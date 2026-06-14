@@ -2,7 +2,7 @@ name: Update latest stream archive
 
 on:
   schedule:
-    - cron: '*/30 * * * *'   # 30分ごと（GitHubの都合で多少遅れることがあります）
+    - cron: '0 15 * * *'    # 毎日 0:00 JST（= 15:00 UTC）。GitHubの都合で多少遅れることがあります
   workflow_dispatch:          # 手動実行も可
 
 permissions:
