@@ -29,8 +29,8 @@ body {
 body::before {
   content: ""; position: fixed; inset: 0; z-index: -3;
   background:
-    radial-gradient(1100px 760px at 82% 8%, #ffe6f2, transparent),
-    radial-gradient(950px 720px at 8% 18%, #dff0ff, transparent),
+    linear-gradient(rgba(255,250,253,.60), rgba(255,250,253,.74)),
+    url('assets/bg.jpg') center top / cover no-repeat,
     linear-gradient(165deg, #fff4fb 0%, #eef7ff 55%, #f4ecff 100%);
 }
 /* 左右にキャラを薄く配置（画像が無くてもグラデのみで成立） */
