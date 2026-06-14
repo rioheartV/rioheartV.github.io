@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Frontier - 連鎖加工シミュレーション</title>
+    <title>Virtual Town - のんびり経営シミュ♡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: sans-serif; background: #f0f4f8; color: #333; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
         * { box-sizing: border-box; }
@@ -101,19 +104,71 @@
             .grid-split { flex-direction: column; }
             .worker-grid { grid-template-columns: 1fr; }
         }
+
+        /* ===== Virtual Town かわいいテーマ ===== */
+        body {
+            font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', sans-serif;
+            color: #6b4a6b;
+            background:
+                radial-gradient(circle at 18% 12%, rgba(255,255,255,.55), transparent 42%),
+                radial-gradient(circle at 85% 80%, rgba(255,255,255,.4), transparent 45%),
+                linear-gradient(160deg, #ffe3f1 0%, #ecf0ff 52%, #e6fbff 100%);
+            background-attachment: fixed;
+        }
+        #game-container {
+            background: rgba(255,255,255,.88);
+            border: 2px solid #ffd1e8;
+            border-radius: 22px;
+            box-shadow: 0 10px 28px rgba(255,150,200,.28);
+        }
+        h1 { color: #ff5fa2; text-shadow: 0 2px 0 #fff, 0 4px 8px rgba(255,120,180,.28); letter-spacing: .5px; }
+        .status-box { background: linear-gradient(135deg,#fff0f7,#eef4ff); border: 2px solid #ffd1e8; border-radius: 16px; color:#7a5a7a; }
+        .gold-text { color:#ff7eb3; }
+        #world-view {
+            background: linear-gradient(180deg,#c2e9ff,#f0d2ff);
+            border: 2px solid #ffd1e8; border-radius: 16px;
+            display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .section-title { color:#ff6fae; border-bottom: 2px dashed #ffc9e4; }
+        button { border-radius: 10px; }
+        .develop-btn { background:#ff8fc7; } .develop-btn:hover:not(:disabled){ background:#ff6fae; }
+        .mini-gather { background:#7ed9a6; } .mini-gather:hover { background:#57c98a; }
+        .mini-sell { background:#ffb15c; } .mini-sell:hover { background:#f59838; }
+        .production-block, .worker-card, .custom-form { border-radius: 14px; }
+        .help-box { background:#fff6fb; border:1px solid #ffd1e8; border-radius:14px; color:#7a5a7a; }
+        .help-title { color:#ff6fae; }
+        .block-title { color:#a65a8a; border-bottom:1px solid #ffe0ee; }
+        .worker-title { color:#a65a8a; }
+        .worker-card { background:#fff6fb; border:1px solid #ffd9ec; }
+        .worker-controls { background:#fff0f7; border:1px solid #ffd1e8; border-radius:12px; }
+        .material-row { border:1px solid #ffe0ee; }
+        .craft-side { background:#fbf2ff; border:1px solid #ecd6ff; }
+        .craft-empty { background:#fff6fb; border:1px dashed #ffd1e8; }
+        .badge.meet { background:#d6f7e4; color:#1b8a5a; }
+        .quality-label { background:#fff0d6; color:#e08a2e; }
+
+        /* ドット絵リオちゃん */
+        .dotrio { display:inline-block; vertical-align:bottom; animation: rioBob 1s ease-in-out infinite; transform-origin: bottom center; }
+        .dotrio svg { display:block; shape-rendering: crispEdges; image-rendering: pixelated; }
+        @keyframes rioBob { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(-2deg); } }
+        .rio-strip { display:flex; flex-wrap:wrap; align-items:flex-end; gap:2px; margin-top:4px; }
+        .rio-strip .more { font-size:.72rem; color:#a65a8a; font-weight:bold; align-self:center; margin-left:2px; }
+        .rio-portrait { flex:0 0 auto; text-align:center; }
+        .rio-tool { font-size:.85rem; line-height:1; margin-top:1px; }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <h1>Nova Frontier</h1>
+        <h1>💗 Virtual Town 💗</h1>
 
         <div class="status-box">
-            <div>🪙 <span id="stat-gold" class="gold-text">0</span></div>
+            <div>💰 <span id="stat-gold" class="gold-text">0</span>チャリン</div>
             <div><span id="stat-town-rank">始まりの野原</span> (Lv.<span id="stat-town-lv">1</span>)</div>
         </div>
 
         <div id="world-view">
+            <span id="world-rio"></span>
             <span class="dot-anime" id="emoji-display">⛺</span>
             <span class="pixel-puff" style="left:20%;">🫧</span>
             <span class="pixel-puff" style="left:75%; animation-delay:0.8s;">✨</span>
@@ -134,7 +189,7 @@
 
         <div class="section-title">👥 自動化の雇用と職人の技術強化</div>
         <div class="worker-controls">
-            <span style="font-weight:bold; color:#b45309;">🪙 <span id="worker-gold">0</span></span>
+            <span style="font-weight:bold; color:#ff7eb3;">💰 <span id="worker-gold">0</span>チャリン</span>
             <label class="auto-assign-label" style="font-size:0.78rem;"><input type="checkbox" id="global-auto" onchange="setAllAutoAssign(this.checked)"> 全職人を自動配置</label>
             <button onclick="redistributeAll()" style="background:#0369a1; padding:5px 10px; font-size:0.78rem;">⚖️ 均等再配置</button>
         </div>
@@ -154,6 +209,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (8)</b>：ゲーム名を<b>Virtual Town</b>に変更♡ 通貨単位を<b>チャリン</b>に。配置・雇用した職人を<b>ドット絵のリオちゃん</b>で表示し、<b>職業ごとに服装・帽子・持ち物</b>が変化。UIを<b>かわいいパステル＆ハート基調</b>にリニューアル。大量雇用時の費用増加を<b>ゆるめ</b>に調整。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (7)</b>：林業ラインの板材と木炭の順を入替。職人欄の上部に<b>現在の資金</b>を表示。各職人カードの<b>雇用と技術強化を横並び</b>に。配置人数の横に<b>配置先の内訳</b>（どの品に何人）を表示。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (6)</b>：<b>全職人を自動配置</b>チェック＆<b>⚖️均等再配置</b>ボタンを追加。酪農を<b>たまごLv2/羊毛Lv3/皮Lv4</b>に変更し<b>革・革鞄</b>を追加。オムレツの塩を削除。新素材<b>きのこ・ベリー・花・レモン</b>と、きのこソテー/レモネード/ベリータルト/香水を追加。加工品どうしの上位品<b>豪華ディナー・アフタヌーンティー</b>を追加。都市上限を<b>Lv9</b>へ。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (5)</b>：採取ボタンの横に<b>「💰全売却」ボタン</b>を追加（全在庫を一括換金）。発展ボタンの表記を短縮。</p>
@@ -393,6 +449,62 @@
         GAME.customKeys = [];   // 独自レシピのキー一覧
         GAME.customSeq = 0;
 
+        // ============ ドット絵リオちゃん（職業ごとに服装・帽子・持ち物が変化） ============
+        const WORKER_THEME = {
+            gatherer: { dress:'#8fe388', cap:'#54c454', tool:'🧺' },
+            farmer:   { dress:'#cf9b62', cap:'#f2cf66', tool:'🌾' },
+            dairy:    { dress:'#fff1d6', cap:'#ffcf9a', tool:'🥛' },
+            logger:   { dress:'#e06b6b', cap:'#8a4b2f', tool:'🪓' },
+            miner:    { dress:'#9aa6bf', cap:'#ffd93b', tool:'⛏️' },
+            hunter:   { dress:'#6f9e62', cap:'#4d6b3f', tool:'🏹' },
+            cook:     { dress:'#f4f6fb', cap:'#f4f6fb', tool:'🍳' },
+            blender:  { dress:'#c49bf0', cap:'#8a5cd6', tool:'⚗️' },
+            craftsman:{ dress:'#e0975a', cap:'#b5651d', tool:'🔨' },
+            merchant: { dress:'#5ecfce', cap:'#f2cf66', tool:'💰' }
+        };
+        function themeFor(wk) { return WORKER_THEME[wk] || { dress:'#ff9ecb', cap:'#ffd1e8', tool:'💗' }; }
+
+        // 1体ぶんのドットリオちゃんSVGを返す
+        // リオちゃんの素体は固定：金髪ボブ＋青い目＋オレンジの花の髪飾り＋ピンクの靴。
+        // 職業ごとに帽子(cap)・上衣(top)・スカート(skirt)・リボン(ribbon)・持ち物(tool)を変える。
+        function riochanSVG(theme, px) {
+            px = px || 28;
+            const t = theme || {};
+            const top = t.top || t.dress || '#ffb3d1';     // 上衣（既定＝ピンク）
+            const skirt = t.skirt || t.dress || '#fdeef5'; // スカート（既定＝白）
+            const cap = t.cap;                             // 帽子（職業のみ。未指定なら金髪が見える）
+            const ribbon = t.ribbon;                       // 腰リボン（未指定なら無し）
+            const HAIR='#f3d279', SKIN='#ffe2c8', EYE='#4f86d6', SHOE='#f5a8c8';
+            const FLOWER='#ff8a5c', FCTR='#ffd34d';
+            const r = (x,y,w,h,c) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
+            let s = '';
+            s += r(3,1,8,2,HAIR) + r(2,3,2,6,HAIR) + r(10,3,2,6,HAIR) + r(4,3,6,1,HAIR); // 金髪（トップ・両サイド・前髪）
+            if (cap) s += r(4,0,6,2,cap) + r(3,2,8,1,cap);  // 帽子（クラウン＋つば）
+            s += r(10,1,2,2,FLOWER) + r(10,1,1,1,FCTR);     // 横の花飾り（常時）
+            s += r(4,4,6,4,SKIN);                           // 顔
+            s += r(5,5,1,2,EYE) + r(8,5,1,2,EYE);           // 青い目
+            s += r(5,5,1,1,'#dceaff') + r(8,5,1,1,'#dceaff');// ハイライト
+            s += r(4,6,1,1,'#ffb3d1') + r(9,6,1,1,'#ffb3d1');// ほっぺ
+            s += r(7,7,1,1,'#e07da0');                       // 口
+            s += r(3,9,1,2,SKIN) + r(10,9,1,2,SKIN);        // 腕
+            s += r(4,8,6,1,top) + r(4,9,6,2,top);           // 上衣（肩〜胴）
+            if (ribbon) s += r(4,10,6,1,ribbon) + r(6,10,2,1,'rgba(0,0,0,.12)'); // 腰リボン＋結び目
+            s += r(3,11,8,2,skirt) + r(2,13,10,1,skirt) + r(2,13,10,1,'rgba(0,0,0,.10)'); // スカート＋裾の影
+            s += r(5,14,1,1,SKIN) + r(8,14,1,1,SKIN) + r(4,15,2,1,SHOE) + r(8,15,2,1,SHOE);// 足・ピンクの靴
+            const h = Math.round(px * 16 / 14);
+            return `<span class="dotrio" title="リオちゃん"><svg viewBox="0 0 14 16" width="${px}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></span>`;
+        }
+
+        // 配置人数ぶんのミニリオちゃん（最大4体＋「+N」）
+        function assignedSprites(workerKey, n) {
+            if (!workerKey || n <= 0) return '';
+            const cap = Math.min(n, 4);
+            let s = '<div class="rio-strip">';
+            for (let i = 0; i < cap; i++) s += riochanSVG(themeFor(workerKey), 22);
+            if (n > cap) s += `<span class="more">+${n - cap}</span>`;
+            return s + '</div>';
+        }
+
         function getCurrentPrice(key) {
             let res = GAME.resources[key];
             if (res.isCraft) { return res.basePrice * res.facilityLv; }
@@ -533,7 +645,7 @@
 
         function hireWorker(key) {
             let worker = GAME.workers[key];
-            let cost = Math.floor(worker.baseCost * Math.pow(1.5, worker.count));
+            let cost = Math.floor(worker.baseCost * Math.pow(1.35, worker.count));
             if (GAME.gold >= cost) {
                 GAME.gold -= cost; worker.count += 1;
                 if (worker.autoAssign && key !== 'merchant') autoAssignOne(key);
@@ -610,8 +722,9 @@
                 <div class="material-row">
                     <div class="info-text">
                         <span class="item-name"><span class="anim-icon">${res.icon}</span> ${res.name}: ${Math.floor(res.count)}個 <span style="font-size:0.7rem; color:#475569;">[${speedHTML}/秒]</span></span>
-                        <span class="item-meta">売値:🪙${res.price} | 配置:${GAME.assigned[key]}人${baseNote}</span>
+                        <span class="item-meta">売値:${res.price}チャリン | 配置:${GAME.assigned[key]}人${baseNote}</span>
                         ${assignControlHTML(key)}
+                        ${assignedSprites(resWorkerKey(key), GAME.assigned[key])}
                     </div>
                     <div class="control-cluster">
                         <label><input type="checkbox" ${checked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label>
@@ -676,16 +789,17 @@
                     <div class="info-text">
                         <span class="item-name"><span class="anim-icon">${res.icon}</span> ${res.name}: ${Math.floor(res.count)}個 ${speedText}</span>
                         <div class="badge-area" style="display:flex; flex-wrap:wrap; gap:2px; margin-top:2px;">${badgeDesc}</div>
-                        <span class="item-meta" style="margin-top:2px; font-weight:bold;">売値: 🪙${currentPrice} ${qualityLabelText}</span>
+                        <span class="item-meta" style="margin-top:2px; font-weight:bold;">売値: ${currentPrice}チャリン ${qualityLabelText}</span>
                         <span class="${workerStatusClass}">${workerStatusText}</span>
                         ${assignControlHTML(key)}
+                        ${assignedSprites(recipe.workerKey, assignedHere)}
                     </div>
                     <div class="control-cluster" style="flex-direction: column; align-items: flex-end; gap: 3px;">
                         <button onclick="craftItem('${key}')" ${canCraft ? '' : 'disabled'} style="background:#475569; padding:2px 6px; font-size:0.75rem;">手動作成</button>
                         <div style="display:flex; gap:4px; align-items:center; margin-top:1px;">
                             <label><input type="checkbox" ${sellChecked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label> <button onclick="sellItem('${key}')" style="background:#b45309; padding:2px 6px; font-size:0.75rem;">売却</button>
                         </div>
-                        <button onclick="upgradeFacility('${key}')" ${GAME.gold >= facilityCost ? '' : 'disabled'} style="background:#d97706; padding:2px 4px; font-size:0.7rem; margin-top:2px; width:100%;">⚙️投資:🪙${facilityCost}</button>
+                        <button onclick="upgradeFacility('${key}')" ${GAME.gold >= facilityCost ? '' : 'disabled'} style="background:#ffb15c; padding:2px 4px; font-size:0.7rem; margin-top:2px; width:100%;">⚙️投資:${facilityCost}チャリン</button>
                         ${delBtn}
                     </div>
                 </div>`;
@@ -746,7 +860,7 @@
             let sum = 0, parts = [];
             keys.forEach(k => { sum += getCurrentPrice(k) * costs[k]; parts.push(`${GAME.resources[k].icon}${GAME.resources[k].name}×${costs[k]}`); });
             let price = Math.ceil(sum * 1.3);
-            pv.innerText = `${parts.join(' ＋ ')} → 売値 🪙${price}（材料合計🪙${sum}）`;
+            pv.innerText = `${parts.join(' ＋ ')} → 売値 ${price}チャリン（材料合計${sum}チャリン）`;
         }
 
         function registerCustomRecipe() {
@@ -825,11 +939,11 @@
             for (let k in GAME.workers) {
                 let worker = GAME.workers[k];
                 if (!worker.unlocked) continue;
-                let hireCost = Math.floor(worker.baseCost * Math.pow(1.5, worker.count));
+                let hireCost = Math.floor(worker.baseCost * Math.pow(1.35, worker.count));
                 let upCost = Math.floor(worker.baseCost * 2 * worker.lv);
                 let nextUnlockHTML = worker.canUpgrade ? getNextUnlockHint(k, worker.lv) : '';
                 let upgradeBtnHTML = worker.canUpgrade
-                    ? `<button onclick="upgradeWorker('${k}')" ${GAME.gold >= upCost && worker.count > 0 ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#d97706;">技術強化:🪙${upCost}</button>`
+                    ? `<button onclick="upgradeWorker('${k}')" ${GAME.gold >= upCost && worker.count > 0 ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#ffb15c;">技術強化:${upCost}チャリン</button>`
                     : '';
                 // 配置状況＋配置先の内訳＋自動配置チェック（商人以外）
                 let assignInfoHTML = '';
@@ -847,14 +961,17 @@
                 }
                 workerHtml += `
                     <div class="worker-card">
-                        <div>
-                            <div class="worker-title"><span>${worker.name}(${worker.count}人)</span> <span style="color:#1e3a8a;">Lv.${worker.lv}</span></div>
-                            <div class="worker-desc">${worker.desc}</div>
-                            ${nextUnlockHTML}
-                            ${assignInfoHTML}
+                        <div style="display:flex; gap:6px; align-items:flex-start;">
+                            <div class="rio-portrait">${riochanSVG(themeFor(k), 38)}<div class="rio-tool">${themeFor(k).tool}</div></div>
+                            <div style="flex:1; min-width:0;">
+                                <div class="worker-title"><span>${worker.name}(${worker.count}人)</span> <span style="color:#a65a8a;">Lv.${worker.lv}</span></div>
+                                <div class="worker-desc">${worker.desc}</div>
+                                ${nextUnlockHTML}
+                                ${assignInfoHTML}
+                            </div>
                         </div>
-                        <div style="display:flex; gap:4px; margin-top:2px;">
-                            <button onclick="hireWorker('${k}')" ${GAME.gold >= hireCost ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#047857;">雇用:🪙${hireCost}</button>
+                        <div style="display:flex; gap:4px; margin-top:6px;">
+                            <button onclick="hireWorker('${k}')" ${GAME.gold >= hireCost ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#ff8fc7;">雇用:${hireCost}チャリン</button>
                             ${upgradeBtnHTML}
                         </div>
                     </div>`;
@@ -873,7 +990,7 @@
             let reqBox = document.getElementById('town-requirements');
             if (nextUp && GAME.townLevel < GAME.maxTown) {
                 btn.innerText = `🏰 発展→Lv.${GAME.townLevel + 1}`;
-                let reqHtml = `<span class="badge ${GAME.gold >= nextUp.gold ? 'meet' : ''}">🪙${Math.floor(GAME.gold)}/${nextUp.gold}</span>`;
+                let reqHtml = `<span class="badge ${GAME.gold >= nextUp.gold ? 'meet' : ''}">${Math.floor(GAME.gold)}/${nextUp.gold}チャリン</span>`;
                 let btnActive = (GAME.gold >= nextUp.gold);
                 for (let k in nextUp.req) {
                     let has = Math.floor(GAME.resources[k].count); let req = nextUp.req[k];
@@ -950,6 +1067,7 @@
             updateUI();
         }
 
+        document.getElementById('world-rio').innerHTML = riochanSVG({ top:'#ffb3d1', skirt:'#fdeef5', ribbon:'#7fc4ff' }, 44);
         setInterval(runGameLoop, 1000);
         updateLockState();
         updateUI();
