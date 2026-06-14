@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Frontier - 開拓経営連鎖シミュレーション</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f4f8; color: #333; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
+        #game-container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 750px; }
+        h1 { text-align: center; font-size: 1.4rem; margin: 5px 0 10px 0; color: #1e3a8a; }
+
+        .status-box { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; background: #e2e8f0; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; }
+        .gold-text { color: #b45309; }
+
+        /* 操作パネルの横並び */
+        .top-action-panel { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; align-items: center; }
+        .gather-btn { flex: 1; font-size: 0.9rem; background: #10b981; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; height: 55px; }
+        .gather-btn:hover { background: #059669; }
+        .top-upgrade-block { flex: 1.2; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; gap: 3px; height: 55px; box-sizing: border-box; justify-content: center; }
+
+        #world-view { font-size: 2.2rem; text-align: center; margin: 5px 0; background: #111827; border-radius: 8px; padding: 3px; border: 2px solid #334155; height: 45px; line-height: 45px; position: relative; overflow: hidden; }
+        .dot-anime { display: inline-block; animation: dotJump 0.6s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95); }
+        @keyframes dotJump { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+
+        .section-title { font-size: 0.95rem; color: #1e3a8a; margin: 12px 0 6px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 2px; font-weight: bold; }
+
+        button { padding: 4px 8px; cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 4px; font-weight: bold; font-size: 0.8rem; white-space: nowrap; }
+        button:hover:not(:disabled) { background: #1d4ed8; }
+        button:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+
+        .line-container { display: flex; flex-direction: column; gap: 6px; }
+        .production-block { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; }
+        .block-title { font-size: 0.8rem; font-weight: bold; color: #1e3a8a; margin-bottom: 4px; border-bottom: 1px solid #f1f5f9; padding-bottom: 2px; }
+
+        .grid-split { display: flex; gap: 10px; width: 100%; align-items: stretch; }
+        .source-side { flex: 1; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+        .material-row { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid #e2e8f0; padding: 4px 6px; border-radius: 4px; }
+
+        .craft-side { flex: 1; display: flex; align-items: center; background: #edf2f7; border: 1px solid #cbd5e1; padding: 4px 6px; border-radius: 4px; justify-content: space-between; gap: 4px; }
+        .craft-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.75rem; background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 4px; }
+
+        .info-text { display: flex; flex-direction: column; min-width: 80px; }
+        .item-name { font-weight: bold; font-size: 0.8rem; }
+        .item-meta { font-size: 0.65rem; color: #64748b; line-height: 1.2; }
+
+        .worker-label { font-size: 0.6rem; background: #e0f2fe; color: #0369a1; padding: 1px 3px; border-radius: 3px; font-weight: bold; margin-left: 2px; display: inline-block; }
+        .quality-label { font-size: 0.6rem; background: #fef3c7; color: #d97706; padding: 1px 3px; border-radius: 3px; font-weight: bold; margin-left: 2px; display: inline-block; }
+
+        .speed-text { font-size: 0.65rem; font-weight: bold; margin-left: 1px; }
+        .speed-text.plus { color: #16a34a; }
+        .speed-text.minus { color: #dc2626; }
+
+        .worker-requirement { font-size: 0.65rem; color: #4b5563; font-weight: bold; margin-top: 1px; }
+        .worker-requirement.active { color: #2563eb; }
+
+        .control-cluster { display: flex; align-items: center; gap: 4px; }
+        .control-cluster label { font-size: 0.65rem; white-space: nowrap; display: flex; align-items: center; gap: 1px; }
+
+        .worker-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .worker-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; }
+        .worker-title { font-weight: bold; font-size: 0.8rem; display: flex; justify-content: space-between; }
+        .worker-desc { font-size: 0.65rem; color: #64748b; margin: 1px 0 4px 0; line-height: 1.2; }
+
+        .help-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px; font-size: 0.75rem; line-height: 1.3; color: #475569; }
+        .help-title { font-weight: bold; color: #1e3a8a; margin-bottom: 2px; }
+
+        .badge { display: inline-block; background: #fee2e2; color: #ef4444; padding: 1px 2px; border-radius: 2px; font-size: 0.6rem; white-space: nowrap; }
+        .badge.meet { background: #d1fae5; color: #065f46; }
+        .site-back { align-self: flex-start; width: 100%; max-width: 750px; margin-bottom: 8px; }
+        .site-back a { color: #1e3a8a; font-weight: bold; font-size: 0.85rem; text-decoration: none; }
+        .site-back a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="site-back"><a href="../../index.html">← トップへ戻る</a></div>
+
+    <div id="game-container">
+        <h1>Nova Frontier</h1>
+
+        <div class="status-box">
+            <div>🪙 <span id="stat-gold" class="gold-text">0</span></div>
+            <div>町: <span id="stat-town-rank">始まりの野原</span> (Lv.<span id="stat-town-lv">1</span>)</div>
+        </div>
+
+        <div id="world-view">
+            <span class="dot-anime" id="emoji-display">⛺</span>
+        </div>
+
+        <div class="top-action-panel">
+            <button class="gather-btn" onclick="manualGather()">🌾 周辺探索<br>(手動採取)</button>
+            <div class="top-upgrade-block">
+                <div style="font-weight:bold; font-size:0.75rem; color:#1e3a8a;" id="next-town-title">次の発展</div>
+                <div style="font-size:0.65rem; color:#64748b;" id="town-requirements"></div>
+                <button id="town-upgrade-btn" style="padding:2px 6px; font-size:0.7rem; width:100%;" onclick="upgradeTown()">都市を発展させる</button>
+            </div>
+        </div>
+
+        <div class="section-title">📦 生産管理ツリー（左：素材収支 ➔ 右：対応する加工設備）</div>
+        <div class="line-container" id="production-lines"></div>
+
+        <div class="section-title">👥 自動化の雇用と職人の技術強化（Lvアップで新資源・レシピ解放）</div>
+        <div class="worker-grid" id="worker-area"></div>
+
+        <div class="section-title">📖 開拓地経営のヒント</div>
+        <div class="help-box">
+            <div class="help-title">⛏️ 採取者・農民・木こり・採掘人の「技術強化」</div>
+            <p style="margin: 0 0 4px 0;">採取系職人を「技術強化(LvUP)」すると、彼らの技術でしか発見できない新規の農作物やレア鉱石（オレンジ、ブドウ、上薬草、じゃがいも、硬い木材、銀鉱石など）が段階的にスロットへ解放されます。</p>
+            <div class="help-title">🔨 上位加工品（加工品をさらに加工する）</div>
+            <p style="margin: 0;">「職人」が作った「板材」や「石材」、あるいは「鉄の道具」を別のレシピの材料として再投入し、より高価値な「高級ベッド」や「鉄補強の石壁」を生産できます。</p>
+        </div>
+    </div>
+
+    <script>
+        const GAME = {
+            gold: 0,
+            townLevel: 1,
+            townNames: { 1: "始まりの野原", 2: "深緑の木造集落", 3: "水車の大集落", 4: "輝く鉱山都市", 5: "栄光の城塞都市" },
+            townEmojis: { 1: "⛺", 2: "⛺🏡🌾", 3: "🏡⚙️🌾🛶", 4: "🏡⚙️⛏️💎🏭", 5: "🏰🏡⚙️💎🏕️🛶" },
+
+            resources: {
+                // レベル1初期素材（水と薬草は初期から永続自動採取）
+                herb:    { name: "薬草", count: 0, price: 2, unlocked: true, workerKey: "gatherer" },
+                water:   { name: "水",   count: 0, price: 1, unlocked: true, workerKey: "gatherer" },
+                apple:   { name: "りんご", count: 0, price: 2, unlocked: true, workerKey: "gatherer" },
+
+                // 採取者強化によって解放される素材
+                superherb:{ name: "上薬草", count: 0, price: 6, unlocked: false, workerKey: "gatherer", reqLv: 2 },
+                orange:  { name: "オレンジ", count: 0, price: 3, unlocked: false, workerKey: "gatherer", reqLv: 3 },
+                grape:   { name: "ブドウ", count: 0, price: 4, unlocked: false, workerKey: "gatherer", reqLv: 4 },
+
+                // レベル2以降素材
+                wood:    { name: "木材", count: 0, price: 5, unlocked: false, workerKey: "lumberjack" },
+                stone:   { name: "石",   count: 0, price: 6, unlocked: false, workerKey: "miner" },
+                wheat:   { name: "小麦", count: 0, price: 3, unlocked: false, workerKey: "farmer" },
+
+                // 農民の強化によって解放される農作物
+                potato:  { name: "じゃがいも", count: 0, price: 3, unlocked: false, workerKey: "farmer", reqLv: 2 },
+                tomato:  { name: "トマト", count: 0, price: 4, unlocked: false, workerKey: "farmer", reqLv: 3 },
+                lettuce: { name: "レタス", count: 0, price: 3, unlocked: false, workerKey: "farmer", reqLv: 4 },
+
+                // 木こり・採掘人の強化で手に入るレア資材
+                hardwood:{ name: "硬い木材", count: 0, price: 15, unlocked: false, workerKey: "lumberjack", reqLv: 2 },
+                silver:  { name: "銀鉱石", count: 0, price: 25, unlocked: false, workerKey: "miner", reqLv: 2 },
+
+                // 酪農家素材
+                milk:    { name: "ミルク", count: 0, price: 4, unlocked: false, workerKey: "rancher" },
+                wool:    { name: "羊毛", count: 0, price: 12, unlocked: false, workerKey: "rancher" },
+
+                // レベル3以降素材
+                meat:    { name: "生肉", count: 0, price: 8, unlocked: false, workerKey: "hunter" },
+                fish:    { name: "魚",   count: 0, price: 10, unlocked: false, workerKey: "hunter" },
+                iron:    { name: "鉄鉱石", count: 0, price: 15, unlocked: false, workerKey: "miner" },
+                gem:     { name: "原石",   count: 0, price: 50, unlocked: false, workerKey: "miner" },
+
+                // 加工品データ（facilityLvを保持）
+                salt:    { name: "塩", count: 0, basePrice: 3, unlocked: true,  facilityLv: 1, baseFacilityCost: 100 },
+                juice:   { name: "リンゴジュース", count: 0, basePrice: 10, unlocked: true, facilityLv: 1, baseFacilityCost: 120 },
+                ojuice:  { name: "オレンジジュース", count: 0, basePrice: 15, unlocked: false, facilityLv: 1, baseFacilityCost: 160 },
+                gjuice:  { name: "ブドウジュース", count: 0, basePrice: 20, unlocked: false, facilityLv: 1, baseFacilityCost: 200 },
+                mjuice:  { name: "ミックスジュース", count: 0, basePrice: 50, unlocked: false, facilityLv: 1, baseFacilityCost: 400 },
+                salad:   { name: "新鮮サラダ", count: 0, basePrice: 22, unlocked: false, facilityLv: 1, baseFacilityCost: 180 },
+                fries:   { name: "ポテトフライ", count: 0, basePrice: 18, unlocked: false, facilityLv: 1, baseFacilityCost: 180 },
+                bread:   { name: "パン", count: 0, basePrice: 25, unlocked: false, facilityLv: 1, baseFacilityCost: 220 },
+                pie:     { name: "アップルパイ", count: 0, basePrice: 50, unlocked: false, facilityLv: 1, baseFacilityCost: 350 },
+                cheese:  { name: "こだわりチーズ", count: 0, basePrice: 30, unlocked: false, facilityLv: 1, baseFacilityCost: 250 },
+                yogurt:  { name: "プレーンヨーグルト", count: 0, basePrice: 24, unlocked: false, facilityLv: 1, baseFacilityCost: 200 },
+                potion:  { name: "ポーション", count: 0, basePrice: 20, unlocked: false, facilityLv: 1, baseFacilityCost: 250 },
+                spotion: { name: "上位ポーション", count: 0, basePrice: 60, unlocked: false, facilityLv: 1, baseFacilityCost: 500 },
+                stew:    { name: "肉じゃが", count: 0, basePrice: 70, unlocked: false, facilityLv: 1, baseFacilityCost: 400 },
+                soup:    { name: "魚のスープ", count: 0, basePrice: 45, unlocked: false, facilityLv: 1, baseFacilityCost: 350 },
+                skewer:  { name: "串焼き", count: 0, basePrice: 55, unlocked: false, facilityLv: 1, baseFacilityCost: 300 },
+                board:   { name: "板材", count: 0, basePrice: 15, unlocked: false, facilityLv: 1, baseFacilityCost: 200 },
+                hboard:  { name: "硬い板材", count: 0, basePrice: 40, unlocked: false, facilityLv: 1, baseFacilityCost: 400 },
+                mason:   { name: "石材", count: 0, basePrice: 18, unlocked: false, facilityLv: 1, baseFacilityCost: 250 },
+                bed:     { name: "高級ベッド", count: 0, basePrice: 220, unlocked: false, facilityLv: 1, baseFacilityCost: 600 },
+                ring:    { name: "銀の指輪", count: 0, basePrice: 180, unlocked: false, facilityLv: 1, baseFacilityCost: 500 },
+                diamond: { name: "カット宝石", count: 0, basePrice: 400, unlocked: false, facilityLv: 1, baseFacilityCost: 1000 },
+                tool:    { name: "鉄の道具", count: 0, basePrice: 180, unlocked: false, facilityLv: 1, baseFacilityCost: 500 },
+                wall:    { name: "鉄補強の石壁", count: 0, basePrice: 600, unlocked: false, facilityLv: 1, baseFacilityCost: 1200 },
+                relief:  { name: "玉座のレリーフ", count: 0, basePrice: 2500, unlocked: false, facilityLv: 1, baseFacilityCost: 2500 }
+            },
+
+            workers: {
+                gatherer: { name: "採取者", count: 0, baseCost: 40, lv: 1, unlocked: true, desc: "薬草・水・林檎の採取効率増加" },
+                miner:    { name: "採掘人", count: 0, baseCost: 150, lv: 1, unlocked: false, desc: "石・鉄・原石・銀を採掘" },
+                lumberjack:{ name: "木こり", count: 0, baseCost: 120, lv: 1, unlocked: false, desc: "木材・硬い木材を伐採" },
+                farmer:   { name: "農民",   count: 0, baseCost: 100, lv: 1, unlocked: false, desc: "農作物の栽培ラインを担当" },
+                rancher:  { name: "酪農家", count: 0, baseCost: 200, lv: 1, unlocked: false, desc: "ミルクと羊毛を自動生産" },
+                hunter:   { name: "狩人",   count: 0, baseCost: 250, lv: 1, unlocked: false, desc: "生肉と魚を狩猟・漁獲" },
+                cook:     { name: "料理人", count: 0, baseCost: 350, lv: 1, unlocked: false, desc: "全ての飲料・調味料・食品の調理" },
+                blender:  { name: "調合人", count: 0, baseCost: 300, lv: 1, unlocked: false, desc: "各種ポーションの調合" },
+                craftsman:{ name: "職人",   count: 0, baseCost: 500, lv: 1, unlocked: false, desc: "建築資材・家具・道具・美術品の製造" },
+                merchant: { name: "商人",   count: 0, baseCost: 150, lv: 1, unlocked: true,  desc: "チェック素材を毎秒自動売却" }
+            },
+
+            autoSell: {},
+            recipes: {
+                salt:    { costs: { water: 2 }, auto: false, workerKey: "cook", facilityName: "塩田調理場" },
+                juice:   { costs: { apple: 2 }, auto: false, workerKey: "cook", facilityName: "簡易果汁絞り器" },
+                ojuice:  { costs: { orange: 2 }, auto: false, workerKey: "cook", facilityName: "簡易果汁絞り器" },
+                gjuice:  { costs: { grape: 2 }, auto: false, workerKey: "cook", facilityName: "簡易果汁絞り器" },
+                mjuice:  { costs: { apple: 1, orange: 1, grape: 1 }, auto: false, workerKey: "cook", facilityName: "高級ミキサーベース" },
+                salad:   { costs: { lettuce: 2, tomato: 1 }, auto: false, workerKey: "cook", facilityName: "サラダ調理台" },
+                fries:   { costs: { potato: 2, salt: 1 }, auto: false, workerKey: "cook", facilityName: "石窯フライヤー" },
+                bread:   { costs: { wheat: 2 }, auto: false, workerKey: "cook", facilityName: "ベーカリー窯" },
+                pie:     { costs: { apple: 2, wheat: 2, water: 1 }, auto: false, workerKey: "cook", facilityName: "オーブン窯" },
+                cheese:  { costs: { milk: 2, salt: 1 }, auto: false, workerKey: "cook", facilityName: "酪農加工室" },
+                yogurt:  { costs: { milk: 2 }, auto: false, workerKey: "cook", facilityName: "酪農加工室" },
+                potion:  { costs: { herb: 2 }, auto: false, workerKey: "blender", facilityName: "錬金調合台" },
+                spotion: { costs: { superherb: 2, water: 1 }, auto: false, workerKey: "blender", facilityName: "錬金蒸留釜" },
+                stew:    { costs: { meat: 1, potato: 1, tomato: 1, salt: 1 }, auto: false, workerKey: "cook", facilityName: "大水車調理鍋" },
+                soup:    { costs: { fish: 1, salt: 1 }, auto: false, workerKey: "cook", facilityName: "大水車調理鍋" },
+                skewer:  { costs: { meat: 1, wood: 1 }, auto: false, workerKey: "cook", facilityName: "大水車調理鍋" },
+                board:   { costs: { wood: 2 }, auto: false, workerKey: "craftsman", facilityName: "木工のこぎり盤" },
+                hboard:  { costs: { hardwood: 2 }, auto: false, workerKey: "craftsman", facilityName: "精密建具工作台" },
+                mason:   { costs: { stone: 2 }, auto: false, workerKey: "craftsman", facilityName: "石材研磨機" },
+                bed:     { costs: { board: 2, hboard: 1, wool: 1 }, auto: false, workerKey: "craftsman", facilityName: "高級家具工房" },
+                ring:    { costs: { silver: 1 }, auto: false, workerKey: "craftsman", facilityName: "精密鍛冶彫金台" },
+                diamond: { costs: { gem: 1 }, auto: false, workerKey: "craftsman", facilityName: "宝石カッティング機" },
+                tool:    { costs: { iron: 2, board: 1 }, auto: false, workerKey: "craftsman", facilityName: "水車式金属金床" },
+                wall:    { costs: { mason: 2, tool: 1 }, auto: false, workerKey: "craftsman", facilityName: "王宮建築土木ギルド" },
+                relief:  { costs: { tool: 1, diamond: 2, mason: 4 }, auto: false, workerKey: "craftsman", facilityName: "王宮建築土木ギルド" }
+            },
+
+            lines: [
+                { title: "🌱 薬草薬品・上位調合ライン", materials: ["herb", "superherb"], crafts: ["potion", "spotion"] },
+                { title: "💧 水源・岩塩・果実ライン", materials: ["water", "apple", "orange", "grape"], crafts: ["salt", "juice", "ojuice", "gjuice", "mjuice"] },
+                { title: "🌾 農業・パン・サラダ菜園ライン", materials: ["wheat", "lettuce", "tomato", "potato"], crafts: ["salad", "fries", "bread", "pie"] },
+                { title: "🥛 酪農・乳製品ベッドライン", materials: ["milk", "wool"], crafts: ["cheese", "yogurt"] },
+                { title: "🪵 林業木工家具ライン", materials: ["wood", "hardwood"], crafts: ["board", "hboard", "bed"] },
+                { title: "🪨 鉱業石材ライン", materials: ["stone", "silver"], crafts: ["mason", "ring"] },
+                { title: "🐟 漁業スープライン", materials: ["fish"], crafts: ["soup"] },
+                { title: "🍖 狩猟・伝統鍋料理ライン", materials: ["meat"], crafts: ["skewer", "stew"] },
+                { title: "⛓️ 鍛冶宝石要塞ライン", materials: ["iron", "gem"], crafts: ["tool", "diamond", "wall", "relief"] }
+            ],
+
+            townUpgrades: {
+                1: { gold: 300,  req: { herb: 10, salt: 5 }, name: "深緑の木造集落" },
+                2: { gold: 1500, req: { board: 15, salad: 5, bread: 10 }, name: "水車の大集落" },
+                3: { gold: 8000, req: { tool: 8, hboard: 5, bread: 15 }, name: "輝く鉱山都市" },
+                4: { gold: 25000, req: { diamond: 5, ring: 5, wall: 5 }, name: "栄光の城塞都市" },
+                5: { gold: 99999, req: {}, name: "最大レベル" }
+            },
+
+            mProduce: {}, mConsume: {}
+        };
+
+        for (let k in GAME.resources) { GAME.autoSell[k] = false; GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; }
+
+        function getCurrentPrice(key) {
+            let res = GAME.resources[key];
+            if(res && res.isCraft) { return res.basePrice * res.facilityLv; }
+            return res ? res.price : 0;
+        }
+
+        function manualGather() {
+            GAME.resources.herb.count += 1; GAME.resources.water.count += 1; GAME.resources.apple.count += 0.5;
+            if (GAME.resources.wood.unlocked) GAME.resources.wood.count += 0.5;
+            if (GAME.resources.stone.unlocked) GAME.resources.stone.count += 0.3;
+            updateUI();
+        }
+
+        function sellItem(key) {
+            let res = GAME.resources[key];
+            if (res && res.count >= 1) {
+                let amount = Math.floor(res.count);
+                GAME.gold += amount * getCurrentPrice(key);
+                res.count -= amount;
+                updateUI();
+            }
+        }
+
+        function craftItem(key) {
+            let recipe = GAME.recipes[key]; let canCraft = true;
+            for (let mat in recipe.costs) { if (GAME.resources[mat].count < recipe.costs[mat]) canCraft = false; }
+            if (canCraft) {
+                for (let mat in recipe.costs) { GAME.resources[mat].count -= recipe.costs[mat]; }
+                GAME.resources[key].count += 1; updateUI();
+            }
+        }
+
+        function hireWorker(key) {
+            let worker = GAME.workers[key]; let cost = Math.floor(worker.baseCost * Math.pow(1.5, worker.count));
+            if (GAME.gold >= cost) { GAME.gold -= cost; worker.count += 1; updateUI(); }
+        }
+
+        function upgradeWorker(key) {
+            let worker = GAME.workers[key]; let cost = Math.floor(worker.baseCost * 2 * worker.lv);
+            if (GAME.gold >= cost && worker.count > 0) {
+                GAME.gold -= cost; worker.lv += 1;
+                updateLockState();
+                updateUI();
+            }
+        }
+
+        function upgradeFacility(key) {
+            let res = GAME.resources[key];
+            let cost = Math.floor(res.baseFacilityCost * Math.pow(1.8, res.facilityLv - 1));
+            if (GAME.gold >= cost) { GAME.gold -= cost; res.facilityLv += 1; updateUI(); }
+        }
+
+        function toggleAutoSell(key, checked) { GAME.autoSell[key] = checked; }
+        function toggleAutoCraft(key, checked) { GAME.recipes[key].auto = checked; }
+
+        function upgradeTown() {
+            let nextReq = GAME.townUpgrades[GAME.townLevel];
+            if (!nextReq || GAME.townLevel >= 5) return;
+            if (GAME.gold < nextReq.gold) return;
+            for (let k in nextReq.req) { if (GAME.resources[k].count < nextReq.req[k]) return; }
+
+            GAME.gold -= nextReq.gold;
+            for (let k in nextReq.req) { GAME.resources[k].count -= nextReq.req[k]; }
+
+            GAME.townLevel += 1; updateLockState(); updateUI();
+        }
+
+        function updateLockState() {
+            let gLv = GAME.workers.gatherer.lv;
+            if (gLv >= 2) GAME.resources.superherb.unlocked = true;
+            if (gLv >= 3) GAME.resources.orange.unlocked = true;
+            if (gLv >= 4) GAME.resources.grape.unlocked = true;
+
+            let fLv = GAME.workers.farmer.lv;
+            if (GAME.townLevel >= 2) {
+                GAME.resources.wood.unlocked = true; GAME.resources.stone.unlocked = true; GAME.resources.wheat.unlocked = true;
+                if (fLv >= 2) GAME.resources.potato.unlocked = true;
+                if (fLv >= 3) GAME.resources.tomato.unlocked = true;
+                if (fLv >= 4) GAME.resources.lettuce.unlocked = true;
+
+                let mLv = GAME.workers.miner.lv;
+                let lLv = GAME.workers.lumberjack.lv;
+                if (lLv >= 2) GAME.resources.hardwood.unlocked = true;
+                if (mLv >= 2) GAME.resources.silver.unlocked = true;
+
+                GAME.resources.milk.unlocked = true; GAME.resources.wool.unlocked = true;
+                GAME.resources.salad.unlocked = true; GAME.resources.fries.unlocked = true; GAME.resources.bread.unlocked = true;
+                GAME.resources.board.unlocked = true; GAME.resources.mason.unlocked = true;
+                GAME.resources.cheese.unlocked = true; GAME.resources.yogurt.unlocked = true;
+
+                GAME.workers.farmer.unlocked = true; GAME.workers.miner.unlocked = true; GAME.workers.lumberjack.unlocked = true;
+                GAME.workers.rancher.unlocked = true; GAME.workers.cook.unlocked = true; GAME.workers.craftsman.unlocked = true;
+            }
+            if (GAME.townLevel >= 3) {
+                GAME.resources.fish.unlocked = true; GAME.resources.meat.unlocked = true; GAME.resources.iron.unlocked = true;
+                GAME.resources.potion.unlocked = true; GAME.resources.stew.unlocked = true; GAME.resources.soup.unlocked = true;
+                GAME.resources.skewer.unlocked = true; GAME.resources.tool.unlocked = true; GAME.resources.pie.unlocked = true;
+                if (GAME.resources.superherb.unlocked) GAME.resources.spotion.unlocked = true;
+                if (GAME.resources.silver.unlocked) GAME.resources.ring.unlocked = true;
+                if (GAME.resources.wood.unlocked) GAME.resources.hboard.unlocked = true;
+                if (GAME.resources.milk.unlocked && GAME.resources.wool.unlocked) GAME.resources.bed.unlocked = true;
+
+                GAME.workers.hunter.unlocked = true; GAME.workers.blender.unlocked = true;
+            }
+            if (GAME.townLevel >= 4) {
+                GAME.resources.gem.unlocked = true; GAME.resources.diamond.unlocked = true; GAME.resources.wall.unlocked = true;
+                if (GAME.resources.orange.unlocked) GAME.resources.ojuice.unlocked = true;
+                if (GAME.resources.grape.unlocked) GAME.resources.gjuice.unlocked = true;
+                if (GAME.resources.apple.unlocked && GAME.resources.orange.unlocked && GAME.resources.grape.unlocked) GAME.resources.mjuice.unlocked = true;
+            }
+            if (GAME.townLevel >= 5) {
+                GAME.resources.relief.unlocked = true;
+            }
+        }
+
+        function getMaterialRowHTML(key) {
+            let res = GAME.resources[key];
+            if (!res.unlocked) {
+                if (res.reqLv) return `<div class="material-row" style="color:#b91c1c; justify-content:center; font-size:0.75rem; background:#fee2e2;">⚠️ 要・Lv.${res.reqLv}</div>`;
+                return `<div class="material-row" style="color:#cbd5e1; justify-content:center; font-size:0.75rem;">🔒 未解放</div>`;
+            }
+            let checked = GAME.autoSell[key] ? 'checked' : '';
+            let activeWorker = "手動";
+            if (key === "herb" || key === "water" || key === "apple" || key === "superherb" || key === "orange" || key === "grape") { activeWorker = GAME.workers.gatherer.count > 0 ? "採取者" : "自動(基礎)"; }
+            else if (key === "wood" || key === "hardwood") { activeWorker = GAME.workers.lumberjack.count > 0 ? "木こり" : "手動"; }
+            else if (key === "wheat" || key === "lettuce" || key === "tomato" || key === "potato") { activeWorker = GAME.workers.farmer.count > 0 ? "農民" : "手動"; }
+            else if (key === "stone" || key === "iron" || key === "gem" || key === "silver") { activeWorker = GAME.workers.miner.count > 0 ? "採掘人" : "手動"; }
+            else if (key === "milk" || key === "wool") { activeWorker = GAME.workers.rancher.count > 0 ? "酪農家" : "手動"; }
+            else if (key === "meat" || key === "fish") { activeWorker = GAME.workers.hunter.count > 0 ? "狩人" : "手動"; }
+
+            let speedHTML = '';
+            if (GAME.mProduce[key] > 0) speedHTML += `<span class="speed-text plus">+${GAME.mProduce[key].toFixed(1)}</span>`;
+            if (GAME.mConsume[key] > 0) speedHTML += `<span class="speed-text minus">-${GAME.mConsume[key].toFixed(1)}</span>`;
+            if (speedHTML === '') speedHTML = `<span class="speed-text" style="color:#94a3b8;">0.0</span>`;
+
+            return `
+                <div class="material-row">
+                    <div class="info-text">
+                        <span class="item-name">${res.name}: ${Math.floor(res.count)}個 <span style="font-size:0.65rem; color:#475569;">[${speedHTML}/秒]</span></span>
+                        <span class="item-meta">売値:🪙${res.price} | 担当: ${activeWorker}</span>
+                    </div>
+                    <div class="control-cluster">
+                        <label><input type="checkbox" ${checked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label>
+                        <button onclick="sellItem('${key}')">売却</button>
+                    </div>
+                </div>`;
+        }
+
+        function getCraftSideHTML(key) {
+            if (!key) return `<div class="craft-empty">加工レシピなし</div>`;
+            let res = GAME.resources[key];
+            if (!res.unlocked) return `<div class="craft-empty">🔒 レベルアップで解放</div>`;
+
+            let recipe = GAME.recipes[key];
+            let craftChecked = recipe.auto ? 'checked' : '';
+            let sellChecked = GAME.autoSell[key] ? 'checked' : '';
+
+            let hasWorker = GAME.workers[recipe.workerKey].count > 0;
+            let workerStatusClass = hasWorker ? 'worker-requirement active' : 'worker-requirement';
+            let workerStatusText = hasWorker ? `✓ ${recipe.facilityName}稼働` : `⚠️ 要職人`;
+
+            let canCraft = true;
+            let badgeDesc = '';
+            for (let mat in recipe.costs) {
+                let has = Math.floor(GAME.resources[mat].count); let req = recipe.costs[mat];
+                if (has < req) canCraft = false;
+                badgeDesc += `<span class="badge ${has>=req?'meet':''}">${GAME.resources[mat].name.substring(0,2)}:${has}/${req}</span>`;
+            }
+
+            let currentPrice = res.basePrice * res.facilityLv;
+            let facilityCost = Math.floor(res.baseFacilityCost * Math.pow(1.8, res.facilityLv - 1));
+            let qualityLabelText = res.facilityLv > 1 ? `<span class="quality-label">品質Lv.${res.facilityLv}</span>` : '';
+
+            let speedText = GAME.mProduce[key] > 0 ? `<span class="speed-text plus">(+${GAME.mProduce[key].toFixed(1)}/秒)</span>` : '<span class="speed-text" style="color:#94a3b8;">(0.0/秒)</span>';
+
+            return `
+                <div class="craft-side" style="margin-bottom: 4px;">
+                    <div class="info-text" style="min-width:115px;">
+                        <span class="item-name">📦${res.name}: ${Math.floor(res.count)}個 ${speedText}</span>
+                        <div class="badge-area" style="display:flex; flex-wrap:wrap; gap:1px; margin-top:2px;">${badgeDesc}</div>
+                        <span class="item-meta" style="margin-top:2px; font-weight:bold;">売値: 🪙${currentPrice} ${qualityLabelText}</span>
+                        <span class="${workerStatusClass}">${workerStatusText}</span>
+                    </div>
+                    <div class="control-cluster" style="flex-direction: column; align-items: flex-end; gap: 3px;">
+                        <div style="display:flex; gap:4px; align-items:center;">
+                            <label><input type="checkbox" ${craftChecked} ${hasWorker?'':'disabled'} onchange="toggleAutoCraft('${key}', this.checked)"> 自動</label>
+                            <button onclick="craftItem('${key}')" ${canCraft?'':'disabled'} style="background:#475569; padding:2px 6px; font-size:0.75rem;">作成</button>
+                        </div>
+                        <div style="display:flex; gap:4px; align-items:center; margin-top:1px;">
+                            <label><input type="checkbox" ${sellChecked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label>
+                            <button onclick="sellItem('${key}')" style="background:#b45309; padding:2px 6px; font-size:0.75rem;">売却</button>
+                        </div>
+                        <button onclick="upgradeFacility('${key}')" ${GAME.gold>=facilityCost?'':'disabled'} style="background:#d97706; padding:2px 4px; font-size:0.7rem; margin-top:2px; width:100%;">⚙️投資:🪙${facilityCost}</button>
+                    </div>
+                </div>`;
+        }
+
+        function updateUI() {
+            document.getElementById('stat-gold').innerText = Math.floor(GAME.gold).toLocaleString();
+            document.getElementById('stat-town-lv').innerText = GAME.townLevel;
+            document.getElementById('stat-town-rank').innerText = GAME.townNames[GAME.townLevel];
+            document.getElementById('emoji-display').innerText = GAME.townEmojis[GAME.townLevel] || "🏰";
+
+            let linesHtml = '';
+            GAME.lines.forEach(line => {
+                let anyVisible = false;
+                line.materials.forEach(mat => { if(GAME.resources[mat] && GAME.resources[mat].unlocked) anyVisible = true; });
+                if (line.crafts) { line.crafts.forEach(c => { if(GAME.resources[c] && GAME.resources[c].unlocked) anyVisible = true; }); }
+
+                if (anyVisible) {
+                    let html = `<div class="production-block"><div class="block-title">${line.title}</div><div class="grid-split">`;
+                    html += `<div class="source-side">`;
+                    line.materials.forEach(mat => { html += getMaterialRowHTML(mat); });
+                    html += `</div>`;
+                    html += `<div style="flex:1; display:flex; flex-direction:column; gap:4px;">`;
+                    if (line.crafts && line.crafts.length > 0) {
+                        line.crafts.forEach(c => { html += getCraftSideHTML(c); });
+                    } else {
+                        html += getCraftSideHTML(null);
+                    }
+                    html += `</div>`;
+                    html += `</div></div>`;
+                    linesHtml += html;
+                }
+            });
+            document.getElementById('production-lines').innerHTML = linesHtml;
+
+            let workerHtml = '';
+            for (let k in GAME.workers) {
+                let worker = GAME.workers[k]; if (!worker.unlocked) continue;
+                let hireCost = Math.floor(worker.baseCost * Math.pow(1.5, worker.count));
+                let upCost = Math.floor(worker.baseCost * 2 * worker.lv);
+                let upgradeBtnHTML = (k === "miner" || k === "farmer" || k === "gatherer" || k === "hunter" || k === "lumberjack") ? `<button onclick="upgradeWorker('${k}')" ${GAME.gold>=upCost && worker.count>0?'':'disabled'} style="width:100%; padding:3px; font-size:0.75rem; background:#d97706; margin-top:2px;">技術強化:🪙${upCost}</button>` : '';
+                workerHtml += `
+                    <div class="worker-card">
+                        <div>
+                            <div class="worker-title"><span>${worker.name}(${worker.count}人)</span> <span style="color:#1e3a8a;">Lv.${worker.lv}</span></div>
+                            <div class="worker-desc">${worker.desc}</div>
+                        </div>
+                        <button onclick="hireWorker('${k}')" ${GAME.gold>=hireCost?'':'disabled'} style="width:100%; padding:4px; font-size:0.75rem; background:#047857;">雇用:🪙${hireCost}</button>
+                        ${upgradeBtnHTML}
+                    </div>`;
+            }
+            document.getElementById('worker-area').innerHTML = workerHtml;
+
+            let nextUp = GAME.townUpgrades[GAME.townLevel];
+            if (nextUp && GAME.townLevel < 5) {
+                document.getElementById('next-town-title').innerText = `次の発展: ${nextUp.name} (Lv.${GAME.townLevel+1})`;
+                let reqHtml = `<span class="badge ${GAME.gold>=nextUp.gold?'meet':''}">ゴールド: ${Math.floor(GAME.gold)}/${nextUp.gold}</span>`;
+                let btnActive = (GAME.gold >= nextUp.gold);
+                for (let k in nextUp.req) {
+                    let has = Math.floor(GAME.resources[k].count); let req = nextUp.req[k];
+                    if (has < req) btnActive = false;
+                    reqHtml += `<span class="badge ${has>=req?'meet':''}">${GAME.resources[k].name}:${has}/${req}</span>`;
+                }
+                document.getElementById('town-requirements').innerHTML = reqHtml;
+                document.getElementById('town-upgrade-btn').disabled = !btnActive;
+            } else {
+                document.getElementById('next-town-title').innerText = `帝国の最高開拓ランクに達しました！`;
+                document.getElementById('town-requirements').innerHTML = ``;
+                document.getElementById('town-upgrade-btn').disabled = true;
+            }
+        }
+
+        function runGameLoop() {
+            for (let k in GAME.resources) { GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; }
+            // 基礎採取（薬草・水は無条件で毎秒自動で増えます）
+            GAME.resources.herb.count += 0.2; GAME.mProduce.herb += 0.2;
+            GAME.resources.water.count += 0.2; GAME.mProduce.water += 0.2;
+
+            if (GAME.workers.gatherer.count > 0) {
+                let gPow = GAME.workers.gatherer.count * 0.5 * GAME.workers.gatherer.lv;
+                GAME.resources.herb.count += gPow; GAME.mProduce.herb += gPow;
+                GAME.resources.water.count += gPow; GAME.mProduce.water += gPow;
+                GAME.resources.apple.count += gPow * 0.4; GAME.mProduce.apple += gPow * 0.4;
+                if (GAME.resources.superherb.unlocked) { GAME.resources.superherb.count += gPow * 0.2; GAME.mProduce.superherb += gPow * 0.2; }
+                if (GAME.resources.orange.unlocked) { GAME.resources.orange.count += gPow * 0.3; GAME.mProduce.orange += gPow * 0.3; }
+                if (GAME.resources.grape.unlocked) { GAME.resources.grape.count += gPow * 0.2; GAME.mProduce.grape += gPow * 0.2; }
+            }
+            if (GAME.workers.lumberjack.count > 0) {
+                let lPow = GAME.workers.lumberjack.count * GAME.workers.lumberjack.lv;
+                if (GAME.resources.wood.unlocked) { GAME.resources.wood.count += lPow * 0.5; GAME.mProduce.wood += lPow * 0.5; }
+                if (GAME.resources.hardwood.unlocked) { GAME.resources.hardwood.count += lPow * 0.1; GAME.mProduce.hardwood += lPow * 0.1; }
+            }
+            if (GAME.workers.miner.count > 0) {
+                let mPow = GAME.workers.miner.count * GAME.workers.miner.lv;
+                if (GAME.resources.stone.unlocked) { GAME.resources.stone.count += mPow * 0.4; GAME.mProduce.stone += mPow * 0.4; }
+                if (GAME.resources.iron.unlocked) { GAME.resources.iron.count += mPow * 0.1; GAME.mProduce.iron += mPow * 0.1; }
+                if (GAME.resources.gem.unlocked) { GAME.resources.gem.count += mPow * 0.05; GAME.mProduce.gem += mPow * 0.05; }
+                if (GAME.resources.silver.unlocked) { GAME.resources.silver.count += mPow * 0.08; GAME.mProduce.silver += mPow * 0.08; }
+            }
+            if (GAME.workers.farmer.count > 0) {
+                let fPow = GAME.workers.farmer.count * 0.4 * GAME.workers.farmer.lv;
+                GAME.resources.wheat.count += fPow; GAME.mProduce.wheat += fPow;
+                if (GAME.resources.lettuce.unlocked) { GAME.resources.lettuce.count += fPow * 0.4; GAME.mProduce.lettuce += fPow * 0.4; }
+                if (GAME.resources.tomato.unlocked) { GAME.resources.tomato.count += fPow * 0.3; GAME.mProduce.tomato += fPow * 0.3; }
+                if (GAME.resources.potato.unlocked) { GAME.resources.potato.count += fPow * 0.4; GAME.mProduce.potato += fPow * 0.4; }
+            }
+            if (GAME.workers.rancher.count > 0) {
+                let rPow = GAME.workers.rancher.count * GAME.workers.rancher.lv;
+                GAME.resources.milk.count += rPow * 0.4; GAME.mProduce.milk += rPow * 0.4;
+                GAME.resources.wool.count += rPow * 0.15; GAME.mProduce.wool += rPow * 0.15;
+            }
+            if (GAME.workers.hunter.count > 0) {
+                let hPow = GAME.workers.hunter.count * GAME.workers.hunter.lv;
+                GAME.resources.meat.count += hPow * 0.3; GAME.mProduce.meat += hPow * 0.3;
+                GAME.resources.fish.count += hPow * 0.2; GAME.mProduce.fish += hPow * 0.2;
+            }
+            if (GAME.workers.cook.count > 0) {
+                let power = GAME.workers.cook.count;
+                for(let i=0; i<power; i++) {
+                    if (GAME.recipes.salt.auto && GAME.resources.water.count >= 2) { GAME.resources.water.count -= 2; GAME.resources.salt.count++; GAME.mConsume.water += 2; GAME.mProduce.salt += 1; }
+                    if (GAME.recipes.juice.auto && GAME.resources.apple.count >= 2) { GAME.resources.apple.count -= 2; GAME.resources.juice.count++; GAME.mConsume.apple += 2; GAME.mProduce.juice += 1; }
+                    if (GAME.recipes.ojuice.auto && GAME.resources.orange.unlocked && GAME.resources.orange.count >= 2) { GAME.resources.orange.count -= 2; GAME.resources.ojuice.count++; GAME.mConsume.orange += 2; GAME.mProduce.ojuice += 1; }
+                    if (GAME.recipes.gjuice.auto && GAME.resources.grape.unlocked && GAME.resources.grape.count >= 2) { GAME.resources.grape.count -= 2; GAME.resources.gjuice.count++; GAME.mConsume.grape += 2; GAME.mProduce.gjuice += 1; }
+                    if (GAME.recipes.mjuice.auto && GAME.resources.mjuice.unlocked && GAME.resources.apple.count >= 1 && GAME.resources.orange.count >= 1 && GAME.resources.grape.count >= 1) { GAME.resources.apple.count -= 1; GAME.resources.orange.count -= 1; GAME.resources.grape.count -= 1; GAME.resources.mjuice.count++; GAME.mConsume.apple += 1; GAME.mConsume.orange += 1; GAME.mConsume.grape += 1; GAME.mProduce.mjuice += 1; }
+                    if (GAME.recipes.salad.auto && GAME.resources.lettuce.count >= 2 && GAME.resources.tomato.count >= 1) { GAME.resources.lettuce.count -= 2; GAME.resources.tomato.count -= 1; GAME.resources.salad.count++; GAME.mConsume.lettuce += 2; GAME.mConsume.tomato += 1; GAME.mProduce.salad += 1; }
+                    if (GAME.recipes.fries.auto && GAME.resources.potato.count >= 2 && GAME.resources.salt.count >= 1) { GAME.resources.potato.count -= 2; GAME.resources.salt.count -= 1; GAME.resources.fries.count++; GAME.mConsume.potato += 2; GAME.mConsume.salt += 1; GAME.mProduce.fries += 1; }
+                    if (GAME.recipes.pie.auto && GAME.resources.pie.unlocked && GAME.resources.apple.count >= 2 && GAME.resources.wheat.count >= 2 && GAME.resources.water.count >= 1) { GAME.resources.apple.count -= 2; GAME.resources.wheat.count -= 2; GAME.resources.water.count -= 1; GAME.resources.pie.count++; GAME.mConsume.apple += 2; GAME.mConsume.wheat += 2; GAME.mConsume.water += 1; GAME.mProduce.pie += 1; }
+                    if (GAME.recipes.bread.auto && GAME.resources.wheat.count >= 2) { GAME.resources.wheat.count -= 2; GAME.resources.bread.count++; GAME.mConsume.wheat += 2; GAME.mProduce.bread += 1; }
+                    if (GAME.recipes.cheese.auto && GAME.resources.milk.count >= 2 && GAME.resources.salt.count >= 1) { GAME.resources.milk.count -= 2; GAME.resources.salt.count -= 1; GAME.resources.cheese.count++; GAME.mConsume.milk += 2; GAME.mConsume.salt += 1; GAME.mProduce.cheese += 1; }
+                    if (GAME.recipes.yogurt.auto && GAME.resources.milk.count >= 2) { GAME.resources.milk.count -= 2; GAME.resources.yogurt.count++; GAME.mConsume.milk += 2; GAME.mProduce.yogurt += 1; }
+                    if (GAME.recipes.stew.auto && GAME.resources.meat.count >= 1 && GAME.resources.potato.count >= 1 && GAME.resources.tomato.count >= 1 && GAME.resources.salt.count >= 1) { GAME.resources.meat.count -= 1; GAME.resources.potato.count -= 1; GAME.resources.tomato.count -= 1; GAME.resources.salt.count -= 1; GAME.resources.stew.count++; GAME.mConsume.meat += 1; GAME.mConsume.potato += 1; GAME.mConsume.tomato += 1; GAME.mConsume.salt += 1; GAME.mProduce.stew += 1; }
+                    if (GAME.recipes.soup.auto && GAME.resources.fish.count >= 1 && GAME.resources.salt.count >= 1) { GAME.resources.fish.count -= 1; GAME.resources.salt.count -= 1; GAME.resources.soup.count++; GAME.mConsume.fish += 1; GAME.mConsume.salt += 1; GAME.mProduce.soup += 1; }
+                    if (GAME.recipes.skewer.auto && GAME.resources.meat.count >= 1 && GAME.resources.wood.count >= 1) { GAME.resources.meat.count -= 1; GAME.resources.wood.count -= 1; GAME.resources.skewer.count++; GAME.mConsume.meat += 1; GAME.mConsume.wood += 1; GAME.mProduce.skewer += 1; }
+                }
+            }
+            if (GAME.workers.blender.count > 0) {
+                let power = GAME.workers.blender.count;
+                for(let i=0; i<power; i++) {
+                    if (GAME.recipes.potion.auto && GAME.resources.herb.count >= 2) { GAME.resources.herb.count -= 2; GAME.resources.potion.count++; GAME.mConsume.herb += 2; GAME.mProduce.potion += 1; }
+                    if (GAME.recipes.spotion.auto && GAME.resources.spotion.unlocked && GAME.resources.superherb.count >= 2 && GAME.resources.water.count >= 1) { GAME.resources.superherb.count -= 2; GAME.resources.water.count -= 1; GAME.resources.spotion.count++; GAME.mConsume.superherb += 2; GAME.mConsume.water += 1; GAME.mProduce.spotion += 1; }
+                }
+            }
+            if (GAME.workers.craftsman.count > 0) {
+                let power = GAME.workers.craftsman.count;
+                for(let i=0; i<power; i++) {
+                    if (GAME.recipes.board.auto && GAME.resources.wood.count >= 2) { GAME.resources.wood.count -= 2; GAME.resources.board.count++; GAME.mConsume.wood += 2; GAME.mProduce.board += 1; }
+                    if (GAME.recipes.hboard.auto && GAME.resources.hardwood.count >= 2) { GAME.resources.hardwood.count -= 2; GAME.resources.hboard.count++; GAME.mConsume.hardwood += 2; GAME.mProduce.hboard += 1; }
+                    if (GAME.recipes.mason.auto && GAME.resources.stone.count >= 2) { GAME.resources.stone.count -= 2; GAME.resources.mason.count++; GAME.mConsume.stone += 2; GAME.mProduce.mason += 1; }
+                    if (GAME.recipes.bed.auto && GAME.resources.bed.unlocked && GAME.resources.board.count >= 2 && GAME.resources.hboard.count >= 1 && GAME.resources.wool.count >= 1) { GAME.resources.board.count -= 2; GAME.resources.hboard.count -= 1; GAME.resources.wool.count -= 1; GAME.resources.bed.count++; GAME.mConsume.board += 2; GAME.mConsume.hboard += 1; GAME.mConsume.wool += 1; GAME.mProduce.bed += 1; }
+                    if (GAME.recipes.ring.auto && GAME.resources.ring.unlocked && GAME.resources.silver.count >= 1) { GAME.resources.silver.count -= 1; GAME.resources.ring.count++; GAME.mConsume.silver += 1; GAME.mProduce.ring += 1; }
+                    if (GAME.recipes.diamond.auto && GAME.resources.diamond.unlocked && GAME.resources.gem.count >= 1) { GAME.resources.gem.count -= 1; GAME.resources.diamond.count++; GAME.mConsume.gem += 1; GAME.mProduce.diamond += 1; }
+                    if (GAME.recipes.tool.auto && GAME.resources.iron.count >= 2 && GAME.resources.board.count >= 1) { GAME.resources.iron.count -= 2; GAME.resources.board.count -= 1; GAME.resources.tool.count++; GAME.mConsume.iron += 2; GAME.mConsume.board += 1; GAME.mProduce.tool += 1; }
+                    if (GAME.recipes.wall.auto && GAME.resources.wall.unlocked && GAME.resources.mason.count >= 2 && GAME.resources.tool.count >= 1) { GAME.resources.mason.count -= 2; GAME.resources.tool.count -= 1; GAME.resources.wall.count++; GAME.mConsume.mason += 2; GAME.mConsume.tool += 1; GAME.mProduce.wall += 1; }
+                    if (GAME.recipes.relief.auto && GAME.resources.relief.unlocked && GAME.resources.tool.count >= 1 && GAME.resources.diamond.count >= 2 && GAME.resources.mason.count >= 4) { GAME.resources.tool.count -= 1; GAME.resources.diamond.count -= 2; GAME.resources.mason.count -= 4; GAME.resources.relief.count++; GAME.mConsume.tool += 1; GAME.mConsume.diamond += 2; GAME.mConsume.mason += 4; GAME.mProduce.relief += 1; }
+                }
+            }
+            if (GAME.workers.merchant.count > 0) {
+                let sellRate = GAME.workers.merchant.count * 2;
+                for (let k in GAME.autoSell) {
+                    if (GAME.autoSell[k] && GAME.resources[k].count >= 1) {
+                        let toSell = Math.min(Math.floor(GAME.resources[k].count), sellRate);
+                        GAME.gold += toSell * getCurrentPrice(k);
+                        GAME.resources[k].count -= toSell;
+                        GAME.mConsume[k] += toSell;
+                    }
+                }
+            }
+            updateUI();
+        }
+
+        setInterval(runGameLoop, 1000);
+        const resRes = ["salt", "juice", "ojuice", "gjuice", "mjuice", "salad", "fries", "pie", "potion", "spotion", "board", "hboard", "mason", "bed", "ring", "diamond", "tool", "wall", "relief"];
+        resRes.forEach(k => { GAME.resources[k].isCraft = true; });
+        updateLockState();
+        updateUI();
+    </script>
+</body>
+</html>
