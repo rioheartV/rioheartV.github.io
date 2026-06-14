@@ -3,27 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Site</title>
-<meta name="description" content="活動内容・リンク・ブラウザゲームをまとめたサイトです。">
+<title>リオ♡ハート</title>
+<meta name="description" content="VTuberリオ♡ハートとAItuberリオちゃんの、ゆる〜い配信＆創作サイト。ゆっくりしていってね！">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💙</text></svg>">
 </head>
 <body>
 
-<header class="hero">
+<div class="hearts" id="hearts"></div>
+
+<header>
   <nav class="nav">
-    <a href="#home" class="brand">My Site</a>
+    <a href="#home" class="brand">リオ♡ハート</a>
     <div class="nav-links">
       <a href="#about">活動</a>
-      <a href="#games">ゲーム</a>
+      <a href="#chars">キャラ</a>
+      <a href="#games">あそびば</a>
       <a href="#links">リンク</a>
     </div>
   </nav>
   <div class="hero-inner" id="home">
-    <h1>ようこそ 👋</h1>
-    <p class="lead">創作・AI・ブラウザゲームをつくっています。<br>ここで活動内容やリンク、作ったゲームを公開しています。</p>
+    <h1>ゆっくりしていってね！</h1>
+    <p class="lead">VTuber「リオ♡ハート」と AItuber「リオちゃん」の、ゆる〜い配信＆創作スペースです♡</p>
     <div class="hero-cta">
-      <a href="#games" class="btn btn-primary">ゲームで遊ぶ</a>
+      <a href="#chars" class="btn btn-primary">キャラを見る</a>
       <a href="#links" class="btn">リンクを見る</a>
     </div>
   </div>
@@ -32,51 +38,66 @@
 <main>
   <!-- 活動内容 -->
   <section id="about" class="section">
-    <h2>活動内容</h2>
+    <h2>活動内容 <span class="deco">♡</span></h2>
+    <p class="section-sub">のんびり、まったり、すきなことを。</p>
     <div class="cards">
       <div class="card">
-        <div class="card-icon">🎵</div>
-        <h3>音楽・音声</h3>
-        <p>AIを使った楽曲制作や音声合成に取り組んでいます。ここに説明文を書いてください。</p>
+        <div class="card-icon">🎤</div>
+        <span class="tag">歌・ゲーム・おしゃべり</span>
+        <h3>配信</h3>
+        <p>YouTube と X でゆる〜く活動中♡ 歌枠やゲーム実況、まったりおしゃべり配信をお届けしています。リオ♡ハートとリオちゃんの2人で、あなたの「ゆっくりできる場所」になれたらうれしいな。</p>
       </div>
       <div class="card">
         <div class="card-icon">🎨</div>
+        <span class="tag">AI × 創作</span>
         <h3>イラスト・アバター</h3>
-        <p>画像生成やアバター制作の活動内容を紹介します。自由に書き換えてください。</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎮</div>
-        <h3>ゲーム制作</h3>
-        <p>ブラウザで遊べるゲームを作っています。下の「ゲーム」から遊べます。</p>
+        <p>AIと一緒にイラストやアバターづくりに挑戦中。2人のかわいい姿も、衣装も、日々こっそり進化しています。新しい衣装はぜひ配信でチェックしてね！</p>
       </div>
     </div>
   </section>
 
-  <!-- ゲーム -->
-  <section id="games" class="section section-alt">
-    <h2>ブラウザゲーム</h2>
-    <p class="section-sub">クリックするとその場で遊べます。新しいゲームは <code>games/</code> フォルダに追加してカードを増やすだけ。</p>
+  <!-- キャラ紹介 -->
+  <section id="chars" class="section">
+    <h2>キャラクター <span class="deco">♡</span></h2>
+    <p class="section-sub">ふたりをよろしくね！</p>
+    <div class="chars">
+      <div class="char">
+        <div class="char-imgwrap char-rio">
+          <img class="char-img" src="assets/rioheart.png" alt="リオ♡ハート" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'char-noimg\'>画像 assets/rioheart.png を置くとここに表示されます</div>'">
+        </div>
+        <span class="char-badge badge-vt">VTuber</span>
+        <h3>リオ♡ハート</h3>
+        <p>青く煌めく魔法の戦士♡ 元気いっぱいで、歌うこととゲームが大好き。ちょっぴり負けず嫌いだけど、ピンチのときほど笑顔になる頼れる女の子。みんなと一緒に冒険するのが夢だよ！</p>
+      </div>
+      <div class="char">
+        <div class="char-imgwrap char-chan">
+          <img class="char-img" src="assets/riochan.png" alt="リオちゃん" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'char-noimg\'>画像 assets/riochan.png を置くとここに表示されます</div>'">
+        </div>
+        <span class="char-badge badge-ai">AItuber</span>
+        <h3>リオちゃん</h3>
+        <p>ふんわり優しい、もこもこ大好きなAIの女の子。おしゃべりが大好きで、いつでもあなたのそばに。寒い日はあったか着物でぬくぬく。のんびりまったり、一緒に過ごそうね♡</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- あそびば -->
+  <section id="games" class="section">
+    <h2>あそびば <span class="deco">♡</span></h2>
+    <p class="section-sub">ブラウザでそのまま遊べるよ。</p>
     <div class="cards">
       <a class="card game-card" href="games/nova-frontier/index.html">
         <div class="card-thumb">🏰</div>
         <h3>Nova Frontier</h3>
-        <p>開拓経営連鎖シミュレーション。資源を集め・加工し、町を発展させる放置系ゲーム。</p>
-        <span class="play-badge">▶ 遊ぶ</span>
+        <p>資源を集めて加工して、まちを発展させる放置系シミュレーション。職人を配置して、自分だけの生産ラインをつくろう！</p>
+        <span class="play-badge">▶ あそぶ</span>
       </a>
-      <!-- ゲームを追加する例（コメントを外して使う）
-      <a class="card game-card" href="games/your-game/index.html">
-        <div class="card-thumb">🕹️</div>
-        <h3>ゲーム名</h3>
-        <p>ゲームの説明。</p>
-        <span class="play-badge">▶ 遊ぶ</span>
-      </a>
-      -->
     </div>
   </section>
 
   <!-- リンク -->
   <section id="links" class="section">
-    <h2>リンク</h2>
+    <h2>リンク <span class="deco">♡</span></h2>
+    <p class="section-sub">遊びに来てくれたら嬉しいな！</p>
     <div class="links">
       <a class="link-item" href="https://x.com/rio_heart_ch" target="_blank" rel="noopener">
         <span class="link-icon">𝕏</span><span>X (Twitter)</span>
@@ -95,7 +116,7 @@
 </main>
 
 <footer class="footer">
-  <p>© <span id="year"></span> My Site</p>
+  <p>© <span id="year"></span> リオ♡ハート ｜ ゆっくりしていってね！</p>
 </footer>
 
 <script>
@@ -107,6 +128,20 @@
       if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
     });
   });
+  // ふわふわハート
+  (function(){
+    const wrap = document.getElementById('hearts');
+    const marks = ['♡','💙','💗','✨','🩵'];
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement('span');
+      s.textContent = marks[i % marks.length];
+      s.style.left = (Math.random()*100) + 'vw';
+      s.style.fontSize = (14 + Math.random()*22) + 'px';
+      s.style.animationDuration = (9 + Math.random()*10) + 's';
+      s.style.animationDelay = (-Math.random()*12) + 's';
+      wrap.appendChild(s);
+    }
+  })();
 </script>
 </body>
 </html>
