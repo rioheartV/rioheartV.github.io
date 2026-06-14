@@ -134,6 +134,7 @@
 
         <div class="section-title">👥 自動化の雇用と職人の技術強化</div>
         <div class="worker-controls">
+            <span style="font-weight:bold; color:#b45309;">🪙 <span id="worker-gold">0</span></span>
             <label class="auto-assign-label" style="font-size:0.78rem;"><input type="checkbox" id="global-auto" onchange="setAllAutoAssign(this.checked)"> 全職人を自動配置</label>
             <button onclick="redistributeAll()" style="background:#0369a1; padding:5px 10px; font-size:0.78rem;">⚖️ 均等再配置</button>
         </div>
@@ -153,6 +154,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (7)</b>：林業ラインの板材と木炭の順を入替。職人欄の上部に<b>現在の資金</b>を表示。各職人カードの<b>雇用と技術強化を横並び</b>に。配置人数の横に<b>配置先の内訳</b>（どの品に何人）を表示。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (6)</b>：<b>全職人を自動配置</b>チェック＆<b>⚖️均等再配置</b>ボタンを追加。酪農を<b>たまごLv2/羊毛Lv3/皮Lv4</b>に変更し<b>革・革鞄</b>を追加。オムレツの塩を削除。新素材<b>きのこ・ベリー・花・レモン</b>と、きのこソテー/レモネード/ベリータルト/香水を追加。加工品どうしの上位品<b>豪華ディナー・アフタヌーンティー</b>を追加。都市上限を<b>Lv9</b>へ。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (5)</b>：採取ボタンの横に<b>「💰全売却」ボタン</b>を追加（全在庫を一括換金）。発展ボタンの表記を短縮。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (4)</b>：自動配置を<b>既定OFF</b>に変更（＋ボタンが反応しない問題を修正）。ヒントを簡潔化。本「更新履歴」を追加。</p>
@@ -354,7 +356,7 @@
                 { title: "🌾 農業・調理ライン", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "pie", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
                 { title: "🍬 製糖・菓子ライン", materials: ["sugarcane"], crafts: ["sugar", "candy", "jam", "cake", "honeytoast"] },
                 { title: "🐄 酪農・羊毛・皮革ライン", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
-                { title: "🪵 林業・木工家具ライン", materials: ["wood", "hardwood", "maple"], crafts: ["charcoal", "board", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
+                { title: "🪵 林業・木工家具ライン", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
                 { title: "🪨 鉱業・鍛冶・要塞ライン", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "steel", "statue", "tool", "silvertool", "goldtool", "ring", "diamond", "crown", "wall", "relief"] },
                 { title: "🍖 漁業・狩猟ライン", materials: ["fish", "meat"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak"] },
                 { title: "🔧 独自レシピ工房（オリジナル加工品）", materials: [], crafts: [], custom: true }
@@ -783,6 +785,7 @@
         function updateUI() {
             updateLockState();
             document.getElementById('stat-gold').innerText = Math.floor(GAME.gold).toLocaleString();
+            let wg = document.getElementById('worker-gold'); if (wg) wg.innerText = Math.floor(GAME.gold).toLocaleString();
             document.getElementById('stat-town-lv').innerText = GAME.townLevel;
             document.getElementById('stat-town-rank').innerText = GAME.townNames[GAME.townLevel];
             document.getElementById('emoji-display').innerText = GAME.townEmojis[GAME.townLevel] || "🏰";
@@ -826,15 +829,20 @@
                 let upCost = Math.floor(worker.baseCost * 2 * worker.lv);
                 let nextUnlockHTML = worker.canUpgrade ? getNextUnlockHint(k, worker.lv) : '';
                 let upgradeBtnHTML = worker.canUpgrade
-                    ? `<button onclick="upgradeWorker('${k}')" ${GAME.gold >= upCost && worker.count > 0 ? '' : 'disabled'} style="width:100%; padding:4px; font-size:0.75rem; background:#d97706; margin-top:2px;">技術強化:🪙${upCost}</button>`
+                    ? `<button onclick="upgradeWorker('${k}')" ${GAME.gold >= upCost && worker.count > 0 ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#d97706;">技術強化:🪙${upCost}</button>`
                     : '';
-                // 配置状況＋自動配置チェック（商人以外）
+                // 配置状況＋配置先の内訳＋自動配置チェック（商人以外）
                 let assignInfoHTML = '';
                 if (k !== 'merchant') {
                     let used = getAssignedTotal(k);
                     let autoChk = worker.autoAssign ? 'checked' : '';
+                    let breakdown = Object.keys(GAME.resources)
+                        .filter(rk => GAME.assigned[rk] > 0 && resWorkerKey(rk) === k)
+                        .map(rk => `${GAME.resources[rk].icon}${GAME.resources[rk].name}:${GAME.assigned[rk]}`).join(' / ');
+                    let breakdownHTML = breakdown ? `<div style="font-size:0.66rem; color:#475569; word-break:break-word;">→ ${breakdown}</div>` : '';
                     assignInfoHTML = `
                         <div style="font-size:0.68rem; color:#0369a1; font-weight:bold;">配置 ${used}/${worker.count}人（空${worker.count - used}）</div>
+                        ${breakdownHTML}
                         <label class="auto-assign-label"><input type="checkbox" ${autoChk} onchange="toggleAutoAssign('${k}', this.checked)"> 雇用時に自動配置</label>`;
                 }
                 workerHtml += `
@@ -845,8 +853,10 @@
                             ${nextUnlockHTML}
                             ${assignInfoHTML}
                         </div>
-                        <button onclick="hireWorker('${k}')" ${GAME.gold >= hireCost ? '' : 'disabled'} style="width:100%; padding:4px; font-size:0.75rem; background:#047857;">雇用:🪙${hireCost}</button>
-                        ${upgradeBtnHTML}
+                        <div style="display:flex; gap:4px; margin-top:2px;">
+                            <button onclick="hireWorker('${k}')" ${GAME.gold >= hireCost ? '' : 'disabled'} style="flex:1; padding:4px; font-size:0.75rem; background:#047857;">雇用:🪙${hireCost}</button>
+                            ${upgradeBtnHTML}
+                        </div>
                     </div>`;
             }
             document.getElementById('worker-area').innerHTML = workerHtml;
