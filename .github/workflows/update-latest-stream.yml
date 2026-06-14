@@ -1,0 +1,42 @@
+name: Update latest stream archive
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # 30分ごと（GitHubの都合で多少遅れることがあります）
+  workflow_dispatch:          # 手動実行も可
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-latest
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest video from channel RSS
+        run: |
+          CID=UCdYUucnE_qXthBNkyI8aAEw
+          curl -sfL "https://www.youtube.com/feeds/videos.xml?channel_id=${CID}" -o feed.xml
+          VID=$(grep -o '<yt:videoId>[^<]*' feed.xml | head -1 | sed 's/<yt:videoId>//')
+          rm -f feed.xml
+          if [ -z "$VID" ]; then echo "No video id found; skipping"; exit 0; fi
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          printf '{"videoId":"%s","url":"https://www.youtube.com/watch?v=%s","updated":"%s"}\n' "$VID" "$VID" "$NOW" > latest.json
+          echo "latest = $VID"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- latest.json; then
+            echo "No change."
+          else
+            git add latest.json
+            git commit -m "chore: update latest stream archive link"
+            git push
+          fi

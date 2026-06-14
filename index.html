@@ -46,6 +46,7 @@
         <span class="tag">ゲーム・おしゃべり</span>
         <h3>配信</h3>
         <p>YouTube と X でゆる〜く活動中♡ ゲーム実況や、まったりおしゃべり配信をお届けしています。リオ♡ハートとリオちゃんの2人で、あなたの「ゆっくりできる場所」になれたらうれしいな。</p>
+        <a id="latest-archive" class="archive-btn" href="https://www.youtube.com/channel/UCdYUucnE_qXthBNkyI8aAEw/streams" target="_blank" rel="noopener">📺 最新の配信アーカイブを見る</a>
       </div>
       <div class="card">
         <div class="card-icon">🎨</div>
@@ -121,6 +122,11 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+  // 最新の配信アーカイブへ自動リンク（latest.json は GitHub Actions が定期更新）
+  fetch('latest.json?t=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.url) document.getElementById('latest-archive').href = d.url; })
+    .catch(() => {});
   // スムーズスクロール
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
