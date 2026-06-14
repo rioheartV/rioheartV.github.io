@@ -10,6 +10,19 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💙</text></svg>">
+<style>
+  /* ゲームカードのミニ町サムネ */
+  .card-thumb .town-thumb { width: 92%; height: auto; display: block; }
+  .card-thumb .town-thumb rect, .card-thumb .town-thumb polygon { shape-rendering: crispEdges; }
+  .thumb-rio { transform-box: fill-box; transform-origin: bottom center; animation: sdBob 1.5s ease-in-out infinite; }
+  /* マウス追従SDキャラ */
+  #sd-followers { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
+  #sd-followers .sd { position: fixed; left: -18px; top: -22px; will-change: transform; }
+  #sd-followers .sd-body { animation: sdBob 1.1s ease-in-out infinite; transform-origin: bottom center; }
+  #sd-followers svg { display: block; shape-rendering: crispEdges; filter: drop-shadow(0 2px 2px rgba(120,90,140,.28)); }
+  @keyframes sdBob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+  @media (hover: none) { #sd-followers { display: none; } }
+</style>
 </head>
 <body>
 
@@ -87,7 +100,34 @@
     <p class="section-sub">ブラウザでそのまま遊べるよ。</p>
     <div class="cards">
       <a class="card game-card" href="games/nova-frontier/index.html">
-        <div class="card-thumb">💗</div>
+        <div class="card-thumb">
+          <svg class="town-thumb" viewBox="0 0 140 84" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="60" width="140" height="24" fill="#bfe79a"/>
+            <rect x="0" y="60" width="140" height="3" fill="#a9d97f"/>
+            <rect x="16" y="49" width="5" height="13" fill="#8a5a2b"/>
+            <circle cx="18" cy="44" r="9" fill="#6fbf73"/><circle cx="11" cy="48" r="6" fill="#5fb069"/><circle cx="25" cy="48" r="6" fill="#5fb069"/>
+            <circle cx="14" cy="44" r="2" fill="#ff6b6b"/><circle cx="22" cy="46" r="2" fill="#ff6b6b"/><circle cx="18" cy="49" r="2" fill="#ff6b6b"/>
+            <rect x="54" y="40" width="26" height="22" fill="#efe2c9"/>
+            <rect x="54" y="40" width="26" height="2" fill="#ffd34d"/>
+            <rect x="54" y="38" width="4" height="3" fill="#d8c4a0"/><rect x="64" y="38" width="4" height="3" fill="#d8c4a0"/><rect x="74" y="38" width="4" height="3" fill="#d8c4a0"/>
+            <rect x="58" y="45" width="5" height="5" fill="#bfe3ff"/><rect x="71" y="45" width="5" height="5" fill="#bfe3ff"/>
+            <rect x="62" y="52" width="10" height="10" fill="#9c6b3f"/>
+            <rect x="79" y="28" width="2" height="12" fill="#8a8a8a"/><polygon points="81,28 89,30 81,32" fill="#ff6fae"/>
+            <polygon points="96,46 108,38 120,46" fill="#ff9f6b"/><rect x="98" y="46" width="20" height="16" fill="#fbf3e4"/>
+            <rect x="105" y="53" width="6" height="9" fill="#a9764a"/><rect x="100" y="49" width="4" height="4" fill="#bfe3ff"/><rect x="112" y="49" width="4" height="4" fill="#bfe3ff"/>
+            <g transform="translate(53,38) scale(1.6)"><g class="thumb-rio">
+              <rect x="3" y="1" width="8" height="2" fill="#f3d279"/><rect x="2" y="3" width="2" height="6" fill="#f3d279"/><rect x="10" y="3" width="2" height="6" fill="#f3d279"/><rect x="4" y="3" width="6" height="1" fill="#f3d279"/>
+              <rect x="10" y="1" width="2" height="2" fill="#ff8a5c"/><rect x="10" y="1" width="1" height="1" fill="#ffd34d"/>
+              <rect x="4" y="4" width="6" height="4" fill="#ffe2c8"/>
+              <rect x="5" y="5" width="1" height="2" fill="#4f86d6"/><rect x="8" y="5" width="1" height="2" fill="#4f86d6"/>
+              <rect x="4" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="9" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="7" y="7" width="1" height="1" fill="#e07da0"/>
+              <rect x="3" y="9" width="1" height="2" fill="#ffe2c8"/><rect x="10" y="9" width="1" height="2" fill="#ffe2c8"/>
+              <rect x="4" y="8" width="6" height="1" fill="#ffb3d1"/><rect x="4" y="9" width="6" height="2" fill="#ffb3d1"/><rect x="4" y="10" width="6" height="1" fill="#7fc4ff"/>
+              <rect x="3" y="11" width="8" height="2" fill="#fdeef5"/><rect x="2" y="13" width="10" height="1" fill="#fdeef5"/>
+              <rect x="5" y="14" width="1" height="1" fill="#ffe2c8"/><rect x="8" y="14" width="1" height="1" fill="#ffe2c8"/><rect x="4" y="15" width="2" height="1" fill="#f5a8c8"/><rect x="8" y="15" width="2" height="1" fill="#f5a8c8"/>
+            </g></g>
+          </svg>
+        </div>
         <h3>Virtual Town</h3>
         <p>資源を集めて加工して、まちを発展させる放置系シミュレーション。ドット絵のリオちゃんを配置して、自分だけのかわいい生産ラインをつくろう♡</p>
         <span class="play-badge">▶ あそぶ</span>
@@ -147,6 +187,62 @@
       s.style.animationDelay = (-Math.random()*12) + 's';
       wrap.appendChild(s);
     }
+  })();
+</script>
+<!-- マウス追従SDキャラ（リオ＆リオちゃん） -->
+<div id="sd-followers" aria-hidden="true">
+  <div class="sd sd-riochan"><div class="sd-body">
+    <svg viewBox="0 0 14 16" width="36" height="41" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="1" width="8" height="2" fill="#f3d279"/><rect x="2" y="3" width="2" height="6" fill="#f3d279"/><rect x="10" y="3" width="2" height="6" fill="#f3d279"/><rect x="4" y="3" width="6" height="1" fill="#f3d279"/>
+      <rect x="10" y="1" width="2" height="2" fill="#ff8a5c"/><rect x="10" y="1" width="1" height="1" fill="#ffd34d"/>
+      <rect x="4" y="4" width="6" height="4" fill="#ffe2c8"/>
+      <rect x="5" y="5" width="1" height="2" fill="#4f86d6"/><rect x="8" y="5" width="1" height="2" fill="#4f86d6"/><rect x="5" y="5" width="1" height="1" fill="#dceaff"/><rect x="8" y="5" width="1" height="1" fill="#dceaff"/>
+      <rect x="4" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="9" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="7" y="7" width="1" height="1" fill="#e07da0"/>
+      <rect x="3" y="9" width="1" height="2" fill="#ffe2c8"/><rect x="10" y="9" width="1" height="2" fill="#ffe2c8"/>
+      <rect x="4" y="8" width="6" height="1" fill="#ffb3d1"/><rect x="4" y="9" width="6" height="2" fill="#ffb3d1"/><rect x="4" y="10" width="6" height="1" fill="#7fc4ff"/>
+      <rect x="3" y="11" width="8" height="2" fill="#fdeef5"/><rect x="2" y="13" width="10" height="1" fill="#fdeef5"/>
+      <rect x="5" y="14" width="1" height="1" fill="#ffe2c8"/><rect x="8" y="14" width="1" height="1" fill="#ffe2c8"/><rect x="4" y="15" width="2" height="1" fill="#f5a8c8"/><rect x="8" y="15" width="2" height="1" fill="#f5a8c8"/>
+    </svg>
+  </div></div>
+  <div class="sd sd-rio"><div class="sd-body">
+    <svg viewBox="0 0 14 18" width="36" height="46" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="0" width="1" height="1" fill="#f3d279"/>
+      <rect x="3" y="1" width="8" height="2" fill="#f3d279"/><rect x="3" y="2" width="8" height="1" fill="#2f6bd6"/><rect x="4" y="3" width="6" height="1" fill="#f3d279"/>
+      <rect x="2" y="3" width="2" height="10" fill="#f3d279"/><rect x="10" y="3" width="2" height="10" fill="#f3d279"/>
+      <rect x="4" y="4" width="6" height="4" fill="#ffe2c8"/>
+      <rect x="5" y="5" width="1" height="2" fill="#4f86d6"/><rect x="8" y="5" width="1" height="2" fill="#4f86d6"/><rect x="5" y="5" width="1" height="1" fill="#dceaff"/><rect x="8" y="5" width="1" height="1" fill="#dceaff"/>
+      <rect x="4" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="9" y="6" width="1" height="1" fill="#ffb3d1"/><rect x="7" y="7" width="1" height="1" fill="#d66a8a"/>
+      <rect x="4" y="8" width="6" height="2" fill="#ffffff"/><rect x="6" y="8" width="2" height="1" fill="#2f6bd6"/>
+      <rect x="3" y="8" width="1" height="4" fill="#2f6bd6"/><rect x="10" y="8" width="1" height="4" fill="#2f6bd6"/>
+      <rect x="4" y="10" width="6" height="1" fill="#ffd34d"/><rect x="4" y="11" width="6" height="2" fill="#2f6bd6"/>
+      <rect x="5" y="13" width="1" height="1" fill="#ffe2c8"/><rect x="8" y="13" width="1" height="1" fill="#ffe2c8"/>
+      <rect x="5" y="14" width="1" height="3" fill="#2f6bd6"/><rect x="8" y="14" width="1" height="3" fill="#2f6bd6"/><rect x="4" y="16" width="2" height="1" fill="#2f6bd6"/><rect x="8" y="16" width="2" height="1" fill="#2f6bd6"/>
+    </svg>
+  </div></div>
+</div>
+<script>
+  (function(){
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var box = document.getElementById('sd-followers');
+    if (!box) return;
+    var chan = box.querySelector('.sd-riochan');
+    var rio  = box.querySelector('.sd-rio');
+    var mx = innerWidth * 0.5, my = innerHeight * 0.5;
+    var c = { x: mx, y: my, f: 1 }, r = { x: mx, y: my, f: 1 };
+    addEventListener('pointermove', function(e){ mx = e.clientX; my = e.clientY; }, { passive: true });
+    function L(a, b, t){ return a + (b - a) * t; }
+    function tick(){
+      var tx = mx - 18, ty = my - 62;                 // リオちゃんは矢印の少し上に浮く
+      var nx = L(c.x, tx, 0.13), ny = L(c.y, ty, 0.13);
+      if (nx < c.x - 0.4) c.f = -1; else if (nx > c.x + 0.4) c.f = 1;
+      c.x = nx; c.y = ny;
+      var rx = c.x - 40 * c.f, ry = c.y + 6;           // リオはリオちゃんの後ろをついていく
+      r.f = c.f; r.x = L(r.x, rx, 0.10); r.y = L(r.y, ry, 0.10);
+      chan.style.transform = 'translate(' + c.x + 'px,' + c.y + 'px) scaleX(' + c.f + ')';
+      rio.style.transform  = 'translate(' + r.x + 'px,' + r.y + 'px) scaleX(' + r.f + ')';
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
   })();
 </script>
 </body>

@@ -148,13 +148,57 @@
         .quality-label { background:#fff0d6; color:#e08a2e; }
 
         /* ドット絵リオちゃん */
-        .dotrio { display:inline-block; vertical-align:bottom; animation: rioBob 1s ease-in-out infinite; transform-origin: bottom center; }
+        .dotrio { display:inline-block; position:relative; vertical-align:bottom; transform-origin: bottom center; }
         .dotrio svg { display:block; shape-rendering: crispEdges; image-rendering: pixelated; }
-        @keyframes rioBob { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(-2deg); } }
+        /* 飛び出す成果物エフェクト（1秒ループ＝毎秒1個できる演出） */
+        .rio-fx { position:absolute; left:50%; top:-4px; transform:translateX(-50%); font-size:11px; line-height:1; pointer-events:none; animation: fxFloat 1s ease-out infinite; }
+        @keyframes fxFloat { 0% { transform:translate(-50%,5px) scale(.4); opacity:0; } 35% { opacity:1; } 100% { transform:translate(-50%,-11px) scale(1); opacity:0; } }
+        /* 職業別の作業モーション（周期は1秒の約数＝毎秒の再描画でも途切れない） */
+        @keyframes rioBob    { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-2deg); } }
+        @keyframes actGather { 0% { transform: translateY(0) rotate(0); } 35%,55% { transform: translateY(3px) rotate(-13deg); } 100% { transform: translateY(0) rotate(0); } }
+        @keyframes actCook   { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+        @keyframes actMix    { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-4deg); } }
+        @keyframes actCraft  { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-2px) rotate(3deg); } }
+        @keyframes armSwing  { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-42deg); } }
+        .act-idle   { animation: rioBob 1s ease-in-out infinite; }
+        .act-gather { animation: actGather 1s ease-in-out infinite; }
+        .act-cook   { animation: actCook 1s ease-in-out infinite; }
+        .act-mix    { animation: actMix 1s ease-in-out infinite; }
+        .act-craft  { animation: actCraft .5s ease-in-out infinite; }
+        .act-craft .rarm { transform-box: fill-box; transform-origin: top center; animation: armSwing .5s ease-in-out infinite; }
+        .act-gather .rarm, .act-gather .larm { transform-box: fill-box; transform-origin: top center; animation: armSwing 1s ease-in-out infinite; }
         .rio-strip { display:flex; flex-wrap:wrap; align-items:flex-end; gap:2px; margin-top:4px; }
         .rio-strip .more { font-size:.72rem; color:#a65a8a; font-weight:bold; align-self:center; margin-left:2px; }
         .rio-portrait { flex:0 0 auto; text-align:center; }
         .rio-tool { font-size:.85rem; line-height:1; margin-top:1px; }
+
+        /* タウンマップ */
+        #town-map { position:relative; flex:1; min-width:0; margin:0; border:2px solid #ffd1e8; border-radius:16px; overflow:hidden;
+            background:linear-gradient(180deg,#c2eaff 0%,#dbf4ff 56%,#eaf7cd 57%,#cfeaa0 100%); box-shadow: inset 0 -8px 16px rgba(120,180,90,.16); }
+        .map-banner { position:absolute; top:7px; left:50%; transform:translateX(-50%); z-index:4;
+            background:rgba(255,255,255,.9); border:1.5px solid #ffd1e8; border-radius:999px; padding:2px 14px;
+            font-size:.82rem; font-weight:800; color:#ff6fae; white-space:nowrap; box-shadow:0 2px 6px rgba(255,150,200,.25); }
+        #map-scene { position:relative; }
+        #map-scene > svg { display:block; width:100%; height:auto; shape-rendering:crispEdges; }
+        .map-actors { position:absolute; inset:0; pointer-events:none; }
+        .map-actors .walker { position:absolute; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+        @keyframes wanderA { 0%{left:6%;bottom:8%;} 25%{left:40%;bottom:13%;} 45%{left:40%;bottom:13%;} 72%{left:70%;bottom:7%;} 100%{left:6%;bottom:8%;} }
+        @keyframes wanderB { 0%{left:72%;bottom:14%;} 30%{left:28%;bottom:8%;} 55%{left:50%;bottom:12%;} 80%{left:50%;bottom:12%;} 100%{left:72%;bottom:14%;} }
+        @keyframes wanderC { 0%{left:20%;bottom:10%;} 35%{left:62%;bottom:15%;} 62%{left:34%;bottom:8%;} 100%{left:20%;bottom:10%;} }
+        .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
+        @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
+        .develop-btn { display:block; margin:0; }
+        .play-area { display:flex; gap:8px; align-items:stretch; margin:8px 0 12px; }
+        .side-buttons { flex:0 0 34%; max-width:200px; display:flex; flex-direction:column; gap:6px; }
+        .side-buttons button { width:100%; }
+        .side-buttons .mini-gather, .side-buttons .mini-sell { padding:10px; font-size:.9rem; }
+        .side-buttons .dev-reqs { margin:0; }
+        @media (max-width:540px){
+            .play-area { flex-direction:column; }
+            .side-buttons { flex:none; max-width:none; flex-direction:row; flex-wrap:wrap; }
+            .side-buttons button { flex:1; }
+            .side-buttons .dev-reqs { flex-basis:100%; }
+        }
     </style>
 </head>
 <body>
@@ -164,22 +208,20 @@
 
         <div class="status-box">
             <div>💰 <span id="stat-gold" class="gold-text">0</span>チャリン</div>
-            <div><span id="stat-town-rank">始まりの野原</span> (Lv.<span id="stat-town-lv">1</span>)</div>
         </div>
 
-        <div id="world-view">
-            <span id="world-rio"></span>
-            <span class="dot-anime" id="emoji-display">⛺</span>
-            <span class="pixel-puff" style="left:20%;">🫧</span>
-            <span class="pixel-puff" style="left:75%; animation-delay:0.8s;">✨</span>
+        <div class="play-area">
+            <div class="side-buttons">
+                <button class="mini-gather" onclick="manualGather()">🌾 採取</button>
+                <button class="mini-sell" onclick="sellAll()">💰 全売却</button>
+                <button id="town-upgrade-btn" class="develop-btn" onclick="upgradeTown()">🏰 発展</button>
+                <div class="dev-reqs" id="town-requirements"></div>
+            </div>
+            <div id="town-map">
+                <div class="map-banner">🏰 <span id="stat-town-rank">始まりの野原</span> ・ Lv.<span id="stat-town-lv">1</span></div>
+                <div id="map-scene"></div>
+            </div>
         </div>
-
-        <div class="top-actions">
-            <button class="mini-gather" onclick="manualGather()">🌾 採取</button>
-            <button class="mini-sell" onclick="sellAll()">💰 全売却</button>
-            <button id="town-upgrade-btn" class="develop-btn" onclick="upgradeTown()">🏰 発展</button>
-        </div>
-        <div class="dev-reqs" id="town-requirements"></div>
 
         <div class="section-title">📦 生産管理ツリー（左：素材収支 ➔ 右：対応する加工設備）。職人を「👷配置」した品だけ生産されます</div>
         <div class="line-container" id="production-lines"></div>
@@ -209,6 +251,9 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (11)</b>：採取・全売却・発展ボタンを<b>マップの左横に縦並び</b>へ（マップは右で横幅すっきり／スマホは縦積み）。歩くリオちゃんを<b>雇用総数10人ごとに1人（最大6人）</b>に変更し、<b>ゆっくり・経路と速度をバラバラ</b>にして自然な歩き回りに。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (10)</b>：UI刷新。上部を【💰チャリン → 発展ボタン → <b>タウンマップ</b>】に再構成し、町Lv・集落名はマップ上のバナーへ。タウンマップは<b>町Lvや生産加工ラインの解放で発展</b>（加工ライン＝<b>家</b>／採取＝<b>木・畑・牧場・松・岩・池</b>のドット絵、稼働中の工房は<b>煙</b>、中央の城はLvで成長、リオちゃんがマップを歩く）。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (9)</b>：ドット絵リオちゃんに<b>職業別の作業モーション</b>を追加（採取＝かがんで採る／料理＝混ぜる／調合＝ゆらゆら／建造＝腕を振る）。配置した品が<b>ふわっと飛び出すエフェクト</b>で「作ってる感」を演出。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (8)</b>：ゲーム名を<b>Virtual Town</b>に変更♡ 通貨単位を<b>チャリン</b>に。配置・雇用した職人を<b>ドット絵のリオちゃん</b>で表示し、<b>職業ごとに服装・帽子・持ち物</b>が変化。UIを<b>かわいいパステル＆ハート基調</b>にリニューアル。大量雇用時の費用増加を<b>ゆるめ</b>に調整。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (7)</b>：林業ラインの板材と木炭の順を入替。職人欄の上部に<b>現在の資金</b>を表示。各職人カードの<b>雇用と技術強化を横並び</b>に。配置人数の横に<b>配置先の内訳</b>（どの品に何人）を表示。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (6)</b>：<b>全職人を自動配置</b>チェック＆<b>⚖️均等再配置</b>ボタンを追加。酪農を<b>たまごLv2/羊毛Lv3/皮Lv4</b>に変更し<b>革・革鞄</b>を追加。オムレツの塩を削除。新素材<b>きのこ・ベリー・花・レモン</b>と、きのこソテー/レモネード/ベリータルト/香水を追加。加工品どうしの上位品<b>豪華ディナー・アフタヌーンティー</b>を追加。都市上限を<b>Lv9</b>へ。</p>
@@ -464,10 +509,14 @@
         };
         function themeFor(wk) { return WORKER_THEME[wk] || { dress:'#ff9ecb', cap:'#ffd1e8', tool:'💗' }; }
 
+        // 職業ごとの作業モーション（加工職＝専用、それ以外の採取系＝gather）
+        const WORKER_ACTION = { cook:'cook', blender:'mix', craftsman:'craft', merchant:'idle' };
+        function actionFor(wk) { return WORKER_ACTION[wk] || 'gather'; }
+
         // 1体ぶんのドットリオちゃんSVGを返す
         // リオちゃんの素体は固定：金髪ボブ＋青い目＋オレンジの花の髪飾り＋ピンクの靴。
         // 職業ごとに帽子(cap)・上衣(top)・スカート(skirt)・リボン(ribbon)・持ち物(tool)を変える。
-        function riochanSVG(theme, px) {
+        function riochanSVG(theme, px, action, fx) {
             px = px || 28;
             const t = theme || {};
             const top = t.top || t.dress || '#ffb3d1';     // 上衣（既定＝ピンク）
@@ -486,23 +535,129 @@
             s += r(5,5,1,1,'#dceaff') + r(8,5,1,1,'#dceaff');// ハイライト
             s += r(4,6,1,1,'#ffb3d1') + r(9,6,1,1,'#ffb3d1');// ほっぺ
             s += r(7,7,1,1,'#e07da0');                       // 口
-            s += r(3,9,1,2,SKIN) + r(10,9,1,2,SKIN);        // 腕
+            s += `<rect class="larm" x="3" y="9" width="1" height="2" fill="${SKIN}"/>`; // 左腕（動く）
+            s += `<rect class="rarm" x="10" y="9" width="1" height="2" fill="${SKIN}"/>`;// 右腕（動く）
             s += r(4,8,6,1,top) + r(4,9,6,2,top);           // 上衣（肩〜胴）
             if (ribbon) s += r(4,10,6,1,ribbon) + r(6,10,2,1,'rgba(0,0,0,.12)'); // 腰リボン＋結び目
             s += r(3,11,8,2,skirt) + r(2,13,10,1,skirt) + r(2,13,10,1,'rgba(0,0,0,.10)'); // スカート＋裾の影
             s += r(5,14,1,1,SKIN) + r(8,14,1,1,SKIN) + r(4,15,2,1,SHOE) + r(8,15,2,1,SHOE);// 足・ピンクの靴
             const h = Math.round(px * 16 / 14);
-            return `<span class="dotrio" title="リオちゃん"><svg viewBox="0 0 14 16" width="${px}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></span>`;
+            const fxHTML = fx ? `<span class="rio-fx">${fx}</span>` : '';
+            return `<span class="dotrio act-${action || 'idle'}" title="リオちゃん"><svg viewBox="0 0 14 16" width="${px}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg>${fxHTML}</span>`;
         }
 
-        // 配置人数ぶんのミニリオちゃん（最大4体＋「+N」）
-        function assignedSprites(workerKey, n) {
+        // 配置人数ぶんのミニリオちゃん（最大4体＋「+N」）。resKey=作っている品（飛び出すアイコンに使う）
+        function assignedSprites(workerKey, n, resKey) {
             if (!workerKey || n <= 0) return '';
+            const action = actionFor(workerKey);
+            const fx = (resKey && GAME.resources[resKey]) ? GAME.resources[resKey].icon : '';
             const cap = Math.min(n, 4);
             let s = '<div class="rio-strip">';
-            for (let i = 0; i < cap; i++) s += riochanSVG(themeFor(workerKey), 22);
+            for (let i = 0; i < cap; i++) s += riochanSVG(themeFor(workerKey), 22, action, fx);
             if (n > cap) s += `<span class="more">+${n - cap}</span>`;
             return s + '</div>';
+        }
+
+        // ============ タウンマップ（町Lv・生産加工ラインの解放で発展） ============
+        const HOUSE_ROOFS = ['#ff8fc7','#ff9f6b','#8ec9ff','#b89bf0','#7ed99a','#ffd166','#7fd0d0','#e07da0','#9ec96b','#c98b6a'];
+        const NATURE_BY_WORKER = { gatherer:'tree', farmer:'field', dairy:'barn', logger:'pine', miner:'rocks', hunter:'pond' };
+
+        function unlockedRawCount(wk) {
+            let n = 0;
+            for (let k in GAME.resources) { let r = GAME.resources[k]; if (!r.isCraft && r.unlocked && r.workerKey === wk) n++; }
+            return n;
+        }
+        // SVG部品（ローカル16×16・地面=y16）
+        function _r(x,y,w,h,c){ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`; }
+        function _p(pts,c){ return `<polygon points="${pts}" fill="${c}"/>`; }
+        function _c(cx,cy,r,c){ return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}"/>`; }
+        function propHouse(roof, working) {
+            let s = _p('1,7 8,1 15,7', roof) + _r(2,7,12,9,'#fbf3e4')
+                  + _r(6,11,3,5,'#a9764a') + _r(3,8,2,2,'#bfe3ff') + _r(10,8,2,2,'#bfe3ff') + _r(11,3,2,4, roof);
+            if (working) s += `<g transform="translate(12,3)"><g class="smoke"><circle r="1.3" fill="#fff" opacity=".85"/></g></g>`
+                            + `<g transform="translate(12,3)"><g class="smoke" style="animation-delay:1s"><circle r="1" fill="#fff" opacity=".7"/></g></g>`;
+            return s;
+        }
+        function propTree(){ return _r(7,10,2,6,'#8a5a2b')+_c(8,7,5,'#6fbf73')+_c(5,9,3,'#5fb069')+_c(11,9,3,'#5fb069')+_c(6,6,1,'#ff6b6b')+_c(10,7,1,'#ff6b6b')+_c(8,9,1,'#ff6b6b'); }
+        function propPine(){ return _r(7,12,2,4,'#7a4a2b')+_p('8,1 3,7 13,7','#4f9e57')+_p('8,5 2,13 14,13','#56a85f'); }
+        function propField(){ let s=_r(1,12,14,4,'#caa46a'); [2,5,8,11].forEach(x=>s+=_r(x,10,1,3,'#7ec850')); return s; }
+        function propBarn(){ return _p('1,7 8,2 15,7','#a84a3c')+_r(2,7,12,9,'#d36b5a')+_r(6,10,4,6,'#fbf3e4'); }
+        function propRocks(){ return _c(5,14,3,'#9aa3b2')+_c(10,13,4,'#8893a3')+_c(10,12,1,'#cfe0ff')+_c(5,13,1,'#d6c27a'); }
+        function propPond(){ return `<ellipse cx="8" cy="14" rx="7" ry="3" fill="#7fc8ff"/>`+_c(6,13,1,'#dff1ff'); }
+        function propFlower(c){ return _r(8,12,1,4,'#5fae5f')+_c(8,10,2,c)+_c(8,10,1,'#ffd34d'); }
+        function natureProp(t){ return t==='pine'?propPine():t==='field'?propField():t==='barn'?propBarn():t==='rocks'?propRocks():t==='pond'?propPond():propTree(); }
+        function place(inner, tx, ty, s){ return `<g transform="translate(${tx},${ty}) scale(${s})">${inner}</g>`; }
+        function landmark(level){
+            let s = _r(7,6,10,14,'#efe2c9') + _r(7,5,2,2,'#d8c4a0') + _r(11,5,2,2,'#d8c4a0') + _r(15,5,2,2,'#d8c4a0')
+                  + _r(10,13,4,7,'#9c6b3f') + _r(9,9,2,2,'#bfe3ff') + _r(13,9,2,2,'#bfe3ff')
+                  + _r(12,-1,1,6,'#8a8a8a') + _p('13,-1 17,0 13,1','#ff6fae');
+            if (level >= 4) s += _r(3,8,4,12,'#efe2c9')+_p('3,8 5,4 7,8','#ff9f6b')+_r(17,8,4,12,'#efe2c9')+_p('17,8 19,4 21,8','#ff9f6b');
+            if (level >= 6) s += _r(7,6,10,1,'#ffd34d');
+            return s;
+        }
+        function townMapSignature(){
+            let w = ['gatherer','farmer','dairy','logger','miner','hunter'].map(unlockedRawCount).join('-');
+            let l = GAME.lines.filter(x=>!x.custom).map(line=>{
+                let cr=(line.crafts||[]).filter(c=>GAME.resources[c]&&GAME.resources[c].unlocked);
+                return cr.length + (cr.some(c=>GAME.assigned[c]>0)?'w':'');
+            }).join('.');
+            return [GAME.townLevel, w, l, GAME.customKeys.length, mapWalkerCount()].join('|');
+        }
+        function renderTownMap(){
+            let scene = document.getElementById('map-scene');
+            if (!scene) return;
+            let sig = townMapSignature();
+            if (sig === GAME._mapSig) return;   // 見た目が変わる時だけ再生成
+            GAME._mapSig = sig;
+            const G = 84;
+            let svg = `<svg viewBox="0 0 240 110" xmlns="http://www.w3.org/2000/svg">`;
+            svg += _r(0,G,240,110-G,'#bfe79a') + _r(0,G,240,3,'#a9d97f') + `<rect x="0" y="101" width="240" height="5" fill="#e8d6a0" opacity=".6"/>`;
+            let ls = 1 + (GAME.townLevel-1)*0.07;
+            svg += place(landmark(GAME.townLevel), 120-12*ls, G-20*ls+4, ls);
+            // 家：加工ラインごと（解放済み加工があれば1軒。稼働中は煙）
+            let hi = 0;
+            GAME.lines.forEach(line=>{
+                if (line.custom) return;
+                let crafts=(line.crafts||[]).filter(c=>GAME.resources[c]&&GAME.resources[c].unlocked);
+                if (!crafts.length) return;
+                let working=crafts.some(c=>GAME.assigned[c]>0);
+                let band=hi%2, col=Math.floor(hi/2), s=band?1:0.82;
+                svg += place(propHouse(HOUSE_ROOFS[hi%HOUSE_ROOFS.length], working), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s);
+                hi++;
+            });
+            if (GAME.customKeys.length){ let band=hi%2, col=Math.floor(hi/2), s=band?1:0.82;
+                svg += place(propHouse('#c98b6a', true), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s); }
+            // 自然：採取系の職種ごと（解放済み素材があれば1つ。素材数で少し大きく）
+            let ni = 0;
+            ['gatherer','farmer','dairy','logger','miner','hunter'].forEach(wk=>{
+                let cnt=unlockedRawCount(wk); if(!cnt) return;
+                let band=ni%2, col=Math.floor(ni/2), s=(band?1:0.8)*(1+Math.min(cnt,4)*0.05);
+                svg += place(natureProp(NATURE_BY_WORKER[wk]), 6+col*20+(band?0:5), (band?G-2:G-13)-16*s, s);
+                ni++;
+            });
+            // 飾りの花（Lvで増える）
+            const FLW=[[60,98],[80,104],[105,100],[150,104],[175,99],[195,105],[40,105],[215,101],[120,106],[90,98]];
+            const FCOL=['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'];
+            let fc=Math.min(FLW.length, 2+GAME.townLevel);
+            for(let i=0;i<fc;i++) svg += place(propFlower(FCOL[i%FCOL.length]), FLW[i][0], FLW[i][1]-11, 0.7);
+            svg += `</svg>`;
+            // 歩くリオちゃん（雇用総数10人ごとに1人・上限6人。ゆっくり＆動きにバリエーション）
+            let walkers = mapWalkerCount();
+            const WANDER = ['wanderA','wanderB','wanderC'];
+            const STROLL = ['idle','cook','mix'];
+            let actors = '<div class="map-actors">';
+            for (let i=0;i<walkers;i++){
+                let dur = 22 + (i%3)*6 + Math.floor(i/3)*3;   // 22〜34s 程度でゆっくり
+                let delay = -i*5;
+                actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
+                        + `${riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 24, STROLL[i%3])}</span>`;
+            }
+            actors += '</div>';
+            scene.innerHTML = svg + actors;
+        }
+        function mapWalkerCount(){
+            let hired=0; for(let k in GAME.workers) hired+=GAME.workers[k].count;
+            return Math.max(1, Math.min(6, Math.floor(hired/10)));
         }
 
         function getCurrentPrice(key) {
@@ -724,7 +879,7 @@
                         <span class="item-name"><span class="anim-icon">${res.icon}</span> ${res.name}: ${Math.floor(res.count)}個 <span style="font-size:0.7rem; color:#475569;">[${speedHTML}/秒]</span></span>
                         <span class="item-meta">売値:${res.price}チャリン | 配置:${GAME.assigned[key]}人${baseNote}</span>
                         ${assignControlHTML(key)}
-                        ${assignedSprites(resWorkerKey(key), GAME.assigned[key])}
+                        ${assignedSprites(resWorkerKey(key), GAME.assigned[key], key)}
                     </div>
                     <div class="control-cluster">
                         <label><input type="checkbox" ${checked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label>
@@ -792,7 +947,7 @@
                         <span class="item-meta" style="margin-top:2px; font-weight:bold;">売値: ${currentPrice}チャリン ${qualityLabelText}</span>
                         <span class="${workerStatusClass}">${workerStatusText}</span>
                         ${assignControlHTML(key)}
-                        ${assignedSprites(recipe.workerKey, assignedHere)}
+                        ${assignedSprites(recipe.workerKey, assignedHere, key)}
                     </div>
                     <div class="control-cluster" style="flex-direction: column; align-items: flex-end; gap: 3px;">
                         <button onclick="craftItem('${key}')" ${canCraft ? '' : 'disabled'} style="background:#475569; padding:2px 6px; font-size:0.75rem;">手動作成</button>
@@ -902,7 +1057,7 @@
             let wg = document.getElementById('worker-gold'); if (wg) wg.innerText = Math.floor(GAME.gold).toLocaleString();
             document.getElementById('stat-town-lv').innerText = GAME.townLevel;
             document.getElementById('stat-town-rank').innerText = GAME.townNames[GAME.townLevel];
-            document.getElementById('emoji-display').innerText = GAME.townEmojis[GAME.townLevel] || "🏰";
+            renderTownMap();
 
             // 生産ツリー
             let linesHtml = '';
@@ -962,7 +1117,7 @@
                 workerHtml += `
                     <div class="worker-card">
                         <div style="display:flex; gap:6px; align-items:flex-start;">
-                            <div class="rio-portrait">${riochanSVG(themeFor(k), 38)}<div class="rio-tool">${themeFor(k).tool}</div></div>
+                            <div class="rio-portrait">${riochanSVG(themeFor(k), 38, actionFor(k))}<div class="rio-tool">${themeFor(k).tool}</div></div>
                             <div style="flex:1; min-width:0;">
                                 <div class="worker-title"><span>${worker.name}(${worker.count}人)</span> <span style="color:#a65a8a;">Lv.${worker.lv}</span></div>
                                 <div class="worker-desc">${worker.desc}</div>
@@ -1067,7 +1222,6 @@
             updateUI();
         }
 
-        document.getElementById('world-rio').innerHTML = riochanSVG({ top:'#ffb3d1', skirt:'#fdeef5', ribbon:'#7fc4ff' }, 44);
         setInterval(runGameLoop, 1000);
         updateLockState();
         updateUI();
