@@ -269,7 +269,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
-            <p style="margin:0;"><b>2026-06-15</b>：発展条件を<b>毎プレイ ランダム化</b>🎲。<b>整備</b>（🛣街道→出荷速度／🌳果樹園・🐄牧場・🌾農場・⛏製材採掘→採取速度／🏪マーケット→売値）を新設し<b>建材でレベル強化</b>（マップにも反映）。発展時に<b>クラッカー🎉</b>。マップの家は<b>建てた設備だけ</b>表示。各ラインの解放を1Lvずつに整理、<b>ライン名を短く</b>（薬・水を統合）。パティシエ・ブリーダーをLv3に。</p>
+            <p style="margin:0;"><b>2026-06-15</b>：発展条件を<b>毎プレイ ランダム化</b>🎲。<b>整備</b>（🛣街道→出荷速度／🌳果樹園・🐄牧場・🌾農場・⛏製材採掘→採取速度／🏪マーケット→売値）を建材でレベル強化（マップにも反映）。発展時に<b>クラッカー🎉</b>、家は<b>建てた設備だけ</b>表示。各ラインの解放を1Lvずつに整理＆<b>ライン名を短縮</b>。<b>ベリージュース</b>追加＆<b>売値を解放順に見直し</b>、薬・水の加工品を素材順に整列。</p>
         </div>
     </div>
 
@@ -324,6 +324,7 @@
                 salt:        { icon: "🧂", name: "塩",         count: 0, basePrice: 3,   unlocked: true,  facilityLv: 1, baseFacilityCost: 100, req: { town: 1 } },
                 distilledwater:{ icon: "🧊", name: "蒸留水",  count: 0, basePrice: 7,   unlocked: false, facilityLv: 1, baseFacilityCost: 180, req: { town: 4 } },
                 applejuice:  { icon: "🧃", name: "りんごジュース", count: 0, basePrice: 8, unlocked: true,  facilityLv: 1, baseFacilityCost: 120, req: { town: 1 } },
+                berryjuice:  { icon: "🧃", name: "ベリージュース", count: 0, basePrice: 8, unlocked: false, facilityLv: 1, baseFacilityCost: 120, req: { town: 3 } },
                 orangejuice: { icon: "🧃", name: "オレンジジュース", count: 0, basePrice: 10, unlocked: false, facilityLv: 1, baseFacilityCost: 140, req: { worker: "gatherer", wlv: 2 } },
                 grapejuice:  { icon: "🧃", name: "ブドウジュース", count: 0, basePrice: 12, unlocked: false, facilityLv: 1, baseFacilityCost: 160, req: { worker: "gatherer", wlv: 3 } },
                 mixjuice:    { icon: "🥤", name: "ミックスジュース", count: 0, basePrice: 30, unlocked: false, facilityLv: 1, baseFacilityCost: 220, req: { worker: "gatherer", wlv: 3 } },
@@ -408,6 +409,7 @@
             recipes: {
                 salt:        { costs: { water: 2 },                          auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 applejuice:  { costs: { apple: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
+                berryjuice:  { costs: { berry: 2, water: 1 },                auto: false, workerKey: "patissier", facilityName: "ジューススタンド" },
                 orangejuice: { costs: { orange: 2, water: 1 },               auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 grapejuice:  { costs: { grape: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 mixjuice:    { costs: { apple: 1, orange: 1, grape: 1, water: 1 }, auto: false, workerKey: "cook", facilityName: "ジューススタンド" },
@@ -475,8 +477,8 @@
             },
 
             lines: [
-                { title: "🧪 薬・水", materials: ["herb", "water", "mushroom", "flower", "superherb"], crafts: ["salt", "distilledwater", "potion", "greaterpotion", "elixir", "perfume", "mushroomsaute"] },
-                { title: "🍎 フルーツ", materials: ["berry", "apple", "orange", "grape", "lemon"], crafts: ["berrytart", "applejuice", "pie", "orangejuice", "grapejuice", "mixjuice", "jam", "lemonade"] },
+                { title: "🧪 薬・水", materials: ["herb", "water", "mushroom", "flower", "superherb"], crafts: ["salt", "distilledwater", "potion", "mushroomsaute", "perfume", "greaterpotion", "elixir"] },
+                { title: "🍎 フルーツ", materials: ["berry", "apple", "orange", "grape", "lemon"], crafts: ["berryjuice", "applejuice", "orangejuice", "pie", "berrytart", "grapejuice", "jam", "mixjuice", "lemonade"] },
                 { title: "🌾 農業", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
                 { title: "🍬 スイーツ", materials: ["sugarcane"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake"] },
                 { title: "🐄 酪農", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
@@ -502,7 +504,7 @@
         };
 
         // 加工品フラグと補助テーブルの初期化
-        const CRAFT_KEYS = ["salt","distilledwater","applejuice","orangejuice","grapejuice","mixjuice","bread","salad","fries","pie",
+        const CRAFT_KEYS = ["salt","distilledwater","applejuice","berryjuice","orangejuice","grapejuice","mixjuice","bread","salad","fries","pie",
             "sandwich","clubhouse","mushroomsaute","deluxedinner","afternoontea","ketchup","pizza","sugar","candy","jam","cake","honey","honeytoast",
             "lemonade","berrytart","icecream","pudding","cookie","chocolate","donut","parfait","grandcake","cheese","yogurt","omelet","pancake","cloth","leather","leatherbag",
             "potion","greaterpotion","elixir","perfume","charcoal","board","hardboard","barrel","mason","statue","steel","fireplace","furniture",
@@ -534,6 +536,11 @@
             cookie:{town:4}, pudding:{town:4}, greaterpotion:{town:5}, furniture:{town:5}
         };
         Object.keys(REQ_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].req = REQ_OVERRIDE[k]; });
+        // 売値の見直し（解放順＝早い物ほど安く）。順番を変えた果物の原料・加工品を中心に
+        const PRICE_OVERRIDE = { berry:2, apple:3, orange:4, grape:6, lemon:8 };            // 原料(price)
+        Object.keys(PRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].price = PRICE_OVERRIDE[k]; });
+        const BASEPRICE_OVERRIDE = { berryjuice:8, berrytart:34, jam:30, applejuice:8, orangejuice:11, grapejuice:14 }; // 加工品(basePrice)
+        Object.keys(BASEPRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].basePrice = BASEPRICE_OVERRIDE[k]; });
         // 初期解放の付け替え：ベリーを最初の果物に／りんご・りんごジュースは非解放スタート
         GAME.resources.berry.unlocked = true;
         GAME.resources.apple.unlocked = false;
@@ -1102,7 +1109,7 @@
             // 設備の建設／強化（チャリン＋建材）
             let fGold = facilityCostGold(key);
             let fMat = facilityCostMat(key);
-            let matStr = Object.keys(fMat).map(m => `${GAME.resources[m].icon}${fMat[m]}`).join(' ');
+            let matStr = Object.keys(fMat).map(m => `${GAME.resources[m].icon}${GAME.resources[m].name}×${fMat[m]}`).join('・');
             let canF = canBuildFacility(key);
             let facBtn = `<button onclick="buildFacility('${key}')" ${canF ? '' : 'disabled'} style="background:${built ? '#ffb15c' : '#16a34a'}; padding:3px 5px; font-size:0.66rem; margin-top:2px; width:100%; white-space:normal; line-height:1.25;">${built ? `⚙️強化 Lv.${res.facilityLv}→${res.facilityLv + 1}` : '🏗️ 設備を建設'}<br>${fGold}チャリン${matStr ? ' ＋ ' + matStr : ''}</button>`;
 
@@ -1307,15 +1314,19 @@
             for (let k in GAME.infra) {
                 let f = GAME.infra[k];
                 let g = infraGold(k), m = infraMat(k);
-                let matStr = Object.keys(m).map(r => `${GAME.resources[r].icon}${m[r]}`).join(' ');
                 let can = canUpgradeInfra(k);
+                let needBadges = `<span class="badge ${GAME.gold >= g ? 'meet' : ''}">🪙${g}チャリン</span>`
+                    + Object.keys(m).map(r => { let have = Math.floor(GAME.resources[r].count);
+                        return `<span class="badge ${have >= m[r] ? 'meet' : ''}">${GAME.resources[r].icon}${GAME.resources[r].name} ${have}/${m[r]}</span>`; }).join('');
                 infraHtml += `
                     <div class="worker-card">
                         <div>
                             <div class="worker-title"><span>${f.icon} ${f.name}</span> <span style="color:#a65a8a;">Lv.${f.lv}</span></div>
                             <div class="worker-desc">${f.desc}（現在 ${infraEffectText(k)}）</div>
+                            <div style="font-size:0.66rem; color:#64748b; margin-top:3px;">強化に必要：</div>
+                            <div class="badge-area" style="display:flex; flex-wrap:wrap; gap:3px; margin-top:2px;">${needBadges}</div>
                         </div>
-                        <button onclick="upgradeInfra('${k}')" ${can ? '' : 'disabled'} style="padding:5px; font-size:0.72rem; background:#16a34a; margin-top:4px; width:100%; white-space:normal; line-height:1.25;">🛠 強化 Lv.${f.lv}→${f.lv + 1}<br>${g}チャリン${matStr ? ' ＋ ' + matStr : ''}</button>
+                        <button onclick="upgradeInfra('${k}')" ${can ? '' : 'disabled'} style="padding:5px; font-size:0.78rem; background:#16a34a; margin-top:6px; width:100%;">🛠 Lv.${f.lv}→${f.lv + 1} に強化</button>
                     </div>`;
             }
             document.getElementById('infra-area').innerHTML = infraHtml;
