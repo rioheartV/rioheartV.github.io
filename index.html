@@ -149,6 +149,9 @@
       <a class="link-item" href="https://ofuse.me/rioheart" target="_blank" rel="noopener">
         <span class="link-icon">💌</span><span>OFUSE で応援</span>
       </a>
+      <button type="button" class="link-item" onclick="shareSite()" style="cursor:pointer; font:inherit; text-align:left;">
+        <span class="link-icon">🔗</span><span>このサイトをシェア</span>
+      </button>
     </div>
   </section>
 </main>
@@ -159,6 +162,17 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+  // 共有：スマホは端末の共有シート、PCはX投稿が開く
+  function shareSite(){
+    const url = 'https://rioheartv.github.io/';
+    const text = 'VTuberリオ♡ハート＆AItuberリオちゃんの配信＆創作サイト💙 ドット絵ゲームも遊べるよ♡';
+    if (navigator.share) {
+      navigator.share({ title: 'リオ♡ハート', text: text, url: url }).catch(function(){});
+    } else {
+      window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + '\n' + url + '\n#VTuber #AItuber'), '_blank', 'noopener');
+    }
+  }
+  window.shareSite = shareSite;
   // 最新の配信アーカイブへ自動リンク（latest.json は GitHub Actions が定期更新）
   fetch('latest.json?t=' + Date.now())
     .then(r => r.ok ? r.json() : null)

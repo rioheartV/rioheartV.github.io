@@ -202,10 +202,12 @@
         @keyframes confettiFall { 0% { opacity:1; transform:translateY(-6px) rotate(0); } 100% { opacity:0; transform:translateY(190px) rotate(560deg); } }
         .town-pop { position:absolute; top:42%; left:50%; transform:translate(-50%,-50%); z-index:7; font-size:1.6rem; font-weight:800; color:#fff; text-shadow:0 2px 0 #ff6fae, 0 0 12px rgba(255,120,180,.9); pointer-events:none; animation: townPop 1.5s ease-out forwards; white-space:nowrap; }
         @keyframes townPop { 0% { opacity:0; transform:translate(-50%,-30%) scale(.5); } 25% { opacity:1; transform:translate(-50%,-55%) scale(1.15); } 75% { opacity:1; } 100% { opacity:0; transform:translate(-50%,-80%) scale(1); } }
-        .game-top { display:flex; justify-content:flex-start; margin-bottom:8px; }
-        .hp-back { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem;
-            color:#fff; background:linear-gradient(135deg,#8ec9ff,#b89bf0); padding:6px 16px; border-radius:999px; box-shadow:0 2px 6px rgba(150,150,255,.3); }
-        .hp-back:hover { filter:brightness(1.05); transform:translateY(-1px); }
+        .game-top { display:flex; justify-content:flex-start; gap:8px; margin-bottom:8px; }
+        .hp-back, .share-btn { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem; border:none; cursor:pointer;
+            color:#fff; padding:6px 16px; border-radius:999px; box-shadow:0 2px 6px rgba(150,150,255,.3); font-family:inherit; }
+        .hp-back { background:linear-gradient(135deg,#8ec9ff,#b89bf0); }
+        .share-btn { background:linear-gradient(135deg,#ff8fc7,#ffb15c); }
+        .hp-back:hover, .share-btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
         .play-area { display:flex; gap:8px; align-items:stretch; margin:8px 0 12px; }
         .side-buttons { flex:0 0 34%; max-width:200px; display:flex; flex-direction:column; gap:6px; }
         .side-buttons button { width:100%; }
@@ -222,7 +224,7 @@
 <body>
 
     <div id="game-container">
-        <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a></div>
+        <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a><button class="share-btn" onclick="shareGame()">🔗 シェア</button></div>
         <h1>💗 Virtual Town 💗</h1>
 
         <div class="status-box">
@@ -1013,6 +1015,17 @@
 
         function toggleAutoSell(key, checked) { GAME.autoSell[key] = checked; }
         function toggleAutoCraft(key, checked) { GAME.recipes[key].auto = checked; }
+
+        // 共有：スマホは端末の共有シート、PCはX投稿が開く
+        function shareGame() {
+            const url = 'https://rioheartv.github.io/games/nova-frontier/';
+            const text = 'ドット絵のリオちゃんが働く放置ゲーム『Virtual Town』で遊んでるよ🏰✨ 無料・登録不要♡';
+            if (navigator.share) {
+                navigator.share({ title: 'Virtual Town', text: text, url: url }).catch(() => {});
+            } else {
+                window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + '\n' + url + '\n#ブラウザゲーム #放置ゲーム #ドット絵'), '_blank', 'noopener');
+            }
+        }
 
         function upgradeTown() {
             let nextReq = GAME.townUpgrades[GAME.townLevel];
