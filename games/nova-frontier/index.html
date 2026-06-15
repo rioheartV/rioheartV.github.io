@@ -188,6 +188,11 @@
         .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
         @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
         .develop-btn { display:block; margin:0; }
+        /* 発展の祝福（クラッカー） */
+        .confetti { position:absolute; top:24px; width:7px; height:11px; border-radius:2px; z-index:6; opacity:0; pointer-events:none; animation: confettiFall 1.5s ease-out forwards; }
+        @keyframes confettiFall { 0% { opacity:1; transform:translateY(-6px) rotate(0); } 100% { opacity:0; transform:translateY(190px) rotate(560deg); } }
+        .town-pop { position:absolute; top:42%; left:50%; transform:translate(-50%,-50%); z-index:7; font-size:1.6rem; font-weight:800; color:#fff; text-shadow:0 2px 0 #ff6fae, 0 0 12px rgba(255,120,180,.9); pointer-events:none; animation: townPop 1.5s ease-out forwards; white-space:nowrap; }
+        @keyframes townPop { 0% { opacity:0; transform:translate(-50%,-30%) scale(.5); } 25% { opacity:1; transform:translate(-50%,-55%) scale(1.15); } 75% { opacity:1; } 100% { opacity:0; transform:translate(-50%,-80%) scale(1); } }
         .game-top { display:flex; justify-content:flex-start; margin-bottom:8px; }
         .hp-back { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem;
             color:#fff; background:linear-gradient(135deg,#8ec9ff,#b89bf0); padding:6px 16px; border-radius:999px; box-shadow:0 2px 6px rgba(150,150,255,.3); }
@@ -242,6 +247,9 @@
         </div>
         <div class="worker-grid" id="worker-area"></div>
 
+        <div class="section-title">🛠 整備（建材で街ぜんたいを強化）</div>
+        <div class="worker-grid" id="infra-area"></div>
+
         <div class="section-title">📖 開拓地経営のヒント</div>
         <div class="help-box">
             <div class="help-title">👷 職人の「配置」が最重要</div>
@@ -261,19 +269,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (14)</b>：<b>設備システム刷新</b>。加工品は<b>専用設備の建設</b>が必要に（チャリン＋建材＝板材・硬い板材・石材・鋼）。建材を作る設備はチャリンのみで建設可。設備強化で<b>生産速度＋売値UP</b>。<b>パティシエ</b>を新設しジュース・お菓子・スイーツをシェフから移管。<b>職業名をカタカナ</b>に（料理人→シェフ等）。Lv2集中だった解放の一部をLv3へ、木材・石材の採取量UP。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (13)</b>：<b>スイーツ7品</b>を追加（🍦アイス/🍮プリン/🍪クッキー/🍫チョコ/🍩ドーナツ/🍨パフェ/🎂デコケーキ＝製糖・スイーツライン）。バランス調整：<b>手採取が都市Lvで増量</b>／<b>商人の出荷量UP</b>（2→3個/人）／<b>設備投資コストを緩和</b>（1.8→1.7倍）。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (12)</b>：ゲーム最上部に<b>「🏠 HPに戻る」ボタン</b>を追加。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (11)</b>：採取・全売却・発展ボタンを<b>マップの左横に縦並び</b>へ（マップは右で横幅すっきり／スマホは縦積み）。歩くリオちゃんを<b>雇用総数10人ごとに1人（最大6人）</b>に変更し、<b>ゆっくり・経路と速度をバラバラ</b>にして自然な歩き回りに。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (10)</b>：UI刷新。上部を【💰チャリン → 発展ボタン → <b>タウンマップ</b>】に再構成し、町Lv・集落名はマップ上のバナーへ。タウンマップは<b>町Lvや生産加工ラインの解放で発展</b>（加工ライン＝<b>家</b>／採取＝<b>木・畑・牧場・松・岩・池</b>のドット絵、稼働中の工房は<b>煙</b>、中央の城はLvで成長、リオちゃんがマップを歩く）。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (9)</b>：ドット絵リオちゃんに<b>職業別の作業モーション</b>を追加（採取＝かがんで採る／料理＝混ぜる／調合＝ゆらゆら／建造＝腕を振る）。配置した品が<b>ふわっと飛び出すエフェクト</b>で「作ってる感」を演出。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (8)</b>：ゲーム名を<b>Virtual Town</b>に変更♡ 通貨単位を<b>チャリン</b>に。配置・雇用した職人を<b>ドット絵のリオちゃん</b>で表示し、<b>職業ごとに服装・帽子・持ち物</b>が変化。UIを<b>かわいいパステル＆ハート基調</b>にリニューアル。大量雇用時の費用増加を<b>ゆるめ</b>に調整。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (7)</b>：林業ラインの板材と木炭の順を入替。職人欄の上部に<b>現在の資金</b>を表示。各職人カードの<b>雇用と技術強化を横並び</b>に。配置人数の横に<b>配置先の内訳</b>（どの品に何人）を表示。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (6)</b>：<b>全職人を自動配置</b>チェック＆<b>⚖️均等再配置</b>ボタンを追加。酪農を<b>たまごLv2/羊毛Lv3/皮Lv4</b>に変更し<b>革・革鞄</b>を追加。オムレツの塩を削除。新素材<b>きのこ・ベリー・花・レモン</b>と、きのこソテー/レモネード/ベリータルト/香水を追加。加工品どうしの上位品<b>豪華ディナー・アフタヌーンティー</b>を追加。都市上限を<b>Lv9</b>へ。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (5)</b>：採取ボタンの横に<b>「💰全売却」ボタン</b>を追加（全在庫を一括換金）。発展ボタンの表記を短縮。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (4)</b>：自動配置を<b>既定OFF</b>に変更（＋ボタンが反応しない問題を修正）。ヒントを簡潔化。本「更新履歴」を追加。</p>
-            <p style="margin:0 0 6px 0;"><b>2026-06-14 (3)</b>：職人の<b>配置システム</b>（品ごとに人数を割当、人数で速度上昇、＋／−／数値入力）、<b>独自レシピ工房</b>、<b>動くアイコン</b>を追加。金鉱石・メープル材、砂糖/ケチャップ/ピザ/各種道具/王冠/鋼/樽/はちみつ等を追加。都市上限を<b>Lv7</b>へ。肉じゃがの塩を削除、ジュースに水を追加。</p>
-            <p style="margin:0;"><b>2026-06-14 (2)</b>：採取者/農民/酪農家/木こり/採掘人の段階解放、ジュース細分化＋ミックスジュース、乳製品・布、たまご料理、製糖・菓子などを追加し生産チェーンを拡張。全品にアイコンと「Lvで何が解放されるか」を明記。</p>
+            <p style="margin:0;"><b>2026-06-15</b>：発展条件を<b>毎プレイ ランダム化</b>🎲。<b>整備</b>（🛣街道→出荷速度／🌳果樹園・🐄牧場・🌾農場・⛏製材採掘→採取速度／🏪マーケット→売値）を新設し<b>建材でレベル強化</b>（マップにも反映）。発展時に<b>クラッカー🎉</b>。マップの家は<b>建てた設備だけ</b>表示。各ラインの解放を1Lvずつに整理、<b>ライン名を短く</b>（薬・水を統合）。パティシエ・ブリーダーをLv3に。</p>
         </div>
     </div>
 
@@ -479,16 +475,15 @@
             },
 
             lines: [
-                { title: "🌿 薬草・調合・香水ライン", materials: ["herb", "superherb", "mushroom", "flower"], crafts: ["potion", "greaterpotion", "elixir", "perfume", "mushroomsaute"] },
-                { title: "💧 水・製塩ライン", materials: ["water"], crafts: ["salt", "distilledwater"] },
-                { title: "🍎 果樹・ジュースライン", materials: ["apple", "orange", "grape", "berry", "lemon"], crafts: ["applejuice", "orangejuice", "grapejuice", "mixjuice", "lemonade", "berrytart"] },
-                { title: "🌾 農業・調理ライン", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "pie", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
-                { title: "🍬 製糖・スイーツライン", materials: ["sugarcane"], crafts: ["sugar", "candy", "jam", "cake", "honeytoast", "icecream", "pudding", "cookie", "chocolate", "donut", "parfait", "grandcake"] },
-                { title: "🐄 酪農・羊毛・皮革ライン", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
-                { title: "🪵 林業・木工家具ライン", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
-                { title: "🪨 鉱業・鍛冶・要塞ライン", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "steel", "statue", "tool", "silvertool", "goldtool", "ring", "diamond", "crown", "wall", "relief"] },
-                { title: "🍖 漁業・狩猟ライン", materials: ["fish", "meat"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak"] },
-                { title: "🔧 独自レシピ工房（オリジナル加工品）", materials: [], crafts: [], custom: true }
+                { title: "🧪 薬・水", materials: ["herb", "water", "mushroom", "flower", "superherb"], crafts: ["salt", "distilledwater", "potion", "greaterpotion", "elixir", "perfume", "mushroomsaute"] },
+                { title: "🍎 フルーツ", materials: ["berry", "apple", "orange", "grape", "lemon"], crafts: ["berrytart", "applejuice", "pie", "orangejuice", "grapejuice", "mixjuice", "jam", "lemonade"] },
+                { title: "🌾 農業", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
+                { title: "🍬 スイーツ", materials: ["sugarcane"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake"] },
+                { title: "🐄 酪農", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
+                { title: "🪵 木工", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
+                { title: "🪨 鉱業", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "steel", "statue", "tool", "silvertool", "goldtool", "ring", "diamond", "crown", "wall", "relief"] },
+                { title: "🍖 漁・狩", materials: ["fish", "meat"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak"] },
+                { title: "🔧 オリジナル", materials: [], crafts: [], custom: true }
             ],
 
             townUpgrades: {
@@ -522,6 +517,80 @@
         // ジュース・お菓子・スイーツはパティシエへ移管（シェフの負担分散）
         ['applejuice','orangejuice','grapejuice','mixjuice','lemonade','sugar','candy','jam','cake','honey','honeytoast','berrytart','icecream','pudding','cookie','chocolate','donut','parfait','grandcake']
             .forEach(k => { if (GAME.recipes[k]) GAME.recipes[k].workerKey = 'patissier'; });
+
+        // ============ 進行リバランス（解放Lvを1段ずつに調整） ============
+        const REQ_OVERRIDE = {
+            // 薬草ライン：薬草→きのこ→花→上薬草
+            mushroom:{town:3}, flower:{town:4}, superherb:{town:5},
+            // 果物ライン：ベリー→りんご→オレンジ→ブドウ→レモン（1Lvずつ）
+            berry:{town:1}, apple:{town:2}, orange:{town:3}, grape:{town:4}, lemon:{town:5},
+            // 酪農ライン：ミルク→たまご→羊毛→皮（ブリーダーL3）
+            milk:{town:3}, egg:{town:4}, wool:{town:5}, hide:{town:6},
+            // 果物加工・ジュース
+            applejuice:{town:3}, orangejuice:{town:3}, grapejuice:{town:4}, mixjuice:{town:4}, lemonade:{town:5}, berrytart:{town:3}, jam:{town:4}, pie:{town:3},
+            // 乳製品・布革
+            yogurt:{town:3}, cheese:{town:3}, omelet:{town:4}, pancake:{town:4}, cloth:{town:5}, leather:{town:6}, leatherbag:{town:6},
+            // 菓子（たまご使用）・薬・家具
+            cookie:{town:4}, pudding:{town:4}, greaterpotion:{town:5}, furniture:{town:5}
+        };
+        Object.keys(REQ_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].req = REQ_OVERRIDE[k]; });
+        // 初期解放の付け替え：ベリーを最初の果物に／りんご・りんごジュースは非解放スタート
+        GAME.resources.berry.unlocked = true;
+        GAME.resources.apple.unlocked = false;
+        GAME.resources.applejuice.unlocked = false;
+        // 役職の解放Lv：L2集中をならす（ブリーダー・パティシエをL3へ。木こり/採掘はL2のまま）
+        GAME.workers.dairy.reqTown = 3;
+        GAME.workers.patissier.reqTown = 3;
+        GAME.workers.gatherer.desc = "薬草・水・ベリーを採取。都市Lvが上がると新しい素材を発見（りんご→きのこ→オレンジ→花…）";
+        GAME.workers.dairy.desc = "ミルク・たまご・羊毛・皮を生産（薬草を飼料に消費）";
+        // ============ 発展条件をランダム生成（毎プレイ変化・到達可能を保証） ============
+        function _unlockLv(k){ let r=GAME.resources[k].req||{}; let lv=0;
+            if(r.town) lv=Math.max(lv,r.town);
+            if(r.worker){ let wt=(GAME.workers[r.worker]?GAME.workers[r.worker].reqTown:1)||1; if(r.wlv) wt += (r.wlv-1); lv=Math.max(lv,wt); }
+            if(lv===0) lv = GAME.resources[k].unlocked?1:99; return lv; }
+        function _obtainable(k,L,seen){ seen=seen||{}; if(k in seen) return seen[k]; let res=GAME.resources[k];
+            if(!res) return seen[k]=false; if(_unlockLv(k)>L) return seen[k]=false;
+            if(!res.isCraft) return seen[k]=true; let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
+            seen[k]=true; for(let m in rec.costs){ if(!_obtainable(m,L,seen)) return seen[k]=false; } return seen[k]=true; }
+        function generateTownGoals(){
+            for(let L=1; L<=8; L++){
+                if(!GAME.townUpgrades[L]) continue;
+                let crafts = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && !GAME.resources[k].isCustom && _obtainable(k,L,{}));
+                let raws = Object.keys(GAME.resources).filter(k=>!GAME.resources[k].isCraft && _unlockLv(k)<=L);
+                let pool = crafts.length>=2 ? crafts : crafts.concat(raws);
+                if(!pool.length){ continue; }
+                let n = pool.length>=3 ? (2 + Math.floor(Math.random()*2)) : Math.min(2, pool.length);
+                let p = pool.slice(), picks=[];
+                for(let i=0;i<n && p.length;i++){ picks.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); }
+                let req={};
+                picks.forEach(k=>{ let isC=GAME.resources[k].isCraft; let base = isC ? (5+L*2) : (8+L*3);
+                    req[k] = Math.max(3, Math.round(base*(0.7+Math.random()*0.6))); });
+                GAME.townUpgrades[L].req = req;
+            }
+        }
+        generateTownGoals();
+
+        // ============ 整備（インフラ）：建材で街全体をレベル強化（設備強化とは別軸） ============
+        GAME.infra = {
+            road:    { name:'街道',     icon:'🛣️', lv:0, baseCost:400, mat:{board:3, mason:2},     desc:'商人の出荷量UP' },
+            orchard: { name:'果樹園',   icon:'🌳', lv:0, baseCost:350, mat:{board:4},              desc:'レンジャーの採取速度UP' },
+            ranch:   { name:'牧場',     icon:'🐄', lv:0, baseCost:450, mat:{board:4, mason:2},     desc:'ブリーダーの生産速度UP' },
+            farm:    { name:'農場',     icon:'🌾', lv:0, baseCost:400, mat:{board:4},              desc:'ファーマーの栽培速度UP' },
+            toolyard:{ name:'製材・採掘場', icon:'⛏️', lv:0, baseCost:500, mat:{mason:4, board:2}, desc:'木材・採掘の速度UP' },
+            market:  { name:'マーケット', icon:'🏪', lv:0, baseCost:600, mat:{hardboard:2, mason:3}, desc:'全売値UP（控えめ）' }
+        };
+        function infraGold(key){ let f=GAME.infra[key]; return Math.floor(f.baseCost*Math.pow(1.7, f.lv)); }
+        function infraMat(key){ let f=GAME.infra[key], lvf=1+f.lv*0.6, out={}; for(let m in f.mat) out[m]=Math.ceil(f.mat[m]*lvf); return out; }
+        function canUpgradeInfra(key){ if(GAME.gold<infraGold(key))return false; let m=infraMat(key); for(let r in m){ if(GAME.resources[r].count<m[r])return false; } return true; }
+        function upgradeInfra(key){ if(!canUpgradeInfra(key))return; GAME.gold-=infraGold(key); let m=infraMat(key); for(let r in m) GAME.resources[r].count-=m[r]; GAME.infra[key].lv++; updateUI(); }
+        function infraGatherMult(wk){ let i=GAME.infra;
+            if(wk==='gatherer') return 1 + i.orchard.lv*0.3;
+            if(wk==='farmer')   return 1 + i.farm.lv*0.3;
+            if(wk==='dairy')    return 1 + i.ranch.lv*0.3;
+            if(wk==='logger'||wk==='miner') return 1 + i.toolyard.lv*0.3;
+            return 1; }
+        function marketMult(){ return 1 + GAME.infra.market.lv*0.08; }
+        function infraEffectText(k){ let lv=GAME.infra[k].lv; if(k==='road')return `出荷+${lv*3}個/人`; if(k==='market')return `売値+${lv*8}%`; return `速度+${lv*30}%`; }
 
         // ============ 設備の建設・強化（チャリン＋建材） ============
         // 建材＝木材/石材ライン由来。建材を作る設備・序盤の設備はチャリンのみで建設可（詰み回避）
@@ -666,11 +735,10 @@
         }
         function townMapSignature(){
             let w = ['gatherer','farmer','dairy','logger','miner','hunter'].map(unlockedRawCount).join('-');
-            let l = GAME.lines.filter(x=>!x.custom).map(line=>{
-                let cr=(line.crafts||[]).filter(c=>GAME.resources[c]&&GAME.resources[c].unlocked);
-                return cr.length + (cr.some(c=>GAME.assigned[c]>0)?'w':'');
-            }).join('.');
-            return [GAME.townLevel, w, l, GAME.customKeys.length, mapWalkerCount()].join('|');
+            let l = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && GAME.resources[k].facilityLv>=1)
+                .map(k=> k + (GAME.assigned[k]>0?'w':'')).join('.');
+            let inf = Object.keys(GAME.infra).map(k=>GAME.infra[k].lv).join(',');
+            return [GAME.townLevel, w, l, inf, mapWalkerCount()].join('|');
         }
         function renderTownMap(){
             let scene = document.getElementById('map-scene');
@@ -683,19 +751,15 @@
             svg += _r(0,G,240,110-G,'#bfe79a') + _r(0,G,240,3,'#a9d97f') + `<rect x="0" y="101" width="240" height="5" fill="#e8d6a0" opacity=".6"/>`;
             let ls = 1 + (GAME.townLevel-1)*0.07;
             svg += place(landmark(GAME.townLevel), 120-12*ls, G-20*ls+4, ls);
-            // 家：加工ラインごと（解放済み加工があれば1軒。稼働中は煙）
+            // 家：建てた設備だけ（建設済み加工品ごとに1軒・最大9。稼働中は煙）
+            let builtKeys = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].facilityLv >= 1);
             let hi = 0;
-            GAME.lines.forEach(line=>{
-                if (line.custom) return;
-                let crafts=(line.crafts||[]).filter(c=>GAME.resources[c]&&GAME.resources[c].unlocked);
-                if (!crafts.length) return;
-                let working=crafts.some(c=>GAME.assigned[c]>0);
+            builtKeys.slice(0, 9).forEach(k => {
+                let working = GAME.assigned[k] > 0;
                 let band=hi%2, col=Math.floor(hi/2), s=band?1:0.82;
                 svg += place(propHouse(HOUSE_ROOFS[hi%HOUSE_ROOFS.length], working), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s);
                 hi++;
             });
-            if (GAME.customKeys.length){ let band=hi%2, col=Math.floor(hi/2), s=band?1:0.82;
-                svg += place(propHouse('#c98b6a', true), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s); }
             // 自然：採取系の職種ごと（解放済み素材があれば1つ。素材数で少し大きく）
             let ni = 0;
             ['gatherer','farmer','dairy','logger','miner','hunter'].forEach(wk=>{
@@ -709,6 +773,16 @@
             const FCOL=['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'];
             let fc=Math.min(FLW.length, 2+GAME.townLevel);
             for(let i=0;i<fc;i++) svg += place(propFlower(FCOL[i%FCOL.length]), FLW[i][0], FLW[i][1]-11, 0.7);
+            // 整備の反映（マップ）：建てた分だけ街が賑やかに
+            const I = GAME.infra;
+            if (I.road.lv > 0) { svg += _r(0,100,240,6,'#dcc18a') + _r(0,100,240,1,'#c9a86a');
+                let lamps = Math.min(I.road.lv, 5);
+                for (let i=0;i<lamps;i++){ let lx = 26 + i*46; svg += _r(lx,96,1,6,'#8a6a4a') + _c(lx+0.5,95,1.6,'#fff3b0'); } }
+            if (I.orchard.lv > 0) { let n=Math.min(I.orchard.lv,3); for(let i=0;i<n;i++) svg += place(propTree(), 2+i*8, G-2-16*0.7, 0.7); }
+            if (I.ranch.lv > 0)  svg += place(propBarn(), 62, G-2-16*0.8, 0.8);
+            if (I.market.lv > 0) svg += place(propHouse('#ff6fae', false), 86, G-13-16*0.85, 0.85);
+            if (I.farm.lv > 0)   svg += place(propField(), 112, G-1-16*0.8, 0.8);
+            if (I.toolyard.lv > 0) svg += place(propRocks(), 132, G-1-16*0.7, 0.7);
             svg += `</svg>`;
             // 歩くリオちゃん（雇用総数10人ごとに1人・上限6人。ゆっくり＆動きにバリエーション）
             let walkers = mapWalkerCount();
@@ -724,6 +798,27 @@
             actors += '</div>';
             scene.innerHTML = svg + actors;
         }
+
+        // 発展時の祝福（クラッカー）＝マップ上のみ
+        function spawnMapConfetti() {
+            let map = document.getElementById('town-map');
+            if (!map) return;
+            const colors = ['#ff8fc7','#ffd166','#8ec9ff','#b89bf0','#7ed99a','#ff9f6b','#ff6fae'];
+            for (let i = 0; i < 40; i++) {
+                let s = document.createElement('span');
+                s.className = 'confetti';
+                s.style.left = (8 + (i * 2.1) % 84 + (i % 5)) + '%';
+                s.style.background = colors[i % colors.length];
+                s.style.animationDelay = ((i % 7) * 0.05) + 's';
+                map.appendChild(s);
+                setTimeout(() => s.remove(), 1700);
+            }
+            let pop = document.createElement('div');
+            pop.className = 'town-pop';
+            pop.textContent = '🎉 発展！ 🎉';
+            map.appendChild(pop);
+            setTimeout(() => pop.remove(), 1600);
+        }
         function mapWalkerCount(){
             let hired=0; for(let k in GAME.workers) hired+=GAME.workers[k].count;
             return Math.max(1, Math.min(6, Math.floor(hired/10)));
@@ -731,8 +826,8 @@
 
         function getCurrentPrice(key) {
             let res = GAME.resources[key];
-            if (res.isCraft) { return res.basePrice * Math.max(1, res.facilityLv); }
-            return res.price;
+            let base = res.isCraft ? res.basePrice * Math.max(1, res.facilityLv) : res.price;
+            return Math.floor(base * marketMult());
         }
 
         // その品の担当職人キー（素材→workerKey / 加工品→recipe.workerKey）
@@ -901,7 +996,7 @@
             GAME.gold -= nextReq.gold;
             for (let k in nextReq.req) { GAME.resources[k].count -= nextReq.req[k]; }
 
-            GAME.townLevel += 1; updateLockState(); updateUI();
+            GAME.townLevel += 1; updateLockState(); updateUI(); spawnMapConfetti();
         }
 
         // 配置コントロール（−/数値/＋ と 空き人数）
@@ -1206,6 +1301,25 @@
                     </div>`;
             }
             document.getElementById('worker-area').innerHTML = workerHtml;
+
+            // 整備（インフラ）カード
+            let infraHtml = '';
+            for (let k in GAME.infra) {
+                let f = GAME.infra[k];
+                let g = infraGold(k), m = infraMat(k);
+                let matStr = Object.keys(m).map(r => `${GAME.resources[r].icon}${m[r]}`).join(' ');
+                let can = canUpgradeInfra(k);
+                infraHtml += `
+                    <div class="worker-card">
+                        <div>
+                            <div class="worker-title"><span>${f.icon} ${f.name}</span> <span style="color:#a65a8a;">Lv.${f.lv}</span></div>
+                            <div class="worker-desc">${f.desc}（現在 ${infraEffectText(k)}）</div>
+                        </div>
+                        <button onclick="upgradeInfra('${k}')" ${can ? '' : 'disabled'} style="padding:5px; font-size:0.72rem; background:#16a34a; margin-top:4px; width:100%; white-space:normal; line-height:1.25;">🛠 強化 Lv.${f.lv}→${f.lv + 1}<br>${g}チャリン${matStr ? ' ＋ ' + matStr : ''}</button>
+                    </div>`;
+            }
+            document.getElementById('infra-area').innerHTML = infraHtml;
+
             // 全自動配置チェックの状態を反映（解放済み非商人職人が全員ONならチェック）
             let ga = document.getElementById('global-auto');
             if (ga) {
@@ -1250,7 +1364,7 @@
                 let w = GAME.workers[res.workerKey];
                 let assigned = GAME.assigned[k];
                 if (!w || assigned <= 0) continue;
-                let amt = res.gather * assigned * w.lv;
+                let amt = res.gather * assigned * w.lv * infraGatherMult(res.workerKey);
                 // 飼料（薬草など）が必要な素材は、在庫の範囲内に生産量を制限
                 if (res.feed) {
                     for (let f in res.feed) {
@@ -1287,7 +1401,7 @@
             // 商人による自動出荷
             let mc = GAME.workers.merchant;
             if (mc.count > 0) {
-                let sellRate = mc.count * 3;
+                let sellRate = mc.count * (3 + GAME.infra.road.lv * 3);
                 for (let k in GAME.autoSell) {
                     if (GAME.autoSell[k] && GAME.resources[k].unlocked && GAME.resources[k].count >= 1) {
                         let toSell = Math.min(Math.floor(GAME.resources[k].count), sellRate);
