@@ -188,6 +188,10 @@
         .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
         @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
         .develop-btn { display:block; margin:0; }
+        .game-top { display:flex; justify-content:flex-start; margin-bottom:8px; }
+        .hp-back { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem;
+            color:#fff; background:linear-gradient(135deg,#8ec9ff,#b89bf0); padding:6px 16px; border-radius:999px; box-shadow:0 2px 6px rgba(150,150,255,.3); }
+        .hp-back:hover { filter:brightness(1.05); transform:translateY(-1px); }
         .play-area { display:flex; gap:8px; align-items:stretch; margin:8px 0 12px; }
         .side-buttons { flex:0 0 34%; max-width:200px; display:flex; flex-direction:column; gap:6px; }
         .side-buttons button { width:100%; }
@@ -204,6 +208,7 @@
 <body>
 
     <div id="game-container">
+        <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a></div>
         <h1>💗 Virtual Town 💗</h1>
 
         <div class="status-box">
@@ -241,16 +246,24 @@
         <div class="help-box">
             <div class="help-title">👷 職人の「配置」が最重要</div>
             <p style="margin: 0 0 8px 0;">職人は雇うだけでは働きません。各品の<b>👷配置（−／数値／＋）</b>で人数を割り当てると、その品だけが生産されます。<b>配置人数が多いほど生産・加工が速く</b>なります。1職種の合計配置は雇用人数まで（カードに「配置 X/Y人・空Z」を表示）。職人カードの<b>「雇用時に自動配置」</b>をONにすると、雇うたび自動で空いた品へ割り振られます。</p>
-            <div class="help-title">💼 雇用・技術強化・投資</div>
+            <div class="help-title">🏗️ 設備の建設・強化（重要）</div>
+            <p style="margin: 0 0 8px 0;">
+                加工品は<b>専用設備を「建設」</b>しないと作れません。建設・強化には<b>チャリン＋建材</b>（板材・硬い板材・石材・鋼）が必要。<br>
+                ・<b>建材は木材／石材ラインの加工品</b>。建材を作る設備（木工ろくろ・石材加工場など）は<b>チャリンのみ</b>で建てられます＝まず建材設備→建材を生産→他の設備を建設、の順。<br>
+                ・<b>⚙️ 強化</b>…設備Lvを上げると<b>生産速度UP＋売値UP</b>（品質Lv）。
+            </p>
+            <div class="help-title">💼 雇用・技術強化</div>
             <p style="margin: 0 0 8px 0;">
                 ・<b>🟢 雇用</b>…職人の<b>人数</b>を増やす（配置できる上限が増える）。<br>
-                ・<b>🟠 技術強化</b>…職人の<b>レベル</b>を上げる。採取量が増え<b>新しい上位素材を解放</b>（カードの「↑Lv.○で○○を解放」参照）。1人以上で押せます。<br>
-                ・<b>⚙️ 投資</b>…加工品の<b>設備Lv</b>を上げ<b>売値を倍々</b>に（品質Lv）。速度は不変、単価のみ上昇。
+                ・<b>🟠 技術強化</b>…職人の<b>レベル</b>を上げる。採取量が増え<b>新しい上位素材を解放</b>。1人以上で押せます。
             </p>
         </div>
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (14)</b>：<b>設備システム刷新</b>。加工品は<b>専用設備の建設</b>が必要に（チャリン＋建材＝板材・硬い板材・石材・鋼）。建材を作る設備はチャリンのみで建設可。設備強化で<b>生産速度＋売値UP</b>。<b>パティシエ</b>を新設しジュース・お菓子・スイーツをシェフから移管。<b>職業名をカタカナ</b>に（料理人→シェフ等）。Lv2集中だった解放の一部をLv3へ、木材・石材の採取量UP。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (13)</b>：<b>スイーツ7品</b>を追加（🍦アイス/🍮プリン/🍪クッキー/🍫チョコ/🍩ドーナツ/🍨パフェ/🎂デコケーキ＝製糖・スイーツライン）。バランス調整：<b>手採取が都市Lvで増量</b>／<b>商人の出荷量UP</b>（2→3個/人）／<b>設備投資コストを緩和</b>（1.8→1.7倍）。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-14 (12)</b>：ゲーム最上部に<b>「🏠 HPに戻る」ボタン</b>を追加。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (11)</b>：採取・全売却・発展ボタンを<b>マップの左横に縦並び</b>へ（マップは右で横幅すっきり／スマホは縦積み）。歩くリオちゃんを<b>雇用総数10人ごとに1人（最大6人）</b>に変更し、<b>ゆっくり・経路と速度をバラバラ</b>にして自然な歩き回りに。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (10)</b>：UI刷新。上部を【💰チャリン → 発展ボタン → <b>タウンマップ</b>】に再構成し、町Lv・集落名はマップ上のバナーへ。タウンマップは<b>町Lvや生産加工ラインの解放で発展</b>（加工ライン＝<b>家</b>／採取＝<b>木・畑・牧場・松・岩・池</b>のドット絵、稼働中の工房は<b>煙</b>、中央の城はLvで成長、リオちゃんがマップを歩く）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-14 (9)</b>：ドット絵リオちゃんに<b>職業別の作業モーション</b>を追加（採取＝かがんで採る／料理＝混ぜる／調合＝ゆらゆら／建造＝腕を振る）。配置した品が<b>ふわっと飛び出すエフェクト</b>で「作ってる感」を演出。</p>
@@ -298,11 +311,11 @@
                 wool:     { icon: "🧶", name: "羊毛",   count: 0, price: 10, unlocked: false, workerKey: "dairy",   gather: 0.12, req: { worker: "dairy", wlv: 3 } },
                 hide:     { icon: "🐾", name: "皮",     count: 0, price: 18, unlocked: false, workerKey: "dairy",   gather: 0.1,  req: { worker: "dairy", wlv: 4 } },
                 // --- 木こり ---
-                wood:     { icon: "🪵", name: "木材",   count: 0, price: 5,  unlocked: false, workerKey: "logger",  gather: 0.4,  req: { town: 2 } },
+                wood:     { icon: "🪵", name: "木材",   count: 0, price: 5,  unlocked: false, workerKey: "logger",  gather: 0.5,  req: { town: 2 } },
                 hardwood: { icon: "🌲", name: "硬い木材", count: 0, price: 16, unlocked: false, workerKey: "logger", gather: 0.12, req: { worker: "logger", wlv: 3 } },
                 maple:    { icon: "🍁", name: "メープル材", count: 0, price: 14, unlocked: false, workerKey: "logger", gather: 0.1, req: { worker: "logger", wlv: 4 } },
                 // --- 採掘人（鉱業＝鍛冶統合） ---
-                stone:    { icon: "🪨", name: "石",     count: 0, price: 6,  unlocked: false, workerKey: "miner",   gather: 0.35, req: { town: 2 } },
+                stone:    { icon: "🪨", name: "石",     count: 0, price: 6,  unlocked: false, workerKey: "miner",   gather: 0.45, req: { town: 2 } },
                 iron:     { icon: "🔩", name: "鉄鉱石", count: 0, price: 15, unlocked: false, workerKey: "miner",   gather: 0.12, req: { worker: "miner", wlv: 2 } },
                 silver:   { icon: "🥈", name: "銀鉱石", count: 0, price: 28, unlocked: false, workerKey: "miner",   gather: 0.06, req: { worker: "miner", wlv: 3 } },
                 gem:      { icon: "💠", name: "原石",   count: 0, price: 60, unlocked: false, workerKey: "miner",   gather: 0.03, req: { town: 4, worker: "miner", wlv: 4 } },
@@ -319,8 +332,8 @@
                 grapejuice:  { icon: "🧃", name: "ブドウジュース", count: 0, basePrice: 12, unlocked: false, facilityLv: 1, baseFacilityCost: 160, req: { worker: "gatherer", wlv: 3 } },
                 mixjuice:    { icon: "🥤", name: "ミックスジュース", count: 0, basePrice: 30, unlocked: false, facilityLv: 1, baseFacilityCost: 220, req: { worker: "gatherer", wlv: 3 } },
                 bread:       { icon: "🍞", name: "パン",       count: 0, basePrice: 12,  unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 2 } },
-                salad:       { icon: "🥗", name: "新鮮サラダ", count: 0, basePrice: 16,  unlocked: false, facilityLv: 1, baseFacilityCost: 180, req: { town: 2 } },
-                fries:       { icon: "🍟", name: "ポテトフライ", count: 0, basePrice: 16, unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 2 } },
+                salad:       { icon: "🥗", name: "新鮮サラダ", count: 0, basePrice: 16,  unlocked: false, facilityLv: 1, baseFacilityCost: 180, req: { town: 3 } },
+                fries:       { icon: "🍟", name: "ポテトフライ", count: 0, basePrice: 16, unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 3 } },
                 pie:         { icon: "🥧", name: "アップルパイ", count: 0, basePrice: 35, unlocked: false, facilityLv: 1, baseFacilityCost: 260, req: { town: 3 } },
                 sandwich:    { icon: "🥪", name: "サンドイッチ", count: 0, basePrice: 70, unlocked: false, facilityLv: 1, baseFacilityCost: 360, req: { town: 3 } },
                 clubhouse:   { icon: "🍔", name: "クラブハウスサンド", count: 0, basePrice: 130, unlocked: false, facilityLv: 1, baseFacilityCost: 500, req: { town: 5 } },
@@ -337,9 +350,16 @@
                 honeytoast:  { icon: "🧇", name: "ハニートースト", count: 0, basePrice: 80, unlocked: false, facilityLv: 1, baseFacilityCost: 460, req: { town: 4 } },
                 lemonade:    { icon: "🍹", name: "レモネード", count: 0, basePrice: 38,  unlocked: false, facilityLv: 1, baseFacilityCost: 300, req: { town: 4 } },
                 berrytart:   { icon: "🧁", name: "ベリータルト", count: 0, basePrice: 40, unlocked: false, facilityLv: 1, baseFacilityCost: 320, req: { town: 4 } },
+                icecream:    { icon: "🍦", name: "アイスクリーム", count: 0, basePrice: 28, unlocked: false, facilityLv: 1, baseFacilityCost: 260, req: { town: 3 } },
+                pudding:     { icon: "🍮", name: "プリン",     count: 0, basePrice: 42,  unlocked: false, facilityLv: 1, baseFacilityCost: 320, req: { town: 3 } },
+                cookie:      { icon: "🍪", name: "クッキー",   count: 0, basePrice: 36,  unlocked: false, facilityLv: 1, baseFacilityCost: 300, req: { town: 3 } },
+                chocolate:   { icon: "🍫", name: "チョコレート", count: 0, basePrice: 55, unlocked: false, facilityLv: 1, baseFacilityCost: 360, req: { town: 4 } },
+                donut:       { icon: "🍩", name: "チョコドーナツ", count: 0, basePrice: 90, unlocked: false, facilityLv: 1, baseFacilityCost: 460, req: { town: 4 } },
+                parfait:     { icon: "🍨", name: "パフェ",     count: 0, basePrice: 200, unlocked: false, facilityLv: 1, baseFacilityCost: 900, req: { town: 5 } },
+                grandcake:   { icon: "🎂", name: "デコレーションケーキ", count: 0, basePrice: 480, unlocked: false, facilityLv: 1, baseFacilityCost: 1800, req: { town: 6 } },
                 yogurt:      { icon: "🥣", name: "ヨーグルト", count: 0, basePrice: 12,  unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 2 } },
                 cheese:      { icon: "🧀", name: "チーズ",     count: 0, basePrice: 20,  unlocked: false, facilityLv: 1, baseFacilityCost: 240, req: { town: 2 } },
-                omelet:      { icon: "🍳", name: "オムレツ",   count: 0, basePrice: 16,  unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 2 } },
+                omelet:      { icon: "🍳", name: "オムレツ",   count: 0, basePrice: 16,  unlocked: false, facilityLv: 1, baseFacilityCost: 200, req: { town: 3 } },
                 pancake:     { icon: "🥞", name: "パンケーキ", count: 0, basePrice: 24,  unlocked: false, facilityLv: 1, baseFacilityCost: 280, req: { town: 3 } },
                 cloth:       { icon: "🧵", name: "布",         count: 0, basePrice: 24,  unlocked: false, facilityLv: 1, baseFacilityCost: 360, req: { worker: "dairy", wlv: 2 } },
                 leather:     { icon: "👝", name: "革",         count: 0, basePrice: 45,  unlocked: false, facilityLv: 1, baseFacilityCost: 420, req: { worker: "dairy", wlv: 4 } },
@@ -374,16 +394,17 @@
             },
 
             workers: {
-                gatherer: { name: "採取者", count: 0, baseCost: 50,  lv: 1, unlocked: true,  reqTown: 1, canUpgrade: true,  desc: "薬草・水・りんごを採取。強化でオレンジ→ブドウ→上薬草を発見" },
-                farmer:   { name: "農民",   count: 0, baseCost: 100, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "小麦を栽培。強化でじゃがいも→レタス→トマト。都市Lv3でサトウキビも" },
-                dairy:    { name: "酪農家", count: 0, baseCost: 130, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "ミルク生産（薬草を飼料に消費）。強化でたまご→羊毛→皮を発見" },
-                logger:   { name: "木こり", count: 0, baseCost: 140, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "木材を伐採。強化で硬い木材→メープル材を発見" },
-                miner:    { name: "採掘人", count: 0, baseCost: 180, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "石を採掘。強化で鉄→銀→原石→金鉱石を発見" },
-                hunter:   { name: "狩人",   count: 0, baseCost: 250, lv: 1, unlocked: false, reqTown: 3, canUpgrade: true,  desc: "生肉と魚を自動調達" },
-                cook:     { name: "料理人", count: 0, baseCost: 300, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "塩・ジュース・料理・乳製品を加工" },
-                blender:  { name: "調合人", count: 0, baseCost: 350, lv: 1, unlocked: false, reqTown: 3, canUpgrade: false, desc: "蒸留水・ポーション・上位ポーション・エリクサーを調合" },
-                craftsman:{ name: "職人",   count: 0, baseCost: 500, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "板・石・家具・道具・鍛冶・美術品を建造" },
-                merchant: { name: "商人",   count: 0, baseCost: 120, lv: 1, unlocked: true,  reqTown: 1, canUpgrade: false, desc: "ONにした品を自動出荷" }
+                gatherer: { name: "レンジャー", count: 0, baseCost: 50,  lv: 1, unlocked: true,  reqTown: 1, canUpgrade: true,  desc: "薬草・水・りんごを採取。強化でオレンジ→ブドウ→上薬草を発見" },
+                farmer:   { name: "ファーマー", count: 0, baseCost: 100, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "小麦を栽培。強化でじゃがいも→レタス→トマト。都市Lv3でサトウキビも" },
+                dairy:    { name: "ブリーダー", count: 0, baseCost: 130, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "ミルク生産（薬草を飼料に消費）。強化でたまご→羊毛→皮を発見" },
+                logger:   { name: "ウッドカッター", count: 0, baseCost: 140, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "木材を伐採。強化で硬い木材→メープル材を発見" },
+                miner:    { name: "マイナー", count: 0, baseCost: 180, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "石を採掘。強化で鉄→銀→原石→金鉱石を発見" },
+                hunter:   { name: "ハンター", count: 0, baseCost: 250, lv: 1, unlocked: false, reqTown: 3, canUpgrade: true,  desc: "生肉と魚を自動調達" },
+                cook:     { name: "シェフ",   count: 0, baseCost: 300, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "塩・パン・料理・乳製品・肉料理を加工" },
+                patissier:{ name: "パティシエ", count: 0, baseCost: 300, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "ジュース・砂糖・お菓子・スイーツを担当" },
+                blender:  { name: "アルケミスト", count: 0, baseCost: 350, lv: 1, unlocked: false, reqTown: 3, canUpgrade: false, desc: "蒸留水・ポーション・上位ポーション・エリクサーを調合" },
+                craftsman:{ name: "ビルダー", count: 0, baseCost: 500, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "板材・石材・鋼などの建材や、家具・道具・鍛冶・美術品を建造" },
+                merchant: { name: "マーチャント", count: 0, baseCost: 120, lv: 1, unlocked: true,  reqTown: 1, canUpgrade: false, desc: "ONにした品を自動出荷" }
             },
 
             autoSell: {},
@@ -414,6 +435,13 @@
                 mushroomsaute:{ costs: { mushroom: 2, salt: 1 },             auto: false, workerKey: "cook",      facilityName: "炒め場" },
                 lemonade:    { costs: { lemon: 2, water: 1, sugar: 1 },       auto: false, workerKey: "cook",      facilityName: "ドリンクバー" },
                 berrytart:   { costs: { berry: 2, wheat: 1, sugar: 1 },       auto: false, workerKey: "cook",      facilityName: "製菓店" },
+                icecream:    { costs: { milk: 1, sugar: 1 },                  auto: false, workerKey: "cook",      facilityName: "製氷菓子店" },
+                pudding:     { costs: { egg: 1, milk: 1, sugar: 1 },          auto: false, workerKey: "cook",      facilityName: "プリン工房" },
+                cookie:      { costs: { wheat: 1, sugar: 1, egg: 1 },         auto: false, workerKey: "cook",      facilityName: "焼き菓子店" },
+                chocolate:   { costs: { milk: 1, sugar: 2 },                  auto: false, workerKey: "cook",      facilityName: "ショコラ工房" },
+                donut:       { costs: { wheat: 1, sugar: 1, chocolate: 1 },   auto: false, workerKey: "cook",      facilityName: "ドーナツ店" },
+                parfait:     { costs: { icecream: 1, berry: 1, cake: 1 },     auto: false, workerKey: "cook",      facilityName: "パフェ専門店" },
+                grandcake:   { costs: { cake: 2, chocolate: 1, icecream: 1 }, auto: false, workerKey: "cook",      facilityName: "パティスリー" },
                 charcoal:    { costs: { wood: 2 },                           auto: false, workerKey: "craftsman", facilityName: "炭焼き窯" },
                 soup:        { costs: { fish: 1, salt: 1 },                  auto: false, workerKey: "cook",      facilityName: "大水車の調理場" },
                 smokedfish:  { costs: { fish: 2, charcoal: 1 },              auto: false, workerKey: "cook",      facilityName: "燻製小屋" },
@@ -455,7 +483,7 @@
                 { title: "💧 水・製塩ライン", materials: ["water"], crafts: ["salt", "distilledwater"] },
                 { title: "🍎 果樹・ジュースライン", materials: ["apple", "orange", "grape", "berry", "lemon"], crafts: ["applejuice", "orangejuice", "grapejuice", "mixjuice", "lemonade", "berrytart"] },
                 { title: "🌾 農業・調理ライン", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "pie", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
-                { title: "🍬 製糖・菓子ライン", materials: ["sugarcane"], crafts: ["sugar", "candy", "jam", "cake", "honeytoast"] },
+                { title: "🍬 製糖・スイーツライン", materials: ["sugarcane"], crafts: ["sugar", "candy", "jam", "cake", "honeytoast", "icecream", "pudding", "cookie", "chocolate", "donut", "parfait", "grandcake"] },
                 { title: "🐄 酪農・羊毛・皮革ライン", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
                 { title: "🪵 林業・木工家具ライン", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
                 { title: "🪨 鉱業・鍛冶・要塞ライン", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "steel", "statue", "tool", "silvertool", "goldtool", "ring", "diamond", "crown", "wall", "relief"] },
@@ -481,14 +509,54 @@
         // 加工品フラグと補助テーブルの初期化
         const CRAFT_KEYS = ["salt","distilledwater","applejuice","orangejuice","grapejuice","mixjuice","bread","salad","fries","pie",
             "sandwich","clubhouse","mushroomsaute","deluxedinner","afternoontea","ketchup","pizza","sugar","candy","jam","cake","honey","honeytoast",
-            "lemonade","berrytart","cheese","yogurt","omelet","pancake","cloth","leather","leatherbag",
+            "lemonade","berrytart","icecream","pudding","cookie","chocolate","donut","parfait","grandcake","cheese","yogurt","omelet","pancake","cloth","leather","leatherbag",
             "potion","greaterpotion","elixir","perfume","charcoal","board","hardboard","barrel","mason","statue","steel","fireplace","furniture",
             "tool","silvertool","goldtool","crown","ring","diamond","wall","relief",
             "stew","soup","smokedfish","fishfry","skewer","steak"];
-        CRAFT_KEYS.forEach(k => { GAME.resources[k].isCraft = true; });
-        // assigned = 各品に配置された職人数 / autoSell = 自動売却
-        GAME.assigned = {};
-        for (let k in GAME.resources) { GAME.autoSell[k] = false; GAME.assigned[k] = 0; GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; }
+        // 設備は最初「未建設」(facilityLv=0)。建設してから加工できる
+        CRAFT_KEYS.forEach(k => { GAME.resources[k].isCraft = true; GAME.resources[k].facilityLv = 0; });
+        // assigned = 各品に配置された職人数 / autoSell = 自動売却 / craftCarry = 設備速度の端数繰越
+        GAME.assigned = {}; GAME.craftCarry = {};
+        for (let k in GAME.resources) { GAME.autoSell[k] = false; GAME.assigned[k] = 0; GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; GAME.craftCarry[k] = 0; }
+
+        // ジュース・お菓子・スイーツはパティシエへ移管（シェフの負担分散）
+        ['applejuice','orangejuice','grapejuice','mixjuice','lemonade','sugar','candy','jam','cake','honey','honeytoast','berrytart','icecream','pudding','cookie','chocolate','donut','parfait','grandcake']
+            .forEach(k => { if (GAME.recipes[k]) GAME.recipes[k].workerKey = 'patissier'; });
+
+        // ============ 設備の建設・強化（チャリン＋建材） ============
+        // 建材＝木材/石材ライン由来。建材を作る設備・序盤の設備はチャリンのみで建設可（詰み回避）
+        const FACILITY_GOLD_ONLY = new Set(['board','hardboard','mason','steel','charcoal','salt']);
+        function facilityCostGold(key) {
+            let res = GAME.resources[key];
+            return Math.floor(res.baseFacilityCost * Math.pow(1.7, res.facilityLv)); // 未建設(0)=base / 以降は倍々
+        }
+        function facilityCostMat(key) {
+            let res = GAME.resources[key];
+            if (FACILITY_GOLD_ONLY.has(key) || res.isCustom) return {};
+            let c = res.baseFacilityCost, base;
+            if (c < 300) base = { board: 3 };
+            else if (c < 500) base = { board: 4, mason: 2 };
+            else if (c < 900) base = { hardboard: 3, mason: 3 };
+            else base = { hardboard: 4, steel: 2, mason: 4 };
+            let lvf = 1 + res.facilityLv * 0.6;   // 強化のたび必要量UP
+            let out = {};
+            for (let m in base) out[m] = Math.ceil(base[m] * lvf);
+            return out;
+        }
+        function canBuildFacility(key) {
+            if (GAME.gold < facilityCostGold(key)) return false;
+            let mat = facilityCostMat(key);
+            for (let m in mat) { if (GAME.resources[m].count < mat[m]) return false; }
+            return true;
+        }
+        function buildFacility(key) {
+            if (!canBuildFacility(key)) return;
+            GAME.gold -= facilityCostGold(key);
+            let mat = facilityCostMat(key);
+            for (let m in mat) { GAME.resources[m].count -= mat[m]; }
+            GAME.resources[key].facilityLv += 1;
+            updateUI();
+        }
         // 「自動配置」は既定OFF（雇った職人はプールに残り、＋ボタンで手動配置できる）
         for (let k in GAME.workers) { if (k !== 'merchant') GAME.workers[k].autoAssign = false; }
         GAME.customKeys = [];   // 独自レシピのキー一覧
@@ -503,6 +571,7 @@
             miner:    { dress:'#9aa6bf', cap:'#ffd93b', tool:'⛏️' },
             hunter:   { dress:'#6f9e62', cap:'#4d6b3f', tool:'🏹' },
             cook:     { dress:'#f4f6fb', cap:'#f4f6fb', tool:'🍳' },
+            patissier:{ dress:'#ffd1e8', cap:'#ff9ecb', tool:'🍰' },
             blender:  { dress:'#c49bf0', cap:'#8a5cd6', tool:'⚗️' },
             craftsman:{ dress:'#e0975a', cap:'#b5651d', tool:'🔨' },
             merchant: { dress:'#5ecfce', cap:'#f2cf66', tool:'💰' }
@@ -510,7 +579,7 @@
         function themeFor(wk) { return WORKER_THEME[wk] || { dress:'#ff9ecb', cap:'#ffd1e8', tool:'💗' }; }
 
         // 職業ごとの作業モーション（加工職＝専用、それ以外の採取系＝gather）
-        const WORKER_ACTION = { cook:'cook', blender:'mix', craftsman:'craft', merchant:'idle' };
+        const WORKER_ACTION = { cook:'cook', patissier:'mix', blender:'mix', craftsman:'craft', merchant:'idle' };
         function actionFor(wk) { return WORKER_ACTION[wk] || 'gather'; }
 
         // 1体ぶんのドットリオちゃんSVGを返す
@@ -662,7 +731,7 @@
 
         function getCurrentPrice(key) {
             let res = GAME.resources[key];
-            if (res.isCraft) { return res.basePrice * res.facilityLv; }
+            if (res.isCraft) { return res.basePrice * Math.max(1, res.facilityLv); }
             return res.price;
         }
 
@@ -700,6 +769,7 @@
             let best = null, bestVal = Infinity;
             for (let k in GAME.resources) {
                 if (!GAME.resources[k].unlocked) continue;
+                if (GAME.resources[k].isCraft && GAME.resources[k].facilityLv < 1) continue;  // 未建設は配置先にしない
                 if (resWorkerKey(k) !== workerKey) continue;
                 if (GAME.assigned[k] < bestVal) { bestVal = GAME.assigned[k]; best = k; }
             }
@@ -724,7 +794,7 @@
             for (let wk in GAME.workers) {
                 if (wk === 'merchant') continue;
                 let total = GAME.workers[wk].count;
-                let items = Object.keys(GAME.resources).filter(k => GAME.resources[k].unlocked && resWorkerKey(k) === wk);
+                let items = Object.keys(GAME.resources).filter(k => GAME.resources[k].unlocked && resWorkerKey(k) === wk && !(GAME.resources[k].isCraft && GAME.resources[k].facilityLv < 1));
                 let chosen = items.filter(k => GAME.assigned[k] > 0);
                 let targets = chosen.length ? chosen : items;
                 items.forEach(k => GAME.assigned[k] = 0);
@@ -756,9 +826,10 @@
         }
 
         function manualGather() {
-            GAME.resources.water.count += 1;
-            GAME.resources.herb.count += 1;
-            if (GAME.resources.apple.unlocked) GAME.resources.apple.count += 0.5;
+            let b = 1 + Math.floor(GAME.townLevel / 2);   // 都市Lvが上がるほど手採取量UP
+            GAME.resources.water.count += b;
+            GAME.resources.herb.count += b;
+            if (GAME.resources.apple.unlocked) GAME.resources.apple.count += b * 0.5;
             updateUI();
         }
 
@@ -790,6 +861,7 @@
         }
 
         function craftItem(key) {
+            if (GAME.resources[key].facilityLv < 1) return;   // 設備未建設
             let recipe = GAME.recipes[key];
             if (canAfford(recipe.costs)) {
                 for (let m in recipe.costs) { GAME.resources[m].count -= recipe.costs[m]; }
@@ -815,12 +887,6 @@
                 GAME.gold -= cost; worker.lv += 1;
                 updateLockState(); updateUI();
             }
-        }
-
-        function upgradeFacility(key) {
-            let res = GAME.resources[key];
-            let cost = Math.floor(res.baseFacilityCost * Math.pow(1.8, res.facilityLv - 1));
-            if (GAME.gold >= cost) { GAME.gold -= cost; res.facilityLv += 1; updateUI(); }
         }
 
         function toggleAutoSell(key, checked) { GAME.autoSell[key] = checked; }
@@ -916,14 +982,17 @@
 
             let recipe = GAME.recipes[key];
             let sellChecked = GAME.autoSell[key] ? 'checked' : '';
-
+            let built = res.facilityLv >= 1;
             let assignedHere = GAME.assigned[key];
-            let workerStatusClass = assignedHere > 0 ? 'worker-requirement active' : 'worker-requirement';
-            let workerStatusText = assignedHere > 0
-                ? `✓ ${recipe.facilityName}稼働中（${assignedHere}人）`
-                : `⏸ ${GAME.workers[recipe.workerKey].name}を配置で稼働`;
 
-            let canCraft = true;
+            let workerStatusClass = (built && assignedHere > 0) ? 'worker-requirement active' : 'worker-requirement';
+            let workerStatusText = !built
+                ? `🏗️ ${recipe.facilityName}は未建設`
+                : (assignedHere > 0
+                    ? `✓ ${recipe.facilityName}稼働中（${assignedHere}人・設備Lv.${res.facilityLv}）`
+                    : `⏸ ${GAME.workers[recipe.workerKey].name}を配置で稼働`);
+
+            let canCraft = built;
             let badgeDesc = '';
             for (let mat in recipe.costs) {
                 let has = Math.floor(GAME.resources[mat].count); let req = recipe.costs[mat];
@@ -931,11 +1000,16 @@
                 badgeDesc += `<span class="badge ${has >= req ? 'meet' : ''}">${GAME.resources[mat].icon}${GAME.resources[mat].name.substring(0, 3)}:${has}/${req}</span>`;
             }
 
-            let currentPrice = res.basePrice * res.facilityLv;
-            let facilityCost = Math.floor(res.baseFacilityCost * Math.pow(1.8, res.facilityLv - 1));
+            let currentPrice = res.basePrice * Math.max(1, res.facilityLv);
             let qualityLabelText = res.facilityLv > 1 ? `<span class="quality-label">品質Lv.${res.facilityLv}</span>` : '';
-
             let speedText = GAME.mProduce[key] > 0 ? `<span class="speed-text plus">(+${GAME.mProduce[key].toFixed(1)}/秒)</span>` : '<span class="speed-text" style="color:#94a3b8;">(0.0/秒)</span>';
+
+            // 設備の建設／強化（チャリン＋建材）
+            let fGold = facilityCostGold(key);
+            let fMat = facilityCostMat(key);
+            let matStr = Object.keys(fMat).map(m => `${GAME.resources[m].icon}${fMat[m]}`).join(' ');
+            let canF = canBuildFacility(key);
+            let facBtn = `<button onclick="buildFacility('${key}')" ${canF ? '' : 'disabled'} style="background:${built ? '#ffb15c' : '#16a34a'}; padding:3px 5px; font-size:0.66rem; margin-top:2px; width:100%; white-space:normal; line-height:1.25;">${built ? `⚙️強化 Lv.${res.facilityLv}→${res.facilityLv + 1}` : '🏗️ 設備を建設'}<br>${fGold}チャリン${matStr ? ' ＋ ' + matStr : ''}</button>`;
 
             let delBtn = res.isCustom ? `<button onclick="deleteCustomRecipe('${key}')" style="background:#dc2626; padding:2px 4px; font-size:0.7rem; margin-top:2px; width:100%;">🗑 削除</button>` : '';
 
@@ -946,15 +1020,15 @@
                         <div class="badge-area" style="display:flex; flex-wrap:wrap; gap:2px; margin-top:2px;">${badgeDesc}</div>
                         <span class="item-meta" style="margin-top:2px; font-weight:bold;">売値: ${currentPrice}チャリン ${qualityLabelText}</span>
                         <span class="${workerStatusClass}">${workerStatusText}</span>
-                        ${assignControlHTML(key)}
-                        ${assignedSprites(recipe.workerKey, assignedHere, key)}
+                        ${built ? assignControlHTML(key) : ''}
+                        ${built ? assignedSprites(recipe.workerKey, assignedHere, key) : ''}
                     </div>
                     <div class="control-cluster" style="flex-direction: column; align-items: flex-end; gap: 3px;">
                         <button onclick="craftItem('${key}')" ${canCraft ? '' : 'disabled'} style="background:#475569; padding:2px 6px; font-size:0.75rem;">手動作成</button>
                         <div style="display:flex; gap:4px; align-items:center; margin-top:1px;">
                             <label><input type="checkbox" ${sellChecked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label> <button onclick="sellItem('${key}')" style="background:#b45309; padding:2px 6px; font-size:0.75rem;">売却</button>
                         </div>
-                        <button onclick="upgradeFacility('${key}')" ${GAME.gold >= facilityCost ? '' : 'disabled'} style="background:#ffb15c; padding:2px 4px; font-size:0.7rem; margin-top:2px; width:100%;">⚙️投資:${facilityCost}チャリン</button>
+                        ${facBtn}
                         ${delBtn}
                     </div>
                 </div>`;
@@ -974,7 +1048,7 @@
 
             let opts = '<option value="">―</option>' + unlockedKeys.map(k =>
                 `<option value="${k}">${GAME.resources[k].icon}${GAME.resources[k].name}</option>`).join('');
-            let workerOpts = ['cook', 'craftsman', 'blender'].map(w =>
+            let workerOpts = ['cook', 'patissier', 'craftsman', 'blender'].map(w =>
                 `<option value="${w}">${GAME.workers[w].name}</option>`).join('');
             let rows = [1, 2, 3].map(i =>
                 `<div class="ing-row">材料${i}: <select id="cing${i}" onchange="updateCustomPreview()">${opts}</select>
@@ -1195,20 +1269,25 @@
             // 加工（配置人数 = 毎秒の加工試行回数。recipes の定義順＝加工順）
             for (let k in GAME.recipes) {
                 let r = GAME.recipes[k];
-                let power = GAME.assigned[k];
-                if (power <= 0) continue;
-                if (!GAME.resources[k].unlocked) continue;
-                for (let i = 0; i < power; i++) {
-                    if (!canAfford(r.costs)) break;
+                let res = GAME.resources[k];
+                let assigned = GAME.assigned[k];
+                if (assigned <= 0) continue;
+                if (!res.unlocked || res.facilityLv < 1) continue;   // 未建設は生産しない
+                let speed = 1 + (res.facilityLv - 1) * 0.4;          // 設備強化で生産速度UP
+                let raw = assigned * speed + (GAME.craftCarry[k] || 0);
+                let n = Math.floor(raw);
+                GAME.craftCarry[k] = raw - n;
+                for (let i = 0; i < n; i++) {
+                    if (!canAfford(r.costs)) { GAME.craftCarry[k] = 0; break; }
                     for (let m in r.costs) { GAME.resources[m].count -= r.costs[m]; GAME.mConsume[m] += r.costs[m]; }
-                    GAME.resources[k].count += 1; GAME.mProduce[k] += 1;
+                    res.count += 1; GAME.mProduce[k] += 1;
                 }
             }
 
             // 商人による自動出荷
             let mc = GAME.workers.merchant;
             if (mc.count > 0) {
-                let sellRate = mc.count * 2;
+                let sellRate = mc.count * 3;
                 for (let k in GAME.autoSell) {
                     if (GAME.autoSell[k] && GAME.resources[k].unlocked && GAME.resources[k].count >= 1) {
                         let toSell = Math.min(Math.floor(GAME.resources[k].count), sellRate);
