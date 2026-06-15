@@ -244,7 +244,17 @@
             </div>
         </div>
 
-        <div class="section-title">📦 生産管理ツリー（左：素材収支 ➔ 右：対応する加工設備）。職人を「👷配置」した品だけ生産されます</div>
+        <div class="section-title">📦 生産ツリー（職人を「👷配置」した品だけ生産）
+            <span style="font-weight:400; margin-left:6px; white-space:nowrap;">
+                <button onclick="collapseAll(true)" style="font-size:0.66rem; padding:2px 8px; background:#94a3b8;">▶ 全部たたむ</button>
+                <button onclick="collapseAll(false)" style="font-size:0.66rem; padding:2px 8px; background:#0369a1;">▼ 全部開く</button>
+            </span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#fff0f7; border:1px solid #ffd1e8; border-radius:10px; padding:5px 10px; margin-bottom:6px; font-size:0.8rem;">
+            <span style="font-weight:800; color:#b45309;">💰 一括自動売却：</span>
+            <label style="display:flex; align-items:center; gap:3px;"><input type="checkbox" id="autosell-raw" onchange="setAllAutoSell('raw', this.checked)"> 素材すべて</label>
+            <label style="display:flex; align-items:center; gap:3px;"><input type="checkbox" id="autosell-craft" onchange="setAllAutoSell('craft', this.checked)"> 加工品すべて</label>
+        </div>
         <div class="line-container" id="production-lines"></div>
 
         <div class="section-title">🔧 独自レシピを作る（手持ち素材からオリジナル加工品を登録）</div>
@@ -280,7 +290,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
-            <p style="margin:0;"><b>2026-06-15</b>：歩くリオちゃんに<b>レアモーション</b>を追加（時々💕や🎵を出しつつ<b>くるっと回転</b>したり<b>バンザイ＆ジャンプ</b>したり）。整備の必要素材を<b>名前＋所持/必要＋色分け</b>で明記。全年齢向けに用語を調整（木の樽→木箱／ドリンクバー→ドリンクスタンド）。</p>
+            <p style="margin:0;"><b>2026-06-16</b>：<b>ベリー→いちご🍓</b>に変更（ジュース・タルト・パフェも「いちご」表記）。価格・表示順・アイコンを点検し調整（ジュースのアイコン重複を解消／メープル材を硬い木材より高く／木工・鉱業の並びを解放順に）。<b>QoL強化</b>：職人カードに<b>未配置の品を一覧</b>（クリックで即配置）。<b>発展に必要な物</b>の表示を分かりやすく。<b>生産ラインを折りたたみ</b>（見出しクリック／全部たたむ・開く）。<b>一括自動売却</b>（素材／加工品それぞれON/OFF）。共有ボタンも設置済み。</p>
         </div>
     </div>
 
@@ -493,8 +503,8 @@
                 { title: "🌾 農業", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
                 { title: "🍬 スイーツ", materials: ["sugarcane"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake"] },
                 { title: "🐄 酪農", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
-                { title: "🪵 木工", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "hardboard", "barrel", "honey", "fireplace", "furniture"] },
-                { title: "🪨 鉱業", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "steel", "statue", "tool", "silvertool", "goldtool", "ring", "diamond", "crown", "wall", "relief"] },
+                { title: "🪵 木工", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "fireplace", "hardboard", "barrel", "honey", "furniture"] },
+                { title: "🪨 鉱業", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "tool", "ring", "steel", "statue", "silvertool", "diamond", "wall", "goldtool", "relief", "crown"] },
                 { title: "🍖 漁・狩", materials: ["fish", "meat"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak"] },
                 { title: "🔧 オリジナル", materials: [], crafts: [], custom: true }
             ],
@@ -548,10 +558,15 @@
         };
         Object.keys(REQ_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].req = REQ_OVERRIDE[k]; });
         // 売値の見直し（解放順＝早い物ほど安く）。順番を変えた果物の原料・加工品を中心に
-        const PRICE_OVERRIDE = { berry:2, apple:3, orange:4, grape:6, lemon:8 };            // 原料(price)
+        const PRICE_OVERRIDE = { berry:2, apple:3, orange:4, grape:6, lemon:8, maple:18 };  // 原料(price)。mapleは硬い木材(16)より高く
         Object.keys(PRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].price = PRICE_OVERRIDE[k]; });
         const BASEPRICE_OVERRIDE = { berryjuice:8, berrytart:34, jam:30, applejuice:8, orangejuice:11, grapejuice:14 }; // 加工品(basePrice)
         Object.keys(BASEPRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].basePrice = BASEPRICE_OVERRIDE[k]; });
+        // ベリー→いちご（名前）。berry(原料)🍓と被らないようジュース系のアイコンも調整。お酒連想は回避
+        const NAME_OVERRIDE = { berry:'いちご', berryjuice:'いちごジュース', berrytart:'いちごタルト' };
+        Object.keys(NAME_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].name = NAME_OVERRIDE[k]; });
+        const ICON_OVERRIDE = { berry:'🍓', orangejuice:'🧉', grapejuice:'🧋', berryjuice:'🥤', mixjuice:'🍹', lemonade:'🍵' };
+        Object.keys(ICON_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].icon = ICON_OVERRIDE[k]; });
         // 初期解放の付け替え：ベリーを最初の果物に／りんご・りんごジュースは非解放スタート
         GAME.resources.berry.unlocked = true;
         GAME.resources.apple.unlocked = false;
@@ -648,6 +663,7 @@
         for (let k in GAME.workers) { if (k !== 'merchant') GAME.workers[k].autoAssign = false; }
         GAME.customKeys = [];   // 独自レシピのキー一覧
         GAME.customSeq = 0;
+        GAME.collapsed = {};    // 折りたたんだ生産ライン（index→true）
 
         // ============ ドット絵リオちゃん（職業ごとに服装・帽子・持ち物が変化） ============
         const WORKER_THEME = {
@@ -1014,6 +1030,32 @@
         }
 
         function toggleAutoSell(key, checked) { GAME.autoSell[key] = checked; }
+
+        // 一括自動売却：type='raw'(素材) / 'craft'(加工品) の解放済みを一括ON/OFF
+        function setAllAutoSell(type, checked) {
+            for (let k in GAME.resources) {
+                let r = GAME.resources[k];
+                if (!r.unlocked) continue;
+                if (type === 'raw' && r.isCraft) continue;
+                if (type === 'craft' && !r.isCraft) continue;
+                GAME.autoSell[k] = checked;
+            }
+            updateUI();
+        }
+
+        // 生産ラインの折りたたみ
+        function toggleLine(i) { GAME.collapsed[i] = !GAME.collapsed[i]; updateUI(); }
+        function collapseAll(v) { GAME.lines.forEach((l, i) => { GAME.collapsed[i] = v; }); updateUI(); }
+
+        // この職人を配置できる「解放済み・未配置(0)」の品（クラフトは建設済みのみ）
+        function unassignedTargets(workerKey) {
+            return Object.keys(GAME.resources).filter(k => {
+                let r = GAME.resources[k];
+                if (!r.unlocked || resWorkerKey(k) !== workerKey) return false;
+                if (r.isCraft && r.facilityLv < 1) return false;   // 未建設は配置不可
+                return GAME.assigned[k] === 0;
+            });
+        }
         function toggleAutoCraft(key, checked) { GAME.recipes[key].auto = checked; }
 
         // 共有：スマホは端末の共有シート、PCはX投稿が開く
@@ -1270,7 +1312,7 @@
 
             // 生産ツリー
             let linesHtml = '';
-            GAME.lines.forEach(line => {
+            GAME.lines.forEach((line, li) => {
                 // 独自レシピ行は customKeys を動的に表示（1件も無ければ非表示）
                 let crafts = line.custom ? GAME.customKeys : (line.crafts || []);
                 let anyVisible = false;
@@ -1279,7 +1321,10 @@
                 if (line.custom && GAME.customKeys.length === 0) return;
 
                 if (anyVisible || line.custom) {
-                    let html = `<div class="production-block"><div class="block-title">${line.title}</div><div class="grid-split">`;
+                    let collapsed = GAME.collapsed[li];
+                    let html = `<div class="production-block"><div class="block-title" style="cursor:pointer; user-select:none;" onclick="toggleLine(${li})">${collapsed ? '▶' : '▼'} ${line.title}</div>`;
+                    if (!collapsed) {
+                    html += `<div class="grid-split">`;
                     html += `<div class="source-side">`;
                     line.materials.forEach(mat => { html += getMaterialRowHTML(mat); });
                     if (line.materials.length === 0) html += `<div class="craft-empty">下のフォームから作成</div>`;
@@ -1291,11 +1336,18 @@
                         html += getCraftSideHTML(null);
                     }
                     html += `</div>`;
-                    html += `</div></div>`;
+                    html += `</div>`;
+                    }
+                    html += `</div>`;
                     linesHtml += html;
                 }
             });
             document.getElementById('production-lines').innerHTML = linesHtml;
+            // 一括自動売却チェックの状態を反映（全部ONならチェック）
+            let _raws = Object.keys(GAME.resources).filter(k => !GAME.resources[k].isCraft && GAME.resources[k].unlocked);
+            let _crafts = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].unlocked);
+            let _er = document.getElementById('autosell-raw'); if (_er) _er.checked = _raws.length > 0 && _raws.every(k => GAME.autoSell[k]);
+            let _ec = document.getElementById('autosell-craft'); if (_ec) _ec.checked = _crafts.length > 0 && _crafts.every(k => GAME.autoSell[k]);
             renderCustomForm();
 
             // 職人
@@ -1318,9 +1370,16 @@
                         .filter(rk => GAME.assigned[rk] > 0 && resWorkerKey(rk) === k)
                         .map(rk => `${GAME.resources[rk].icon}${GAME.resources[rk].name}:${GAME.assigned[rk]}`).join(' / ');
                     let breakdownHTML = breakdown ? `<div style="font-size:0.66rem; color:#475569; word-break:break-word;">→ ${breakdown}</div>` : '';
+                    // 未配置（配置0）の解放済み品。クリックで1人配置（空きがある時）
+                    let targets = unassignedTargets(k);
+                    let avail = worker.count - used;
+                    let targetHTML = targets.length ? `
+                        <div style="font-size:0.64rem; color:#0369a1; margin-top:3px;">未配置（クリックで配置${avail<=0?'・空き無し':''}）：</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:3px; margin-top:2px;">${targets.map(t => `<span onclick="changeAssign('${t}',1)" style="cursor:pointer; background:#e0f2fe; border:1px solid #7dd3fc; border-radius:6px; padding:1px 5px; font-size:0.64rem; ${avail<=0?'opacity:.55;':''}">${GAME.resources[t].icon}${GAME.resources[t].name}</span>`).join('')}</div>` : '';
                     assignInfoHTML = `
                         <div style="font-size:0.68rem; color:#0369a1; font-weight:bold;">配置 ${used}/${worker.count}人（空${worker.count - used}）</div>
                         ${breakdownHTML}
+                        ${targetHTML}
                         <label class="auto-assign-label"><input type="checkbox" ${autoChk} onchange="toggleAutoAssign('${k}', this.checked)"> 雇用時に自動配置</label>`;
                 }
                 workerHtml += `
@@ -1377,12 +1436,13 @@
             let reqBox = document.getElementById('town-requirements');
             if (nextUp && GAME.townLevel < GAME.maxTown) {
                 btn.innerText = `🏰 発展→Lv.${GAME.townLevel + 1}`;
-                let reqHtml = `<span class="badge ${GAME.gold >= nextUp.gold ? 'meet' : ''}">${Math.floor(GAME.gold)}/${nextUp.gold}チャリン</span>`;
+                let reqHtml = `<div style="flex-basis:100%; font-size:0.7rem; font-weight:800; color:#a65a8a; margin-bottom:2px;">🏰 Lv.${GAME.townLevel + 1} 発展に必要：</div>`;
+                reqHtml += `<span class="badge ${GAME.gold >= nextUp.gold ? 'meet' : ''}">🪙${Math.floor(GAME.gold)}/${nextUp.gold}チャリン</span>`;
                 let btnActive = (GAME.gold >= nextUp.gold);
                 for (let k in nextUp.req) {
                     let has = Math.floor(GAME.resources[k].count); let req = nextUp.req[k];
                     if (has < req) btnActive = false;
-                    reqHtml += `<span class="badge ${has >= req ? 'meet' : ''}">${GAME.resources[k].icon}${GAME.resources[k].name}:${has}/${req}</span>`;
+                    reqHtml += `<span class="badge ${has >= req ? 'meet' : ''}">${GAME.resources[k].icon}${GAME.resources[k].name} ${has}/${req}</span>`;
                 }
                 reqBox.innerHTML = reqHtml;
                 btn.disabled = !btnActive;
