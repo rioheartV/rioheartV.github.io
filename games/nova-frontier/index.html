@@ -185,6 +185,15 @@
         @keyframes wanderA { 0%{left:6%;bottom:8%;} 25%{left:40%;bottom:13%;} 45%{left:40%;bottom:13%;} 72%{left:70%;bottom:7%;} 100%{left:6%;bottom:8%;} }
         @keyframes wanderB { 0%{left:72%;bottom:14%;} 30%{left:28%;bottom:8%;} 55%{left:50%;bottom:12%;} 80%{left:50%;bottom:12%;} 100%{left:72%;bottom:14%;} }
         @keyframes wanderC { 0%{left:20%;bottom:10%;} 35%{left:62%;bottom:15%;} 62%{left:34%;bottom:8%;} 100%{left:20%;bottom:10%;} }
+        /* リオちゃんのレアモーション（時々ハート等をふわっと） */
+        .rio-emote { position:absolute; left:50%; top:-7px; transform:translate(-50%,0); font-size:11px; line-height:1; opacity:0; pointer-events:none; animation: rioEmote 13s ease-out infinite; }
+        @keyframes rioEmote { 0%,80%{ opacity:0; transform:translate(-50%,2px) scale(.4); } 85%{ opacity:1; transform:translate(-50%,-6px) scale(1.1); } 95%{ opacity:1; transform:translate(-50%,-12px) scale(1); } 100%{ opacity:0; transform:translate(-50%,-16px) scale(.9); } }
+        /* レアモーション：くるっと回転／バンザイ＆ジャンプ */
+        .rio-act { display:inline-block; transform-origin:bottom center; }
+        @keyframes gSpin { 0%,82%{ transform:rotate(0); } 90%{ transform:rotate(180deg); } 97%,100%{ transform:rotate(360deg); } }
+        @keyframes gHop  { 0%,82%{ transform:translateY(0); } 88%{ transform:translateY(-6px); } 94%{ transform:translateY(-5px); } 100%{ transform:translateY(0); } }
+        @keyframes armUpL { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(135deg); } 100%{ transform:rotate(0); } }
+        @keyframes armUpR { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(-135deg); } 100%{ transform:rotate(0); } }
         .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
         @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
         .develop-btn { display:block; margin:0; }
@@ -269,7 +278,7 @@
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
-            <p style="margin:0;"><b>2026-06-15</b>：発展条件を<b>毎プレイ ランダム化</b>🎲。<b>整備</b>（🛣街道→出荷速度／🌳果樹園・🐄牧場・🌾農場・⛏製材採掘→採取速度／🏪マーケット→売値）を建材でレベル強化（マップにも反映）。発展時に<b>クラッカー🎉</b>、家は<b>建てた設備だけ</b>表示。各ラインの解放を1Lvずつに整理＆<b>ライン名を短縮</b>。<b>ベリージュース</b>追加＆<b>売値を解放順に見直し</b>、薬・水の加工品を素材順に整列。</p>
+            <p style="margin:0;"><b>2026-06-15</b>：歩くリオちゃんに<b>レアモーション</b>を追加（時々💕や🎵を出しつつ<b>くるっと回転</b>したり<b>バンザイ＆ジャンプ</b>したり）。整備の必要素材を<b>名前＋所持/必要＋色分け</b>で明記。全年齢向けに用語を調整（木の樽→木箱／ドリンクバー→ドリンクスタンド）。</p>
         </div>
     </div>
 
@@ -368,7 +377,7 @@
                 charcoal:    { icon: "⚫", name: "木炭",       count: 0, basePrice: 12,  unlocked: false, facilityLv: 1, baseFacilityCost: 160, req: { town: 2 } },
                 board:       { icon: "🟫", name: "板材",       count: 0, basePrice: 14,  unlocked: false, facilityLv: 1, baseFacilityCost: 300, req: { town: 2 } },
                 hardboard:   { icon: "🟤", name: "硬い板材",   count: 0, basePrice: 38,  unlocked: false, facilityLv: 1, baseFacilityCost: 420, req: { worker: "logger", wlv: 3 } },
-                barrel:      { icon: "🛢️", name: "木の樽",     count: 0, basePrice: 45,  unlocked: false, facilityLv: 1, baseFacilityCost: 400, req: { town: 4 } },
+                barrel:      { icon: "📦", name: "木箱",       count: 0, basePrice: 45,  unlocked: false, facilityLv: 1, baseFacilityCost: 400, req: { town: 4 } },
                 mason:       { icon: "🧱", name: "石材",       count: 0, basePrice: 16,  unlocked: false, facilityLv: 1, baseFacilityCost: 350, req: { town: 2 } },
                 statue:      { icon: "🗿", name: "石像",       count: 0, basePrice: 90,  unlocked: false, facilityLv: 1, baseFacilityCost: 700, req: { town: 4 } },
                 steel:       { icon: "⛓️", name: "鋼",         count: 0, basePrice: 45,  unlocked: false, facilityLv: 1, baseFacilityCost: 460, req: { town: 4 } },
@@ -431,7 +440,7 @@
                 honey:       { costs: { maple: 2 },                          auto: false, workerKey: "cook",      facilityName: "採蜜所" },
                 honeytoast:  { costs: { bread: 1, honey: 1 },                auto: false, workerKey: "cook",      facilityName: "製菓店" },
                 mushroomsaute:{ costs: { mushroom: 2, salt: 1 },             auto: false, workerKey: "cook",      facilityName: "炒め場" },
-                lemonade:    { costs: { lemon: 2, water: 1, sugar: 1 },       auto: false, workerKey: "cook",      facilityName: "ドリンクバー" },
+                lemonade:    { costs: { lemon: 2, water: 1, sugar: 1 },       auto: false, workerKey: "cook",      facilityName: "ドリンクスタンド" },
                 berrytart:   { costs: { berry: 2, wheat: 1, sugar: 1 },       auto: false, workerKey: "cook",      facilityName: "製菓店" },
                 icecream:    { costs: { milk: 1, sugar: 1 },                  auto: false, workerKey: "cook",      facilityName: "製氷菓子店" },
                 pudding:     { costs: { egg: 1, milk: 1, sugar: 1 },          auto: false, workerKey: "cook",      facilityName: "プリン工房" },
@@ -460,7 +469,7 @@
                 cloth:       { costs: { wool: 2 },                           auto: false, workerKey: "craftsman", facilityName: "織物工房" },
                 leather:     { costs: { hide: 2 },                           auto: false, workerKey: "craftsman", facilityName: "なめし工房" },
                 leatherbag:  { costs: { leather: 2, cloth: 1 },              auto: false, workerKey: "craftsman", facilityName: "鞄工房" },
-                barrel:      { costs: { board: 2, iron: 1 },                 auto: false, workerKey: "craftsman", facilityName: "樽工房" },
+                barrel:      { costs: { board: 2, iron: 1 },                 auto: false, workerKey: "craftsman", facilityName: "木箱工房" },
                 mason:       { costs: { stone: 2 },                          auto: false, workerKey: "craftsman", facilityName: "石材加工場" },
                 steel:       { costs: { iron: 2, charcoal: 1 },              auto: false, workerKey: "craftsman", facilityName: "製鋼炉" },
                 furniture:   { costs: { board: 2, hardboard: 1, cloth: 1 },  auto: false, workerKey: "craftsman", facilityName: "高級家具工房" },
@@ -661,7 +670,7 @@
         // 1体ぶんのドットリオちゃんSVGを返す
         // リオちゃんの素体は固定：金髪ボブ＋青い目＋オレンジの花の髪飾り＋ピンクの靴。
         // 職業ごとに帽子(cap)・上衣(top)・スカート(skirt)・リボン(ribbon)・持ち物(tool)を変える。
-        function riochanSVG(theme, px, action, fx) {
+        function riochanSVG(theme, px, action, fx, armAnim) {
             px = px || 28;
             const t = theme || {};
             const top = t.top || t.dress || '#ffb3d1';     // 上衣（既定＝ピンク）
@@ -680,8 +689,10 @@
             s += r(5,5,1,1,'#dceaff') + r(8,5,1,1,'#dceaff');// ハイライト
             s += r(4,6,1,1,'#ffb3d1') + r(9,6,1,1,'#ffb3d1');// ほっぺ
             s += r(7,7,1,1,'#e07da0');                       // 口
-            s += `<rect class="larm" x="3" y="9" width="1" height="2" fill="${SKIN}"/>`; // 左腕（動く）
-            s += `<rect class="rarm" x="10" y="9" width="1" height="2" fill="${SKIN}"/>`;// 右腕（動く）
+            const aL = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpL ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
+            const aR = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpR ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
+            s += `<rect class="larm" x="3" y="9" width="1" height="2" fill="${SKIN}"${aL}/>`; // 左腕（動く）
+            s += `<rect class="rarm" x="10" y="9" width="1" height="2" fill="${SKIN}"${aR}/>`;// 右腕（動く）
             s += r(4,8,6,1,top) + r(4,9,6,2,top);           // 上衣（肩〜胴）
             if (ribbon) s += r(4,10,6,1,ribbon) + r(6,10,2,1,'rgba(0,0,0,.12)'); // 腰リボン＋結び目
             s += r(3,11,8,2,skirt) + r(2,13,10,1,skirt) + r(2,13,10,1,'rgba(0,0,0,.10)'); // スカート＋裾の影
@@ -795,12 +806,21 @@
             let walkers = mapWalkerCount();
             const WANDER = ['wanderA','wanderB','wanderC'];
             const STROLL = ['idle','cook','mix'];
+            const EMO = ['💕','✨','🎵','♡','😊','🩷'];   // レアモーションで出る絵文字
             let actors = '<div class="map-actors">';
             for (let i=0;i<walkers;i++){
                 let dur = 22 + (i%3)*6 + Math.floor(i/3)*3;   // 22〜34s 程度でゆっくり
                 let delay = -i*5;
+                let emo = EMO[i % EMO.length];
+                let edur = 12 + i*3;                          // レアモーションの間隔をバラす（時々だけ）
+                let edelay = -(i*7 + 4);
+                let banzai = (i % 2 === 1);                   // 偶=くるっと回転／奇=バンザイ＆ジャンプ
+                let actKf = banzai ? 'gHop' : 'gSpin';
+                let armT = banzai ? { dur: edur, delay: edelay } : null;
                 actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
-                        + `${riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 24, STROLL[i%3])}</span>`;
+                        + `<span class="rio-emote" style="animation-duration:${edur}s; animation-delay:${edelay}s">${emo}</span>`
+                        + `<span class="rio-act" style="animation:${actKf} ${edur}s ease-in-out infinite ${edelay}s">`
+                        + `${riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 24, STROLL[i%3], null, armT)}</span></span>`;
             }
             actors += '</div>';
             scene.innerHTML = svg + actors;
