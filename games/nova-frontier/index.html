@@ -194,6 +194,12 @@
         @keyframes gHop  { 0%,82%{ transform:translateY(0); } 88%{ transform:translateY(-6px); } 94%{ transform:translateY(-5px); } 100%{ transform:translateY(0); } }
         @keyframes armUpL { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(135deg); } 100%{ transform:rotate(0); } }
         @keyframes armUpR { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(-135deg); } 100%{ transform:rotate(0); } }
+        /* 手をふるアクション（右手を連続でふる）＋追加レアモーション（くるくる/ダンス） */
+        @keyframes handWave { 0%,100%{ transform:rotate(12deg); } 50%{ transform:rotate(-62deg); } }
+        .act-wave   { animation: rioBob 1s ease-in-out infinite; }
+        .act-wave .rarm { transform-box:fill-box; transform-origin:top center; animation: handWave .6s ease-in-out infinite; }
+        @keyframes gTwirl { 0%,78%{ transform:rotate(0); } 88%{ transform:rotate(200deg) scale(1.05); } 96%,100%{ transform:rotate(360deg); } }
+        @keyframes gDance { 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(-2px) rotate(-9deg); } 75%{ transform:translateX(2px) rotate(9deg); } }
         .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
         @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
         .develop-btn { display:block; margin:0; }
@@ -271,7 +277,7 @@
                 <div class="dev-reqs" id="town-requirements"></div>
             </div>
             <div id="town-map">
-                <div class="map-banner"><span id="stat-biome"></span>🏰 <span id="stat-town-rank">始まりの野原</span> ・ Lv.<span id="stat-town-lv">1</span></div>
+                <div class="map-banner"><span id="stat-biome"></span>🏰 Lv.<span id="stat-town-lv">1</span></div>
                 <div id="area-tabs"></div>
                 <div id="map-scene"></div>
             </div>
@@ -857,8 +863,9 @@
             s += r(7,7,1,1,'#e07da0');                       // 口
             const aL = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpL ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
             const aR = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpR ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
-            s += `<rect class="larm" x="3" y="9" width="1" height="2" fill="${SKIN}"${aL}/>`; // 左腕（動く）
-            s += `<rect class="rarm" x="10" y="9" width="1" height="2" fill="${SKIN}"${aR}/>`;// 右腕（動く）
+            // 腕＋手（先端のマス＝手）。グループごと回って手が動く
+            s += `<g class="larm"${aL}>` + r(3,9,1,1,SKIN) + r(3,10,1,1,'#ffc59e') + `</g>`;   // 左腕＋左手
+            s += `<g class="rarm"${aR}>` + r(10,9,1,1,SKIN) + r(10,10,1,1,'#ffc59e') + `</g>`; // 右腕＋右手
             s += r(4,8,6,1,top) + r(4,9,6,2,top);           // 上衣（肩〜胴）
             if (ribbon) s += r(4,10,6,1,ribbon) + r(6,10,2,1,'rgba(0,0,0,.12)'); // 腰リボン＋結び目
             s += r(3,11,8,2,skirt) + r(2,13,10,1,skirt) + r(2,13,10,1,'rgba(0,0,0,.10)'); // スカート＋裾の影
@@ -893,9 +900,22 @@
         function _r(x,y,w,h,c){ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`; }
         function _p(pts,c){ return `<polygon points="${pts}" fill="${c}"/>`; }
         function _c(cx,cy,r,c){ return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}"/>`; }
-        function propHouse(roof, working) {
-            let s = _p('1,7 8,1 15,7', roof) + _r(2,7,12,9,'#fbf3e4')
-                  + _r(6,11,3,5,'#a9764a') + _r(3,8,2,2,'#bfe3ff') + _r(10,8,2,2,'#bfe3ff') + _r(11,3,2,4, roof);
+        function propHouse(roof, working, b) {
+            b = b || _biome();
+            let s = '';
+            if (b === 'tropical') {        // 高床の藁葺き小屋
+                s += _p('0,7 8,2 16,7', '#c79a45') + _r(1,6,14,2,'#d9ad55')        // 藁屋根
+                   + _r(2,8,12,7,'#efe0b0') + _r(6,11,3,4,'#a9764a')                // 壁＋入口
+                   + _r(3,9,2,2,'#bfe3ff') + _r(10,9,2,2,'#bfe3ff')                  // 窓
+                   + _r(3,15,1,1,'#9c6b3f') + _r(12,15,1,1,'#9c6b3f');              // 床下の柱
+            } else if (b === 'snow') {     // 雪が積もった丸太小屋
+                s += _p('1,7 8,1 15,7', '#8a5a36') + _p('2,7 8,2 14,7', '#ffffff')  // 屋根＋雪
+                   + _r(2,7,12,9,'#b07a44') + _r(2,10,12,1,'rgba(0,0,0,.10)') + _r(2,13,12,1,'rgba(0,0,0,.10)')  // 丸太の目地
+                   + _r(6,11,3,5,'#7a4a2b') + _r(3,8,2,2,'#bfe3ff') + _r(10,8,2,2,'#bfe3ff');
+            } else {                       // 平野＝クリーム壁＋カラフル屋根
+                s += _p('1,7 8,1 15,7', roof) + _r(2,7,12,9,'#fbf3e4')
+                   + _r(6,11,3,5,'#a9764a') + _r(3,8,2,2,'#bfe3ff') + _r(10,8,2,2,'#bfe3ff') + _r(11,3,2,4, roof);
+            }
             if (working) s += `<g transform="translate(12,3)"><g class="smoke"><circle r="1.3" fill="#fff" opacity=".85"/></g></g>`
                             + `<g transform="translate(12,3)"><g class="smoke" style="animation-delay:1s"><circle r="1" fill="#fff" opacity=".7"/></g></g>`;
             return s;
@@ -909,6 +929,10 @@
         function propFlower(c){ return _r(8,12,1,4,'#5fae5f')+_c(8,10,2,c)+_c(8,10,1,'#ffd34d'); }
         function natureProp(t){ return t==='pine'?propPine():t==='field'?propField():t==='barn'?propBarn():t==='rocks'?propRocks():t==='pond'?propPond():propTree(); }
         function place(inner, tx, ty, s){ return `<g transform="translate(${tx},${ty}) scale(${s})">${inner}</g>`; }
+        // バイオーム署名プロップ
+        function propPalm(){ return _r(7,8,2,8,'#a9764a') + _p('8,3 0,6 8,7','#4fae5f') + _p('8,3 16,6 8,7','#57b864') + _p('8,2 3,0 9,6','#6cc56f') + _p('8,2 13,0 8,6','#5fbf68') + _c(8,8,1.2,'#caa46a') + _c(6,8,0.8,'#caa46a'); }
+        function propSnowman(){ return _c(8,13,3.2,'#ffffff') + _c(8,8,2.3,'#f3f8ff') + _r(7.5,8,2,1,'#ff8a5c') + _c(7.2,7.4,0.45,'#333') + _c(8.8,7.4,0.45,'#333') + _r(5,5,6,1,'#5a6b7a') + _r(7,3,2,2,'#5a6b7a') + _c(8,11,0.5,'#6a7b8a'); }
+        function propSnowPine(){ return _r(7,12,2,4,'#7a4a2b') + _p('8,1 3,7 13,7','#4f8e57') + _p('8,5 2,13 14,13','#56985f') + _p('8,1 4,6 12,6','#ffffff') + _p('8,5 3,12 13,12','#eef6ff'); }
         // 始まりはテント→木の家→城、と町Lvで発展（いきなり城にしない）
         function landmark(level){
             if (level <= 2) {  // Lv1-2：テント（始まりの野原・木造集落）
@@ -941,7 +965,24 @@
         GAME.unlockedAreas = { field:true, forest:false, sea:false, mine:false };   // 解放状態（セーブ対象）
         GAME.lastArea = 'field';                                                    // 最後に解放したエリア＝デフォルト表示（セーブ対象）
         const AREA_ORDER = ['field','forest','sea','mine'];
-        const AREA_GROUND = { field:['#bfe79a','#a9d97f'], forest:['#8fce7e','#73b863'], sea:['#ffe6ad','#f0d488'], mine:['#b9a98f','#9c8b72'] };
+        // 地形：バイオーム×エリアで空・地面色が変わる（土地選択が見た目に反映）
+        const SKY_BY_BIOME = { plains:'#c2e9ff', tropical:'#a9e6ff', snow:'#dbe8f4' };
+        const TERRAIN = {
+            plains_field:['#bfe79a','#9fce79'], plains_forest:['#a6d985','#84c065'], plains_sea:['#ecd9a0','#d8c389'], plains_mine:['#b9a98f','#9c8b72'],
+            tropical_field:['#cde87c','#a9d05a'], tropical_forest:['#9ed86c','#79bf4e'], tropical_sea:['#f4e4a6','#e7d086'], tropical_mine:['#c6ab8a','#ab906f'],
+            snow_field:['#eef5fb','#d2e2ef'], snow_forest:['#e6eff8','#cbdcec'], snow_sea:['#e1eef8','#c7deee'], snow_mine:['#cbc6d4','#aca5ba']
+        };
+        function _biome(){ return GAME.biome || 'plains'; }
+        function skyColor(){ return SKY_BY_BIOME[_biome()] || '#c2e9ff'; }
+        function groundColor(a){ return TERRAIN[_biome()+'_'+a] || TERRAIN['plains_'+a] || ['#bfe79a','#9fce79']; }
+        // バイオーム別のリオちゃん衣装（素体＝金髪/青目/オレンジ花飾り/ピンク靴は固定）
+        function biomeTheme(){ let b=_biome();
+            if(b==='tropical') return { top:'#5fd6c0', skirt:'#fff3cf', cap:'#e8c878', ribbon:'#ff9f6b' };  // 常夏=麦わら帽＋アクア
+            if(b==='snow')     return { top:'#e0675f', skirt:'#fff4f4', cap:'#e0675f', ribbon:'#ffffff' };  // 白銀=赤コート＋白マフラー
+            return { top:'#ffb3d1', skirt:'#fdeef5', ribbon:'#7fc4ff' };                                    // 平野=ピンク
+        }
+        // プロップを地面に立たせる：下端(localY=16)を bottomY に合わせる＝空に浮かない
+        function onGround(inner, x, bottomY, s){ return place(inner, x, bottomY - 16*s, s); }
         // 採取workerでエリアを決定（加工はすべて街＝field）。石・鉄は野原の基礎建材素材として上書き。
         const WORKER_AREA = { gatherer:'field', farmer:'field', dairy:'field', merchant:'field',
             logger:'forest', miner:'mine', hunter:'sea', cook:'field', patissier:'field', blender:'field', craftsman:'field' };
@@ -1024,12 +1065,16 @@
 
         // 表示中エリアのシーンSVGを組み立て（背景＋プロップ）
         function buildAreaScene(a){
-            const G = 84;
-            let ar = GAME.areas[a] || GAME.areas.field;
-            let gnd = AREA_GROUND[a] || AREA_GROUND.field;
+            const G = 84;                       // 地面線。地面は G..110（プロップはこの帯に接地）
+            let g = groundColor(a), b = _biome();
             let svg = `<svg viewBox="0 0 240 110" xmlns="http://www.w3.org/2000/svg">`;
-            svg += _r(0,0,240,G,ar.sky);
-            svg += _r(0,G,240,110-G,gnd[0]) + _r(0,G,240,3,gnd[1]) + `<rect x="0" y="101" width="240" height="5" fill="#e8d6a0" opacity=".45"/>`;
+            svg += _r(0,0,240,G,skyColor());
+            // 空のバイオーム演出（常夏=太陽／白銀=雪と雲／平野=雲）
+            if (b==='tropical') svg += _c(214,15,9,'#ffe48c') + _c(214,15,13,'rgba(255,224,130,.22)');
+            else if (b==='snow') { [[36,16],[88,12],[150,18],[198,13],[66,30],[176,34],[120,22]].forEach(p=>svg+=_c(p[0],p[1],1,'#ffffff')); svg += _c(150,15,7,'#ffffff')+_c(160,17,8,'#ffffff'); }
+            else svg += _c(48,17,6,'#ffffff')+_c(56,15,7,'#ffffff')+_c(64,17,6,'#ffffff');
+            // 地面
+            svg += _r(0,G,240,110-G,g[0]) + _r(0,G,240,3,g[1]) + `<rect x="0" y="101" width="240" height="5" fill="${b==='snow'?'#cdd9e6':'#e8d6a0'}" opacity=".45"/>`;
             if (a==='forest') svg += sceneForest(G);
             else if (a==='sea') svg += sceneSea(G);
             else if (a==='mine') svg += sceneMine(G);
@@ -1037,89 +1082,94 @@
             return svg + `</svg>`;
         }
         function sceneField(G){
-            let svg = '';
-            let ls = 1 + (GAME.townLevel-1)*0.07;
-            svg += place(landmark(GAME.townLevel), 120-12*ls, G-20*ls+4, ls);
-            // 家：建設済み設備（=街の加工所、最大9・稼働中は煙）
+            let svg = '', b = _biome();
+            let ls = 1 + (GAME.townLevel-1)*0.06;
+            // ランドマーク（テント/家/城）。基部(localY~20)を地面に接地
+            svg += place(landmark(GAME.townLevel), 120-12*ls, 100-20*ls, ls);
+            // 家：建設済み設備（街の加工所・最大8・奥1段/手前1段で接地。稼働中は煙）
             let builtKeys = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].facilityLv >= 1 && areaOf(k)==='field');
             let hi = 0;
-            builtKeys.slice(0, 9).forEach(k => {
-                let working = GAME.assigned[k] > 0;
-                let band=hi%2, col=Math.floor(hi/2), s=band?1:0.82;
-                svg += place(propHouse(HOUSE_ROOFS[hi%HOUSE_ROOFS.length], working), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s);
-                hi++;
+            builtKeys.slice(0, 8).forEach(k => {
+                let working = GAME.assigned[k] > 0, back=hi%2, col=Math.floor(hi/2);
+                let s = back?0.78:0.92, x = 150+col*22+(back?4:0), bottom = back?G+8:G+18;
+                svg += onGround(propHouse(HOUSE_ROOFS[hi%HOUSE_ROOFS.length], working, b), x, bottom, s); hi++;
             });
             // 自然（街の採取系：レンジャー/ファーマー/ブリーダー）
             let ni = 0;
             ['gatherer','farmer','dairy'].forEach(wk=>{
                 let cnt=unlockedRawCount(wk); if(!cnt) return;
-                let band=ni%2, col=Math.floor(ni/2), s=(band?1:0.8)*(1+Math.min(cnt,4)*0.05);
-                svg += place(natureProp(NATURE_BY_WORKER[wk]), 6+col*20+(band?0:5), (band?G-2:G-13)-16*s, s);
-                ni++;
+                let back=ni%2, col=Math.floor(ni/2), s=back?0.78:0.92, x=8+col*22+(back?4:0), bottom=back?G+8:G+18;
+                svg += onGround(natureProp(NATURE_BY_WORKER[wk]), x, bottom, s); ni++;
             });
-            const FLW=[[60,98],[80,104],[105,100],[150,104],[175,99],[195,105],[40,105],[215,101],[120,106],[90,98]];
+            // バイオーム署名（常夏=ヤシ／白銀=雪だるま）
+            if (b==='tropical') svg += onGround(propPalm(),30,G+18,1.0) + onGround(propPalm(),208,G+17,0.85);
+            else if (b==='snow') svg += onGround(propSnowman(),34,G+18,1.0);
+            // 飾りの花
             const FCOL=['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'];
-            let fc=Math.min(FLW.length, 2+GAME.townLevel);
-            for(let i=0;i<fc;i++) svg += place(propFlower(FCOL[i%FCOL.length]), FLW[i][0], FLW[i][1]-11, 0.7);
+            let fc=Math.min(8, 2+GAME.townLevel);
+            for(let i=0;i<fc;i++) svg += onGround(propFlower(FCOL[i%FCOL.length]), 20+i*26, 104-(i%2)*3, 0.55);
+            // 整備
             const I = GAME.infra;
             if (I.road.lv > 0) { svg += _r(0,100,240,6,'#dcc18a') + _r(0,100,240,1,'#c9a86a');
                 let lamps = Math.min(I.road.lv, 5);
-                for (let i=0;i<lamps;i++){ let lx = 26 + i*46; svg += _r(lx,96,1,6,'#8a6a4a') + _c(lx+0.5,95,1.6,'#fff3b0'); } }
-            if (I.orchard.lv > 0) { let n=Math.min(I.orchard.lv,3); for(let i=0;i<n;i++) svg += place(propTree(), 2+i*8, G-2-16*0.7, 0.7); }
-            if (I.ranch.lv > 0)  svg += place(propBarn(), 62, G-2-16*0.8, 0.8);
-            if (I.market.lv > 0) svg += place(propHouse('#ff6fae', false), 86, G-13-16*0.85, 0.85);
-            if (I.farm.lv > 0)   svg += place(propField(), 112, G-1-16*0.8, 0.8);
-            if (I.toolyard.lv > 0) svg += place(propRocks(), 132, G-1-16*0.7, 0.7);
+                for (let i=0;i<lamps;i++){ let lx = 26 + i*46; svg += _r(lx,95,1,7,'#8a6a4a') + _c(lx+0.5,94,1.6,'#fff3b0'); } }
+            if (I.orchard.lv > 0) { let n=Math.min(I.orchard.lv,3); for(let i=0;i<n;i++) svg += onGround(propTree(), 4+i*9, G+6, 0.6); }
+            if (I.ranch.lv > 0)  svg += onGround(propBarn(), 72, G+8, 0.72);
+            if (I.market.lv > 0) svg += onGround(propHouse('#ff6fae', false, b), 96, G+8, 0.78);
+            if (I.farm.lv > 0)   svg += onGround(propField(), 118, G+18, 0.8);
+            if (I.toolyard.lv > 0) svg += onGround(propRocks(), 138, G+18, 0.7);
             return svg;
         }
         function sceneForest(G){
-            let svg = '';
-            let pines = Math.max(2, Math.min(6, unlockedRawCount('logger') + 2));
-            for(let i=0;i<pines;i++){ let band=i%2, col=Math.floor(i/2), s=(band?1.05:0.85);
-                svg += place(propPine(), 8+col*30+(band?0:12), (band?G-2:G-14)-16*s, s); }
+            let svg = '', b = _biome();
+            let pines = Math.max(3, Math.min(7, unlockedRawCount('logger') + 3));
+            for(let i=0;i<pines;i++){ let back=i%2, col=Math.floor(i/2), s=back?0.8:1.0, x=12+col*28+(back?6:0), bottom=back?G+8:G+18;
+                svg += onGround(b==='snow'?propSnowPine():propPine(), x, bottom, s); }
             if (GAME.resources.herbplant && GAME.resources.herbplant.unlocked){
-                for(let i=0;i<3;i++) svg += place(propHerbBush(), 56+i*44, G-2-16*0.8, 0.8); }
-            for(let i=0;i<5;i++) svg += place(propFlower(['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'][i%5]), 24+i*44, G-1-16*0.55, 0.55);
+                for(let i=0;i<3;i++) svg += onGround(propHerbBush(), 60+i*46, 104, 0.8); }
+            const FCOL=['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'];
+            for(let i=0;i<5;i++) svg += onGround(propFlower(FCOL[i%5]), 28+i*44, 104, 0.55);
             return svg;
         }
         function sceneSea(G){
-            let svg = '';
-            svg += _r(0,G-3,240,113-G,'#7fc8ff') + _r(0,G-3,240,3,'#5bb0ef');
-            for(let i=0;i<5;i++) svg += place(propWaves(), 4+i*48, G+1, 0.85);
+            let svg = '', b = _biome();
+            let waterTop = G+6, wcol = b==='snow'?'#a9cfe6':(b==='tropical'?'#3fd0d6':'#5fb6ef');
+            svg += _r(0,waterTop,240,110-waterTop,wcol) + _r(0,waterTop,240,2,'#bfeaff');   // 砂浜(G..waterTop)＋海
+            for(let i=0;i<5;i++) svg += onGround(propWaves(), 6+i*48, waterTop+11, 0.8);
             let boats = Math.max(1, Math.min(4, unlockedRawCount('hunter')));
-            for(let i=0;i<boats;i++) svg += place(propBoat(), 18+i*56, G-3-16*0.95, 0.95);
+            for(let i=0;i<boats;i++) svg += onGround(propBoat(), 22+i*52, waterTop+13, 0.95);  // 船は水面に
             if (GAME.resources.clam && GAME.resources.clam.unlocked){
-                for(let i=0;i<3;i++) svg += place(propShell(), 36+i*64, 99, 0.6); }
+                for(let i=0;i<3;i++) svg += onGround(propShell(), 30+i*70, G+4, 0.6); }          // 貝は砂浜に
             return svg;
         }
         function sceneMine(G){
             let svg = '';
-            svg += place(propCave(), 104, G-16*1.25, 1.25);
-            let ores = Math.max(2, Math.min(7, unlockedRawCount('miner') + 2));
-            for(let i=0;i<ores;i++){ let band=i%2, col=Math.floor(i/2), s=(band?0.95:0.72);
-                svg += place(propOre(), 6+col*26+(band?0:8), (band?G-2:G-12)-16*s, s); }
+            svg += onGround(propCave(), 104, G+20, 1.25);
+            let ores = Math.max(3, Math.min(8, unlockedRawCount('miner') + 3));
+            for(let i=0;i<ores;i++){ let back=i%2, col=Math.floor(i/2), s=back?0.7:0.95, x=8+col*26+(back?6:0), bottom=back?G+8:G+18;
+                svg += onGround(propOre(), x, bottom, s); }
             return svg;
         }
         // 歩くリオちゃん（街のみ。雇用総数10人ごとに1人・上限6人）
         function buildWalkers(){
             let walkers = mapWalkerCount();
             const WANDER = ['wanderA','wanderB','wanderC'];
-            const STROLL = ['idle','cook','mix'];
-            const EMO = ['💕','✨','🎵','♡','😊','🩷'];
+            const RARE   = ['gSpin','gHop','gTwirl','gDance'];   // レアモーション（くるくる/バンザイ跳び/大回転/ダンス）
+            const ACTS   = ['wave','cook','mix','idle'];          // 通常の手の行動（手をふる等）
+            const EMO    = ['💕','✨','🎵','♡','😊','🩷','🌟','🎶'];
+            let th = biomeTheme();                                // バイオーム別の衣装
             let actors = '<div class="map-actors">';
             for (let i=0;i<walkers;i++){
-                let dur = 22 + (i%3)*6 + Math.floor(i/3)*3;
-                let delay = -i*5;
-                let emo = EMO[i % EMO.length];
-                let edur = 12 + i*3;
-                let edelay = -(i*7 + 4);
-                let banzai = (i % 2 === 1);
-                let actKf = banzai ? 'gHop' : 'gSpin';
+                let dur = 22 + (i%3)*6 + Math.floor(i/3)*3, delay = -i*5;
+                let emo = EMO[i % EMO.length], edur = 11 + i*3, edelay = -(i*7 + 4);
+                let rare = RARE[i % RARE.length];
+                let banzai = (rare === 'gHop');                   // バンザイ跳びは両腕を上げる
+                let act = banzai ? 'idle' : ACTS[i % ACTS.length];// 腕の競合回避（バンザイ時は通常腕）
                 let armT = banzai ? { dur: edur, delay: edelay } : null;
                 actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
                         + `<span class="rio-emote" style="animation-duration:${edur}s; animation-delay:${edelay}s">${emo}</span>`
-                        + `<span class="rio-act" style="animation:${actKf} ${edur}s ease-in-out infinite ${edelay}s">`
-                        + `${riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 24, STROLL[i%3], null, armT)}</span></span>`;
+                        + `<span class="rio-act" style="animation:${rare} ${edur}s ease-in-out infinite ${edelay}s">`
+                        + `${riochanSVG(th, 24, act, null, armT)}</span></span>`;
             }
             return actors + '</div>';
         }
@@ -1149,7 +1199,7 @@
             if (scene){
                 scene.classList.remove('area-enter'); void scene.offsetWidth; scene.classList.add('area-enter');
                 let w = document.createElement('div'); w.className='area-walk';
-                w.innerHTML = riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 26, 'gather');
+                w.innerHTML = riochanSVG(biomeTheme(), 26, 'wave');
                 scene.appendChild(w); setTimeout(()=>{ if(w.parentNode) w.parentNode.removeChild(w); }, 680);
             }
             renderAreaTabs();
@@ -1160,7 +1210,7 @@
             let l = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && GAME.resources[k].facilityLv>=1)
                 .map(k=> k + (GAME.assigned[k]>0?'w':'')).join('.');
             let inf = Object.keys(GAME.infra).map(k=>GAME.infra[k].lv).join(',');
-            return [GAME.activeArea, GAME.townLevel, w, l, inf, mapWalkerCount()].join('|');
+            return [GAME.biome, GAME.activeArea, GAME.townLevel, w, l, inf, mapWalkerCount()].join('|');
         }
         function renderTownMap(){
             let scene = document.getElementById('map-scene');
@@ -1674,7 +1724,6 @@
             document.getElementById('stat-gold').innerText = Math.floor(GAME.gold).toLocaleString();
             let wg = document.getElementById('worker-gold'); if (wg) wg.innerText = Math.floor(GAME.gold).toLocaleString();
             document.getElementById('stat-town-lv').innerText = GAME.townLevel;
-            document.getElementById('stat-town-rank').innerText = GAME.townNames[GAME.townLevel];
             let bb = document.getElementById('stat-biome');
             if (bb) bb.innerText = GAME.biome && BIOME_DEFS[GAME.biome] ? BIOME_DEFS[GAME.biome].icon + BIOME_DEFS[GAME.biome].name : '';
             renderTownMap();
