@@ -203,11 +203,12 @@
         .town-pop { position:absolute; top:42%; left:50%; transform:translate(-50%,-50%); z-index:7; font-size:1.6rem; font-weight:800; color:#fff; text-shadow:0 2px 0 #ff6fae, 0 0 12px rgba(255,120,180,.9); pointer-events:none; animation: townPop 1.5s ease-out forwards; white-space:nowrap; }
         @keyframes townPop { 0% { opacity:0; transform:translate(-50%,-30%) scale(.5); } 25% { opacity:1; transform:translate(-50%,-55%) scale(1.15); } 75% { opacity:1; } 100% { opacity:0; transform:translate(-50%,-80%) scale(1); } }
         .game-top { display:flex; justify-content:flex-start; gap:8px; margin-bottom:8px; }
-        .hp-back, .share-btn { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem; border:none; cursor:pointer;
+        .hp-back, .share-btn, .reset-btn { display:inline-flex; align-items:center; gap:5px; text-decoration:none; font-weight:800; font-size:0.82rem; border:none; cursor:pointer;
             color:#fff; padding:6px 16px; border-radius:999px; box-shadow:0 2px 6px rgba(150,150,255,.3); font-family:inherit; }
         .hp-back { background:linear-gradient(135deg,#8ec9ff,#b89bf0); }
         .share-btn { background:linear-gradient(135deg,#ff8fc7,#ffb15c); }
-        .hp-back:hover, .share-btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
+        .reset-btn { background:linear-gradient(135deg,#ffa9a9,#ff7e7e); margin-left:auto; }
+        .hp-back:hover, .share-btn:hover, .reset-btn:hover { filter:brightness(1.05); transform:translateY(-1px); }
         .play-area { display:flex; gap:8px; align-items:stretch; margin:8px 0 12px; }
         .side-buttons { flex:0 0 34%; max-width:200px; display:flex; flex-direction:column; gap:6px; }
         .side-buttons button { width:100%; }
@@ -219,12 +220,43 @@
             .side-buttons button { flex:1; }
             .side-buttons .dev-reqs { flex-basis:100%; }
         }
+
+        /* エリアタブ＆切り替え演出（フェーズ4） */
+        #area-tabs { display:flex; gap:4px; padding:0 6px; margin-top:26px; flex-wrap:wrap; position:relative; z-index:3; }
+        .area-tab { background:#ffe0ee; color:#a65a8a; border:1px solid #ffc9e4; border-bottom:none;
+            border-radius:10px 10px 0 0; padding:3px 9px; font-size:.72rem; font-weight:800; font-family:inherit; cursor:pointer; white-space:nowrap; }
+        .area-tab.on { background:#ff8fc7; color:#fff; }
+        .area-tab:hover:not(.on):not(.locked){ background:#ffd1e8; }
+        .area-tab.locked { background:#eef0f4; color:#94a3b8; border-color:#dfe3ea; display:inline-flex; align-items:center; gap:4px; }
+        .area-tab.locked:not(:disabled){ background:#fff4d6; color:#a6791e; border-color:#ffd98a; cursor:pointer; }
+        .area-tab.locked:not(:disabled):hover{ background:#ffe9ad; }
+        .area-cost { font-size:.62rem; font-weight:700; opacity:.85; }
+        #map-scene.area-enter { animation: areaEnter .35s ease; }
+        @keyframes areaEnter { from { opacity:.25; transform:translateX(16px); } to { opacity:1; transform:none; } }
+        .area-walk { position:absolute; bottom:7%; left:-10%; z-index:6; pointer-events:none; animation: areaWalk .68s ease-in forwards; }
+        @keyframes areaWalk { from { left:-10%; } to { left:106%; } }
+
+        /* バイオーム選択オーバーレイ（フェーズ6） */
+        #biome-select { display:none; position:fixed; inset:0; z-index:50; background:rgba(60,40,70,.55);
+            align-items:center; justify-content:center; padding:16px; }
+        .biome-modal { background:#fff6fb; border:2px solid #ffd1e8; border-radius:20px; padding:18px 16px; max-width:680px; width:100%;
+            box-shadow:0 12px 40px rgba(120,60,120,.4); }
+        .biome-modal h2 { color:#ff5fa2; text-align:center; margin:4px 0 6px; font-size:1.2rem; }
+        .biome-cards { display:flex; gap:10px; flex-wrap:wrap; }
+        .biome-card { flex:1; min-width:170px; background:#fff; border:2px solid #ffd1e8; border-radius:14px; padding:12px;
+            cursor:pointer; font-family:inherit; text-align:center; transition:transform .1s; }
+        .biome-card:hover { transform:translateY(-3px); border-color:#ff8fc7; background:#fff0f7; }
+        .biome-ic { font-size:2.2rem; } .biome-nm { font-weight:800; color:#a65a8a; margin:4px 0; font-size:1rem; }
+        .biome-ds { font-size:.72rem; color:#7a5a7a; line-height:1.4; }
+        #stat-biome { background:#fff; border:1px solid #ffd1e8; border-radius:999px; padding:0 7px; margin-right:6px; font-size:.74rem; }
     </style>
 </head>
 <body>
 
+    <div id="biome-select"></div>
+
     <div id="game-container">
-        <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a><button class="share-btn" onclick="shareGame()">🔗 シェア</button></div>
+        <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a><button class="share-btn" onclick="shareGame()">🔗 シェア</button><button class="reset-btn" onclick="resetGame()">🔄 最初から</button></div>
         <h1>💗 Virtual Town 💗</h1>
 
         <div class="status-box">
@@ -239,7 +271,8 @@
                 <div class="dev-reqs" id="town-requirements"></div>
             </div>
             <div id="town-map">
-                <div class="map-banner">🏰 <span id="stat-town-rank">始まりの野原</span> ・ Lv.<span id="stat-town-lv">1</span></div>
+                <div class="map-banner"><span id="stat-biome"></span>🏰 <span id="stat-town-rank">始まりの野原</span> ・ Lv.<span id="stat-town-lv">1</span></div>
+                <div id="area-tabs"></div>
                 <div id="map-scene"></div>
             </div>
         </div>
@@ -322,6 +355,7 @@
                 lettuce:  { icon: "🥬", name: "レタス", count: 0, price: 3,  unlocked: false, workerKey: "farmer",  gather: 0.3,  req: { worker: "farmer", wlv: 3 } },
                 tomato:   { icon: "🍅", name: "トマト", count: 0, price: 4,  unlocked: false, workerKey: "farmer",  gather: 0.25, req: { worker: "farmer", wlv: 4 } },
                 sugarcane:{ icon: "🎋", name: "サトウキビ", count: 0, price: 4, unlocked: false, workerKey: "farmer", gather: 0.3,  req: { town: 3 } },
+                sugarbeet:{ icon: "🥕", name: "甜菜",   count: 0, price: 4,  unlocked: false, workerKey: "farmer", gather: 0.3,  req: { town: 3 } },
                 // --- 酪農家（ミルク・たまごは飼料として薬草を消費） ---
                 milk:     { icon: "🥛", name: "ミルク", count: 0, price: 4,  unlocked: false, workerKey: "dairy",   gather: 0.4,  feed: { herb: 0.5 }, req: { town: 2 } },
                 egg:      { icon: "🥚", name: "たまご", count: 0, price: 5,  unlocked: false, workerKey: "dairy",   gather: 0.3,  feed: { herb: 0.5 }, req: { worker: "dairy", wlv: 2 } },
@@ -337,9 +371,24 @@
                 silver:   { icon: "🥈", name: "銀鉱石", count: 0, price: 28, unlocked: false, workerKey: "miner",   gather: 0.06, req: { worker: "miner", wlv: 3 } },
                 gem:      { icon: "💠", name: "原石",   count: 0, price: 60, unlocked: false, workerKey: "miner",   gather: 0.03, req: { town: 4, worker: "miner", wlv: 4 } },
                 goldore:  { icon: "🟡", name: "金鉱石", count: 0, price: 100, unlocked: false, workerKey: "miner",  gather: 0.02, req: { town: 5, worker: "miner", wlv: 5 } },
+                copper:   { icon: "🟠", name: "銅",     count: 0, price: 12, unlocked: false, workerKey: "miner",  gather: 0.25, req: {} },
                 // --- 狩人（魚→肉の順で調達） ---
                 fish:     { icon: "🐟", name: "魚",     count: 0, price: 10, unlocked: false, workerKey: "hunter",  gather: 0.2,  req: { town: 3 } },
                 meat:     { icon: "🥩", name: "生肉",   count: 0, price: 8,  unlocked: false, workerKey: "hunter",  gather: 0.3,  req: { town: 3 } },
+                // フェーズ3：和食の起点（米）と肉の細分化（鶏・豚）。既存meatは汎用肉として維持
+                rice:     { icon: "🍚", name: "米",     count: 0, price: 3,  unlocked: false, workerKey: "farmer",  gather: 0.4,  req: { town: 2 } },
+                chicken:  { icon: "🐔", name: "鶏肉",   count: 0, price: 8,  unlocked: false, workerKey: "hunter",  gather: 0.3,  req: { town: 3 } },
+                pork:     { icon: "🐖", name: "豚肉",   count: 0, price: 10, unlocked: false, workerKey: "hunter",  gather: 0.25, req: { town: 3 } },
+                // フェーズ4：森(ハーブ)＋海(魚介・海水・貝)。海エリアはLv4で解放
+                herbplant:{ icon: "🌱", name: "ハーブ", count: 0, price: 4,  unlocked: false, workerKey: "gatherer", gather: 0.3,  req: { town: 2 } },
+                seawater: { icon: "💦", name: "海水",   count: 0, price: 3,  unlocked: false, workerKey: "hunter",  gather: 0.5,  req: { town: 4 } },
+                seafish:  { icon: "🦈", name: "海魚",   count: 0, price: 12, unlocked: false, workerKey: "hunter",  gather: 0.18, req: { town: 4 } },
+                shrimp:   { icon: "🦐", name: "エビ",   count: 0, price: 14, unlocked: false, workerKey: "hunter",  gather: 0.15, req: { town: 4 } },
+                octopus:  { icon: "🐙", name: "タコ",   count: 0, price: 16, unlocked: false, workerKey: "hunter",  gather: 0.12, req: { town: 4 } },
+                clam:     { icon: "🐚", name: "貝",     count: 0, price: 9,  unlocked: false, workerKey: "hunter",  gather: 0.2,  req: { town: 4 } },
+                // フェーズ6：地域特産（バイオーム限定で採れる目玉素材＝輸入不可）
+                mango:    { icon: "🥭", name: "マンゴー", count: 0, price: 9, unlocked: false, workerKey: "gatherer", gather: 0.22, req: { town: 2 } },
+                coldfish: { icon: "🐋", name: "寒流魚", count: 0, price: 18, unlocked: false, workerKey: "hunter",  gather: 0.15, req: {} },
 
                 // ============ 加工品（isCraft は後で付与） ============
                 salt:        { icon: "🧂", name: "塩",         count: 0, basePrice: 3,   unlocked: true,  facilityLv: 1, baseFacilityCost: 100, req: { town: 1 } },
@@ -408,21 +457,53 @@
                 steak:       { icon: "🍖", name: "ステーキ",   count: 0, basePrice: 45,  unlocked: false, facilityLv: 1, baseFacilityCost: 460, req: { town: 4 } },
                 diamond:     { icon: "💎", name: "カット宝石", count: 0, basePrice: 180, unlocked: false, facilityLv: 1, baseFacilityCost: 1200, req: { town: 4 } },
                 wall:        { icon: "🏯", name: "鉄補強の石壁", count: 0, basePrice: 320, unlocked: false, facilityLv: 1, baseFacilityCost: 1500, req: { town: 4 } },
-                relief:      { icon: "🏵️", name: "玉座のレリーフ", count: 0, basePrice: 1500, unlocked: false, facilityLv: 1, baseFacilityCost: 3000, req: { town: 5 } }
+                relief:      { icon: "🏵️", name: "玉座のレリーフ", count: 0, basePrice: 1500, unlocked: false, facilityLv: 1, baseFacilityCost: 3000, req: { town: 5 } },
+
+                // ============ フェーズ3：和食／肉魚加工／建材／装飾（価格＝材料現価×1.3） ============
+                onigiri:    { icon:"🍙", name:"おにぎり", count:0, basePrice:12,  unlocked:false, facilityLv:1, baseFacilityCost:200, req:{ town:3 } },
+                sushi:      { icon:"🍣", name:"寿司",     count:0, basePrice:17,  unlocked:false, facilityLv:1, baseFacilityCost:360, req:{ town:3 } },
+                grilledfish:{ icon:"🐡", name:"焼き魚",   count:0, basePrice:17,  unlocked:false, facilityLv:1, baseFacilityCost:460, req:{ town:3 } },
+                oyakodon:   { icon:"🍛", name:"親子丼",   count:0, basePrice:21,  unlocked:false, facilityLv:1, baseFacilityCost:360, req:{ town:4 } },
+                dango:      { icon:"🍡", name:"団子",     count:0, basePrice:24,  unlocked:false, facilityLv:1, baseFacilityCost:260, req:{ town:3 } },
+                senbei:     { icon:"🍘", name:"せんべい", count:0, basePrice:12,  unlocked:false, facilityLv:1, baseFacilityCost:200, req:{ town:3 } },
+                mochi:      { icon:"🥮", name:"餅",       count:0, basePrice:8,   unlocked:false, facilityLv:1, baseFacilityCost:200, req:{ town:3 } },
+                karaage:    { icon:"🍗", name:"唐揚げ",   count:0, basePrice:25,  unlocked:false, facilityLv:1, baseFacilityCost:360, req:{ town:3 } },
+                bacon:      { icon:"🥓", name:"ベーコン", count:0, basePrice:30,  unlocked:false, facilityLv:1, baseFacilityCost:460, req:{ town:3 } },
+                brick:      { icon:"🟧", name:"レンガ",   count:0, basePrice:42,  unlocked:false, facilityLv:1, baseFacilityCost:400, req:{ town:2 } },
+                fountain:   { icon:"⛲", name:"噴水",     count:0, basePrice:68,  unlocked:false, facilityLv:1, baseFacilityCost:600, req:{ town:4 } },
+                brickroad:  { icon:"🌉", name:"レンガ道", count:0, basePrice:130, unlocked:false, facilityLv:1, baseFacilityCost:700, req:{ town:4 } },
+                flowercrown:{ icon:"💐", name:"花飾り",   count:0, basePrice:31,  unlocked:false, facilityLv:1, baseFacilityCost:500, req:{ town:4 } },
+                vase:       { icon:"🏺", name:"花瓶",     count:0, basePrice:31,  unlocked:false, facilityLv:1, baseFacilityCost:500, req:{ town:4 } },
+                streetlamp: { icon:"🏮", name:"街灯",     count:0, basePrice:74,  unlocked:false, facilityLv:1, baseFacilityCost:620, req:{ town:4 } },
+                flowerbed:  { icon:"🪴", name:"花壇",     count:0, basePrice:39,  unlocked:false, facilityLv:1, baseFacilityCost:500, req:{ town:4 } },
+
+                // ============ フェーズ4：森(ハーブ)／海(魚介・海塩・貝細工) ============
+                herbtea:    { icon:"☕", name:"ハーブティー", count:0, basePrice:7,   unlocked:false, facilityLv:1, baseFacilityCost:200, req:{ town:2 } },
+                herbgrill:  { icon:"🫕", name:"香草焼き",     count:0, basePrice:16,  unlocked:false, facilityLv:1, baseFacilityCost:300, req:{ town:3 } },
+                seasalt:    { icon:"🫧", name:"海塩",         count:0, basePrice:12,  unlocked:false, facilityLv:1, baseFacilityCost:200, req:{ town:4 } },
+                kaisendon:  { icon:"🥡", name:"海鮮丼",       count:0, basePrice:38,  unlocked:false, facilityLv:1, baseFacilityCost:460, req:{ town:4 } },
+                takoyaki:   { icon:"🥟", name:"たこ焼き",     count:0, basePrice:32,  unlocked:false, facilityLv:1, baseFacilityCost:360, req:{ town:4 } },
+                pearl:      { icon:"⚪", name:"真珠",         count:0, basePrice:24,  unlocked:false, facilityLv:1, baseFacilityCost:400, req:{ town:4 } },
+                shellcraft: { icon:"🪸", name:"貝細工",       count:0, basePrice:42,  unlocked:false, facilityLv:1, baseFacilityCost:500, req:{ town:4 } },
+
+                // フェーズ4改訂：鉱山解放後の上位鉱物加工
+                lamp:       { icon:"🪔", name:"ランプ",       count:0, basePrice:32,  unlocked:false, facilityLv:1, baseFacilityCost:400, req:{} },
+                necklace:   { icon:"📿", name:"ネックレス",   count:0, basePrice:115, unlocked:false, facilityLv:1, baseFacilityCost:800, req:{ town:4 } }
             },
 
             workers: {
                 gatherer: { name: "レンジャー", count: 0, baseCost: 50,  lv: 1, unlocked: true,  reqTown: 1, canUpgrade: true,  desc: "薬草・水・りんごを採取。強化でオレンジ→ブドウ→上薬草を発見" },
-                farmer:   { name: "ファーマー", count: 0, baseCost: 100, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "小麦を栽培。強化でじゃがいも→レタス→トマト。都市Lv3でサトウキビも" },
+                farmer:   { name: "ファーマー", count: 0, baseCost: 100, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "小麦・米を栽培。強化でじゃがいも→レタス→トマト。都市Lv3でサトウキビも" },
                 dairy:    { name: "ブリーダー", count: 0, baseCost: 130, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "ミルク生産（薬草を飼料に消費）。強化でたまご→羊毛→皮を発見" },
                 logger:   { name: "ウッドカッター", count: 0, baseCost: 140, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "木材を伐採。強化で硬い木材→メープル材を発見" },
                 miner:    { name: "マイナー", count: 0, baseCost: 180, lv: 1, unlocked: false, reqTown: 2, canUpgrade: true,  desc: "石を採掘。強化で鉄→銀→原石→金鉱石を発見" },
-                hunter:   { name: "ハンター", count: 0, baseCost: 250, lv: 1, unlocked: false, reqTown: 3, canUpgrade: true,  desc: "生肉と魚を自動調達" },
+                hunter:   { name: "ハンター", count: 0, baseCost: 250, lv: 1, unlocked: false, reqTown: 3, canUpgrade: true,  desc: "魚・生肉・鶏肉・豚肉を自動調達" },
                 cook:     { name: "シェフ",   count: 0, baseCost: 300, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "塩・パン・料理・乳製品・肉料理を加工" },
                 patissier:{ name: "パティシエ", count: 0, baseCost: 300, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "ジュース・砂糖・お菓子・スイーツを担当" },
                 blender:  { name: "アルケミスト", count: 0, baseCost: 350, lv: 1, unlocked: false, reqTown: 3, canUpgrade: false, desc: "蒸留水・ポーション・上位ポーション・エリクサーを調合" },
                 craftsman:{ name: "ビルダー", count: 0, baseCost: 500, lv: 1, unlocked: false, reqTown: 2, canUpgrade: false, desc: "板材・石材・鋼などの建材や、家具・道具・鍛冶・美術品を建造" },
-                merchant: { name: "マーチャント", count: 0, baseCost: 120, lv: 1, unlocked: true,  reqTown: 1, canUpgrade: false, desc: "ONにした品を自動出荷" }
+                merchant: { name: "マーチャント", count: 0, baseCost: 120, lv: 1, unlocked: true,  reqTown: 1, canUpgrade: false, desc: "ONにした品を自動出荷" },
+                trader:   { name: "トレーダー", count: 0, baseCost: 150, lv: 1, unlocked: false, reqTown: 3, canUpgrade: false, desc: "ONにした素材を自動で仕入れ（チャリンで購入）。採れない素材の補充や、安く仕入れ→加工→高く売る交易に" }
             },
 
             autoSell: {},
@@ -434,7 +515,7 @@
                 orangejuice: { costs: { orange: 2, water: 1 },               auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 grapejuice:  { costs: { grape: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 mixjuice:    { costs: { apple: 1, orange: 1, grape: 1, water: 1 }, auto: false, workerKey: "cook", facilityName: "ジューススタンド" },
-                bread:       { costs: { wheat: 2 },                          auto: false, workerKey: "cook",      facilityName: "石造りの窯" },
+                bread:       { costs: { wheat: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "石造りの窯" },
                 fries:       { costs: { potato: 2, salt: 1 },                auto: false, workerKey: "cook",      facilityName: "石造りの窯" },
                 salad:       { costs: { lettuce: 2, tomato: 1 },             auto: false, workerKey: "cook",      facilityName: "石造りの窯" },
                 pie:         { costs: { apple: 2, wheat: 2, water: 1 },       auto: false, workerKey: "cook",      facilityName: "大水車の調理場" },
@@ -445,7 +526,7 @@
                 sandwich:    { costs: { bread: 1, cheese: 1, lettuce: 1 },   auto: false, workerKey: "cook",      facilityName: "デリカテッセン" },
                 ketchup:     { costs: { tomato: 2 },                         auto: false, workerKey: "cook",      facilityName: "製瓶所" },
                 pizza:       { costs: { wheat: 1, tomato: 1, cheese: 1 },     auto: false, workerKey: "cook",      facilityName: "ピザ窯" },
-                sugar:       { costs: { sugarcane: 2 },                      auto: false, workerKey: "cook",      facilityName: "製糖所" },
+                sugar:       { costs: { sugarcane: 2 }, alt: { sugarbeet: 2 }, auto: false, workerKey: "cook",      facilityName: "製糖所" },
                 candy:       { costs: { sugar: 2 },                          auto: false, workerKey: "cook",      facilityName: "製菓店" },
                 jam:         { costs: { grape: 2, sugar: 1 },                auto: false, workerKey: "cook",      facilityName: "製菓店" },
                 cake:        { costs: { wheat: 2, egg: 1, sugar: 1 },        auto: false, workerKey: "cook",      facilityName: "製菓店" },
@@ -494,18 +575,49 @@
                 diamond:     { costs: { gem: 1 },                            auto: false, workerKey: "craftsman", facilityName: "宝石カッティング機" },
                 crown:       { costs: { goldore: 2, diamond: 1 },            auto: false, workerKey: "craftsman", facilityName: "王室宝飾工房" },
                 wall:        { costs: { mason: 2, tool: 1 },                 auto: false, workerKey: "craftsman", facilityName: "王宮建築ギルド" },
-                relief:      { costs: { diamond: 3, mason: 4 },             auto: false, workerKey: "craftsman", facilityName: "王宮建築ギルド" }
+                relief:      { costs: { diamond: 3, mason: 4 },             auto: false, workerKey: "craftsman", facilityName: "王宮建築ギルド" },
+                // フェーズ3
+                onigiri:     { costs: { rice: 2, salt: 1 },                  auto: false, workerKey: "cook",      facilityName: "おにぎり屋" },
+                sushi:       { costs: { rice: 1, fish: 1 },                  auto: false, workerKey: "cook",      facilityName: "寿司処" },
+                grilledfish: { costs: { fish: 1, salt: 1 },                  auto: false, workerKey: "cook",      facilityName: "炭火焼き場" },
+                oyakodon:    { costs: { rice: 1, chicken: 1, egg: 1 },       auto: false, workerKey: "cook",      facilityName: "丼物屋" },
+                dango:       { costs: { rice: 2, sugar: 1 },                 auto: false, workerKey: "patissier", facilityName: "団子屋" },
+                senbei:      { costs: { rice: 2, salt: 1 },                  auto: false, workerKey: "cook",      facilityName: "せんべい焼き場" },
+                mochi:       { costs: { rice: 2 },                           auto: false, workerKey: "patissier", facilityName: "餅つき小屋" },
+                karaage:     { costs: { chicken: 2, wheat: 1 },              auto: false, workerKey: "cook",      facilityName: "唐揚げ店" },
+                bacon:       { costs: { pork: 2, salt: 1 },                  auto: false, workerKey: "cook",      facilityName: "燻製肉工房" },
+                brick:       { costs: { mason: 2 },                          auto: false, workerKey: "craftsman", facilityName: "レンガ窯" },
+                fountain:    { costs: { wood: 2, brick: 1 },                 auto: false, workerKey: "craftsman", facilityName: "噴水工房" },
+                brickroad:   { costs: { brick: 2, mason: 1 },                auto: false, workerKey: "craftsman", facilityName: "石畳工房" },
+                flowercrown: { costs: { flower: 3 },                         auto: false, workerKey: "craftsman", facilityName: "花細工工房" },
+                vase:        { costs: { mason: 1, flower: 1 },               auto: false, workerKey: "craftsman", facilityName: "陶芸工房" },
+                streetlamp:  { costs: { steel: 1, charcoal: 1 },             auto: false, workerKey: "craftsman", facilityName: "街灯工房" },
+                flowerbed:   { costs: { flower: 2, board: 1 },               auto: false, workerKey: "craftsman", facilityName: "園芸工房" },
+                // フェーズ4
+                herbtea:     { costs: { water: 1, herbplant: 1 },            auto: false, workerKey: "cook",      facilityName: "ハーブ工房" },
+                herbgrill:   { costs: { meat: 1, herbplant: 1 },             auto: false, workerKey: "cook",      facilityName: "香草焼き場" },
+                seasalt:     { costs: { seawater: 3 },                       auto: false, workerKey: "cook",      facilityName: "塩田" },
+                kaisendon:   { costs: { rice: 1, seafish: 1, shrimp: 1 },    auto: false, workerKey: "cook",      facilityName: "海鮮丼屋" },
+                takoyaki:    { costs: { octopus: 1, wheat: 1, egg: 1 },      auto: false, workerKey: "cook",      facilityName: "たこ焼き屋" },
+                pearl:       { costs: { clam: 2 },                           auto: false, workerKey: "craftsman", facilityName: "真珠養殖場" },
+                shellcraft:  { costs: { clam: 2, board: 1 },                 auto: false, workerKey: "craftsman", facilityName: "貝細工工房" },
+                lamp:        { costs: { copper: 2 },                         auto: false, workerKey: "craftsman", facilityName: "銅細工工房" },
+                necklace:    { costs: { gem: 1, silver: 1 },                 auto: false, workerKey: "craftsman", facilityName: "宝飾工房" }
             },
 
             lines: [
                 { title: "🧪 薬・水", materials: ["herb", "water", "mushroom", "flower", "superherb"], crafts: ["salt", "distilledwater", "potion", "mushroomsaute", "perfume", "greaterpotion", "elixir"] },
-                { title: "🍎 フルーツ", materials: ["berry", "apple", "orange", "grape", "lemon"], crafts: ["berryjuice", "applejuice", "orangejuice", "pie", "berrytart", "grapejuice", "jam", "mixjuice", "lemonade"] },
+                { title: "🍎 フルーツ", materials: ["berry", "apple", "orange", "grape", "lemon", "mango"], crafts: ["berryjuice", "applejuice", "orangejuice", "pie", "berrytart", "grapejuice", "jam", "mixjuice", "lemonade"] },
                 { title: "🌾 農業", materials: ["wheat", "potato", "lettuce", "tomato"], crafts: ["bread", "fries", "salad", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea"] },
-                { title: "🍬 スイーツ", materials: ["sugarcane"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake"] },
+                { title: "🍬 スイーツ", materials: ["sugarcane", "sugarbeet"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake"] },
                 { title: "🐄 酪農", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
                 { title: "🪵 木工", materials: ["wood", "hardwood", "maple"], crafts: ["board", "charcoal", "fireplace", "hardboard", "barrel", "honey", "furniture"] },
-                { title: "🪨 鉱業", materials: ["stone", "iron", "silver", "gem", "goldore"], crafts: ["mason", "tool", "ring", "steel", "statue", "silvertool", "diamond", "wall", "goldtool", "relief", "crown"] },
-                { title: "🍖 漁・狩", materials: ["fish", "meat"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak"] },
+                { title: "🪨 鉱業", materials: ["stone", "iron", "copper", "silver", "gem", "goldore"], crafts: ["mason", "tool", "ring", "steel", "statue", "lamp", "silvertool", "diamond", "necklace", "wall", "goldtool", "relief", "crown"] },
+                { title: "🍖 漁・狩", materials: ["fish", "meat", "chicken", "pork"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak", "karaage", "bacon"] },
+                { title: "🍙 和食", materials: ["rice"], crafts: ["onigiri", "sushi", "grilledfish", "oyakodon", "dango", "senbei", "mochi"] },
+                { title: "🏗️ 建材・装飾", materials: [], crafts: ["brick", "fountain", "brickroad", "vase", "flowercrown", "flowerbed", "streetlamp"] },
+                { title: "🌲 森", materials: ["herbplant"], crafts: ["herbtea", "herbgrill"] },
+                { title: "🌊 海鮮", materials: ["seawater", "clam", "seafish", "shrimp", "octopus", "coldfish"], crafts: ["seasalt", "kaisendon", "takoyaki", "pearl", "shellcraft"] },
                 { title: "🔧 オリジナル", materials: [], crafts: [], custom: true }
             ],
 
@@ -530,12 +642,16 @@
             "lemonade","berrytart","icecream","pudding","cookie","chocolate","donut","parfait","grandcake","cheese","yogurt","omelet","pancake","cloth","leather","leatherbag",
             "potion","greaterpotion","elixir","perfume","charcoal","board","hardboard","barrel","mason","statue","steel","fireplace","furniture",
             "tool","silvertool","goldtool","crown","ring","diamond","wall","relief",
-            "stew","soup","smokedfish","fishfry","skewer","steak"];
+            "stew","soup","smokedfish","fishfry","skewer","steak",
+            "onigiri","sushi","grilledfish","oyakodon","dango","senbei","mochi","karaage","bacon",
+            "brick","fountain","brickroad","flowercrown","vase","streetlamp","flowerbed",
+            "herbtea","herbgrill","seasalt","kaisendon","takoyaki","pearl","shellcraft",
+            "lamp","necklace"];
         // 設備は最初「未建設」(facilityLv=0)。建設してから加工できる
         CRAFT_KEYS.forEach(k => { GAME.resources[k].isCraft = true; GAME.resources[k].facilityLv = 0; });
         // assigned = 各品に配置された職人数 / autoSell = 自動売却 / craftCarry = 設備速度の端数繰越
-        GAME.assigned = {}; GAME.craftCarry = {};
-        for (let k in GAME.resources) { GAME.autoSell[k] = false; GAME.assigned[k] = 0; GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; GAME.craftCarry[k] = 0; }
+        GAME.assigned = {}; GAME.craftCarry = {}; GAME.autoBuy = {};   // autoBuy=仕入れ(輸入)フラグ
+        for (let k in GAME.resources) { GAME.autoSell[k] = false; GAME.autoBuy[k] = false; GAME.assigned[k] = 0; GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; GAME.craftCarry[k] = 0; }
 
         // ジュース・お菓子・スイーツはパティシエへ移管（シェフの負担分散）
         ['applejuice','orangejuice','grapejuice','mixjuice','lemonade','sugar','candy','jam','cake','honey','honeytoast','berrytart','icecream','pudding','cookie','chocolate','donut','parfait','grandcake']
@@ -558,7 +674,7 @@
         };
         Object.keys(REQ_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].req = REQ_OVERRIDE[k]; });
         // 売値の見直し（解放順＝早い物ほど安く）。順番を変えた果物の原料・加工品を中心に
-        const PRICE_OVERRIDE = { berry:2, apple:3, orange:4, grape:6, lemon:8, maple:18 };  // 原料(price)。mapleは硬い木材(16)より高く
+        const PRICE_OVERRIDE = { berry:3, apple:3, orange:4, grape:6, lemon:8, maple:18 };  // 原料(price)。いちごは雇用必要なので無料採取の薬草(2)より上=3。mapleは硬い木材(16)より高く
         Object.keys(PRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].price = PRICE_OVERRIDE[k]; });
         const BASEPRICE_OVERRIDE = { berryjuice:8, berrytart:34, jam:30, applejuice:8, orangejuice:11, grapejuice:14 }; // 加工品(basePrice)
         Object.keys(BASEPRICE_OVERRIDE).forEach(k => { if (GAME.resources[k]) GAME.resources[k].basePrice = BASEPRICE_OVERRIDE[k]; });
@@ -583,13 +699,16 @@
             if(lv===0) lv = GAME.resources[k].unlocked?1:99; return lv; }
         function _obtainable(k,L,seen){ seen=seen||{}; if(k in seen) return seen[k]; let res=GAME.resources[k];
             if(!res) return seen[k]=false; if(_unlockLv(k)>L) return seen[k]=false;
-            if(!res.isCraft) return seen[k]=true; let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
-            seen[k]=true; for(let m in rec.costs){ if(!_obtainable(m,L,seen)) return seen[k]=false; } return seen[k]=true; }
+            // 素材は「その土地で採れる or 輸入できる」場合のみ入手可（バイオーム特産で詰むのを防ぐ）
+            if(!res.isCraft) return seen[k]=(biomeAllowsRaw(k) || importable(k)); let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
+            seen[k]=true; let opts = rec.alt ? [rec.costs, rec.alt] : [rec.costs];   // 代替レシピはどちらか作れればOK
+            for(let oi=0;oi<opts.length;oi++){ let ok=true; for(let m in opts[oi]){ if(!_obtainable(m,L,seen)){ ok=false; break; } } if(ok) return seen[k]=true; }
+            return seen[k]=false; }
         function generateTownGoals(){
             for(let L=1; L<=8; L++){
                 if(!GAME.townUpgrades[L]) continue;
                 let crafts = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && !GAME.resources[k].isCustom && _obtainable(k,L,{}));
-                let raws = Object.keys(GAME.resources).filter(k=>!GAME.resources[k].isCraft && _unlockLv(k)<=L);
+                let raws = Object.keys(GAME.resources).filter(k=>!GAME.resources[k].isCraft && _unlockLv(k)<=L && (biomeAllowsRaw(k) || importable(k)));
                 let pool = crafts.length>=2 ? crafts : crafts.concat(raws);
                 if(!pool.length){ continue; }
                 let n = pool.length>=3 ? (2 + Math.floor(Math.random()*2)) : Math.min(2, pool.length);
@@ -601,6 +720,34 @@
                 GAME.townUpgrades[L].req = req;
             }
         }
+        // ============ フェーズ4.5：工房解放（町Lvで加工品を段階解放） ============
+        // 各工房(facilityName)に解放町Lvを割り当て、所属加工品のreq.townに反映（縦の伸びしろ）。
+        // レシピ・ジョブは不変＝解放ゲートを被せるのみ。素材のエリア/wlvゲートは別途そのまま。
+        const WORKSHOP_LV = {
+            // Lv1：建材の基礎＋序盤食料
+            '簡易調理場':1, '石造りの窯':1, 'おにぎり屋':1, '木工ろくろ':1, '石材加工場':1, '炭焼き窯':1, 'レンガ窯':1,
+            // Lv2
+            '蒸留装置':2, 'ハーブ工房':2, '餅つき小屋':2, '製瓶所':2, '製糖所':2, 'せんべい焼き場':2, '塩田':2, '香草焼き場':2, '寿司処':2,
+            // Lv3
+            '炭火焼き場':3, '調合専門店':3, '乳製品工房':3, '丼物屋':3, '炒め場':3, '織物工房':3, '団子屋':3, '真珠養殖場':3, '唐揚げ店':3,
+            // Lv4（＋鍛冶場を前倒し）
+            '製氷菓子店':4, 'ジューススタンド':4, '燻製肉工房':4, '花細工工房':4, '陶芸工房':4, 'たこ焼き屋':4, '銅細工工房':4, '焼き菓子店':4, 'ドリンクスタンド':4, '鍛冶場':4,
+            // Lv5（＋製菓店を前倒し）
+            '海鮮丼屋':5, '園芸工房':5, 'プリン工房':5, '貝細工工房':5, '採蜜所':5, 'なめし工房':5, '木箱工房':5, '製鋼炉':5, '鉄板焼き場':5, '製菓店':5,
+            // Lv6
+            '揚げ物店':6, 'ピザ窯':6, 'ショコラ工房':6, '上級調合所':6, '燻製小屋':6, '大水車の調理場':6, '香水工房':6, '噴水工房':6, 'デリカテッセン':6,
+            // Lv7（※製菓店=基礎菓子はLv5・鍛冶場=基礎道具はLv4へ前倒し＝バランス調整）
+            '街灯工房':7, 'ドーナツ店':7, '彫刻工房':7, '銀細工場':7, '暖炉工房':7, '宝飾工房':7, '高級デリ':7,
+            // Lv8
+            '石畳工房':8, '高級家具工房':8, '宝石カッティング機':8, 'パフェ専門店':8, '鞄工房':8, '迎賓館の厨房':8, '金細工場':8, '貴賓ラウンジ':8, '錬金術工房':8,
+            // Lv9：最終
+            'パティスリー':9, '王室宝飾工房':9, '王宮建築ギルド':9
+        };
+        function workshopLvOf(key){ let rec=GAME.recipes[key]; return (rec && WORKSHOP_LV[rec.facilityName]) || 1; }
+        // 既存加工品(非custom)の解放を「工房Lv」に統一（素材側のエリア/wlvゲートは素材自身が持つ）
+        Object.keys(GAME.resources).forEach(k=>{ let r=GAME.resources[k];
+            if(r.isCraft && !r.isCustom && GAME.recipes[k]) r.req = { town: workshopLvOf(k) }; });
+
         generateTownGoals();
 
         // ============ 整備（インフラ）：建材で街全体をレベル強化（設備強化とは別軸） ============
@@ -627,7 +774,7 @@
 
         // ============ 設備の建設・強化（チャリン＋建材） ============
         // 建材＝木材/石材ライン由来。建材を作る設備・序盤の設備はチャリンのみで建設可（詰み回避）
-        const FACILITY_GOLD_ONLY = new Set(['board','hardboard','mason','steel','charcoal','salt']);
+        const FACILITY_GOLD_ONLY = new Set(['board','hardboard','mason','steel','charcoal','salt','brick']);
         function facilityCostGold(key) {
             let res = GAME.resources[key];
             return Math.floor(res.baseFacilityCost * Math.pow(1.7, res.facilityLv)); // 未建設(0)=base / 以降は倍々
@@ -677,12 +824,13 @@
             patissier:{ dress:'#ffd1e8', cap:'#ff9ecb', tool:'🍰' },
             blender:  { dress:'#c49bf0', cap:'#8a5cd6', tool:'⚗️' },
             craftsman:{ dress:'#e0975a', cap:'#b5651d', tool:'🔨' },
-            merchant: { dress:'#5ecfce', cap:'#f2cf66', tool:'💰' }
+            merchant: { dress:'#5ecfce', cap:'#f2cf66', tool:'💰' },
+            trader:   { dress:'#9fd3ff', cap:'#5fa8e0', tool:'🛒' }
         };
         function themeFor(wk) { return WORKER_THEME[wk] || { dress:'#ff9ecb', cap:'#ffd1e8', tool:'💗' }; }
 
         // 職業ごとの作業モーション（加工職＝専用、それ以外の採取系＝gather）
-        const WORKER_ACTION = { cook:'cook', patissier:'mix', blender:'mix', craftsman:'craft', merchant:'idle' };
+        const WORKER_ACTION = { cook:'cook', patissier:'mix', blender:'mix', craftsman:'craft', merchant:'idle', trader:'idle' };
         function actionFor(wk) { return WORKER_ACTION[wk] || 'gather'; }
 
         // 1体ぶんのドットリオちゃんSVGを返す
@@ -761,34 +909,139 @@
         function propFlower(c){ return _r(8,12,1,4,'#5fae5f')+_c(8,10,2,c)+_c(8,10,1,'#ffd34d'); }
         function natureProp(t){ return t==='pine'?propPine():t==='field'?propField():t==='barn'?propBarn():t==='rocks'?propRocks():t==='pond'?propPond():propTree(); }
         function place(inner, tx, ty, s){ return `<g transform="translate(${tx},${ty}) scale(${s})">${inner}</g>`; }
+        // 始まりはテント→木の家→城、と町Lvで発展（いきなり城にしない）
         function landmark(level){
+            if (level <= 2) {  // Lv1-2：テント（始まりの野原・木造集落）
+                return _p('10,3 2,18 18,18','#ffcf8f') + _p('10,3 10,18 18,18','#f2b56b')   // 三角テント＋陰
+                     + _r(8,11,4,7,'#9c6b3f') + _p('10,11 8,18 12,18','#7a5230')             // 入口の布
+                     + _r(10,-2,1,5,'#8a8a8a') + _p('11,-2 15,-1 11,0','#ff6fae');           // ポール＋旗
+            }
+            if (level <= 4) {  // Lv3-4：木の家（集落〜都市の入口）
+                return _p('3,8 10,2 17,8','#c0653f') + _r(4,8,12,10,'#e6c79a')                // 切妻屋根＋壁
+                     + _r(8,12,4,6,'#9c6b3f') + _r(5,10,2,2,'#bfe3ff') + _r(13,10,2,2,'#bfe3ff') // ドア＋窓
+                     + _r(13,-1,1,5,'#8a8a8a') + _p('14,-1 18,0 14,1','#ff6fae');             // 煙突風ポール＋旗
+            }
+            // Lv5+：城（城塞都市〜）。Lv6で塔、Lv8で金装飾
             let s = _r(7,6,10,14,'#efe2c9') + _r(7,5,2,2,'#d8c4a0') + _r(11,5,2,2,'#d8c4a0') + _r(15,5,2,2,'#d8c4a0')
                   + _r(10,13,4,7,'#9c6b3f') + _r(9,9,2,2,'#bfe3ff') + _r(13,9,2,2,'#bfe3ff')
                   + _r(12,-1,1,6,'#8a8a8a') + _p('13,-1 17,0 13,1','#ff6fae');
-            if (level >= 4) s += _r(3,8,4,12,'#efe2c9')+_p('3,8 5,4 7,8','#ff9f6b')+_r(17,8,4,12,'#efe2c9')+_p('17,8 19,4 21,8','#ff9f6b');
-            if (level >= 6) s += _r(7,6,10,1,'#ffd34d');
+            if (level >= 6) s += _r(3,8,4,12,'#efe2c9')+_p('3,8 5,4 7,8','#ff9f6b')+_r(17,8,4,12,'#efe2c9')+_p('17,8 19,4 21,8','#ff9f6b');
+            if (level >= 8) s += _r(7,6,10,1,'#ffd34d');
             return s;
         }
-        function townMapSignature(){
-            let w = ['gatherer','farmer','dairy','logger','miner','hunter'].map(unlockedRawCount).join('-');
-            let l = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && GAME.resources[k].facilityLv>=1)
-                .map(k=> k + (GAME.assigned[k]>0?'w':'')).join('.');
-            let inf = Object.keys(GAME.infra).map(k=>GAME.infra[k].lv).join(',');
-            return [GAME.townLevel, w, l, inf, mapWalkerCount()].join('|');
+        // ============ エリア（マップ切り替え式・フェーズ4） ============
+        // 各エリアは「チャリン＋建材」を払って任意順に解放（町Lv紐づけは廃止）。表示中エリアのみフル描画。
+        GAME.areas = {
+            field:  { name:'はじまりの野原', icon:'🌾', sky:'#cdeeff', cost:null },
+            forest: { name:'みどりの森',     icon:'🌲', sky:'#cdeecf', cost:{ gold:800,   mat:{ brick:6 } } },
+            sea:    { name:'あおい海',       icon:'🌊', sky:'#bfe9ff', cost:{ gold:6000,  mat:{ brick:20, mason:15 } } },
+            mine:   { name:'きらめく鉱山',   icon:'⛏️', sky:'#d8d0e8', cost:{ gold:30000, mat:{ brick:40, mason:30, iron:20 } } }
+        };
+        GAME.activeArea = 'field';                                                  // 表示中エリア（runtime）
+        GAME.unlockedAreas = { field:true, forest:false, sea:false, mine:false };   // 解放状態（セーブ対象）
+        GAME.lastArea = 'field';                                                    // 最後に解放したエリア＝デフォルト表示（セーブ対象）
+        const AREA_ORDER = ['field','forest','sea','mine'];
+        const AREA_GROUND = { field:['#bfe79a','#a9d97f'], forest:['#8fce7e','#73b863'], sea:['#ffe6ad','#f0d488'], mine:['#b9a98f','#9c8b72'] };
+        // 採取workerでエリアを決定（加工はすべて街＝field）。石・鉄は野原の基礎建材素材として上書き。
+        const WORKER_AREA = { gatherer:'field', farmer:'field', dairy:'field', merchant:'field',
+            logger:'forest', miner:'mine', hunter:'sea', cook:'field', patissier:'field', blender:'field', craftsman:'field' };
+        const RAW_AREA_OVERRIDE = { herbplant:'forest', flower:'forest', meat:'field', chicken:'field', pork:'field', fish:'field', stone:'field', iron:'field' };
+        function areaOf(key){
+            let r = GAME.resources[key]; if (!r) return 'field';
+            if (RAW_AREA_OVERRIDE[key]) return RAW_AREA_OVERRIDE[key];
+            if (r.isCraft){ let rec = GAME.recipes[key]; return (rec && WORKER_AREA[rec.workerKey]) || 'field'; }
+            return WORKER_AREA[r.workerKey] || 'field';
         }
-        function renderTownMap(){
-            let scene = document.getElementById('map-scene');
-            if (!scene) return;
-            let sig = townMapSignature();
-            if (sig === GAME._mapSig) return;   // 見た目が変わる時だけ再生成
-            GAME._mapSig = sig;
+        function areaUnlocked(a){ return !!GAME.unlockedAreas[a]; }
+        function areaCostGold(a){ return (GAME.areas[a] && GAME.areas[a].cost) ? GAME.areas[a].cost.gold : 0; }
+        function areaCostMat(a){ return (GAME.areas[a] && GAME.areas[a].cost) ? GAME.areas[a].cost.mat : {}; }
+        function canUnlockArea(a){
+            if(!GAME.areas[a] || !GAME.areas[a].cost || areaUnlocked(a)) return false;
+            if(GAME.gold < areaCostGold(a)) return false;
+            let m=areaCostMat(a); for(let r in m){ if(!GAME.resources[r] || GAME.resources[r].count < m[r]) return false; }
+            return true;
+        }
+        function unlockArea(a){
+            if(!canUnlockArea(a)) return;
+            GAME.gold -= areaCostGold(a);
+            let m=areaCostMat(a); for(let r in m){ GAME.resources[r].count -= m[r]; }
+            GAME.unlockedAreas[a]=true; GAME.lastArea=a; GAME.activeArea=a; GAME._mapSig=null;
+            updateLockState(); updateUI();
+            let scene=document.getElementById('map-scene');
+            if(scene){ scene.classList.remove('area-enter'); void scene.offsetWidth; scene.classList.add('area-enter'); spawnMapConfetti(); }
+        }
+        function ensureActiveArea(){ if(!GAME.activeArea || !areaUnlocked(GAME.activeArea)) GAME.activeArea = (GAME.lastArea && areaUnlocked(GAME.lastArea)) ? GAME.lastArea : 'field'; }
+
+        // ============ フェーズ6：バイオーム（地域）選択 ============
+        // 地域で「採れる素材」が変わる。海・鉱山・森の生物＋基礎は気候中立＝共通。
+        // 採れない基礎素材は輸入で補える／地域特産(マンゴー・寒流魚)は輸入不可＝その土地だけ。
+        GAME.biome = null;   // 'plains'|'tropical'|'snow'（セーブ対象。未選択なら起動時に選択画面）
+        const BIOME_DEFS = {
+            plains:   { name:'平野の町', icon:'🌾', desc:'バランス型。多くの素材がそこそこ採れ、加工貿易の拠点向き。砂糖は甜菜から。' },
+            tropical: { name:'常夏の町', icon:'🌴', desc:'南国。米・サトウキビ・柑橘・マンゴーが豊富。小麦・乳製品・針葉樹は採れない（輸入で補う）。' },
+            snow:     { name:'白銀の町', icon:'❄️', desc:'雪国。小麦・じゃがいも・乳製品・針葉樹・寒流魚が強い。米・柑橘・サトウキビは採れない（砂糖は甜菜）。' }
+        };
+        const _BIOME_COMMON = ['herb','water','herbplant','superherb','flower','mushroom','lettuce','fish','meat','chicken','pork','egg','hide','seawater','clam','seafish','shrimp','octopus','wood','stone','iron','copper','silver','gem','goldore'];
+        const BIOME_RAWS = {
+            plains:   new Set(_BIOME_COMMON.concat(['wheat','rice','apple','berry','orange','grape','lemon','potato','tomato','milk','wool','hardwood','maple','sugarbeet'])),
+            tropical: new Set(_BIOME_COMMON.concat(['rice','orange','lemon','grape','tomato','sugarcane','mango'])),
+            snow:     new Set(_BIOME_COMMON.concat(['wheat','potato','apple','berry','milk','wool','hardwood','maple','sugarbeet','coldfish']))
+        };
+        function biomeAllowsRaw(key){ if(!GAME.biome) return true; let s=BIOME_RAWS[GAME.biome]; return s ? s.has(key) : true; }
+        function chooseBiome(b){ if(!BIOME_DEFS[b] || GAME.biome) return; GAME.biome=b;
+            // 選択前に初期解放されていた素材のうち、この土地で採れないものは閉じる（例:常夏のいちご）
+            for(let k in GAME.resources){ let r=GAME.resources[k]; if(!r.isCraft && !biomeAllowsRaw(k)) r.unlocked=false; }
+            generateTownGoals();   // 発展目標をこの土地で達成可能な品で再生成（特産で詰む回避）
+            let ov=document.getElementById('biome-select'); if(ov) ov.style.display='none';
+            updateLockState(); ensureActiveArea(); updateUI(); saveGame(); }
+        function renderBiomeSelect(){
+            let ov=document.getElementById('biome-select'); if(!ov) return;
+            if(GAME.biome){ ov.style.display='none'; return; }
+            ov.style.display='flex';
+            ov.innerHTML = `<div class="biome-modal"><h2>🏝 町のある土地をえらぼう</h2>`
+                + `<p style="font-size:.8rem;color:#7a5a7a;margin:0 0 10px;">土地で「採れる素材」が変わります。採れないものは輸入で補えます（地域特産は輸入できません）。</p>`
+                + `<div class="biome-cards">` + Object.keys(BIOME_DEFS).map(b=>{
+                    let d=BIOME_DEFS[b];
+                    return `<button class="biome-card" onclick="chooseBiome('${b}')"><div class="biome-ic">${d.icon}</div><div class="biome-nm">${d.name}</div><div class="biome-ds">${d.desc}</div></button>`;
+                  }).join('') + `</div></div>`;
+        }
+        // ミニマップ後付け用：各エリアの状態をいつでも引ける（今回ミニマップ自体は未実装）
+        function areaState(a){
+            let raws=[], facs=[];
+            for(let k in GAME.resources){ if(areaOf(k)!==a) continue; let r=GAME.resources[k];
+                if(r.isCraft){ if(r.facilityLv>=1) facs.push(k); } else if(r.unlocked) raws.push(k); }
+            return { key:a, name:GAME.areas[a].name, icon:GAME.areas[a].icon, unlocked:areaUnlocked(a), active:GAME.activeArea===a, raws:raws, facilities:facs };
+        }
+        function allAreaStates(){ return AREA_ORDER.map(areaState); }
+
+        // エリア専用プロップ
+        function propWaves(){ return _p('0,11 4,9 8,11 12,9 16,11 16,16 0,16','#7fc8ff')+_p('0,13 4,11 8,13 12,11 16,13 16,16 0,16','#5bb0ef'); }
+        function propBoat(){ return _p('2,12 14,12 12,15 4,15','#a9764a')+_r(8,5,1,7,'#7a4a2b')+_p('9,5 9,11 14,10','#fff6fb'); }
+        function propHerbBush(){ return _c(8,13,3,'#6fae5f')+_c(5,14,2,'#5fae5f')+_c(11,14,2,'#7ec06f')+_c(8,10,1,'#bce3a0')+_c(6,12,0.8,'#ff8fc7'); }
+        function propOre(){ return _c(6,14,3,'#8893a3')+_c(10,13,3,'#9aa3b2')+_c(6,13,1,'#ffd34d')+_c(10,12,1,'#9fe0ff'); }
+        function propShell(){ return _p('8,15 4,11 8,9 12,11','#ffd9e6')+_p('8,15 8,9 12,11','#ffc0d6'); }
+        function propCave(){ return _r(2,4,14,12,'#5a4a3a')+`<ellipse cx="9" cy="13" rx="5" ry="7" fill="#241c2b"/>`+_r(7,2,4,2,'#6b5a47'); }
+
+        // 表示中エリアのシーンSVGを組み立て（背景＋プロップ）
+        function buildAreaScene(a){
             const G = 84;
+            let ar = GAME.areas[a] || GAME.areas.field;
+            let gnd = AREA_GROUND[a] || AREA_GROUND.field;
             let svg = `<svg viewBox="0 0 240 110" xmlns="http://www.w3.org/2000/svg">`;
-            svg += _r(0,G,240,110-G,'#bfe79a') + _r(0,G,240,3,'#a9d97f') + `<rect x="0" y="101" width="240" height="5" fill="#e8d6a0" opacity=".6"/>`;
+            svg += _r(0,0,240,G,ar.sky);
+            svg += _r(0,G,240,110-G,gnd[0]) + _r(0,G,240,3,gnd[1]) + `<rect x="0" y="101" width="240" height="5" fill="#e8d6a0" opacity=".45"/>`;
+            if (a==='forest') svg += sceneForest(G);
+            else if (a==='sea') svg += sceneSea(G);
+            else if (a==='mine') svg += sceneMine(G);
+            else svg += sceneField(G);
+            return svg + `</svg>`;
+        }
+        function sceneField(G){
+            let svg = '';
             let ls = 1 + (GAME.townLevel-1)*0.07;
             svg += place(landmark(GAME.townLevel), 120-12*ls, G-20*ls+4, ls);
-            // 家：建てた設備だけ（建設済み加工品ごとに1軒・最大9。稼働中は煙）
-            let builtKeys = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].facilityLv >= 1);
+            // 家：建設済み設備（=街の加工所、最大9・稼働中は煙）
+            let builtKeys = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].facilityLv >= 1 && areaOf(k)==='field');
             let hi = 0;
             builtKeys.slice(0, 9).forEach(k => {
                 let working = GAME.assigned[k] > 0;
@@ -796,20 +1049,18 @@
                 svg += place(propHouse(HOUSE_ROOFS[hi%HOUSE_ROOFS.length], working), 138+col*22+(band?0:6), (band?G-2:G-13)-16*s, s);
                 hi++;
             });
-            // 自然：採取系の職種ごと（解放済み素材があれば1つ。素材数で少し大きく）
+            // 自然（街の採取系：レンジャー/ファーマー/ブリーダー）
             let ni = 0;
-            ['gatherer','farmer','dairy','logger','miner','hunter'].forEach(wk=>{
+            ['gatherer','farmer','dairy'].forEach(wk=>{
                 let cnt=unlockedRawCount(wk); if(!cnt) return;
                 let band=ni%2, col=Math.floor(ni/2), s=(band?1:0.8)*(1+Math.min(cnt,4)*0.05);
                 svg += place(natureProp(NATURE_BY_WORKER[wk]), 6+col*20+(band?0:5), (band?G-2:G-13)-16*s, s);
                 ni++;
             });
-            // 飾りの花（Lvで増える）
             const FLW=[[60,98],[80,104],[105,100],[150,104],[175,99],[195,105],[40,105],[215,101],[120,106],[90,98]];
             const FCOL=['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'];
             let fc=Math.min(FLW.length, 2+GAME.townLevel);
             for(let i=0;i<fc;i++) svg += place(propFlower(FCOL[i%FCOL.length]), FLW[i][0], FLW[i][1]-11, 0.7);
-            // 整備の反映（マップ）：建てた分だけ街が賑やかに
             const I = GAME.infra;
             if (I.road.lv > 0) { svg += _r(0,100,240,6,'#dcc18a') + _r(0,100,240,1,'#c9a86a');
                 let lamps = Math.min(I.road.lv, 5);
@@ -819,20 +1070,50 @@
             if (I.market.lv > 0) svg += place(propHouse('#ff6fae', false), 86, G-13-16*0.85, 0.85);
             if (I.farm.lv > 0)   svg += place(propField(), 112, G-1-16*0.8, 0.8);
             if (I.toolyard.lv > 0) svg += place(propRocks(), 132, G-1-16*0.7, 0.7);
-            svg += `</svg>`;
-            // 歩くリオちゃん（雇用総数10人ごとに1人・上限6人。ゆっくり＆動きにバリエーション）
+            return svg;
+        }
+        function sceneForest(G){
+            let svg = '';
+            let pines = Math.max(2, Math.min(6, unlockedRawCount('logger') + 2));
+            for(let i=0;i<pines;i++){ let band=i%2, col=Math.floor(i/2), s=(band?1.05:0.85);
+                svg += place(propPine(), 8+col*30+(band?0:12), (band?G-2:G-14)-16*s, s); }
+            if (GAME.resources.herbplant && GAME.resources.herbplant.unlocked){
+                for(let i=0;i<3;i++) svg += place(propHerbBush(), 56+i*44, G-2-16*0.8, 0.8); }
+            for(let i=0;i<5;i++) svg += place(propFlower(['#ff8fc7','#ffd166','#b89bf0','#ff9f6b','#8ec9ff'][i%5]), 24+i*44, G-1-16*0.55, 0.55);
+            return svg;
+        }
+        function sceneSea(G){
+            let svg = '';
+            svg += _r(0,G-3,240,113-G,'#7fc8ff') + _r(0,G-3,240,3,'#5bb0ef');
+            for(let i=0;i<5;i++) svg += place(propWaves(), 4+i*48, G+1, 0.85);
+            let boats = Math.max(1, Math.min(4, unlockedRawCount('hunter')));
+            for(let i=0;i<boats;i++) svg += place(propBoat(), 18+i*56, G-3-16*0.95, 0.95);
+            if (GAME.resources.clam && GAME.resources.clam.unlocked){
+                for(let i=0;i<3;i++) svg += place(propShell(), 36+i*64, 99, 0.6); }
+            return svg;
+        }
+        function sceneMine(G){
+            let svg = '';
+            svg += place(propCave(), 104, G-16*1.25, 1.25);
+            let ores = Math.max(2, Math.min(7, unlockedRawCount('miner') + 2));
+            for(let i=0;i<ores;i++){ let band=i%2, col=Math.floor(i/2), s=(band?0.95:0.72);
+                svg += place(propOre(), 6+col*26+(band?0:8), (band?G-2:G-12)-16*s, s); }
+            return svg;
+        }
+        // 歩くリオちゃん（街のみ。雇用総数10人ごとに1人・上限6人）
+        function buildWalkers(){
             let walkers = mapWalkerCount();
             const WANDER = ['wanderA','wanderB','wanderC'];
             const STROLL = ['idle','cook','mix'];
-            const EMO = ['💕','✨','🎵','♡','😊','🩷'];   // レアモーションで出る絵文字
+            const EMO = ['💕','✨','🎵','♡','😊','🩷'];
             let actors = '<div class="map-actors">';
             for (let i=0;i<walkers;i++){
-                let dur = 22 + (i%3)*6 + Math.floor(i/3)*3;   // 22〜34s 程度でゆっくり
+                let dur = 22 + (i%3)*6 + Math.floor(i/3)*3;
                 let delay = -i*5;
                 let emo = EMO[i % EMO.length];
-                let edur = 12 + i*3;                          // レアモーションの間隔をバラす（時々だけ）
+                let edur = 12 + i*3;
                 let edelay = -(i*7 + 4);
-                let banzai = (i % 2 === 1);                   // 偶=くるっと回転／奇=バンザイ＆ジャンプ
+                let banzai = (i % 2 === 1);
                 let actKf = banzai ? 'gHop' : 'gSpin';
                 let armT = banzai ? { dur: edur, delay: edelay } : null;
                 actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
@@ -840,8 +1121,57 @@
                         + `<span class="rio-act" style="animation:${actKf} ${edur}s ease-in-out infinite ${edelay}s">`
                         + `${riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 24, STROLL[i%3], null, armT)}</span></span>`;
             }
-            actors += '</div>';
-            scene.innerHTML = svg + actors;
+            return actors + '</div>';
+        }
+        // タブ描画＆エリア切り替え。未解放エリアは「解放コスト＋解放ボタン」状態で表示。
+        function renderAreaTabs(){
+            let bar = document.getElementById('area-tabs'); if(!bar) return;
+            let html='';
+            AREA_ORDER.forEach(a=>{
+                if(areaUnlocked(a)){
+                    let on = GAME.activeArea===a;
+                    html += `<button class="area-tab${on?' on':''}" onclick="switchArea('${a}')">${GAME.areas[a].icon} ${GAME.areas[a].name}</button>`;
+                } else {
+                    let m=areaCostMat(a);
+                    let matStr = Object.keys(m).map(r=>`${GAME.resources[r].icon}${m[r]}`).join(' ');
+                    let ok = canUnlockArea(a);
+                    html += `<button class="area-tab locked" onclick="unlockArea('${a}')" ${ok?'':'disabled'} title="解放: ${areaCostGold(a)}チャリン ＋ ${matStr}">🔒${GAME.areas[a].icon}${GAME.areas[a].name}<span class="area-cost">${areaCostGold(a)}🪙 ${matStr}</span></button>`;
+                }
+            });
+            bar.innerHTML = html;
+        }
+        function switchArea(a){
+            if(!GAME.areas[a] || !areaUnlocked(a) || GAME.activeArea===a) return;
+            GAME.activeArea = a;
+            GAME._mapSig = null;               // 強制再描画
+            renderTownMap();
+            let scene = document.getElementById('map-scene');
+            if (scene){
+                scene.classList.remove('area-enter'); void scene.offsetWidth; scene.classList.add('area-enter');
+                let w = document.createElement('div'); w.className='area-walk';
+                w.innerHTML = riochanSVG({top:'#ffb3d1',skirt:'#fdeef5',ribbon:'#7fc4ff'}, 26, 'gather');
+                scene.appendChild(w); setTimeout(()=>{ if(w.parentNode) w.parentNode.removeChild(w); }, 680);
+            }
+            renderAreaTabs();
+        }
+
+        function townMapSignature(){
+            let w = ['gatherer','farmer','dairy','logger','miner','hunter'].map(unlockedRawCount).join('-');
+            let l = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && GAME.resources[k].facilityLv>=1)
+                .map(k=> k + (GAME.assigned[k]>0?'w':'')).join('.');
+            let inf = Object.keys(GAME.infra).map(k=>GAME.infra[k].lv).join(',');
+            return [GAME.activeArea, GAME.townLevel, w, l, inf, mapWalkerCount()].join('|');
+        }
+        function renderTownMap(){
+            let scene = document.getElementById('map-scene');
+            if (!scene) return;
+            ensureActiveArea();
+            renderAreaTabs();
+            let sig = townMapSignature();
+            if (sig === GAME._mapSig) return;   // 見た目が変わる時だけ再生成
+            GAME._mapSig = sig;
+            let actors = (GAME.activeArea==='field') ? buildWalkers() : '';
+            scene.innerHTML = buildAreaScene(GAME.activeArea) + actors;
         }
 
         // 発展時の祝福（クラッカー）＝マップ上のみ
@@ -873,6 +1203,29 @@
             let res = GAME.resources[key];
             let base = res.isCraft ? res.basePrice * Math.max(1, res.facilityLv) : res.price;
             return Math.floor(base * marketMult());
+        }
+
+        // ============ 輸入（仕入れ）：トレーダーが対象品をチャリンで購入 ============
+        // 輸入価格＝売値×1.2。①裸の転売(買って即売り)は損②全材料を輸入しても加工品(売値×1.3)は黒字
+        // ＝加工貿易に旨味③自前採取は無料なので輸入で自前採取が無意味化しない。素材(raw)のみ輸入可。
+        const IMPORT_MARKUP = 1.2;
+        // 目玉素材＝輸入不可（そのエリアを解放してこそ入手＝開拓の動機）。基礎・共通素材は未解放でも輸入可。
+        const IMPORT_BLOCKED = new Set(['silver','gem','goldore','clam','mango','coldfish']);
+        function importable(key) {
+            let r = GAME.resources[key];
+            return !!r && !r.isCraft && !IMPORT_BLOCKED.has(key);
+        }
+        function importPrice(key) {
+            return Math.max(1, Math.ceil(getCurrentPrice(key) * IMPORT_MARKUP));
+        }
+        function toggleAutoBuy(key, checked) { GAME.autoBuy[key] = checked; }
+        function buyItem(key) {
+            if (!importable(key)) return;
+            let ip = importPrice(key);
+            if (GAME.gold < ip) return;
+            GAME.gold -= ip;
+            GAME.resources[key].count += 1;
+            updateUI();
         }
 
         // その品の担当職人キー（素材→workerKey / 加工品→recipe.workerKey）
@@ -957,7 +1310,8 @@
         function updateLockState() {
             for (let k in GAME.resources) {
                 let res = GAME.resources[k];
-                if (!res.unlocked && reqMet(res.req)) res.unlocked = true;
+                // 素材/加工品は「自身のreq」かつ「所属エリア解放」かつ（素材は）「その地域で採れる」で解放
+                if (!res.unlocked && reqMet(res.req) && areaUnlocked(areaOf(k)) && (res.isCraft || biomeAllowsRaw(k))) res.unlocked = true;
             }
             for (let k in GAME.workers) {
                 let w = GAME.workers[k];
@@ -996,15 +1350,19 @@
         }
 
         function canAfford(costs) {
-            for (let m in costs) { if (GAME.resources[m].count < costs[m]) return false; }
+            for (let m in costs) { if (!GAME.resources[m] || GAME.resources[m].count < costs[m]) return false; }
             return true;
         }
+        // 代替レシピ対応：主レシピ(costs)＋任意の alt。在庫で賄える方を返す（主を優先）。無ければ null。
+        function recipeOptions(key) { let r = GAME.recipes[key]; if (!r) return []; return r.alt ? [r.costs, r.alt] : [r.costs]; }
+        function affordableCosts(key) { let opts = recipeOptions(key); for (let i = 0; i < opts.length; i++) { if (canAfford(opts[i])) return opts[i]; } return null; }
+        function canAffordAny(key) { return affordableCosts(key) !== null; }
 
         function craftItem(key) {
             if (GAME.resources[key].facilityLv < 1) return;   // 設備未建設
-            let recipe = GAME.recipes[key];
-            if (canAfford(recipe.costs)) {
-                for (let m in recipe.costs) { GAME.resources[m].count -= recipe.costs[m]; }
+            let costs = affordableCosts(key);
+            if (costs) {
+                for (let m in costs) { GAME.resources[m].count -= costs[m]; }
                 GAME.resources[key].count += 1;
                 updateUI();
             }
@@ -1099,13 +1457,18 @@
         function getMaterialRowHTML(key) {
             let res = GAME.resources[key];
             if (!res.unlocked) {
-                let hint = `🔒 ${res.icon}${res.name}は未解放`;
-                if (res.req && res.req.worker && res.req.wlv) {
-                    hint = `🔒 ${res.icon}${res.name} → ${GAME.workers[res.req.worker].name}を技術強化Lv.${res.req.wlv}で解放`;
-                } else if (res.req && res.req.town) {
-                    hint = `🔒 ${res.icon}${res.name} → 都市Lv.${res.req.town}で解放`;
-                }
-                return `<div class="material-row" style="color:#94a3b8; justify-content:center; font-size:0.72rem; background:#f8fafc;">${hint}</div>`;
+                let ar = areaOf(key);
+                let hint;
+                if (!biomeAllowsRaw(key)) hint = `🚫 ${res.icon}${res.name}はこの土地では採れない${importable(key) ? '（輸入で補える）' : '（他の土地の特産）'}`;
+                else if (!areaUnlocked(ar)) hint = `🔒 ${res.icon}${res.name} → ${GAME.areas[ar].icon}${GAME.areas[ar].name}を解放で採取`;
+                else if (res.req && res.req.worker && res.req.wlv) hint = `🔒 ${res.icon}${res.name} → ${GAME.workers[res.req.worker].name}を技術強化Lv.${res.req.wlv}で解放`;
+                else if (res.req && res.req.town) hint = `🔒 ${res.icon}${res.name} → 都市Lv.${res.req.town}で解放`;
+                else hint = `🔒 ${res.icon}${res.name}は未解放`;
+                // 基礎・共通素材はエリア未解放でも輸入で補える（目玉素材は輸入不可なので出ない）
+                let imp = (GAME.workers.trader && GAME.workers.trader.unlocked && importable(key))
+                    ? `<span style="margin-left:6px; color:#0284c7;">輸入${Math.floor(res.count)}個</span> <button onclick="buyItem('${key}')" style="background:#0ea5e9; padding:1px 6px; font-size:0.7rem;" ${GAME.gold >= importPrice(key) ? '' : 'disabled'}>仕入${importPrice(key)}</button>`
+                    : '';
+                return `<div class="material-row" style="color:#94a3b8; justify-content:space-between; align-items:center; font-size:0.72rem; background:#f8fafc;"><span>${hint}</span>${imp}</div>`;
             }
             let checked = GAME.autoSell[key] ? 'checked' : '';
 
@@ -1127,6 +1490,7 @@
                     <div class="control-cluster">
                         <label><input type="checkbox" ${checked} onchange="toggleAutoSell('${key}', this.checked)"> 自動売</label>
                         <button onclick="sellItem('${key}')">売却</button>
+                        ${(GAME.workers.trader && GAME.workers.trader.unlocked) ? `<label><input type="checkbox" ${GAME.autoBuy[key] ? 'checked' : ''} onchange="toggleAutoBuy('${key}', this.checked)"> 仕入</label><button onclick="buyItem('${key}')" style="background:#0ea5e9;" ${GAME.gold >= importPrice(key) ? '' : 'disabled'}>仕入${importPrice(key)}</button>` : ''}
                     </div>
                 </div>`;
         }
@@ -1148,8 +1512,11 @@
             if (!key) return `<div class="craft-empty">加工レシピなし</div>`;
             let res = GAME.resources[key];
             if (!res.unlocked) {
+                let rec0 = GAME.recipes[key];
                 let lockHint = `🔒 ${res.icon}${res.name}は未解放`;
-                if (res.req && res.req.worker && res.req.wlv) {
+                if (rec0 && res.req && res.req.town) {
+                    lockHint = `🏭 ${rec0.facilityName}は町Lv.${res.req.town}で解放（${res.icon}${res.name}）`;
+                } else if (res.req && res.req.worker && res.req.wlv) {
                     lockHint = `🔒 ${res.icon}${res.name} → ${GAME.workers[res.req.worker].name}を技術強化Lv.${res.req.wlv}で解放`;
                 } else if (res.req && res.req.town) {
                     lockHint = `🔒 ${res.icon}${res.name} → 都市Lv.${res.req.town}で解放`;
@@ -1169,13 +1536,13 @@
                     ? `✓ ${recipe.facilityName}稼働中（${assignedHere}人・設備Lv.${res.facilityLv}）`
                     : `⏸ ${GAME.workers[recipe.workerKey].name}を配置で稼働`);
 
-            let canCraft = built;
-            let badgeDesc = '';
-            for (let mat in recipe.costs) {
-                let has = Math.floor(GAME.resources[mat].count); let req = recipe.costs[mat];
-                if (has < req) canCraft = false;
-                badgeDesc += `<span class="badge ${has >= req ? 'meet' : ''}">${GAME.resources[mat].icon}${GAME.resources[mat].name.substring(0, 3)}:${has}/${req}</span>`;
-            }
+            // 代替レシピ対応：各選択肢のバッジを「／または」で並べ、いずれか賄えれば作成可
+            let opts = recipeOptions(key);
+            let badgeDesc = opts.map(costs => Object.keys(costs).map(mat => {
+                let has = Math.floor(GAME.resources[mat].count); let req = costs[mat];
+                return `<span class="badge ${has >= req ? 'meet' : ''}">${GAME.resources[mat].icon}${GAME.resources[mat].name.substring(0, 3)}:${has}/${req}</span>`;
+            }).join('')).join('<span style="font-size:0.62rem;color:#94a3b8;align-self:center;">／</span>');
+            let canCraft = built && canAffordAny(key);
 
             let currentPrice = res.basePrice * Math.max(1, res.facilityLv);
             let qualityLabelText = res.facilityLv > 1 ? `<span class="quality-label">品質Lv.${res.facilityLv}</span>` : '';
@@ -1286,7 +1653,7 @@
             GAME.resources[key] = { icon, name, count: 0, basePrice, unlocked: true, facilityLv: 1,
                 baseFacilityCost: Math.max(150, basePrice * 6), req: {}, isCraft: true, isCustom: true };
             GAME.recipes[key] = { costs, workerKey, facilityName: name + '工房' };
-            GAME.assigned[key] = 0; GAME.autoSell[key] = false; GAME.mProduce[key] = 0; GAME.mConsume[key] = 0;
+            GAME.assigned[key] = 0; GAME.autoSell[key] = false; GAME.autoBuy[key] = false; GAME.mProduce[key] = 0; GAME.mConsume[key] = 0;
             GAME.customKeys.push(key);
             nameEl.value = '';
             updateUI();
@@ -1297,7 +1664,7 @@
             if (idx < 0) return;
             GAME.customKeys.splice(idx, 1);
             delete GAME.resources[key]; delete GAME.recipes[key];
-            delete GAME.assigned[key]; delete GAME.autoSell[key];
+            delete GAME.assigned[key]; delete GAME.autoSell[key]; delete GAME.autoBuy[key];
             delete GAME.mProduce[key]; delete GAME.mConsume[key];
             updateUI();
         }
@@ -1308,6 +1675,8 @@
             let wg = document.getElementById('worker-gold'); if (wg) wg.innerText = Math.floor(GAME.gold).toLocaleString();
             document.getElementById('stat-town-lv').innerText = GAME.townLevel;
             document.getElementById('stat-town-rank').innerText = GAME.townNames[GAME.townLevel];
+            let bb = document.getElementById('stat-biome');
+            if (bb) bb.innerText = GAME.biome && BIOME_DEFS[GAME.biome] ? BIOME_DEFS[GAME.biome].icon + BIOME_DEFS[GAME.biome].name : '';
             renderTownMap();
 
             // 生産ツリー
@@ -1327,7 +1696,7 @@
                     html += `<div class="grid-split">`;
                     html += `<div class="source-side">`;
                     line.materials.forEach(mat => { html += getMaterialRowHTML(mat); });
-                    if (line.materials.length === 0) html += `<div class="craft-empty">下のフォームから作成</div>`;
+                    if (line.materials.length === 0) html += `<div class="craft-empty">${line.custom ? '下のフォームから作成' : '他ラインの素材から建造'}</div>`;
                     html += `</div>`;
                     html += `<div class="craft-col">`;
                     if (crafts.length > 0) {
@@ -1496,8 +1865,9 @@
                 let n = Math.floor(raw);
                 GAME.craftCarry[k] = raw - n;
                 for (let i = 0; i < n; i++) {
-                    if (!canAfford(r.costs)) { GAME.craftCarry[k] = 0; break; }
-                    for (let m in r.costs) { GAME.resources[m].count -= r.costs[m]; GAME.mConsume[m] += r.costs[m]; }
+                    let costs = affordableCosts(k);
+                    if (!costs) { GAME.craftCarry[k] = 0; break; }
+                    for (let m in costs) { GAME.resources[m].count -= costs[m]; GAME.mConsume[m] += costs[m]; }
                     res.count += 1; GAME.mProduce[k] += 1;
                 }
             }
@@ -1516,12 +1886,154 @@
                 }
             }
 
+            // 仕入れ役（トレーダー）による自動輸入＝商人(自動売却)の対。チャリンで素材を購入
+            let tr = GAME.workers.trader;
+            if (tr && tr.count > 0) {
+                let buyRate = tr.count * 3;
+                for (let k in GAME.autoBuy) {
+                    if (!GAME.autoBuy[k] || !importable(k)) continue;
+                    if (GAME.autoSell[k]) continue;   // 自動売却中の品は輸入しない（買って即売り＝損の防止）
+                    let ip = importPrice(k); if (ip <= 0) continue;
+                    let canBuy = Math.min(buyRate, Math.floor(GAME.gold / ip));
+                    if (canBuy <= 0) continue;
+                    GAME.gold -= canBuy * ip;
+                    GAME.resources[k].count += canBuy;
+                    GAME.mProduce[k] += canBuy;
+                }
+            }
+
+            if ((++_autosaveTick % 10) === 0) saveGame();   // 約10秒ごとにオートセーブ
             updateUI();
         }
 
+        // ============ セーブ／ロード（localStorage） ============
+        // 方針：保存するのは「変化する状態」だけ。静的な定義（icon/name/価格/req等）や
+        //       毎tick再計算する mProduce/mConsume、描画キャッシュ(_mapSig)、関数は保存しない。
+        //       ロードは「新規初期化済みのGAMEに保存値を上書きマージ」＝旧セーブに無い
+        //       新規プロパティは初期値が残る（前方互換マイグレーション）。
+        const SAVE_KEY = "virtualtown_save";
+        const SAVE_VERSION = 1;
+        let _autosaveTick = 0;
+        let _resetting = false;   // リセット中はオートセーブ／離脱時保存を止める（削除直後の再保存防止）
+
+        function serializeGame() {
+            const data = {
+                version: SAVE_VERSION,
+                gold: GAME.gold, townLevel: GAME.townLevel,
+                resources: {}, customResources: {}, customRecipes: {},
+                workers: {}, infra: {}, autoSell: {}, autoBuy: {}, assigned: {}, craftCarry: {}, collapsed: {},
+                customKeys: GAME.customKeys.slice(), customSeq: GAME.customSeq,
+                unlockedAreas: {}, lastArea: GAME.lastArea, biome: GAME.biome,   // エリア解放状態＋最後に解放＋バイオーム
+                townGoals: {}   // ランダム生成された発展条件を固定保存
+            };
+            for (let a in GAME.unlockedAreas) data.unlockedAreas[a] = GAME.unlockedAreas[a];
+            for (let k in GAME.resources) {
+                let r = GAME.resources[k];
+                if (r.isCustom) {
+                    data.customResources[k] = { icon: r.icon, name: r.name, count: r.count, basePrice: r.basePrice,
+                        unlocked: r.unlocked, facilityLv: r.facilityLv, baseFacilityCost: r.baseFacilityCost, req: r.req };
+                    if (GAME.recipes[k]) data.customRecipes[k] = { costs: GAME.recipes[k].costs, auto: !!GAME.recipes[k].auto,
+                        workerKey: GAME.recipes[k].workerKey, facilityName: GAME.recipes[k].facilityName };
+                } else {
+                    let e = { count: r.count, unlocked: r.unlocked };
+                    if (typeof r.facilityLv === 'number') e.facilityLv = r.facilityLv;
+                    data.resources[k] = e;
+                }
+            }
+            for (let k in GAME.workers) { let w = GAME.workers[k];
+                data.workers[k] = { count: w.count, lv: w.lv, unlocked: w.unlocked, autoAssign: !!w.autoAssign }; }
+            for (let k in GAME.infra) data.infra[k] = { lv: GAME.infra[k].lv };
+            for (let k in GAME.autoSell) data.autoSell[k] = GAME.autoSell[k];
+            for (let k in GAME.autoBuy) data.autoBuy[k] = GAME.autoBuy[k];
+            for (let k in GAME.assigned) data.assigned[k] = GAME.assigned[k];
+            for (let k in GAME.craftCarry) data.craftCarry[k] = GAME.craftCarry[k];
+            for (let k in GAME.collapsed) data.collapsed[k] = GAME.collapsed[k];
+            for (let L in GAME.townUpgrades) data.townGoals[L] = GAME.townUpgrades[L].req;
+            return data;
+        }
+
+        function saveGame() {
+            if (_resetting) return;   // リセット進行中は保存しない
+            try { localStorage.setItem(SAVE_KEY, JSON.stringify(serializeGame())); }
+            catch (e) { /* 容量超過・プライベートモード等は黙って無視 */ }
+        }
+
+        function loadGame() {
+            let raw;
+            try { raw = localStorage.getItem(SAVE_KEY); } catch (e) { return false; }
+            if (!raw) return false;
+            let data;
+            try { data = JSON.parse(raw); } catch (e) { return false; }
+            if (!data || typeof data !== 'object') return false;
+
+            // 独自レシピを先に復元（resources へ追加してから各マップをマージするため）
+            if (data.customResources) {
+                for (let k in data.customResources) {
+                    let cr = data.customResources[k];
+                    GAME.resources[k] = { icon: cr.icon, name: cr.name, count: cr.count || 0, basePrice: cr.basePrice,
+                        unlocked: cr.unlocked !== false, facilityLv: typeof cr.facilityLv === 'number' ? cr.facilityLv : 1,
+                        baseFacilityCost: cr.baseFacilityCost || Math.max(150, (cr.basePrice || 10) * 6),
+                        req: cr.req || {}, isCraft: true, isCustom: true };
+                    let rec = (data.customRecipes && data.customRecipes[k]) || {};
+                    GAME.recipes[k] = { costs: rec.costs || {}, auto: !!rec.auto,
+                        workerKey: rec.workerKey || 'cook', facilityName: rec.facilityName || ((cr.name || '') + '工房') };
+                    GAME.assigned[k] = 0; GAME.autoSell[k] = false; GAME.autoBuy[k] = false;
+                    GAME.mProduce[k] = 0; GAME.mConsume[k] = 0; GAME.craftCarry[k] = 0;
+                }
+            }
+            GAME.customKeys = Array.isArray(data.customKeys) ? data.customKeys.filter(k => GAME.resources[k]) : [];
+            GAME.customSeq = typeof data.customSeq === 'number' ? data.customSeq : 0;
+
+            if (typeof data.gold === 'number') GAME.gold = data.gold;
+            if (typeof data.townLevel === 'number') GAME.townLevel = data.townLevel;
+
+            if (data.resources) for (let k in data.resources) {
+                if (!GAME.resources[k]) continue;   // 削除済み/未知アイテムは無視
+                let e = data.resources[k];
+                if (typeof e.count === 'number') GAME.resources[k].count = e.count;
+                if (typeof e.unlocked === 'boolean') GAME.resources[k].unlocked = e.unlocked;
+                if (typeof e.facilityLv === 'number') GAME.resources[k].facilityLv = e.facilityLv;
+            }
+            if (data.workers) for (let k in data.workers) {
+                if (!GAME.workers[k]) continue;
+                let w = data.workers[k];
+                if (typeof w.count === 'number') GAME.workers[k].count = w.count;
+                if (typeof w.lv === 'number') GAME.workers[k].lv = w.lv;
+                if (typeof w.unlocked === 'boolean') GAME.workers[k].unlocked = w.unlocked;
+                if (typeof w.autoAssign === 'boolean') GAME.workers[k].autoAssign = w.autoAssign;
+            }
+            if (data.infra) for (let k in data.infra) {
+                if (GAME.infra[k] && typeof data.infra[k].lv === 'number') GAME.infra[k].lv = data.infra[k].lv;
+            }
+            if (data.autoSell) for (let k in data.autoSell) { if (k in GAME.autoSell) GAME.autoSell[k] = !!data.autoSell[k]; }
+            if (data.autoBuy) for (let k in data.autoBuy) { if (k in GAME.autoBuy) GAME.autoBuy[k] = !!data.autoBuy[k]; }
+            if (data.assigned) for (let k in data.assigned) { if (k in GAME.assigned && typeof data.assigned[k] === 'number') GAME.assigned[k] = data.assigned[k]; }
+            if (data.craftCarry) for (let k in data.craftCarry) { if (k in GAME.craftCarry && typeof data.craftCarry[k] === 'number') GAME.craftCarry[k] = data.craftCarry[k]; }
+            if (data.collapsed) for (let k in data.collapsed) { GAME.collapsed[k] = data.collapsed[k]; }
+            if (data.townGoals) for (let L in data.townGoals) { if (GAME.townUpgrades[L]) GAME.townUpgrades[L].req = data.townGoals[L]; }
+            if (data.unlockedAreas) for (let a in data.unlockedAreas) { if (a in GAME.unlockedAreas) GAME.unlockedAreas[a] = !!data.unlockedAreas[a]; }
+            GAME.unlockedAreas.field = true;   // 野原は常に解放
+            if (data.lastArea && GAME.areas[data.lastArea]) GAME.lastArea = data.lastArea;
+            if (data.biome && BIOME_DEFS[data.biome]) GAME.biome = data.biome;
+
+            return true;
+        }
+
+        function resetGame() {
+            if (!confirm('本当に最初からやり直しますか？\nこれまでの進行データは消えてしまいます（元に戻せません）。')) return;
+            _resetting = true;   // 以降のオートセーブ／beforeunload保存を抑止
+            try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+            location.reload();   // 完全初期化（発展条件も新規ランダム生成）
+        }
+
+        loadGame();                              // 保存があれば復元（無ければ新規開始）
         setInterval(runGameLoop, 1000);
         updateLockState();
+        // 起動／ロード時の表示エリア＝最後に解放したエリア（無ければ野原）。最後に見たタブは保存しない。
+        GAME.activeArea = (GAME.lastArea && areaUnlocked(GAME.lastArea)) ? GAME.lastArea : 'field';
         updateUI();
+        renderBiomeSelect();   // 新規ゲーム（バイオーム未選択）なら選択画面を表示
+        window.addEventListener('beforeunload', saveGame);   // 離脱時にも保存
     </script>
 </body>
 </html>
