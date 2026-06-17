@@ -1018,15 +1018,19 @@
         // 採れない基礎素材は輸入で補える／地域特産(マンゴー・寒流魚)は輸入不可＝その土地だけ。
         GAME.biome = null;   // 'plains'|'tropical'|'snow'（セーブ対象。未選択なら起動時に選択画面）
         const BIOME_DEFS = {
-            plains:   { name:'平野の町', icon:'🌾', desc:'バランス型。多くの素材がそこそこ採れ、加工貿易の拠点向き。砂糖は甜菜から。' },
-            tropical: { name:'常夏の町', icon:'🌴', desc:'南国。米・サトウキビ・柑橘・マンゴーが豊富。小麦・乳製品・針葉樹は採れない（輸入で補う）。' },
-            snow:     { name:'白銀の町', icon:'❄️', desc:'雪国。小麦・じゃがいも・乳製品・針葉樹・寒流魚が強い。米・柑橘・サトウキビは採れない（砂糖は甜菜）。' }
+            plains:   { name:'平野の町', icon:'🌾', desc:'バランス型。温帯の定番が広く採れる拠点向き。柑橘・サトウキビ・針葉樹・特産の魚介は無い（輸入で補う）。砂糖は甜菜。' },
+            tropical: { name:'常夏の町', icon:'🌴', desc:'南国。米・柑橘・ブドウ・サトウキビ・マンゴー＋温かい海のエビ・タコが豊富。小麦・乳・針葉樹は無い。' },
+            snow:     { name:'白銀の町', icon:'❄️', desc:'雪国。小麦・じゃが・乳・羊毛・針葉樹・寒流魚が強い。米・柑橘・サトウキビ・温海の魚介は無い（砂糖は甜菜）。' }
         };
-        const _BIOME_COMMON = ['herb','water','herbplant','superherb','flower','mushroom','lettuce','fish','meat','chicken','pork','egg','hide','seawater','clam','seafish','shrimp','octopus','wood','stone','iron','copper','silver','gem','goldore'];
+        // 共通＝気候中立（エビ/タコは温海の特産にするため共通から外し常夏へ）
+        const _BIOME_COMMON = ['herb','water','herbplant','superherb','flower','mushroom','lettuce','fish','meat','chicken','pork','egg','hide','seawater','clam','seafish','wood','stone','iron','copper','silver','gem','goldore'];
         const BIOME_RAWS = {
-            plains:   new Set(_BIOME_COMMON.concat(['wheat','rice','apple','berry','orange','grape','lemon','potato','tomato','milk','wool','hardwood','maple','sugarbeet'])),
-            tropical: new Set(_BIOME_COMMON.concat(['rice','orange','lemon','grape','tomato','sugarcane','mango'])),
-            snow:     new Set(_BIOME_COMMON.concat(['wheat','potato','apple','berry','milk','wool','hardwood','maple','sugarbeet','coldfish']))
+            // 平野＝温帯の定番が広く（柑橘/サトウキビ/針葉樹/特産魚介は無い＝広く浅く・拠点型）
+            plains:   new Set(_BIOME_COMMON.concat(['wheat','rice','apple','berry','grape','tomato','potato','milk','sugarbeet'])),
+            // 常夏＝米・柑橘・ブドウ・サトウキビ・マンゴー＋温かい海のエビ/タコ
+            tropical: new Set(_BIOME_COMMON.concat(['rice','grape','tomato','orange','lemon','sugarcane','mango','shrimp','octopus'])),
+            // 白銀＝小麦・じゃが・乳・羊毛・針葉樹・寒流魚
+            snow:     new Set(_BIOME_COMMON.concat(['wheat','apple','berry','potato','milk','sugarbeet','wool','hardwood','maple','coldfish']))
         };
         function biomeAllowsRaw(key){ if(!GAME.biome) return true; let s=BIOME_RAWS[GAME.biome]; return s ? s.has(key) : true; }
         function chooseBiome(b){ if(!BIOME_DEFS[b] || GAME.biome) return; GAME.biome=b;
