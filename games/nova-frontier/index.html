@@ -325,10 +325,16 @@
                 ・<b>🟢 雇用</b>…職人の<b>人数</b>を増やす（配置できる上限が増える）。<br>
                 ・<b>🟠 技術強化</b>…職人の<b>レベル</b>を上げる。採取量が増え<b>新しい上位素材を解放</b>。1人以上で押せます。
             </p>
+            <div class="help-title">🚢 交易（この土地で採れない素材）</div>
+            <p style="margin: 0 0 8px 0;">
+                土地によって<b>採れない素材</b>があります（例：常夏は小麦・ミルクが無い）。それらは生産ラインに出さず、一番下の<b>🚢交易欄</b>にまとめて<b>仕入れ</b>できます。<br>
+                ・交易の利用には<b>トレーダー（交易職）の解放が必要</b>（都市Lv.3）。仕入れた素材を使えば、<b>その土地で採れない加工品</b>も作れるようになります（＝採れない素材を使う加工品は交易解放後に開放）。
+            </p>
         </div>
 
         <div class="section-title">📝 更新履歴</div>
         <div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-18</b>：<b>🚢交易欄を新設</b>。その土地で採れない素材は各ラインから分離し、最下部の交易欄でまとめて仕入れできるように（トレーダー解放が前提）。<b>加工品の開放をバイオーム別に</b>調整：材料が「採取 or 交易で実際に入手できる」ようになって初めて開放（設備だけ建って材料が無い"空き状態"を解消）。<b>銅・寒流魚の解放条件のバグを修正</b>（目標生成と実挙動の不整合を解消）。</p>
             <p style="margin:0;"><b>2026-06-16</b>：<b>ベリー→いちご🍓</b>に変更（ジュース・タルト・パフェも「いちご」表記）。価格・表示順・アイコンを点検し調整（ジュースのアイコン重複を解消／メープル材を硬い木材より高く／木工・鉱業の並びを解放順に）。<b>QoL強化</b>：職人カードに<b>未配置の品を一覧</b>（クリックで即配置）。<b>発展に必要な物</b>の表示を分かりやすく。<b>生産ラインを折りたたみ</b>（見出しクリック／全部たたむ・開く）。<b>一括自動売却</b>（素材／加工品それぞれON/OFF）。共有ボタンも設置済み。</p>
         </div>
     </div>
@@ -377,7 +383,7 @@
                 silver:   { icon: "🥈", name: "銀鉱石", count: 0, price: 28, unlocked: false, workerKey: "miner",   gather: 0.06, req: { worker: "miner", wlv: 3 } },
                 gem:      { icon: "💠", name: "原石",   count: 0, price: 60, unlocked: false, workerKey: "miner",   gather: 0.03, req: { town: 4, worker: "miner", wlv: 4 } },
                 goldore:  { icon: "🟡", name: "金鉱石", count: 0, price: 100, unlocked: false, workerKey: "miner",  gather: 0.02, req: { town: 5, worker: "miner", wlv: 5 } },
-                copper:   { icon: "🟠", name: "銅",     count: 0, price: 12, unlocked: false, workerKey: "miner",  gather: 0.25, req: {} },
+                copper:   { icon: "🟠", name: "銅",     count: 0, price: 12, unlocked: false, workerKey: "miner",  gather: 0.25, req: { town: 4 } },
                 // --- 狩人（魚→肉の順で調達） ---
                 fish:     { icon: "🐟", name: "魚",     count: 0, price: 10, unlocked: false, workerKey: "hunter",  gather: 0.2,  req: { town: 3 } },
                 meat:     { icon: "🥩", name: "生肉",   count: 0, price: 8,  unlocked: false, workerKey: "hunter",  gather: 0.3,  req: { town: 3 } },
@@ -394,7 +400,7 @@
                 clam:     { icon: "🐚", name: "貝",     count: 0, price: 9,  unlocked: false, workerKey: "hunter",  gather: 0.2,  req: { town: 4 } },
                 // フェーズ6：地域特産（バイオーム限定で採れる目玉素材＝輸入不可）
                 mango:    { icon: "🥭", name: "マンゴー", count: 0, price: 9, unlocked: false, workerKey: "gatherer", gather: 0.22, req: { town: 2 } },
-                coldfish: { icon: "🐋", name: "寒流魚", count: 0, price: 18, unlocked: false, workerKey: "hunter",  gather: 0.15, req: {} },
+                coldfish: { icon: "🐋", name: "寒流魚", count: 0, price: 18, unlocked: false, workerKey: "hunter",  gather: 0.15, req: { town: 4 } },
 
                 // ============ 加工品（isCraft は後で付与） ============
                 salt:        { icon: "🧂", name: "塩",         count: 0, basePrice: 3,   unlocked: true,  facilityLv: 1, baseFacilityCost: 100, req: { town: 1 } },
@@ -706,7 +712,12 @@
         function _obtainable(k,L,seen){ seen=seen||{}; if(k in seen) return seen[k]; let res=GAME.resources[k];
             if(!res) return seen[k]=false; if(_unlockLv(k)>L) return seen[k]=false;
             // 素材は「その土地で採れる or 輸入できる」場合のみ入手可（バイオーム特産で詰むのを防ぐ）
-            if(!res.isCraft) return seen[k]=(biomeAllowsRaw(k) || importable(k)); let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
+            if(!res.isCraft){
+                if(biomeAllowsRaw(k)) return seen[k]=true;                 // この土地で採れる（_unlockLvは上で判定済）
+                if(importable(k)){ let tt=(GAME.workers.trader?GAME.workers.trader.reqTown:3); return seen[k]=(L>=tt); } // 輸入専用＝トレーダー解放(都市Lv)以降
+                return seen[k]=false;                                       // 他地域特産＝輸入不可
+            }
+            let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
             seen[k]=true; let opts = rec.alt ? [rec.costs, rec.alt] : [rec.costs];   // 代替レシピはどちらか作れればOK
             for(let oi=0;oi<opts.length;oi++){ let ok=true; for(let m in opts[oi]){ if(!_obtainable(m,L,seen)){ ok=false; break; } } if(ok) return seen[k]=true; }
             return seen[k]=false; }
@@ -714,7 +725,7 @@
             for(let L=1; L<=8; L++){
                 if(!GAME.townUpgrades[L]) continue;
                 let crafts = Object.keys(GAME.resources).filter(k=>GAME.resources[k].isCraft && !GAME.resources[k].isCustom && _obtainable(k,L,{}));
-                let raws = Object.keys(GAME.resources).filter(k=>!GAME.resources[k].isCraft && _unlockLv(k)<=L && (biomeAllowsRaw(k) || importable(k)));
+                let raws = Object.keys(GAME.resources).filter(k=>!GAME.resources[k].isCraft && _obtainable(k,L,{}));
                 let pool = crafts.length>=2 ? crafts : crafts.concat(raws);
                 if(!pool.length){ continue; }
                 let n = pool.length>=3 ? (2 + Math.floor(Math.random()*2)) : Math.min(2, pool.length);
@@ -1275,6 +1286,7 @@
         function toggleAutoBuy(key, checked) { GAME.autoBuy[key] = checked; }
         function buyItem(key) {
             if (!importable(key)) return;
+            if (!(GAME.workers.trader && GAME.workers.trader.unlocked)) return;   // 交易はトレーダー解放が前提
             let ip = importPrice(key);
             if (GAME.gold < ip) return;
             GAME.gold -= ip;
@@ -1361,11 +1373,32 @@
             return true;
         }
 
+        // ある材料が「今この土地で入手可能か」＝採れて解放済み or（輸入可かつトレーダー解放）or 解放済み加工品
+        function ingredientReady(m) {
+            let r = GAME.resources[m]; if (!r) return false;
+            if (r.isCraft) return r.unlocked;                 // 中間加工品は解放済みであること
+            if (r.unlocked) return true;                       // この土地で採れて解放済み
+            return importable(m) && GAME.workers.trader && GAME.workers.trader.unlocked;  // 輸入で補える（交易職が必要）
+        }
+        // 加工品が解放可能か＝いずれかのレシピの全材料が今この土地で入手可能（バイオーム＆交易ジョブを自動考慮）
+        function craftUnlockReady(k) {
+            let opts = recipeOptions(k);
+            for (let i = 0; i < opts.length; i++) {
+                let ok = true; for (let m in opts[i]) { if (!ingredientReady(m)) { ok = false; break; } }
+                if (ok) return true;
+            }
+            return false;
+        }
         function updateLockState() {
-            for (let k in GAME.resources) {
-                let res = GAME.resources[k];
-                // 素材/加工品は「自身のreq」かつ「所属エリア解放」かつ（素材は）「その地域で採れる」で解放
-                if (!res.unlocked && reqMet(res.req) && areaUnlocked(areaOf(k)) && (res.isCraft || biomeAllowsRaw(k))) res.unlocked = true;
+            // 加工品は中間材を先に解放してから上位を解放できるよう、収束まで数回まわす
+            for (let pass = 0; pass < 3; pass++) {
+                for (let k in GAME.resources) {
+                    let res = GAME.resources[k];
+                    if (res.unlocked) continue;
+                    if (!reqMet(res.req) || !areaUnlocked(areaOf(k))) continue;
+                    // 素材＝その土地で採れる / 加工品＝材料が今この土地で入手可能（採取 or 交易）になったら解放
+                    if (res.isCraft ? craftUnlockReady(k) : biomeAllowsRaw(k)) res.unlocked = true;
+                }
             }
             for (let k in GAME.workers) {
                 let w = GAME.workers[k];
@@ -1457,6 +1490,44 @@
 
         // 生産ラインの折りたたみ
         function toggleLine(i) { GAME.collapsed[i] = !GAME.collapsed[i]; updateUI(); }
+        function toggleTrade() { GAME.collapsed['trade'] = !GAME.collapsed['trade']; updateUI(); }
+        // ============ 🚢 交易欄：この土地で採れない素材（輸入可）をまとめて仕入れ ============
+        // トレーダー(交易職)が解放されると利用可。ここで仕入れた素材で「採れない加工品」も作れるようになる。
+        function tradeRaws() {
+            return Object.keys(GAME.resources).filter(k => {
+                let r = GAME.resources[k];
+                return !r.isCraft && !biomeAllowsRaw(k) && importable(k);
+            });
+        }
+        function getTradeRowHTML(key) {
+            let res = GAME.resources[key];
+            let ip = importPrice(key);
+            return `<div class="material-row" style="justify-content:space-between; align-items:center;">
+                        <span class="item-name"><span class="anim-icon">${res.icon}</span> ${res.name}: ${Math.floor(res.count)}個 <span style="font-size:0.7rem; color:#475569;">売値:${getCurrentPrice(key)}チャリン</span></span>
+                        <div class="control-cluster">
+                            <label><input type="checkbox" ${GAME.autoBuy[key] ? 'checked' : ''} onchange="toggleAutoBuy('${key}', this.checked)"> 自動仕入</label>
+                            <button onclick="buyItem('${key}')" style="background:#0ea5e9;" ${GAME.gold >= ip ? '' : 'disabled'}>仕入${ip}</button>
+                            <button onclick="sellItem('${key}')" ${res.count >= 1 ? '' : 'disabled'}>売却</button>
+                        </div>
+                    </div>`;
+        }
+        function getTradeSectionHTML() {
+            let raws = tradeRaws();
+            if (raws.length === 0) return '';                       // 採れない素材が無い土地なら出さない
+            let collapsed = GAME.collapsed['trade'];
+            let html = `<div class="production-block"><div class="block-title" style="cursor:pointer; user-select:none;" onclick="toggleTrade()">${collapsed ? '▶' : '▼'} 🚢 交易（この土地で採れない素材を仕入れ）</div>`;
+            if (!collapsed) {
+                if (!(GAME.workers.trader && GAME.workers.trader.unlocked)) {
+                    html += `<div class="craft-empty">🔒 トレーダー（交易職）を解放すると、ここで他の土地の素材を仕入れできます（都市Lv.${GAME.workers.trader.reqTown}で解放）</div>`;
+                } else {
+                    html += `<div style="display:flex; flex-direction:column; gap:4px;">`;
+                    raws.forEach(k => { html += getTradeRowHTML(k); });
+                    html += `</div>`;
+                }
+            }
+            html += `</div>`;
+            return html;
+        }
         function collapseAll(v) { GAME.lines.forEach((l, i) => { GAME.collapsed[i] = v; }); updateUI(); }
 
         // この職人を配置できる「解放済み・未配置(0)」の品（クラフトは建設済みのみ）
@@ -1511,18 +1582,15 @@
         function getMaterialRowHTML(key) {
             let res = GAME.resources[key];
             if (!res.unlocked) {
+                // この土地で採れない素材は各ラインに出さない（輸入可＝🚢交易欄へ集約／他地域特産＝非表示）
+                if (!biomeAllowsRaw(key)) return '';
                 let ar = areaOf(key);
                 let hint;
-                if (!biomeAllowsRaw(key)) hint = `🚫 ${res.icon}${res.name}はこの土地では採れない${importable(key) ? '（輸入で補える）' : '（他の土地の特産）'}`;
-                else if (!areaUnlocked(ar)) hint = `🔒 ${res.icon}${res.name} → ${GAME.areas[ar].icon}${GAME.areas[ar].name}を解放で採取`;
+                if (!areaUnlocked(ar)) hint = `🔒 ${res.icon}${res.name} → ${GAME.areas[ar].icon}${GAME.areas[ar].name}を解放で採取`;
                 else if (res.req && res.req.worker && res.req.wlv) hint = `🔒 ${res.icon}${res.name} → ${GAME.workers[res.req.worker].name}を技術強化Lv.${res.req.wlv}で解放`;
                 else if (res.req && res.req.town) hint = `🔒 ${res.icon}${res.name} → 都市Lv.${res.req.town}で解放`;
                 else hint = `🔒 ${res.icon}${res.name}は未解放`;
-                // 基礎・共通素材はエリア未解放でも輸入で補える（目玉素材は輸入不可なので出ない）
-                let imp = (GAME.workers.trader && GAME.workers.trader.unlocked && importable(key))
-                    ? `<span style="margin-left:6px; color:#0284c7;">輸入${Math.floor(res.count)}個</span> <button onclick="buyItem('${key}')" style="background:#0ea5e9; padding:1px 6px; font-size:0.7rem;" ${GAME.gold >= importPrice(key) ? '' : 'disabled'}>仕入${importPrice(key)}</button>`
-                    : '';
-                return `<div class="material-row" style="color:#94a3b8; justify-content:space-between; align-items:center; font-size:0.72rem; background:#f8fafc;"><span>${hint}</span>${imp}</div>`;
+                return `<div class="material-row" style="color:#94a3b8; justify-content:space-between; align-items:center; font-size:0.72rem; background:#f8fafc;"><span>${hint}</span></div>`;
             }
             let checked = GAME.autoSell[key] ? 'checked' : '';
 
@@ -1748,8 +1816,11 @@
                     if (!collapsed) {
                     html += `<div class="grid-split">`;
                     html += `<div class="source-side">`;
-                    line.materials.forEach(mat => { html += getMaterialRowHTML(mat); });
+                    let srcRows = '';
+                    line.materials.forEach(mat => { srcRows += getMaterialRowHTML(mat); });
+                    html += srcRows;
                     if (line.materials.length === 0) html += `<div class="craft-empty">${line.custom ? '下のフォームから作成' : '他ラインの素材から建造'}</div>`;
+                    else if (srcRows === '') html += `<div class="craft-empty">この土地では採れません → 🚢交易で仕入れ</div>`;
                     html += `</div>`;
                     html += `<div class="craft-col">`;
                     if (crafts.length > 0) {
@@ -1764,6 +1835,7 @@
                     linesHtml += html;
                 }
             });
+            linesHtml += getTradeSectionHTML();   // 🚢 交易欄（この土地で採れない素材の仕入れ）
             document.getElementById('production-lines').innerHTML = linesHtml;
             // 一括自動売却チェックの状態を反映（全部ONならチェック）
             let _raws = Object.keys(GAME.resources).filter(k => !GAME.resources[k].isCraft && GAME.resources[k].unlocked);
