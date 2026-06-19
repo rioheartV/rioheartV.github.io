@@ -171,6 +171,13 @@
         .rio-strip .more { font-size:.72rem; color:#a65a8a; font-weight:bold; align-self:center; margin-left:2px; }
         .rio-portrait { flex:0 0 auto; text-align:center; }
         .rio-tool { font-size:.85rem; line-height:1; margin-top:1px; }
+        /* なめらかSDリオ（マップ・ジョブ用）：ドット化を解除して曲線をきれいに */
+        .riosd svg { image-rendering:auto; shape-rendering:geometricPrecision; }
+        /* 折りたたみセクション（プルダウン収納） */
+        .sec-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .sec-toggle { cursor:pointer; user-select:none; flex:1; display:flex; align-items:center; gap:6px; }
+        .sec-caret { font-size:.8rem; color:#ff8fc7; width:.9em; display:inline-block; }
+        .sec-body.collapsed { display:none; }
 
         /* タウンマップ */
         #town-map { position:relative; flex:1; min-width:0; margin:0; border:2px solid #ffd1e8; border-radius:16px; overflow:hidden;
@@ -283,35 +290,44 @@
             </div>
         </div>
 
-        <div class="section-title">📦 生産ツリー（職人を「👷配置」した品だけ生産）
-            <span style="font-weight:400; margin-left:6px; white-space:nowrap;">
+        <div class="section-title sec-head" data-sec="sb-prod">
+            <span class="sec-toggle" onclick="toggleSection('sb-prod')"><span class="sec-caret">▼</span> 📦 生産ツリー（職人を「👷配置」した品だけ生産）</span>
+            <span style="font-weight:400; white-space:nowrap;">
                 <button onclick="collapseAll(true)" style="font-size:0.66rem; padding:2px 8px; background:#94a3b8;">▶ 全部たたむ</button>
                 <button onclick="collapseAll(false)" style="font-size:0.66rem; padding:2px 8px; background:#0369a1;">▼ 全部開く</button>
             </span>
         </div>
+        <div class="sec-body" id="sb-prod">
         <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:#fff0f7; border:1px solid #ffd1e8; border-radius:10px; padding:5px 10px; margin-bottom:6px; font-size:0.8rem;">
             <span style="font-weight:800; color:#b45309;">💰 一括自動売却：</span>
             <label style="display:flex; align-items:center; gap:3px;"><input type="checkbox" id="autosell-raw" onchange="setAllAutoSell('raw', this.checked)"> 素材すべて</label>
             <label style="display:flex; align-items:center; gap:3px;"><input type="checkbox" id="autosell-craft" onchange="setAllAutoSell('craft', this.checked)"> 加工品すべて</label>
         </div>
         <div class="line-container" id="production-lines"></div>
+        </div>
 
-        <div class="section-title">🔧 独自レシピを作る（手持ち素材からオリジナル加工品を登録）</div>
-        <div id="custom-form-area"></div>
+        <div class="section-title sec-head sec-toggle" data-sec="sb-custom" onclick="toggleSection('sb-custom')"><span class="sec-caret">▶</span> 🔧 独自レシピを作る（手持ち素材からオリジナル加工品を登録）</div>
+        <div class="sec-body collapsed" id="sb-custom"><div id="custom-form-area"></div></div>
 
-        <div class="section-title">👥 自動化の雇用と職人の技術強化</div>
+        <div class="section-title sec-head" data-sec="sb-worker">
+            <span class="sec-toggle" onclick="toggleSection('sb-worker')"><span class="sec-caret">▼</span> 👥 自動化の雇用と職人の技術強化</span>
+        </div>
+        <div class="sec-body" id="sb-worker">
         <div class="worker-controls">
             <span style="font-weight:bold; color:#ff7eb3;">💰 <span id="worker-gold">0</span>チャリン</span>
             <label class="auto-assign-label" style="font-size:0.78rem;"><input type="checkbox" id="global-auto" onchange="setAllAutoAssign(this.checked)"> 全職人を自動配置</label>
             <button onclick="redistributeAll()" style="background:#0369a1; padding:5px 10px; font-size:0.78rem;">⚖️ 均等再配置</button>
         </div>
         <div class="worker-grid" id="worker-area"></div>
+        </div>
 
-        <div class="section-title">🛠 整備（建材で街ぜんたいを強化）</div>
-        <div class="worker-grid" id="infra-area"></div>
+        <div class="section-title sec-head" data-sec="sb-infra">
+            <span class="sec-toggle" onclick="toggleSection('sb-infra')"><span class="sec-caret">▼</span> 🛠 整備（建材で街ぜんたいを強化）</span>
+        </div>
+        <div class="sec-body" id="sb-infra"><div class="worker-grid" id="infra-area"></div></div>
 
-        <div class="section-title">📖 開拓地経営のヒント</div>
-        <div class="help-box">
+        <div class="section-title sec-head sec-toggle" data-sec="sb-help" onclick="toggleSection('sb-help')"><span class="sec-caret">▶</span> 📖 開拓地経営のヒント</div>
+        <div class="sec-body collapsed" id="sb-help"><div class="help-box">
             <div class="help-title">👷 職人の「配置」が最重要</div>
             <p style="margin: 0 0 8px 0;">職人は雇うだけでは働きません。各品の<b>👷配置（−／数値／＋）</b>で人数を割り当てると、その品だけが生産されます。<b>配置人数が多いほど生産・加工が速く</b>なります。1職種の合計配置は雇用人数まで（カードに「配置 X/Y人・空Z」を表示）。職人カードの<b>「雇用時に自動配置」</b>をONにすると、雇うたび自動で空いた品へ割り振られます。</p>
             <div class="help-title">🏗️ 設備の建設・強化（重要）</div>
@@ -330,13 +346,14 @@
                 土地によって<b>採れない素材</b>があります（例：常夏は小麦・ミルクが無い）。それらは生産ラインに出さず、一番下の<b>🚢交易欄</b>にまとめて<b>仕入れ</b>できます。<br>
                 ・交易の利用には<b>トレーダー（交易職）の解放が必要</b>（都市Lv.3）。仕入れた素材を使えば、<b>その土地で採れない加工品</b>も作れるようになります（＝採れない素材を使う加工品は交易解放後に開放）。
             </p>
-        </div>
+        </div></div>
 
-        <div class="section-title">📝 更新履歴</div>
-        <div class="help-box" id="changelog">
+        <div class="section-title sec-head sec-toggle" data-sec="sb-log" onclick="toggleSection('sb-log')"><span class="sec-caret">▶</span> 📝 更新履歴</div>
+        <div class="sec-body collapsed" id="sb-log"><div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-19</b>：<b>リオちゃんをなめらかSDちびキャラに</b>（マップの歩くリオ・職人カードの肖像）。手足くっきり・大きな瞳でかわいさ重視。品ごとの小スプライトは従来のドット絵のまま。<b>画面をすっきり化</b>：各セクション（生産ツリー／独自レシピ／雇用／整備／ヒント／更新履歴）を<b>見出しクリックで折りたたみ</b>収納できるように（開閉状態は保存）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-18</b>：<b>🚢交易欄を新設</b>。その土地で採れない素材は各ラインから分離し、最下部の交易欄でまとめて仕入れできるように（トレーダー解放が前提）。<b>加工品の開放をバイオーム別に</b>調整：材料が「採取 or 交易で実際に入手できる」ようになって初めて開放（設備だけ建って材料が無い"空き状態"を解消）。<b>銅・寒流魚の解放条件のバグを修正</b>（目標生成と実挙動の不整合を解消）。</p>
             <p style="margin:0;"><b>2026-06-16</b>：<b>ベリー→いちご🍓</b>に変更（ジュース・タルト・パフェも「いちご」表記）。価格・表示順・アイコンを点検し調整（ジュースのアイコン重複を解消／メープル材を硬い木材より高く／木工・鉱業の並びを解放順に）。<b>QoL強化</b>：職人カードに<b>未配置の品を一覧</b>（クリックで即配置）。<b>発展に必要な物</b>の表示を分かりやすく。<b>生産ラインを折りたたみ</b>（見出しクリック／全部たたむ・開く）。<b>一括自動売却</b>（素材／加工品それぞれON/OFF）。共有ボタンも設置済み。</p>
-        </div>
+        </div></div>
     </div>
 
     <script>
@@ -886,6 +903,40 @@
             return `<span class="dotrio act-${action || 'idle'}" title="リオちゃん"><svg viewBox="0 0 14 16" width="${px}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg>${fxHTML}</span>`;
         }
 
+        // ============ なめらかSDリオ（マップ・ジョブ用／約2頭身ちび）。素体固定色は共通、衣装はthemeで差し替え ============
+        // riochanSVGと同じ引数・同じ.dotrioラッパー＝既存アニメ(act-*/armUp)が効く。中身だけ曲線SDに（.riosdでpixelated解除）
+        function rioSDsvg(theme, px, action, fx, armAnim) {
+            px = px || 28;
+            const t = theme || {};
+            const top = t.top || t.dress || '#ffb3d1';
+            const skirt = t.skirt || t.dress || '#fdeef5';
+            const cap = t.cap, ribbon = t.ribbon;
+            const HAIR='#f3d279', SKIN='#ffe2c8', EYE='#4f86d6', SHOE='#f5a8c8', FL='#ff8a5c', FC='#ffd34d', CHK='#ffb3c4', MO='#e07da0';
+            const C=(x,y,r,c)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`;
+            const E=(x,y,rx,ry,c)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${c}"/>`;
+            const Rr=(x,y,w,h,c,rx)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" rx="${rx}"/>`;
+            const aL = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpL ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
+            const aR = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpR ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
+            let s = E(50,42,35,34,HAIR) + E(18,56,10,24,HAIR) + E(82,56,10,24,HAIR);           // 髪（後ろ＋サイド）
+            s += `<g class="larm"${aL}>` + Rr(19,80,11,26,SKIN,5) + C(24.5,107,7,SKIN) + `</g>`; // 左腕＋ミトン手
+            s += `<g class="rarm"${aR}>` + Rr(70,80,11,26,SKIN,5) + C(75.5,107,7,SKIN) + `</g>`; // 右腕＋ミトン手
+            s += Rr(39,110,9,12,SKIN,4) + Rr(52,110,9,12,SKIN,4) + E(43,124,8.5,4.5,SHOE) + E(57,124,8.5,4.5,SHOE); // 足＋靴
+            s += `<path d="M28,98 L72,98 L82,118 Q50,124 18,118 Z" fill="${skirt}"/>`;            // スカート
+            s += `<path d="M33,80 Q50,74 67,80 L72,100 L28,100 Z" fill="${top}"/>`;               // 上衣
+            if (ribbon) s += `<polygon points="50,98 39,93 39,103" fill="${ribbon}"/><polygon points="50,98 61,93 61,103" fill="${ribbon}"/>` + C(50,98,3,ribbon);
+            s += C(50,46,28,SKIN);                                                                // 顔
+            s += E(34,30,14,13,HAIR) + E(50,27,15,13,HAIR) + E(66,30,14,13,HAIR);                 // 前髪
+            if (cap) s += E(50,25,42,11,cap) + E(50,15,22,13,cap);                                // 帽子
+            s += C(78,28,4.5,FL) + C(83,32,4.5,FL) + C(78,36,4.5,FL) + C(73,32,4.5,FL) + C(78,32,3,FC); // 花飾り
+            s += E(39,49,8,10,'#fff') + C(39,50,6.2,EYE) + C(39,50.5,3.2,'#23314a') + C(36.4,46.6,2.3,'#fff') + C(41,53,1.1,'#fff'); // 左目
+            s += E(61,49,8,10,'#fff') + C(61,50,6.2,EYE) + C(61,50.5,3.2,'#23314a') + C(58.4,46.6,2.3,'#fff') + C(63,53,1.1,'#fff'); // 右目
+            s += E(27,58,7,4,CHK) + E(73,58,7,4,CHK) + C(50,56,1.1,'#e6a98f');                    // ほっぺ＋鼻
+            s += `<path d="M44,61 Q50,68 56,61" fill="none" stroke="${MO}" stroke-width="2.4" stroke-linecap="round"/>`; // 口
+            const h = Math.round(px * 130 / 100);
+            const fxHTML = fx ? `<span class="rio-fx">${fx}</span>` : '';
+            return `<span class="dotrio riosd act-${action || 'idle'}" title="リオちゃん"><svg viewBox="0 0 100 130" width="${px}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg>${fxHTML}</span>`;
+        }
+
         // 配置人数ぶんのミニリオちゃん（最大4体＋「+N」）。resKey=作っている品（飛び出すアイコンに使う）
         function assignedSprites(workerKey, n, resKey) {
             if (!workerKey || n <= 0) return '';
@@ -1184,7 +1235,7 @@
                 actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
                         + `<span class="rio-emote" style="animation-duration:${edur}s; animation-delay:${edelay}s">${emo}</span>`
                         + `<span class="rio-act" style="animation:${rare} ${edur}s ease-in-out infinite ${edelay}s">`
-                        + `${riochanSVG(th, 24, act, null, armT)}</span></span>`;
+                        + `${rioSDsvg(th, 28, act, null, armT)}</span></span>`;
             }
             return actors + '</div>';
         }
@@ -1214,7 +1265,7 @@
             if (scene){
                 scene.classList.remove('area-enter'); void scene.offsetWidth; scene.classList.add('area-enter');
                 let w = document.createElement('div'); w.className='area-walk';
-                w.innerHTML = riochanSVG(biomeTheme(), 26, 'wave');
+                w.innerHTML = rioSDsvg(biomeTheme(), 30, 'wave');
                 scene.appendChild(w); setTimeout(()=>{ if(w.parentNode) w.parentNode.removeChild(w); }, 680);
             }
             renderAreaTabs();
@@ -1491,6 +1542,21 @@
         // 生産ラインの折りたたみ
         function toggleLine(i) { GAME.collapsed[i] = !GAME.collapsed[i]; updateUI(); }
         function toggleTrade() { GAME.collapsed['trade'] = !GAME.collapsed['trade']; updateUI(); }
+        // ============ セクション折りたたみ（品/ジョブ/その他の収納） ============
+        const SECTION_IDS = ['sb-prod','sb-custom','sb-worker','sb-infra','sb-help','sb-log'];
+        function _setCaret(id, collapsed){ let c=document.querySelector('[data-sec="'+id+'"] .sec-caret'); if(c) c.textContent = collapsed?'▶':'▼'; }
+        function toggleSection(id){
+            let b=document.getElementById(id); if(!b) return;
+            let collapsed=b.classList.toggle('collapsed'); _setCaret(id, collapsed);
+            try{ let st=JSON.parse(localStorage.getItem('vt_sections')||'{}'); st[id]=collapsed; localStorage.setItem('vt_sections', JSON.stringify(st)); }catch(e){}
+        }
+        function restoreSections(){
+            let st={}; try{ st=JSON.parse(localStorage.getItem('vt_sections')||'{}'); }catch(e){}
+            SECTION_IDS.forEach(id=>{ let b=document.getElementById(id); if(!b) return;
+                let collapsed = (id in st) ? st[id] : b.classList.contains('collapsed');  // 既定はマークアップのclassに従う
+                b.classList.toggle('collapsed', collapsed); _setCaret(id, collapsed);
+            });
+        }
         // ============ 🚢 交易欄：この土地で採れない素材（輸入可）をまとめて仕入れ ============
         // トレーダー(交易職)が解放されると利用可。ここで仕入れた素材で「採れない加工品」も作れるようになる。
         function tradeRaws() {
@@ -1879,7 +1945,7 @@
                 workerHtml += `
                     <div class="worker-card">
                         <div style="display:flex; gap:6px; align-items:flex-start;">
-                            <div class="rio-portrait">${riochanSVG(themeFor(k), 38, actionFor(k))}<div class="rio-tool">${themeFor(k).tool}</div></div>
+                            <div class="rio-portrait">${rioSDsvg(themeFor(k), 40, actionFor(k))}<div class="rio-tool">${themeFor(k).tool}</div></div>
                             <div style="flex:1; min-width:0;">
                                 <div class="worker-title"><span>${worker.name}(${worker.count}人)</span> <span style="color:#a65a8a;">Lv.${worker.lv}</span></div>
                                 <div class="worker-desc">${worker.desc}</div>
@@ -2157,6 +2223,7 @@
         // 起動／ロード時の表示エリア＝最後に解放したエリア（無ければ野原）。最後に見たタブは保存しない。
         GAME.activeArea = (GAME.lastArea && areaUnlocked(GAME.lastArea)) ? GAME.lastArea : 'field';
         updateUI();
+        restoreSections();     // セクション折りたたみ状態を復元（品/ジョブ/その他の収納）
         renderBiomeSelect();   // 新規ゲーム（バイオーム未選択）なら選択画面を表示
         window.addEventListener('beforeunload', saveGame);   // 離脱時にも保存
     </script>
