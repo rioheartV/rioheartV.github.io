@@ -195,18 +195,27 @@
         /* リオちゃんのレアモーション（時々ハート等をふわっと） */
         .rio-emote { position:absolute; left:50%; top:-7px; transform:translate(-50%,0); font-size:11px; line-height:1; opacity:0; pointer-events:none; animation: rioEmote 13s ease-out infinite; }
         @keyframes rioEmote { 0%,80%{ opacity:0; transform:translate(-50%,2px) scale(.4); } 85%{ opacity:1; transform:translate(-50%,-6px) scale(1.1); } 95%{ opacity:1; transform:translate(-50%,-12px) scale(1); } 100%{ opacity:0; transform:translate(-50%,-16px) scale(.9); } }
-        /* レアモーション：くるっと回転／バンザイ＆ジャンプ */
+        /* かわいい仕草（回転は廃止）。SD向けにジャンプ／ぷにっと／ふりふり／首かしげ等を用意 */
         .rio-act { display:inline-block; transform-origin:bottom center; }
-        @keyframes gSpin { 0%,82%{ transform:rotate(0); } 90%{ transform:rotate(180deg); } 97%,100%{ transform:rotate(360deg); } }
-        @keyframes gHop  { 0%,82%{ transform:translateY(0); } 88%{ transform:translateY(-6px); } 94%{ transform:translateY(-5px); } 100%{ transform:translateY(0); } }
+        @keyframes gHop   { 0%,82%{ transform:translateY(0); } 88%{ transform:translateY(-7px); } 94%{ transform:translateY(-5px); } 100%{ transform:translateY(0); } }
+        @keyframes gCheer { 0%,76%{ transform:translateY(0); } 83%{ transform:translateY(-8px); } 89%{ transform:translateY(-2px); } 95%{ transform:translateY(-6px); } 100%{ transform:translateY(0); } }
+        @keyframes gBounce{ 0%,70%{ transform:translateY(0); } 78%{ transform:translateY(-6px); } 85%{ transform:translateY(0); } 92%{ transform:translateY(-3px); } 100%{ transform:translateY(0); } }
+        @keyframes gSquish{ 0%,72%,100%{ transform:scale(1,1); } 80%{ transform:scale(1.12,.86); } 88%{ transform:scale(.92,1.1); } 96%{ transform:scale(1.02,.98); } }
+        @keyframes gWiggle{ 0%,68%,100%{ transform:translateX(0) rotate(0); } 76%{ transform:translateX(-3px) rotate(-5deg); } 84%{ transform:translateX(3px) rotate(5deg); } 92%{ transform:translateX(-2px) rotate(-3deg); } }
+        @keyframes gTilt  { 0%,72%,100%{ transform:rotate(0); } 82%{ transform:rotate(-11deg); } 91%{ transform:rotate(8deg); } }
+        @keyframes gDance { 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(-2px) rotate(-8deg); } 75%{ transform:translateX(2px) rotate(8deg); } }
         @keyframes armUpL { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(135deg); } 100%{ transform:rotate(0); } }
         @keyframes armUpR { 0%,82%{ transform:rotate(0); } 88%,95%{ transform:rotate(-135deg); } 100%{ transform:rotate(0); } }
-        /* 手をふるアクション（右手を連続でふる）＋追加レアモーション（くるくる/ダンス） */
+        /* 手をふる（ドット版） */
         @keyframes handWave { 0%,100%{ transform:rotate(12deg); } 50%{ transform:rotate(-62deg); } }
         .act-wave   { animation: rioBob 1s ease-in-out infinite; }
         .act-wave .rarm { transform-box:fill-box; transform-origin:top center; animation: handWave .6s ease-in-out infinite; }
-        @keyframes gTwirl { 0%,78%{ transform:rotate(0); } 88%{ transform:rotate(200deg) scale(1.05); } 96%,100%{ transform:rotate(360deg); } }
-        @keyframes gDance { 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(-2px) rotate(-9deg); } 75%{ transform:translateX(2px) rotate(9deg); } }
+        /* SD版＝腕が短く体に近いので振り幅を小さく（ぶらぶら防止・手は体の近く） */
+        @keyframes handWaveSD { 0%,100%{ transform:rotate(2deg); } 50%{ transform:rotate(-32deg); } }
+        @keyframes armSwingSD { 0%,100%{ transform:rotate(5deg); } 50%{ transform:rotate(-15deg); } }
+        .act-wave.riosd .rarm   { animation: handWaveSD .6s ease-in-out infinite; }
+        .act-craft.riosd .rarm  { animation: armSwingSD .5s ease-in-out infinite; }
+        .act-gather.riosd .rarm, .act-gather.riosd .larm { animation: armSwingSD 1s ease-in-out infinite; }
         .smoke { transform-box: fill-box; transform-origin: center bottom; animation: smokeRise 2s ease-out infinite; }
         @keyframes smokeRise { 0% { transform: translateY(0) scale(.4); opacity:0; } 30% { opacity:.85; } 100% { transform: translateY(-6px) scale(1.2); opacity:0; } }
         .develop-btn { display:block; margin:0; }
@@ -293,8 +302,7 @@
         <div class="section-title sec-head" data-sec="sb-prod">
             <span class="sec-toggle" onclick="toggleSection('sb-prod')"><span class="sec-caret">▼</span> 📦 生産ツリー（職人を「👷配置」した品だけ生産）</span>
             <span style="font-weight:400; white-space:nowrap;">
-                <button onclick="collapseAll(true)" style="font-size:0.66rem; padding:2px 8px; background:#94a3b8;">▶ 全部たたむ</button>
-                <button onclick="collapseAll(false)" style="font-size:0.66rem; padding:2px 8px; background:#0369a1;">▼ 全部開く</button>
+                <button id="toggle-lines-btn" onclick="toggleAllLines()" style="font-size:0.78rem; padding:4px 12px; background:#ff8fc7;">▶ 品目を全部たたむ</button>
             </span>
         </div>
         <div class="sec-body" id="sb-prod">
@@ -350,7 +358,7 @@
 
         <div class="section-title sec-head sec-toggle" data-sec="sb-log" onclick="toggleSection('sb-log')"><span class="sec-caret">▶</span> 📝 更新履歴</div>
         <div class="sec-body collapsed" id="sb-log"><div class="help-box" id="changelog">
-            <p style="margin:0 0 6px 0;"><b>2026-06-19</b>：<b>リオちゃんをなめらかSDちびキャラに</b>（マップの歩くリオ・職人カードの肖像）。手足くっきり・大きな瞳でかわいさ重視。品ごとの小スプライトは従来のドット絵のまま。<b>画面をすっきり化</b>：各セクション（生産ツリー／独自レシピ／雇用／整備／ヒント／更新履歴）を<b>見出しクリックで折りたたみ</b>収納できるように（開閉状態は保存）。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-19</b>：<b>リオちゃんをなめらかSDちびキャラに</b>（マップの歩くリオ・職人カードの肖像）。手足くっきり・大きな瞳でかわいさ重視。品ごとの小スプライトは従来のドット絵のまま。<b>仕草を刷新</b>：くるくる回転を廃止し、ぴょこぴょこ／ぷにっと／ふりふり／こてん／バンザイなど<b>かわいい仕草を多数追加</b>。腕を体に寄せてぶらぶらも解消。<b>画面をすっきり化</b>：各セクション（生産ツリー／独自レシピ／雇用／整備／ヒント／更新履歴）を<b>見出しクリックで折りたたみ</b>、さらに<b>「品目を全部たたむ／ひらく」</b>ワンタップで生産ラインを一括収納（新しく解放されたラインも畳んだ状態で表示、状態は保存）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-18</b>：<b>🚢交易欄を新設</b>。その土地で採れない素材は各ラインから分離し、最下部の交易欄でまとめて仕入れできるように（トレーダー解放が前提）。<b>加工品の開放をバイオーム別に</b>調整：材料が「採取 or 交易で実際に入手できる」ようになって初めて開放（設備だけ建って材料が無い"空き状態"を解消）。<b>銅・寒流魚の解放条件のバグを修正</b>（目標生成と実挙動の不整合を解消）。</p>
             <p style="margin:0;"><b>2026-06-16</b>：<b>ベリー→いちご🍓</b>に変更（ジュース・タルト・パフェも「いちご」表記）。価格・表示順・アイコンを点検し調整（ジュースのアイコン重複を解消／メープル材を硬い木材より高く／木工・鉱業の並びを解放順に）。<b>QoL強化</b>：職人カードに<b>未配置の品を一覧</b>（クリックで即配置）。<b>発展に必要な物</b>の表示を分かりやすく。<b>生産ラインを折りたたみ</b>（見出しクリック／全部たたむ・開く）。<b>一括自動売却</b>（素材／加工品それぞれON/OFF）。共有ボタンも設置済み。</p>
         </div></div>
@@ -844,7 +852,8 @@
         for (let k in GAME.workers) { if (k !== 'merchant') GAME.workers[k].autoAssign = false; }
         GAME.customKeys = [];   // 独自レシピのキー一覧
         GAME.customSeq = 0;
-        GAME.collapsed = {};    // 折りたたんだ生産ライン（index→true）
+        GAME.collapsed = {};    // 個別に折りたたんだ生産ライン（index→true）。未指定はlinesCollapsedModeに従う
+        GAME.linesCollapsedMode = false;  // 一括「全部たたむ」状態＝新規解放ラインもこの状態で出る
 
         // ============ ドット絵リオちゃん（職業ごとに服装・帽子・持ち物が変化） ============
         const WORKER_THEME = {
@@ -918,8 +927,8 @@
             const aL = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpL ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
             const aR = armAnim ? ` style="transform-box:fill-box;transform-origin:top center;animation:armUpR ${armAnim.dur}s ease-in-out infinite ${armAnim.delay}s;"` : '';
             let s = E(50,42,35,34,HAIR) + E(18,56,10,24,HAIR) + E(82,56,10,24,HAIR);           // 髪（後ろ＋サイド）
-            s += `<g class="larm"${aL}>` + Rr(19,80,11,26,SKIN,5) + C(24.5,107,7,SKIN) + `</g>`; // 左腕＋ミトン手
-            s += `<g class="rarm"${aR}>` + Rr(70,80,11,26,SKIN,5) + C(75.5,107,7,SKIN) + `</g>`; // 右腕＋ミトン手
+            s += `<g class="larm"${aL}>` + Rr(22,82,9,19,SKIN,4.5) + C(26,101,6,SKIN) + `</g>`;   // 左腕＋ミトン手（短め・肩寄せ＝体に付いて見える）
+            s += `<g class="rarm"${aR}>` + Rr(69,82,9,19,SKIN,4.5) + C(74,101,6,SKIN) + `</g>`;   // 右腕＋ミトン手
             s += Rr(39,110,9,12,SKIN,4) + Rr(52,110,9,12,SKIN,4) + E(43,124,8.5,4.5,SHOE) + E(57,124,8.5,4.5,SHOE); // 足＋靴
             s += `<path d="M28,98 L72,98 L82,118 Q50,124 18,118 Z" fill="${skirt}"/>`;            // スカート
             s += `<path d="M33,80 Q50,74 67,80 L72,100 L28,100 Z" fill="${top}"/>`;               // 上衣
@@ -1220,18 +1229,27 @@
         function buildWalkers(){
             let walkers = mapWalkerCount();
             const WANDER = ['wanderA','wanderB','wanderC'];
-            const RARE   = ['gSpin','gHop','gTwirl','gDance'];   // レアモーション（くるくる/バンザイ跳び/大回転/ダンス）
+            // かわいい仕草セット（回転は廃止）。up=両腕を上げるモーション
+            const RARE   = [
+                { n:'gHop',    up:true  },   // バンザイ跳び
+                { n:'gCheer',  up:true  },   // 万歳でわーい
+                { n:'gBounce', up:false },   // ぴょこぴょこ
+                { n:'gSquish', up:false },   // ぷにっと伸び縮み
+                { n:'gWiggle', up:false },   // ふりふり
+                { n:'gTilt',   up:false },   // こてん（首かしげ）
+                { n:'gDance',  up:false }    // ゆらゆらダンス
+            ];
             const ACTS   = ['wave','cook','mix','idle'];          // 通常の手の行動（手をふる等）
-            const EMO    = ['💕','✨','🎵','♡','😊','🩷','🌟','🎶'];
+            const EMO    = ['💕','✨','🎵','♡','😊','🩷','🌟','🎶','🥰','💖'];
             let th = biomeTheme();                                // バイオーム別の衣装
             let actors = '<div class="map-actors">';
             for (let i=0;i<walkers;i++){
                 let dur = 22 + (i%3)*6 + Math.floor(i/3)*3, delay = -i*5;
-                let emo = EMO[i % EMO.length], edur = 11 + i*3, edelay = -(i*7 + 4);
-                let rare = RARE[i % RARE.length];
-                let banzai = (rare === 'gHop');                   // バンザイ跳びは両腕を上げる
-                let act = banzai ? 'idle' : ACTS[i % ACTS.length];// 腕の競合回避（バンザイ時は通常腕）
-                let armT = banzai ? { dur: edur, delay: edelay } : null;
+                let emo = EMO[i % EMO.length], edur = 9 + (i%4)*2, edelay = -(i*5 + 3);   // 仕草を少し高頻度に
+                let rm = RARE[i % RARE.length];
+                let rare = rm.n;
+                let act = rm.up ? 'idle' : ACTS[i % ACTS.length]; // 両腕アップ時は腕の競合回避で通常腕
+                let armT = rm.up ? { dur: edur, delay: edelay } : null;
                 actors += `<span class="walker" style="animation-name:${WANDER[i%3]}; animation-duration:${dur}s; animation-delay:${delay}s">`
                         + `<span class="rio-emote" style="animation-duration:${edur}s; animation-delay:${edelay}s">${emo}</span>`
                         + `<span class="rio-act" style="animation:${rare} ${edur}s ease-in-out infinite ${edelay}s">`
@@ -1540,8 +1558,8 @@
         }
 
         // 生産ラインの折りたたみ
-        function toggleLine(i) { GAME.collapsed[i] = !GAME.collapsed[i]; updateUI(); }
-        function toggleTrade() { GAME.collapsed['trade'] = !GAME.collapsed['trade']; updateUI(); }
+        function toggleLine(i) { let cur = (i in GAME.collapsed) ? GAME.collapsed[i] : GAME.linesCollapsedMode; GAME.collapsed[i] = !cur; updateUI(); }
+        function toggleTrade() { let cur = ('trade' in GAME.collapsed) ? GAME.collapsed['trade'] : GAME.linesCollapsedMode; GAME.collapsed['trade'] = !cur; updateUI(); }
         // ============ セクション折りたたみ（品/ジョブ/その他の収納） ============
         const SECTION_IDS = ['sb-prod','sb-custom','sb-worker','sb-infra','sb-help','sb-log'];
         function _setCaret(id, collapsed){ let c=document.querySelector('[data-sec="'+id+'"] .sec-caret'); if(c) c.textContent = collapsed?'▶':'▼'; }
@@ -1580,7 +1598,7 @@
         function getTradeSectionHTML() {
             let raws = tradeRaws();
             if (raws.length === 0) return '';                       // 採れない素材が無い土地なら出さない
-            let collapsed = GAME.collapsed['trade'];
+            let collapsed = ('trade' in GAME.collapsed) ? GAME.collapsed['trade'] : GAME.linesCollapsedMode;
             let html = `<div class="production-block"><div class="block-title" style="cursor:pointer; user-select:none;" onclick="toggleTrade()">${collapsed ? '▶' : '▼'} 🚢 交易（この土地で採れない素材を仕入れ）</div>`;
             if (!collapsed) {
                 if (!(GAME.workers.trader && GAME.workers.trader.unlocked)) {
@@ -1595,6 +1613,26 @@
             return html;
         }
         function collapseAll(v) { GAME.lines.forEach((l, i) => { GAME.collapsed[i] = v; }); updateUI(); }
+        // 表示中の生産ラインが全て畳まれているか（一括トグルのラベル判定用）
+        function allLinesCollapsed() {
+            let any = false;
+            for (let i = 0; i < GAME.lines.length; i++) { let l = GAME.lines[i]; if (l.custom) continue;
+                let vis = (l.materials || []).some(m => GAME.resources[m] && GAME.resources[m].unlocked)
+                       || (l.crafts || []).some(c => GAME.resources[c] && GAME.resources[c].unlocked);
+                if (!vis) continue; any = true;
+                let collapsed = (i in GAME.collapsed) ? GAME.collapsed[i] : GAME.linesCollapsedMode;
+                if (!collapsed) return false;
+            }
+            return any;
+        }
+        // 「フルーツ等に分かれた品目」をまとめて一括で収納／展開。新規解放ラインも同じ状態で出るようモード化
+        function toggleAllLines() {
+            let collapse = !allLinesCollapsed();
+            GAME.linesCollapsedMode = collapse;
+            GAME.lines.forEach((l, i) => { if (!l.custom) delete GAME.collapsed[i]; });  // 個別指定を消してモードに統一
+            GAME.collapsed['trade'] = collapse;
+            updateUI();
+        }
 
         // この職人を配置できる「解放済み・未配置(0)」の品（クラフトは建設済みのみ）
         function unassignedTargets(workerKey) {
@@ -1877,7 +1915,7 @@
                 if (line.custom && GAME.customKeys.length === 0) return;
 
                 if (anyVisible || line.custom) {
-                    let collapsed = GAME.collapsed[li];
+                    let collapsed = (li in GAME.collapsed) ? GAME.collapsed[li] : GAME.linesCollapsedMode;
                     let html = `<div class="production-block"><div class="block-title" style="cursor:pointer; user-select:none;" onclick="toggleLine(${li})">${collapsed ? '▶' : '▼'} ${line.title}</div>`;
                     if (!collapsed) {
                     html += `<div class="grid-split">`;
@@ -1903,6 +1941,8 @@
             });
             linesHtml += getTradeSectionHTML();   // 🚢 交易欄（この土地で採れない素材の仕入れ）
             document.getElementById('production-lines').innerHTML = linesHtml;
+            let _tlb = document.getElementById('toggle-lines-btn');
+            if (_tlb) _tlb.textContent = allLinesCollapsed() ? '▼ 品目を全部ひらく' : '▶ 品目を全部たたむ';
             // 一括自動売却チェックの状態を反映（全部ONならチェック）
             let _raws = Object.keys(GAME.resources).filter(k => !GAME.resources[k].isCraft && GAME.resources[k].unlocked);
             let _crafts = Object.keys(GAME.resources).filter(k => GAME.resources[k].isCraft && GAME.resources[k].unlocked);
@@ -2115,6 +2155,7 @@
                 workers: {}, infra: {}, autoSell: {}, autoBuy: {}, assigned: {}, craftCarry: {}, collapsed: {},
                 customKeys: GAME.customKeys.slice(), customSeq: GAME.customSeq,
                 unlockedAreas: {}, lastArea: GAME.lastArea, biome: GAME.biome,   // エリア解放状態＋最後に解放＋バイオーム
+                linesCollapsedMode: GAME.linesCollapsedMode,   // 品目の一括たたみ状態
                 townGoals: {}   // ランダム生成された発展条件を固定保存
             };
             for (let a in GAME.unlockedAreas) data.unlockedAreas[a] = GAME.unlockedAreas[a];
@@ -2201,6 +2242,7 @@
             if (data.assigned) for (let k in data.assigned) { if (k in GAME.assigned && typeof data.assigned[k] === 'number') GAME.assigned[k] = data.assigned[k]; }
             if (data.craftCarry) for (let k in data.craftCarry) { if (k in GAME.craftCarry && typeof data.craftCarry[k] === 'number') GAME.craftCarry[k] = data.craftCarry[k]; }
             if (data.collapsed) for (let k in data.collapsed) { GAME.collapsed[k] = data.collapsed[k]; }
+            if (typeof data.linesCollapsedMode === 'boolean') GAME.linesCollapsedMode = data.linesCollapsedMode;
             if (data.townGoals) for (let L in data.townGoals) { if (GAME.townUpgrades[L]) GAME.townUpgrades[L].req = data.townGoals[L]; }
             if (data.unlockedAreas) for (let a in data.unlockedAreas) { if (a in GAME.unlockedAreas) GAME.unlockedAreas[a] = !!data.unlockedAreas[a]; }
             GAME.unlockedAreas.field = true;   // 野原は常に解放
