@@ -358,6 +358,7 @@
 
         <div class="section-title sec-head sec-toggle" data-sec="sb-log" onclick="toggleSection('sb-log')"><span class="sec-caret">▶</span> 📝 更新履歴</div>
         <div class="sec-body collapsed" id="sb-log"><div class="help-box" id="changelog">
+            <p style="margin:0 0 6px 0;"><b>2026-06-21</b>：<b>解放タイミングの見直し</b>。初期から持てる<b>🍓いちごのジュースをLv1で解放</b>（他のジュースと同列に。従来Lv4で遅すぎた）。<b>雪国に🎄シラカバを追加</b>＝雪原（街エリア）で採れる早期の木材で、<b>森を解放しなくても板材が作れる</b>ように（雪国で板材が作れず詰む問題を解消）。シラカバの名物🛷そりも追加。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-20</b>：<b>バイオームの個性を大幅強化</b>。各土地に専用の<b>看板素材＋名物加工品</b>を追加（🌾平野＝とうもろこし/かぼちゃ/ひまわり/オーク材/水晶、🌴常夏＝パイナップル/ココナッツ/バナナ/竹/黒曜石、❄️白銀＝タラバガニ/カキ/氷/アクアマリン）。<b>木工・鉱業・生活品・整備</b>まで地域差を拡張：🧺生活品ライン（ろうそく/石けん/麦わら帽子/うちわ/マフラー/コート）と、土地ごとの整備（🌬️風車/💧灌漑/🔥暖房）を新設。素材14種・加工品22種を追加。専用品は輸入不可＝その土地の名物、油や氷など用途の広いものは輸入可。あわせて<b>エリア移動後にキャラが居なくなる不具合を修正</b>（全エリアで歩くリオを表示／登場演出は走って中央で止まるように）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-19</b>：<b>リオちゃんをなめらかSDちびキャラに</b>（マップの歩くリオ・職人カードの肖像）。手足くっきり・大きな瞳でかわいさ重視。品ごとの小スプライトは従来のドット絵のまま。<b>仕草を刷新</b>：くるくる回転を廃止し、ぴょこぴょこ／ぷにっと／ふりふり／こてん／バンザイなど<b>かわいい仕草を多数追加</b>。腕を体に寄せてぶらぶらも解消。<b>画面をすっきり化</b>：各セクション（生産ツリー／独自レシピ／雇用／整備／ヒント／更新履歴）を<b>見出しクリックで折りたたみ</b>、さらに<b>「品目を全部たたむ／ひらく」</b>ワンタップで生産ラインを一括収納（新しく解放されたラインも畳んだ状態で表示、状態は保存）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-18</b>：<b>🚢交易欄を新設</b>。その土地で採れない素材は各ラインから分離し、最下部の交易欄でまとめて仕入れできるように（トレーダー解放が前提）。<b>加工品の開放をバイオーム別に</b>調整：材料が「採取 or 交易で実際に入手できる」ようになって初めて開放（設備だけ建って材料が無い"空き状態"を解消）。<b>銅・寒流魚の解放条件のバグを修正</b>（目標生成と実挙動の不整合を解消）。</p>
@@ -442,6 +443,7 @@
                 bamboo:   { icon: "🎍", name: "竹",           count: 0, price: 8,  unlocked: false, workerKey: "logger",  gather: 0.3,  req: { town: 2 } },   // 常夏・専用
                 obsidian: { icon: "⬛", name: "黒曜石",       count: 0, price: 26, unlocked: false, workerKey: "miner",   gather: 0.1,  req: { town: 4 } },   // 常夏・専用
                 aquamarine:{icon: "🔷", name: "アクアマリン", count: 0, price: 40, unlocked: false, workerKey: "miner",   gather: 0.06, req: { town: 5 } },   // 白銀・専用
+                birch:    { icon: "🎄", name: "シラカバ",     count: 0, price: 14, unlocked: false, workerKey: "logger",  gather: 0.3,  req: { town: 2 } },   // 白銀・専用（雪原で採れる＝森解放不要・板材の代替材）
 
                 // ============ 加工品（isCraft は後で付与） ============
                 salt:        { icon: "🧂", name: "塩",         count: 0, basePrice: 3,   unlocked: true,  facilityLv: 1, baseFacilityCost: 100, req: { town: 1 } },
@@ -565,7 +567,8 @@
                 strawhat:      { icon:"👒", name:"麦わら帽子", count:0, basePrice:34, unlocked:false, facilityLv:1, baseFacilityCost:320, req:{ town:5 } },
                 fan:           { icon:"🪭", name:"うちわ",     count:0, basePrice:30, unlocked:false, facilityLv:1, baseFacilityCost:300, req:{ town:5 } },
                 scarf:         { icon:"🧣", name:"マフラー",   count:0, basePrice:40, unlocked:false, facilityLv:1, baseFacilityCost:340, req:{ town:5 } },
-                coat:          { icon:"🧥", name:"コート",     count:0, basePrice:120, unlocked:false, facilityLv:1, baseFacilityCost:600, req:{ town:5 } }
+                coat:          { icon:"🧥", name:"コート",     count:0, basePrice:120, unlocked:false, facilityLv:1, baseFacilityCost:600, req:{ town:5 } },
+                sled:          { icon:"🛷", name:"そり",       count:0, basePrice:36, unlocked:false, facilityLv:1, baseFacilityCost:340, req:{ town:4 } }
             },
 
             workers: {
@@ -588,7 +591,7 @@
             recipes: {
                 salt:        { costs: { water: 2 },                          auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 applejuice:  { costs: { apple: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
-                berryjuice:  { costs: { berry: 2, water: 1 },                auto: false, workerKey: "patissier", facilityName: "ジューススタンド" },
+                berryjuice:  { costs: { berry: 2, water: 1 },                auto: false, workerKey: "patissier", facilityName: "簡易調理場" },
                 orangejuice: { costs: { orange: 2, water: 1 },               auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 grapejuice:  { costs: { grape: 2, water: 1 },                auto: false, workerKey: "cook",      facilityName: "簡易調理場" },
                 mixjuice:    { costs: { apple: 1, orange: 1, grape: 1, water: 1 }, auto: false, workerKey: "cook", facilityName: "ジューススタンド" },
@@ -634,7 +637,7 @@
                 greaterpotion:{ costs: { superherb: 2, potion: 1 },          auto: false, workerKey: "blender",   facilityName: "上級調合所" },
                 elixir:      { costs: { greaterpotion: 1, distilledwater: 2, superherb: 1 }, auto: false, workerKey: "blender", facilityName: "錬金術工房" },
                 perfume:     { costs: { flower: 2, distilledwater: 1 },       auto: false, workerKey: "blender",   facilityName: "香水工房" },
-                board:       { costs: { wood: 2 },                           auto: false, workerKey: "craftsman", facilityName: "木工ろくろ" },
+                board:       { costs: { wood: 2 }, alt: { birch: 2 },          auto: false, workerKey: "craftsman", facilityName: "木工ろくろ" },
                 hardboard:   { costs: { hardwood: 2 },                       auto: false, workerKey: "craftsman", facilityName: "木工ろくろ" },
                 cloth:       { costs: { wool: 2 },                           auto: false, workerKey: "craftsman", facilityName: "織物工房" },
                 leather:     { costs: { hide: 2 },                           auto: false, workerKey: "craftsman", facilityName: "なめし工房" },
@@ -703,7 +706,8 @@
                 strawhat:      { costs:{ bamboo:1, wheat:1 },             auto:false, workerKey:"craftsman", facilityName:"南国雑貨工房" },
                 fan:           { costs:{ bamboo:1, board:1 },             auto:false, workerKey:"craftsman", facilityName:"南国雑貨工房" },
                 scarf:         { costs:{ cloth:1 },                       auto:false, workerKey:"craftsman", facilityName:"防寒具工房" },
-                coat:          { costs:{ cloth:2, leather:1 },            auto:false, workerKey:"craftsman", facilityName:"防寒具工房" }
+                coat:          { costs:{ cloth:2, leather:1 },            auto:false, workerKey:"craftsman", facilityName:"防寒具工房" },
+                sled:          { costs:{ birch:2 },                       auto:false, workerKey:"craftsman", facilityName:"そり工房" }
             },
 
             lines: [
@@ -712,7 +716,7 @@
                 { title: "🌾 農業", materials: ["wheat", "potato", "lettuce", "tomato", "corn", "pumpkin", "sunflower"], crafts: ["bread", "fries", "salad", "sandwich", "clubhouse", "ketchup", "pizza", "deluxedinner", "afternoontea", "popcorn", "cornpotage", "pumpkinpie", "oil"] },
                 { title: "🍬 スイーツ", materials: ["sugarcane", "sugarbeet", "ice"], crafts: ["sugar", "candy", "icecream", "chocolate", "cake", "cookie", "pudding", "donut", "honeytoast", "parfait", "grandcake", "shavedice"] },
                 { title: "🐄 酪農", materials: ["milk", "egg", "wool", "hide"], crafts: ["yogurt", "cheese", "omelet", "pancake", "cloth", "leather", "leatherbag"] },
-                { title: "🪵 木工", materials: ["wood", "hardwood", "maple", "oak", "bamboo"], crafts: ["board", "charcoal", "fireplace", "hardboard", "barrel", "honey", "furniture", "oakbarrel", "bamboobasket"] },
+                { title: "🪵 木工", materials: ["wood", "hardwood", "maple", "oak", "bamboo", "birch"], crafts: ["board", "charcoal", "fireplace", "hardboard", "barrel", "honey", "furniture", "oakbarrel", "bamboobasket", "sled"] },
                 { title: "🪨 鉱業", materials: ["stone", "iron", "copper", "silver", "gem", "goldore", "crystal", "obsidian", "aquamarine"], crafts: ["mason", "tool", "ring", "steel", "statue", "lamp", "silvertool", "diamond", "necklace", "wall", "goldtool", "relief", "crown", "crystalball", "obsidianblade", "aquaring"] },
                 { title: "🍖 漁・狩", materials: ["fish", "meat", "chicken", "pork"], crafts: ["soup", "smokedfish", "fishfry", "skewer", "stew", "steak", "karaage", "bacon"] },
                 { title: "🍙 和食", materials: ["rice"], crafts: ["onigiri", "sushi", "grilledfish", "oyakodon", "dango", "senbei", "mochi"] },
@@ -750,7 +754,7 @@
             "herbtea","herbgrill","seasalt","kaisendon","takoyaki","pearl","shellcraft",
             "lamp","necklace",
             "popcorn","cornpotage","pumpkinpie","oil","smoothie","coconutpudding","bananacake","shavedice","crabnabe","grilledcrab","oysterfry",
-            "oakbarrel","crystalball","bamboobasket","obsidianblade","aquaring","candle","soap","strawhat","fan","scarf","coat"];
+            "oakbarrel","crystalball","bamboobasket","obsidianblade","aquaring","candle","soap","strawhat","fan","scarf","coat","sled"];
         // 設備は最初「未建設」(facilityLv=0)。建設してから加工できる
         CRAFT_KEYS.forEach(k => { GAME.resources[k].isCraft = true; GAME.resources[k].facilityLv = 0; });
         // assigned = 各品に配置された職人数 / autoSell = 自動売却 / craftCarry = 設備速度の端数繰越
@@ -854,7 +858,7 @@
             // 改良：バイオーム専用設備（揚げ物店=Lv6・宝飾工房=Lv7は既存を流用）
             'ポップコーン台':3, '搾油所':3, 'スープ工房':4, 'スムージーバー':4, 'かき氷屋':4,
             'パイ焼き窯':5, '南国スイーツ工房':5, '鍋料理屋':5, '浜焼き小屋':5,
-            'ろうそく工房':4, '石けん工房':4, '竹細工工房':4, '樽工房':5, '南国雑貨工房':5, '防寒具工房':5, '黒曜石工房':6, '水晶研磨所':6
+            'ろうそく工房':4, '石けん工房':4, '竹細工工房':4, '樽工房':5, '南国雑貨工房':5, '防寒具工房':5, 'そり工房':4, '黒曜石工房':6, '水晶研磨所':6
         };
         function workshopLvOf(key){ let rec=GAME.recipes[key]; return (rec && WORKSHOP_LV[rec.facilityName]) || 1; }
         // 既存加工品(非custom)の解放を「工房Lv」に統一（素材側のエリア/wlvゲートは素材自身が持つ）
@@ -1138,7 +1142,7 @@
         // 採取workerでエリアを決定（加工はすべて街＝field）。石・鉄は野原の基礎建材素材として上書き。
         const WORKER_AREA = { gatherer:'field', farmer:'field', dairy:'field', merchant:'field',
             logger:'forest', miner:'mine', hunter:'sea', cook:'field', patissier:'field', blender:'field', craftsman:'field' };
-        const RAW_AREA_OVERRIDE = { herbplant:'forest', flower:'forest', meat:'field', chicken:'field', pork:'field', fish:'field', stone:'field', iron:'field' };
+        const RAW_AREA_OVERRIDE = { herbplant:'forest', flower:'forest', meat:'field', chicken:'field', pork:'field', fish:'field', stone:'field', iron:'field', birch:'field' };
         function areaOf(key){
             let r = GAME.resources[key]; if (!r) return 'field';
             if (RAW_AREA_OVERRIDE[key]) return RAW_AREA_OVERRIDE[key];
@@ -1172,7 +1176,7 @@
         const BIOME_DEFS = {
             plains:   { name:'平野の町', icon:'🌾', desc:'バランス型の拠点。名物＝🌽とうもろこし・🎃かぼちゃ・🌻ひまわり・🌳オーク材・🔮水晶（🌬️風車も）。柑橘・針葉樹・特産魚介は無い（輸入で補う）。' },
             tropical: { name:'常夏の町', icon:'🌴', desc:'南国。名物＝🍍パイナップル・🥥ココナッツ・🍌バナナ・🎍竹・⬛黒曜石＋温海のエビ・タコ（💧灌漑も）。小麦・乳・針葉樹は無い。' },
-            snow:     { name:'白銀の町', icon:'❄️', desc:'雪国。名物＝🦀タラバガニ・🦪カキ・❄️氷・🔷アクアマリン＋羊毛・針葉樹・寒流魚（🧣防寒具・🔥暖房も）。米・柑橘・温海の魚介は無い。' }
+            snow:     { name:'白銀の町', icon:'❄️', desc:'雪国。名物＝🦀タラバガニ・🦪カキ・❄️氷・🔷アクアマリン・🎄シラカバ（雪原で採れ板材OK）＋羊毛・針葉樹・寒流魚（🧣防寒具・🔥暖房も）。米・柑橘・温海の魚介は無い。' }
         };
         // 共通＝気候中立（エビ/タコは温海の特産にするため共通から外し常夏へ）
         const _BIOME_COMMON = ['herb','water','herbplant','superherb','flower','mushroom','lettuce','fish','meat','chicken','pork','egg','hide','seawater','clam','seafish','wood','stone','iron','copper','silver','gem','goldore'];
@@ -1182,7 +1186,7 @@
             // 常夏＝米・柑橘・ブドウ・サトウキビ・マンゴー＋温かい海のエビ/タコ＋南国フルーツ＋竹/黒曜石
             tropical: new Set(_BIOME_COMMON.concat(['rice','grape','tomato','orange','lemon','sugarcane','mango','shrimp','octopus','pineapple','coconut','banana','bamboo','obsidian'])),
             // 白銀＝小麦・じゃが・乳・羊毛・針葉樹・寒流魚＋冬の海の幸・氷＋アクアマリン
-            snow:     new Set(_BIOME_COMMON.concat(['wheat','apple','berry','potato','milk','sugarbeet','wool','hardwood','maple','coldfish','kingcrab','oyster','ice','aquamarine']))
+            snow:     new Set(_BIOME_COMMON.concat(['wheat','apple','berry','potato','milk','sugarbeet','wool','hardwood','maple','coldfish','kingcrab','oyster','ice','aquamarine','birch']))
         };
         function biomeAllowsRaw(key){ if(!GAME.biome) return true; let s=BIOME_RAWS[GAME.biome]; return s ? s.has(key) : true; }
         function chooseBiome(b){ if(!BIOME_DEFS[b] || GAME.biome) return; GAME.biome=b;
@@ -1425,7 +1429,7 @@
         // ＝加工貿易に旨味③自前採取は無料なので輸入で自前採取が無意味化しない。素材(raw)のみ輸入可。
         const IMPORT_MARKUP = 1.2;
         // 目玉素材＝輸入不可（そのエリアを解放してこそ入手＝開拓の動機）。基礎・共通素材は未解放でも輸入可。
-        const IMPORT_BLOCKED = new Set(['silver','gem','goldore','clam','mango','coldfish','pumpkin','pineapple','coconut','banana','kingcrab','oyster','oak','crystal','bamboo','obsidian','aquamarine']);
+        const IMPORT_BLOCKED = new Set(['silver','gem','goldore','clam','mango','coldfish','pumpkin','pineapple','coconut','banana','kingcrab','oyster','oak','crystal','bamboo','obsidian','aquamarine','birch']);
         function importable(key) {
             let r = GAME.resources[key];
             return !!r && !r.isCraft && !IMPORT_BLOCKED.has(key);
