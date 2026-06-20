@@ -358,7 +358,7 @@
 
         <div class="section-title sec-head sec-toggle" data-sec="sb-log" onclick="toggleSection('sb-log')"><span class="sec-caret">▶</span> 📝 更新履歴</div>
         <div class="sec-body collapsed" id="sb-log"><div class="help-box" id="changelog">
-            <p style="margin:0 0 6px 0;"><b>2026-06-21</b>：<b>解放タイミングの見直し</b>。初期から持てる<b>🍓いちごのジュースをLv1で解放</b>（他のジュースと同列に。従来Lv4で遅すぎた）。<b>雪国に🎄シラカバを追加</b>＝雪原（街エリア）で採れる早期の木材で、<b>森を解放しなくても板材が作れる</b>ように（雪国で板材が作れず詰む問題を解消）。シラカバの名物🛷そりも追加。</p>
+            <p style="margin:0 0 6px 0;"><b>2026-06-21</b>：<b>解放タイミングの見直し</b>。初期から持てる<b>🍓いちごのジュースをLv1で解放</b>（他のジュースと同列に。従来Lv4で遅すぎた）。<b>雪国に🎄シラカバを追加</b>＝雪原（街エリア）で採れる早期の木材で、<b>森を解放しなくても板材が作れる</b>ように（雪国で板材が作れず詰む問題を解消）。シラカバの名物🛷そりも追加。さらに<b>発展目標が「まだ解放していないエリアの素材」を要求して詰む問題を根本修正</b>（早い都市Lvでは森/海/鉱山の素材を目標に出さないようガード）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-20</b>：<b>バイオームの個性を大幅強化</b>。各土地に専用の<b>看板素材＋名物加工品</b>を追加（🌾平野＝とうもろこし/かぼちゃ/ひまわり/オーク材/水晶、🌴常夏＝パイナップル/ココナッツ/バナナ/竹/黒曜石、❄️白銀＝タラバガニ/カキ/氷/アクアマリン）。<b>木工・鉱業・生活品・整備</b>まで地域差を拡張：🧺生活品ライン（ろうそく/石けん/麦わら帽子/うちわ/マフラー/コート）と、土地ごとの整備（🌬️風車/💧灌漑/🔥暖房）を新設。素材14種・加工品22種を追加。専用品は輸入不可＝その土地の名物、油や氷など用途の広いものは輸入可。あわせて<b>エリア移動後にキャラが居なくなる不具合を修正</b>（全エリアで歩くリオを表示／登場演出は走って中央で止まるように）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-19</b>：<b>リオちゃんをなめらかSDちびキャラに</b>（マップの歩くリオ・職人カードの肖像）。手足くっきり・大きな瞳でかわいさ重視。品ごとの小スプライトは従来のドット絵のまま。<b>仕草を刷新</b>：くるくる回転を廃止し、ぴょこぴょこ／ぷにっと／ふりふり／こてん／バンザイなど<b>かわいい仕草を多数追加</b>。腕を体に寄せてぶらぶらも解消。<b>画面をすっきり化</b>：各セクション（生産ツリー／独自レシピ／雇用／整備／ヒント／更新履歴）を<b>見出しクリックで折りたたみ</b>、さらに<b>「品目を全部たたむ／ひらく」</b>ワンタップで生産ラインを一括収納（新しく解放されたラインも畳んだ状態で表示、状態は保存）。</p>
             <p style="margin:0 0 6px 0;"><b>2026-06-18</b>：<b>🚢交易欄を新設</b>。その土地で採れない素材は各ラインから分離し、最下部の交易欄でまとめて仕入れできるように（トレーダー解放が前提）。<b>加工品の開放をバイオーム別に</b>調整：材料が「採取 or 交易で実際に入手できる」ようになって初めて開放（設備だけ建って材料が無い"空き状態"を解消）。<b>銅・寒流魚の解放条件のバグを修正</b>（目標生成と実挙動の不整合を解消）。</p>
@@ -805,13 +805,25 @@
             if(r.town) lv=Math.max(lv,r.town);
             if(r.worker){ let wt=(GAME.workers[r.worker]?GAME.workers[r.worker].reqTown:1)||1; if(r.wlv) wt += (r.wlv-1); lv=Math.max(lv,wt); }
             if(lv===0) lv = GAME.resources[k].unlocked?1:99; return lv; }
+        // 目標生成用：素材が採れる最低Lv≒所属エリア(森/海/鉱山)を解放できる頃。これ未満のLvの発展目標にエリア材を要求しない＝詰み防止
+        // ※初期化順の都合でRAW_AREA_OVERRIDE/WORKER_AREAに依存せず自己完結で判定
+        function rawAreaMinLv(k){
+            if(!GAME.biome) return 1;   // 初期化時(バイオーム未選択)は素通り＝後方定義の定数へ触れない(TDZ回避)
+            if(['stone','iron','fish','meat','chicken','pork','birch'].indexOf(k)>=0) return 1;  // 街(field)で採れる扱い
+            if(['herbplant','flower'].indexOf(k)>=0) return 3;                                    // 森
+            let wk=GAME.resources[k]?GAME.resources[k].workerKey:null;
+            if(wk==='logger') return 3;   // 森（木材）
+            if(wk==='hunter') return 4;   // 海
+            if(wk==='miner')  return 5;   // 鉱山
+            return 1;                      // 平地（採取/農/酪農）
+        }
         function _obtainable(k,L,seen){ seen=seen||{}; if(k in seen) return seen[k]; let res=GAME.resources[k];
             if(!res) return seen[k]=false; if(_unlockLv(k)>L) return seen[k]=false;
-            // 素材は「その土地で採れる or 輸入できる」場合のみ入手可（バイオーム特産で詰むのを防ぐ）
+            // 素材は「その土地で採れる(エリア解放が現実的なLv以降) or 輸入できる」場合のみ入手可
             if(!res.isCraft){
-                if(biomeAllowsRaw(k)) return seen[k]=true;                 // この土地で採れる（_unlockLvは上で判定済）
-                if(importable(k)){ let tt=(GAME.workers.trader?GAME.workers.trader.reqTown:3); return seen[k]=(L>=tt); } // 輸入専用＝トレーダー解放(都市Lv)以降
-                return seen[k]=false;                                       // 他地域特産＝輸入不可
+                if(biomeAllowsRaw(k) && L>=rawAreaMinLv(k)) return seen[k]=true;   // 採取＝エリアが解放できる頃以降
+                if(importable(k)){ let tt=(GAME.workers.trader?GAME.workers.trader.reqTown:3); return seen[k]=(L>=tt); } // 輸入＝トレーダー解放(都市Lv)以降
+                return seen[k]=false;                                              // 他地域特産＝輸入不可
             }
             let rec=GAME.recipes[k]; if(!rec) return seen[k]=false;
             seen[k]=true; let opts = rec.alt ? [rec.costs, rec.alt] : [rec.costs];   // 代替レシピはどちらか作れればOK
