@@ -317,8 +317,8 @@ const FAIRIES=[
   {id:'nemu',n:'ネム',kind:'農業',col:'#f0a0d0',fee:2000,d:'花の妖精。収穫した作物が上質（★・高値）になりやすい。STが少しずつ回復',farm:{quality:.5,regen:1}},
   {id:'kiki',n:'キキ',kind:'共用',col:'#ffc890',fee:2200,d:'拾い物の妖精。町でもダンジョンでも付いてきて、近くに落ちているアイテムやお金を拾ってくる（町では薬草や熟した果物も）',collect:{r:40,cd:1.2}},
   {id:'fuu',n:'フウ',kind:'共用',col:'#a0d0f0',fee:1800,d:'そよ風の妖精。町でもダンジョンでも付いてきて、移動速度+20%、STが少しずつ回復、農作業のST消費-25%',farm:{speed:.2,regen:1,stMul:.75}},
-  {id:'konoha',n:'コノハ',kind:'共用',col:'#8ad07a',fee:2000,d:'木の妖精。町でもダンジョンでも付いてきて、木材を集めてくる。レベルが上がると果物・ハチミツ・キノコ・琥珀も見つけてくる',gather:{cd:30,tbl:[[1,'wood',60],[3,'fruit',20],[5,'honey',12],[7,'kinoko',10],[10,'amber',3]]}},
-  {id:'ruri',n:'ルリ',kind:'共用',col:'#7ab0e8',fee:2500,d:'石の妖精。町でもダンジョンでも付いてきて、石を集めてくる。レベルが上がると鉄鉱石・金鉱石・魔石も掘り当てる',gather:{cd:30,tbl:[[1,'stone',50],[3,'ore',30],[6,'goldore',10],[9,'gem',6]]}}];
+  {id:'konoha',n:'コノハ',kind:'共用',col:'#8ad07a',fee:2000,d:'木の妖精。町でもダンジョンでも付いてきて、木材を集めてくる。レベルが上がると果物・ハチミツ・キノコ・琥珀も見つけてくる',gather:{cd:45,tbl:[[1,'wood',60],[3,'fruit',20],[5,'honey',12],[7,'kinoko',10],[10,'amber',3]]}},
+  {id:'ruri',n:'ルリ',kind:'共用',col:'#7ab0e8',fee:2500,d:'石の妖精。町でもダンジョンでも付いてきて、石を集めてくる。レベルが上がると鉄鉱石・金鉱石・魔石も掘り当てる',gather:{cd:45,tbl:[[1,'stone',60],[3,'ore',20],[6,'goldore',5],[9,'gem',3]]}}];
 const GNAME=id=>id==='fruit'?'果物':ITEMS[id].n;
 const FMAX=10,fNeed=lv=>30*lv,fLv=id=>((S.flv||{})[id])||1;
 const FSNACK={apple:10,peach:10,orange:10,banana:10,grape:12,chocolate:40,chocobanana:50,strawberry:8,juice:25,jam:25,berryjam:25,pudding:40,mangopudding:60,applepie:50,peachpie:50,cake:80};
@@ -327,7 +327,7 @@ function fScaled(b,lv){const k=b.id+lv;if(_fc[k])return _fc[k];const u=lv-1,o={.
   if(b.atk)o.atk={cd:Math.max(.6,b.atk.cd*(1-.04*u)),range:b.atk.range+5*u,dmg:()=>b.atk.dmg()*(1+.15*u)};
   if(b.buff)o.buff={...b.buff,every:Math.max(8,b.buff.every-u),dur:b.buff.dur+u};
   if(b.heal)o.heal={...b.heal,every:Math.max(3,b.heal.every-.3*u),amt:b.heal.amt+.01*u};
-  if(b.gather)o.gather={...b.gather,cd:Math.max(15,b.gather.cd*(1-.055*u))};
+  if(b.gather)o.gather={...b.gather,cd:Math.max(30,b.gather.cd*(1-.037*u))};
   if(b.collect)o.collect={r:b.collect.r+7*u,cd:Math.max(.4,b.collect.cd-.08*u)};
   if(b.farm){const f=b.farm;o.farm={...f};if(f.stMul)o.farm.stMul=Math.max(.25,f.stMul*(1-.04*u));if(f.grow)o.farm.grow=Math.min(.8,f.grow+.04*u);if(f.quality)o.farm.quality=Math.min(.9,f.quality+.04*u);if(f.speed)o.farm.speed=f.speed+.015*u;if(f.regen)o.farm.regenT=Math.max(1.2,3-.2*u)}
   return _fc[k]=o}
@@ -626,7 +626,7 @@ const ELT={fire:{ice:2,wood:1.5,fire:.5,water:.5},water:{fire:2,stone:1.5,water:
 function elemMul(el,k){const t=ELT[el];return t?(t[k||'none']||1):1}
 function updGather(dt){if(paused||!(cur===town||cur.kind==='dun'))return;for(const f of partyF()){const g=f.gather;if(!g)continue;const F=fst(f.id);if(F.gt===undefined)F.gt=g.cd;F.gt-=dt;if(F.gt>0)continue;F.gt=g.cd;
   const pool=g.tbl.filter(t=>f.lv>=t[0]);let r=Math.random()*pool.reduce((a,t)=>a+t[2],0),pk=pool[0];for(const t of pool){r-=t[2];if(r<0){pk=t;break}}
-  const id=pk[1]==='fruit'?['apple','peach','orange'][Math.random()*3|0]:pk[1];S.inv[id]=(S.inv[id]||0)+1;sfx('pickup');pop(F.x,F.y-10,ITEMS[id].n,f.col);for(let i=0;i<5;i++)fx.push({type:'ember',x:F.x+(Math.random()-.5)*10,y:F.y,t:.5,max:.5,c:f.col,rise:1});fGain(4,f.id)}}
+  const id=pk[1]==='fruit'?['apple','peach','orange'][Math.random()*3|0]:pk[1];S.inv[id]=(S.inv[id]||0)+1;sfx('pickup');pop(F.x,F.y-10,ITEMS[id].n,f.col);for(let i=0;i<5;i++)fx.push({type:'ember',x:F.x+(Math.random()-.5)*10,y:F.y,t:.5,max:.5,c:f.col,rise:1});fGain(6,f.id)}}
 function updCollector(dt){updGather(dt);for(const f of partyF()){const c=f.collect;if(!c)continue;const F=fst(f.id),id=f.id;
   F.ct-=dt;if(F.ct>0||paused)continue;F.ct=c.cd;
   const grab=(x,y)=>{fx.push({type:'zap',x:F.x,y:F.y,x2:x,y2:y,t:.2,max:.2});for(let i=0;i<4;i++)fx.push({type:'ember',x:x+(Math.random()-.5)*8,y:y-4,t:.4,max:.4,c:f.col,rise:1});fGain(1,id)};
