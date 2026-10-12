@@ -1517,7 +1517,7 @@ function craftMenu(st){let fk=null;
         if(r.up){r.apply();toast(`${r.n}を作った！`)}else{S.inv[r.out]=(S.inv[r.out]||0)+(r.cnt||1);toast(`${ITEMS[r.out].n}${r.cnt?' ×'+r.cnt:''}を作った`)}fk=ri;render(b);refocus(b)},ok?'pri':'');
       mk.disabled=!ok;mk.dataset.rk=ri;
       const d=el('div','item'),l=el('div','l'),rr=el('div','r');if(!r.up)d.append(itemImg(r.out));
-      l.append(el('span','',r.up?r.n:ITEMS[r.out].n),el('small','',r.up?r.d:descOf(r.out)),el('small',ok?'':'lack',need));rr.append(mk);d.append(l,rr);list.append(d)}
+      l.append(el('span','',r.up?r.n:ITEMS[r.out].n),el('small','',r.up?r.d:descOf(r.out)),el('small',ok?'':'lack',need));if(!r.up){const hv=el('small','muted','所持 '+have(r.out));hv.style.cssText='font-size:11px;white-space:nowrap';rr.append(hv)}rr.append(mk);d.append(l,rr);list.append(d)}
     if(!shown)list.append(el('div','muted',st==='q'&&CTAB!=='すべて'?(CTAB==='作れる'?'いまの材料で作れるものはない':'このカテゴリーの料理はない'):'ここで作れるものはすべて作った'));
     b.append(list,row(btn('閉じる',closeModal)));if(sy)mbox.scrollTop=sy};
   openModal(render);refocus(mbox);
