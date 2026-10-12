@@ -314,9 +314,9 @@ const FAIRIES=[
   {id:'tsuchino',n:'ツチノ',kind:'戦闘',el:'earth',trait:'guard',col:'#c8a060',fee:2600,d:'地の妖精。重い石の弾で敵をはじき、ときどき防御アップ（+5・12秒）',atk:{cd:2,dmg:()=>3+S.lv*.8,range:95},buff:{every:18,type:'def',dur:12}},
   {id:'yomi',n:'ヨミ',kind:'戦闘',el:'dark',trait:'drain',col:'#a060d0',fee:3500,d:'闇の妖精。与えたダメージの1割だけHPを吸い取ってくれる',atk:{cd:1.5,dmg:()=>2+S.lv*.65,range:110}},
   {id:'popo',n:'ポポ',kind:'農業',col:'#c8a060',fee:1200,d:'土の妖精。農作業のST消費が半分。水をやった作物がときどき1日余分に育つ',farm:{stMul:.5,grow:.35}},
-  {id:'nemu',n:'ネム',kind:'農業',col:'#f0a0d0',fee:2000,d:'花の妖精。収穫した作物が上質（★・高値）になりやすい。STが少しずつ回復',farm:{quality:.5,regen:1}},
+  {id:'nemu',n:'ネム',kind:'農業',col:'#f0a0d0',fee:2000,d:'花の妖精。収穫した作物が上質（★・高値）になりやすい。STが少しずつ回復（釣りの間は回復しない）',farm:{quality:.5,regen:1}},
   {id:'kiki',n:'キキ',kind:'共用',col:'#ffc890',fee:2200,d:'拾い物の妖精。町でもダンジョンでも付いてきて、近くに落ちているアイテムやお金を拾ってくる（町では薬草や熟した果物も）',collect:{r:40,cd:1.2}},
-  {id:'fuu',n:'フウ',kind:'共用',col:'#a0d0f0',fee:1800,d:'そよ風の妖精。町でもダンジョンでも付いてきて、移動速度+20%、STが少しずつ回復、農作業のST消費-25%',farm:{speed:.2,regen:1,stMul:.75}},
+  {id:'fuu',n:'フウ',kind:'共用',col:'#a0d0f0',fee:1800,d:'そよ風の妖精。町でもダンジョンでも付いてきて、移動速度+20%、STが少しずつ回復（釣りの間は回復しない）、農作業のST消費-25%',farm:{speed:.2,regen:1,stMul:.75}},
   {id:'konoha',n:'コノハ',kind:'共用',col:'#8ad07a',fee:2000,d:'木の妖精。町でもダンジョンでも付いてきて、木材を集めてくる。レベルが上がると果物・ハチミツ・キノコ・琥珀も見つけてくる',gather:{cd:45,tbl:[[1,'wood',60],[3,'fruit',20],[5,'honey',12],[7,'kinoko',10],[10,'amber',3]]}},
   {id:'ruri',n:'ルリ',kind:'共用',col:'#7ab0e8',fee:2500,d:'石の妖精。町でもダンジョンでも付いてきて、石を集めてくる。レベルが上がると鉄鉱石・金鉱石・魔石も掘り当てる',gather:{cd:45,tbl:[[1,'stone',60],[3,'ore',20],[6,'goldore',5],[9,'gem',3]]}}];
 const GNAME=id=>id==='fruit'?'果物':ITEMS[id].n;
@@ -384,7 +384,7 @@ const ACCS={
   luck:{n:'幸運のお守り',d:'ドロップ率+20%・敵の落とすお金+50%',luck:1,in:{gem:2,egg:3}},
   bell:{n:'牧場主のベル',d:'動物の好感度が2倍上がる',bell:1,in:{ore:2,milk:2}},
   sage:{n:'賢者のイヤリング',d:'魔法のMP消費-30%',mpMul:.7,in:{gem:3,yarn:1}},
-  scarf:{n:'ウールのマフラー',d:'STが少しずつ回復',regen:1,in:{yarn:3}},
+  scarf:{n:'ウールのマフラー',d:'STが少しずつ回復（釣りの間は回復しない）',regen:1,in:{yarn:3}},
   goldring:{n:'金の指輪',d:'出荷の売り上げ+10%',ship:.1,in:{goldore:2,gem:1}},
   furcape:{n:'毛皮のマント',d:'防御+2・最大ST+20',def:2,st:20,in:{fur:3,yarn:1}},
   ghostcape:{n:'霊布のケープ',d:'魔攻+4・魔防+4・最大MP+30',mag:4,mdef:4,mp:30,in:{reifu:3,gem:1}},
@@ -598,12 +598,12 @@ function fStrike(dt){if(cur.kind!=='dun'){FSTR=[];return}for(const s of FSTR)s.t
     fx.push({type:'burst',x:m.x,y:m.y,t:.3,max:.3,c:col});hurtMon(m,fDmg(f,m),[0,0],col);fHit(f,m,0,0)}}
 function updFairy(dt){fStrike(dt);
   if(B.atk>0)B.atk-=dt;if(B.def>0)B.def-=dt;if(B.mag>0)B.mag-=dt;if(B.spd>0)B.spd-=dt;if(B.bar>0)B.bar-=dt;if(B.aspd>0)B.aspd-=dt;
-  P.areg=(P.areg||0)+dt;if(P.areg>=3){P.areg=0;if(accSum('regen'))S.st=Math.min(S.mst,S.st+1)}
+  P.areg=(P.areg||0)+dt;if(P.areg>=3){P.areg=0;if(accSum('regen')&&!P.fish)S.st=Math.min(S.mst,S.st+1)}
   partyF().forEach((f,i)=>{const F=fst(f.id),side=i?-1:1;
   const tx=P.x+(P.dir===3?-12*side:P.dir===2?12*side:10*side),ty=P.y-18-i*4+Math.sin(clock*3+i*2)*3;
   if(Math.hypot(F.x-P.x,F.y-P.y)>90){F.x=tx;F.y=ty}
   F.x+=(tx-F.x)*Math.min(1,dt*4);F.y+=(ty-F.y)*Math.min(1,dt*4);
-  if(f.farm&&f.farm.regen&&(f.kind==='共用'||cur.kind!=='dun')&&!paused){F.rt+=dt;if(F.rt>=f.farm.regenT){F.rt=0;S.st=Math.min(S.mst,S.st+1)}}
+  if(f.farm&&f.farm.regen&&(f.kind==='共用'||cur.kind!=='dun')&&!paused&&!P.fish){F.rt+=dt;if(F.rt>=f.farm.regenT){F.rt=0;S.st=Math.min(S.mst,S.st+1)}}
   if(cur.kind!=='dun')return;
   if(f.atk){F.cd-=dt;if(F.cd<=0){let t=null,bd=f.atk.range;for(const m of mons){const d=Math.hypot(m.x-P.x,m.y-P.y);if(d<bd){bd=d;t=m}}
     if(t&&(f.trait==='chain'||f.trait==='frost')){const ts=mons.filter(m=>Math.hypot(m.x-P.x,m.y-P.y)<f.atk.range).sort((a,b)=>Math.hypot(a.x-P.x,a.y-P.y)-Math.hypot(b.x-P.x,b.y-P.y));
