@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Town - のんびり経営シミュ♡</title>
+    <title>バーチャル・タウン - のんびり経営シミュ♡</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
@@ -105,7 +105,7 @@
             .worker-grid { grid-template-columns: 1fr; }
         }
 
-        /* ===== Virtual Town かわいいテーマ ===== */
+        /* ===== バーチャル・タウン かわいいテーマ ===== */
         body {
             font-family: 'M PLUS Rounded 1c', 'Hiragino Maru Gothic ProN', sans-serif;
             color: #6b4a6b;
@@ -279,7 +279,7 @@
 
     <div id="game-container">
         <div class="game-top"><a href="https://rioheartv.github.io/" class="hp-back">🏠 HPに戻る</a><button class="share-btn" onclick="shareGame()">🔗 シェア</button><button class="reset-btn" onclick="resetGame()">🔄 最初から</button></div>
-        <h1>💗 Virtual Town 💗</h1>
+        <h1>💗 バーチャル・タウン 💗</h1>
 
         <div class="status-box">
             <div>💰 <span id="stat-gold" class="gold-text">0</span>チャリン</div>
@@ -1757,9 +1757,9 @@
         // 共有：スマホは端末の共有シート、PCはX投稿が開く
         function shareGame() {
             const url = 'https://rioheartv.github.io/games/nova-frontier/';
-            const text = 'ドット絵のリオちゃんが働く放置ゲーム『Virtual Town』で遊んでるよ🏰✨ 無料・登録不要♡';
+            const text = 'ドット絵のリオちゃんが働く放置ゲーム『バーチャル・タウン』で遊んでるよ🏰✨ 無料・登録不要♡';
             if (navigator.share) {
-                navigator.share({ title: 'Virtual Town', text: text, url: url }).catch(() => {});
+                navigator.share({ title: 'バーチャル・タウン', text: text, url: url }).catch(() => {});
             } else {
                 window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text + '\n' + url + '\n#ブラウザゲーム #放置ゲーム #ドット絵'), '_blank', 'noopener');
             }
