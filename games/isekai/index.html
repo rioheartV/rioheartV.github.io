@@ -1490,21 +1490,22 @@ function descOf(id){const it=ITEMS[id];if(it.heal){if(it.heal[0]>=999)return'HP�
 const SWEETS=new Set(['chocolate','chococake','chocobanana','grapejelly','jam','applepie','peachpie','pudding','cake','candy','mangopudding','berryjam','honeytoast','melonpan','pumpkinpie']);
 const cookCat=r=>r.up?'料理':DRINK.has(r.out)?'飲み物':SWEETS.has(r.out)?'お菓子':!ITEMS[r.out].heal?'下ごしらえ':'料理';
 let CTAB='すべて';
-function craftMenu(st){
+function craftMenu(st){let fk=null;
+  const refocus=b=>{let t=fk!==null?b.querySelector(`button[data-rk="${fk}"]`):null;if(t&&t.disabled){t=t.closest('.item');t.tabIndex=-1}else if(!t)t=b.querySelector('button[data-rk]:not(:disabled)');if(t){t.focus({preventScroll:true});t.scrollIntoView({block:'nearest'})}};
   const render=b=>{const sy=mbox.scrollTop;b.innerHTML='';b.append(el('h2','',ST_NAMES[st]),el('div','muted',ST_HELP[st]+'。材料はかばんと倉庫の両方から使います。'));
-    if(st==='q')b.append(tabRow(CTAB,['すべて','料理','お菓子','飲み物','下ごしらえ','作れる'].map(k=>[k,k]),k=>{CTAB=k;render(b);mbox.scrollTop=0}));
+    if(st==='q')b.append(tabRow(CTAB,['すべて','料理','お菓子','飲み物','下ごしらえ','作れる'].map(k=>[k,k]),k=>{CTAB=k;fk=null;render(b);mbox.scrollTop=0;refocus(b)}));
     const list=el('div','list');let shown=0;
-    for(const r of RECIPES[st]){if(r.show&&!r.show())continue;if(st==='q'&&CTAB!=='すべて'){if(CTAB==='作れる'){if(!Object.entries(r.in).every(([id,n])=>have(id)>=n))continue}else if(cookCat(r)!==CTAB)continue}shown++;
+    for(const[ri,r]of RECIPES[st].entries()){if(r.show&&!r.show())continue;if(st==='q'&&CTAB!=='すべて'){if(CTAB==='作れる'){if(!Object.entries(r.in).every(([id,n])=>have(id)>=n))continue}else if(cookCat(r)!==CTAB)continue}shown++;
       const ok=Object.entries(r.in).every(([id,n])=>have(id)>=n);
       const need=Object.entries(r.in).map(([id,n])=>`${ITEMS[id].n} ${have(id)}/${n}`).join('　');
       const mk=btn('作る',()=>{for(const[id,n]of Object.entries(r.in))take(id,n);S.st=Math.max(0,S.st-2);
-        if(r.up){r.apply();toast(`${r.n}を作った！`)}else{S.inv[r.out]=(S.inv[r.out]||0)+(r.cnt||1);toast(`${ITEMS[r.out].n}${r.cnt?' ×'+r.cnt:''}を作った`)}render(b)},ok?'pri':'');
-      mk.disabled=!ok;
+        if(r.up){r.apply();toast(`${r.n}を作った！`)}else{S.inv[r.out]=(S.inv[r.out]||0)+(r.cnt||1);toast(`${ITEMS[r.out].n}${r.cnt?' ×'+r.cnt:''}を作った`)}fk=ri;render(b);refocus(b)},ok?'pri':'');
+      mk.disabled=!ok;mk.dataset.rk=ri;
       const d=el('div','item'),l=el('div','l'),rr=el('div','r');if(!r.up)d.append(itemImg(r.out));
       l.append(el('span','',r.up?r.n:ITEMS[r.out].n),el('small','',r.up?r.d:descOf(r.out)),el('small',ok?'':'lack',need));rr.append(mk);d.append(l,rr);list.append(d)}
     if(!shown)list.append(el('div','muted',st==='q'&&CTAB!=='すべて'?(CTAB==='作れる'?'いまの材料で作れるものはない':'このカテゴリーの料理はない'):'ここで作れるものはすべて作った'));
     b.append(list,row(btn('閉じる',closeModal)));if(sy)mbox.scrollTop=sy};
-  openModal(render);
+  openModal(render);refocus(mbox);
 }
 function useGrow(){if(cur.kind!=='town')return toast('町の畑で使おう');let n=0;
   for(const k in S.soil){const s=S.soil[k];if(s.c&&s.c.age<CROPS[s.c.t].days){s.c.age++;n++}}
@@ -2350,7 +2351,7 @@ addEventListener('keydown',e=>{
   if(KCAP){e.preventDefault();e.stopPropagation();if(e.code!=='Escape'){for(const a in KB)KB[a]=KB[a].filter(c=>c!==e.code);KB[KCAP]=[e.code];kSave()}KCAP=null;keyMenu.r&&keyMenu.r();return}
   let a=KMAP[e.code];if(KB.ret.includes(e.code)&&cur&&cur.kind==='dun'&&modal.hidden)a='ret';else if(a==='ret'&&KB.status.includes(e.code))a='status';
   if(!$('#title').hidden){if(!kbNav(e,$('#tbtns'))&&(e.code==='Enter'||e.code==='Space')&&!(document.activeElement instanceof HTMLButtonElement)){e.preventDefault();$('#tbtns button').click()}return}
-  if(!modal.hidden){if(e.code==='Escape'){e.preventDefault();closeModal();return}if(a==='bag'||a==='status'){e.preventDefault();if(mbox.querySelector('.tabs'))menu(a);else closeModal();return}if(!kbNav(e,mbox)&&(e.code==='Enter'||e.code==='Space'||a==='act')){e.preventDefault();const f=document.activeElement;(mbox.contains(f)&&f.tagName==='BUTTON'?f:mbox.querySelector('button.pri:not(:disabled)')||mbox.querySelector('button:not(:disabled)'))?.click()}return}
+  if(!modal.hidden){if(e.code==='Escape'){e.preventDefault();closeModal();return}if(a==='bag'||a==='status'){e.preventDefault();if(mbox.querySelector('.tabs'))menu(a);else closeModal();return}if(!kbNav(e,mbox)&&(e.code==='Enter'||e.code==='Space'||a==='act')){e.preventDefault();const f=document.activeElement;if(mbox.contains(f)&&f.tagName!=='BUTTON')return;(mbox.contains(f)&&f.tagName==='BUTTON'?f:mbox.querySelector('button.pri:not(:disabled)')||mbox.querySelector('button:not(:disabled)'))?.click()}return}
   if(!a)return;
   if(MOVEA[a]){keys[a]=true;e.preventDefault();return}
   e.preventDefault();
