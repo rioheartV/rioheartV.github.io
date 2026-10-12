@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>異世界生活</title>
+<title>メブキ・ガーデン</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
 <style>
 /* Layout: handheld console — HUD strip, pixel stage, tool bar, thumb controls. Single dusk-wood look. */
@@ -96,8 +96,8 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 #mbox button.pri,#title button.pri{background:var(--gold);color:#2a1d0c;border-color:#f6d38a}
 #toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 88px);transform:translateX(-50%);background:rgba(53,44,56,.94);border:2px solid var(--gold);color:var(--fg);padding:6px 16px;border-radius:14px;font-size:14px;z-index:60;white-space:nowrap;pointer-events:none}
 #title{background:rgba(12,9,6,.55)}
-.tbox{max-width:380px;width:100%;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;background:rgba(53,44,56,.92);border:2px solid var(--line);border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.4);padding:24px 18px}
-#title h1{font-size:40px;color:var(--fg);letter-spacing:.08em;text-shadow:3px 3px 0 #000}
+.tbox{max-width:380px;width:100%;box-sizing:border-box;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;background:rgba(53,44,56,.92);border:2px solid var(--line);border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.4);padding:24px 18px}
+#title h1{font-size:clamp(28px,9vw,40px);white-space:nowrap;color:var(--fg);letter-spacing:.08em;text-shadow:3px 3px 0 #000}
 #title h1 b{color:var(--leaf);font-weight:400}
 .tsub{color:var(--muted);font-size:14px}
 .thelp{font-size:12px;color:var(--muted);line-height:1.7;text-align:left}
@@ -128,7 +128,7 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
 <div id="modal" hidden><div id="mbox"></div></div>
 <div id="title">
   <div class="tbox">
-    <h1><b>異世界</b>生活</h1>
+    <h1><b>メブキ</b>・ガーデン</h1>
     <div class="tsub">畑を耕し、迷宮にもぐり、妖精と暮らす。</div>
     <div class="row" id="tbtns"></div>
     <div class="thelp">スマホ：左のパッドで移動、Aで使う（長押しで連続）。下のバーの道具を押すと持ち替え、もう一度押すと中身を切り替え<br>PC：WASD／矢印で移動、Zでダッシュ切替、Space・Enterで使う<br>Q/E 道具の枠を移動　R/F 中身を切替　1〜3 枠を選択　5/6 アイテム　Shift 技　Alt・M 魔法　T 魔法切替　G 技の始まり　X かばん　C ステータス（ダンジョンでは帰還）<br>スマホ：技・魔法ボタンを長押しで切替。ダッシュボタンは押すたびにON/OFF</div>
