@@ -118,7 +118,7 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
   <div id="mbtns"><div id="skinfo"></div><button class="ovb" data-t="status">ステータス</button><button class="ovb" data-t="equip">装備</button><button class="ovb" data-t="skill">術技</button><button id="bB" class="ovb" data-t="bag">かばん</button></div>
   <main id="stage"><canvas id="cv"></canvas><div id="where"></div></main>
   <nav id="tools"></nav>
-  <div id="keys"><b>移動</b> WASD／矢印　<b>ダッシュ</b> Z（押すたびに切替）　<b>使う</b> Space・Enter（長押しで連続）　<b>道具</b> Q/E で枠を移動・R/F で中身を切替（1〜3で直接選択・釣り竿は農具の枠）　<b>アイテム</b> 5/6　<b>技</b> V（Gで始まりの技を切替）　<b>魔法</b> B（Tで切替）　<b>かばん</b> X　<b>ステータス</b> C（ダンジョンでは町へ帰る）　<b>BGM</b> N　<b>町づくり</b> M　<b>素手</b> H</div>
+  <div id="keys"><b>移動</b> WASD／矢印　<b>ダッシュ</b> Z（押すたびに切替）　<b>使う</b> Space・Enter（長押しで連続）　<b>道具</b> Q/E で枠を移動・R/F で中身を切替（1〜3で直接選択・釣り竿は農具の枠）　<b>アイテム</b> 5/6　<b>技</b> V（Gで始まりの技を切替）　<b>魔法</b> B（Hで切替）　<b>かばん</b> X　<b>ステータス</b> J　<b>ダンジョンから帰る</b> P　<b>町づくり</b> M</div>
   <div id="ctrl">
     <div id="pad"><div id="knob"></div></div>
     <div id="btns"><button id="bS" class="rb">技<small id="bSn"></small></button><button id="bM" class="rb">魔法<small id="bMn"></small></button><button id="bA" class="rb">A<small>使う</small></button><button id="bD" class="rb">ダッシュ</button></div>
@@ -131,7 +131,7 @@ button:focus-visible{outline:2px solid var(--leaf);outline-offset:2px}
     <h1><b>メブキ</b>・ガーデン</h1>
     <div class="tsub">畑を耕し、迷宮にもぐり、妖精と暮らす。</div>
     <div class="row" id="tbtns"></div>
-    <div class="thelp">スマホ：左のパッドで移動、Aで使う（長押しで連続）。下のバーの道具を押すと持ち替え、もう一度押すと中身を切り替え<br>PC：WASD／矢印で移動、Zでダッシュ切替、Space・Enterで使う<br>Q/E 道具の枠を移動　R/F 中身を切替　1〜3 枠を選択　5/6 アイテム　V 技　B 魔法　T 魔法切替　G 技の始まり　X かばん　C ステータス（ダンジョンでは帰還）<br>スマホ：技・魔法ボタンを長押しで切替。ダッシュボタンは押すたびにON/OFF</div>
+    <div class="thelp">スマホ：左のパッドで移動、Aで使う（長押しで連続）。下のバーの道具を押すと持ち替え、もう一度押すと中身を切り替え<br><span id="thelpPC">PC：WASD／矢印で移動、Zでダッシュ切替、Space・Enterで使う<br>Q/E 道具の枠を移動　R/F 中身を切替　1〜3 枠を選択　5/6 アイテム　V 技　B 魔法　H 魔法切替　G 技の始まり　X かばん　J ステータス　P ダンジョンから帰る（キー設定で変更可）</span><br>スマホ：技・魔法ボタンを長押しで切替。ダッシュボタンは押すたびにON/OFF</div>
   </div>
 </div>
 
@@ -2327,16 +2327,22 @@ function kbNav(e,box){
   const bs=[...box.querySelectorAll('button:not(:disabled)')];if(!bs.length)return true;
   const i=bs.indexOf(document.activeElement),t=bs[i<0?0:(i+n+bs.length)%bs.length];t.focus();t.scrollIntoView({block:'nearest'});return true}
 const KDEF={up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],dash:['KeyZ'],act:['Space','Enter'],
-  bag:['KeyX'],status:['KeyC'],ret:['KeyC'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyT'],techSt:['KeyG'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],bgm:['KeyN'],build:['KeyM'],hand:['KeyH'],g1:['Digit1'],g2:['Digit2'],g3:['Digit3']};
+  bag:['KeyX'],status:['KeyJ'],ret:['KeyP'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyH'],techSt:['KeyG'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],bgm:[],build:['KeyM'],hand:[],g1:['Digit1'],g2:['Digit2'],g3:['Digit3']};
 const KNAME={up:'上',down:'下',left:'左',right:'右',dash:'ダッシュ切替',act:'使う・攻撃',bag:'かばん',status:'ステータス',ret:'ダンジョンから帰る',tech:'技',magic:'魔法',magSw:'魔法の切替',techSt:'技の始まりを切替',q1:'アイテム1',q2:'アイテム2',slotL:'道具の枠 ←',slotR:'道具の枠 →',cycL:'中身を切替 ↑',cycR:'中身を切替 ↓',bgm:'BGM ON/OFF',build:'町づくり',hand:'素手にする',g1:'農具（釣り竿も）',g2:'種',g3:'武器'};
 let KB=JSON.parse(JSON.stringify(KDEF)),KCAP=null;
-try{const q=JSON.parse(localStorage.getItem('mebuki-keys')||'null');if(q){if(JSON.stringify(q.dash)==='["ShiftLeft","ShiftRight"]')delete q.dash;if(JSON.stringify(q.tech)==='["ShiftLeft","ShiftRight"]')delete q.tech;if(JSON.stringify(q.magic)==='["KeyM"]'&&JSON.stringify(q.build)==='["KeyB"]'){delete q.magic;delete q.build}if(JSON.stringify(q.magic)==='["AltLeft","AltRight","KeyM"]')delete q.magic;if(JSON.stringify(q.q1)==='["KeyZ"]')delete q.q1;if(JSON.stringify(q.q2)==='["KeyX"]')delete q.q2;const OLD={act:'["Space","KeyJ","Enter"]',bag:'["KeyK","KeyI"]',tech:'["KeyL"]',magic:'["KeyM","KeyU"]',g2:'["Digit2"]',g3:'["Digit3"]'};for(const k in OLD)if(JSON.stringify(q[k])===OLD[k])delete q[k];for(const k in KDEF)if(Array.isArray(q[k]))KB[k]=q[k]}}catch(e){}
-const altBound=()=>!!(KMAP.AltLeft||KMAP.AltRight);let KMAP={};function kRebuild(){KMAP={};for(const a in KB)for(const c of KB[a])if(!KMAP[c])KMAP[c]=a}kRebuild();
+try{const q=JSON.parse(localStorage.getItem('mebuki-keys')||'null');if(q){if(!q._v){if(JSON.stringify(q.dash)==='["ShiftLeft","ShiftRight"]')delete q.dash;if(JSON.stringify(q.tech)==='["ShiftLeft","ShiftRight"]')delete q.tech;if(JSON.stringify(q.ret)==='["KeyC"]')delete q.ret;if(JSON.stringify(q.bgm)==='["KeyN"]')delete q.bgm;if(JSON.stringify(q.status)==='["KeyC"]')delete q.status;if(JSON.stringify(q.magSw)==='["KeyT"]')delete q.magSw;if(JSON.stringify(q.hand)==='["KeyH"]')delete q.hand;if(JSON.stringify(q.magic)==='["KeyM"]'&&JSON.stringify(q.build)==='["KeyB"]'){delete q.magic;delete q.build}if(JSON.stringify(q.magic)==='["AltLeft","AltRight","KeyM"]')delete q.magic;if(JSON.stringify(q.q1)==='["KeyZ"]')delete q.q1;if(JSON.stringify(q.q2)==='["KeyX"]')delete q.q2;const OLD={act:'["Space","KeyJ","Enter"]',bag:'["KeyK","KeyI"]',tech:'["KeyL"]',magic:'["KeyM","KeyU"]',g2:'["Digit2"]',g3:'["Digit3"]'};for(const k in OLD)if(JSON.stringify(q[k])===OLD[k])delete q[k];}for(const k in KDEF)if(Array.isArray(q[k]))KB[k]=q[k]}}catch(e){}
+const altBound=()=>!!(KMAP.AltLeft||KMAP.AltRight);let KMAP={};function kRebuild(){KMAP={};for(const a in KB)for(const c of KB[a])if(!KMAP[c])KMAP[c]=a}kRebuild();setTimeout(kHelp);
 const kLabel=c=>c.replace(/^Key/,'').replace(/^Digit/,'').replace('Arrow','↑').replace('↑Up','↑').replace('↑Down','↓').replace('↑Left','←').replace('↑Right','→').replace('ShiftLeft','Shift').replace('ShiftRight','右Shift').replace('AltLeft','Alt').replace('AltRight','右Alt').replace('Space','スペース');
 function keyMenu(){const render=b=>{b.innerHTML='';b.append(el('h2','','キー設定'),el('div','muted',KCAP?`「${KNAME[KCAP]}」に割り当てるキーを押してください（Escでやめる）`:'「変更」を押してから新しいキーを押すと、そのキーに置き換わります（ほかの操作と同じキーは自動で外れます）。'));
   const l=el('div','list');for(const a in KDEF)l.append(item(KNAME[a],'',KB[a].map(kLabel).join('・')||'なし',[btn(KCAP===a?'入力待ち…':'変更',()=>{KCAP=a;render(b)},KCAP===a?'pri':'')]));
   b.append(l,row(btn('初期設定に戻す',()=>{KB=JSON.parse(JSON.stringify(KDEF));kSave();render(b)}),btn('閉じる',()=>{KCAP=null;closeModal()},'pri')));keyMenu.r=()=>render(b)};openModal(render)}
-function kSave(){kRebuild();try{localStorage.setItem('mebuki-keys',JSON.stringify(KB))}catch(e){}}
+function kSave(){kRebuild();kHelp();try{localStorage.setItem('mebuki-keys',JSON.stringify({...KB,_v:71}))}catch(e){}}
+function kHelp(){const K=a=>(KB[a]||[]).map(kLabel).join('・')||'なし',P2=(a,b)=>(KB[a]||[]).length&&(KB[b]||[]).length?K(a)+'/'+K(b):K(a)+'・'+K(b);
+  const dm=['up','left','down','right'].every(a=>JSON.stringify(KB[a])===JSON.stringify(KDEF[a])),mv=dm?'WASD／矢印':['up','left','down','right'].map(K).join(' ');
+  const opt=[['bgm','BGM'],['hand','素手']].filter(([a])=>(KB[a]||[]).length);
+  const kp=[['移動',mv],['ダッシュ',K('dash')+'（押すたびに切替）'],['使う',K('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替（'+['g1','g2','g3'].map(K).join('・')+'で直接選択・釣り竿は農具の枠）'],['アイテム',P2('q1','q2')],['技',K('tech')+'（'+K('techSt')+'で始まりの技を切替）'],['魔法',K('magic')+'（'+K('magSw')+'で切替）'],['かばん',K('bag')],['ステータス',K('status')],['ダンジョンから帰る',K('ret')],['町づくり',K('build')],...opt.map(([a,n])=>[n,K(a)])];
+  const e=$('#keys');if(e){e.innerHTML='';kp.forEach(([n,v],i)=>{if(i)e.append('　');e.append(el('b','',n),' '+v)})}
+  const t=$('#thelpPC');if(t){t.innerHTML='';t.append(`PC：${mv}で移動、${K('dash')}でダッシュ切替、${K('act')}で使う`,el('br'),`${P2('slotL','slotR')} 道具の枠を移動　${P2('cycL','cycR')} 中身を切替　${['g1','g2','g3'].map(K).join('・')} 枠を選択　${P2('q1','q2')} アイテム　${K('tech')} 技　${K('magic')} 魔法　${K('magSw')} 魔法切替　${K('techSt')} 技の始まり　${K('bag')} かばん　${K('status')} ステータス　${K('ret')} ダンジョンから帰る`+opt.map(([a,n])=>`　${K(a)} ${n}`).join('')+'（キー設定で変更可）')}}
 const MOVEA={up:1,down:1,left:1,right:1};
 let dashOn=false;function toggleDash(){dashOn=!dashOn;const b=$('#bD');if(b){b.classList.toggle('on',dashOn);b.textContent=dashOn?'ダッシュON':'ダッシュ'}toast(dashOn?'ダッシュ ON':'ダッシュ OFF')}
 addEventListener('keydown',e=>{
