@@ -149,7 +149,7 @@ function C(x,y,r,c){G.fillStyle=c;G.beginPath();G.arc(x,y,r,0,7);G.fill()}
 const ITEMS={banana:{n:'バナナ',p:45,heal:[20,15,5]},grape:{n:'ぶどう',p:55,heal:[10,15,10]},cacao:{n:'カカオの実',p:60},tree_banana:{n:'バナナの木',p:300},tree_grape:{n:'ぶどうの木',p:300},tree_cacao:{n:'カカオの木',p:300},
   chocolate:{n:'チョコレート',p:340,heal:[20,30,30]},chococake:{n:'チョコケーキ',p:950,heal:[60,70,50]},cocoa:{n:'ホットココア',p:240,heal:[15,40,30]},bananajuice:{n:'バナナミルク',p:200,heal:[25,35,10]},chocobanana:{n:'チョコバナナ',p:560,heal:[40,45,35]},grapejuice:{n:'グレープジュース',p:170,heal:[15,30,25]},grapejelly:{n:'ぶどうゼリー',p:200,heal:[15,25,30]},
   seawater:{n:'海水',p:1},salt:{n:'塩',p:15},butter:{n:'バター',p:220},soy:{n:'しょうゆ',p:40},miso:{n:'みそ',p:40},oil:{n:'油',p:90},vinegar:{n:'酢',p:40},soybean:{n:'大豆',p:25},sunflower:{n:'ひまわり',p:25},pepper:{n:'こしょう',p:60},chicken:{n:'鶏肉',p:40},beastmeat:{n:'けもの肉',p:55},
-  yakitori:{n:'焼き鳥',p:120,heal:[40,30,0]},karaage:{n:'からあげ',p:330,heal:[60,45,10]},teriyaki:{n:'照り焼きチキン',p:240,heal:[70,50,10]},oyakodon:{n:'親子丼',p:340,heal:[100,80,20]},chickensaute:{n:'チキンソテー',p:560,heal:[80,55,20]},steak:{n:'ステーキ',p:290,heal:[90,50,10]},nikujaga:{n:'肉じゃが',p:600,heal:[110,90,20]},hamburg:{n:'ハンバーグ',p:290,heal:[90,70,10]},stew:{n:'ビーフシチュー',p:820,heal:[120,100,30]},misosoup:{n:'みそ汁',p:330,heal:[30,50,10]},shioyaki:{n:'魚の塩焼き',p:110,heal:[70,50,10]},yasaiitame:{n:'野菜炒め',p:560,heal:[60,60,10]},sushi:{n:'ちらし寿司',p:230,heal:[80,70,20]},
+  yakitori:{n:'焼き鳥',p:120,heal:[40,30,0]},karaage:{n:'からあげ',p:330,heal:[60,45,10]},teriyaki:{n:'照り焼きチキン',p:240,heal:[70,50,10]},oyakodon:{n:'親子丼',p:340,heal:[100,80,20]},chickensaute:{n:'チキンソテー',p:560,heal:[80,55,20]},steak:{n:'ステーキ',p:290,heal:[90,50,10],buff:{crit:60}},nikujaga:{n:'肉じゃが',p:600,heal:[110,90,20]},hamburg:{n:'ハンバーグ',p:290,heal:[90,70,10]},stew:{n:'ビーフシチュー',p:820,heal:[120,100,30]},misosoup:{n:'みそ汁',p:330,heal:[30,50,10]},shioyaki:{n:'魚の塩焼き',p:110,heal:[70,50,10]},yasaiitame:{n:'野菜炒め',p:560,heal:[60,60,10]},sushi:{n:'ちらし寿司',p:230,heal:[80,70,20]},
   amber:{n:'琥珀',p:120,sell:1},oldcoin:{n:'古い銀貨',p:150,sell:1},fossil:{n:'化石',p:260,sell:1},roughgem:{n:'宝石の原石',p:420,sell:1},goldnugget:{n:'金の粒',p:550,sell:1},pearl:{n:'真珠',p:650,sell:1},ancientcoin:{n:'古代の金貨',p:900,sell:1},iceorb:{n:'氷の宝玉',p:1300,sell:1},goldidol:{n:'黄金の像',p:2600,sell:1},water:{n:'水',p:1,heal:[0,3,0]},mugicha:{n:'麦茶',p:40,heal:[5,25,0]},appletea:{n:'アップルティー',p:60,heal:[5,25,10]},peachnectar:{n:'ピーチネクター',p:120,heal:[15,35,15]},berrysoda:{n:'ベリーソーダ',p:260,heal:[15,35,30]},carrotjuice:{n:'キャロットジュース',p:160,heal:[20,30,5]},tomatojuice:{n:'トマトジュース',p:360,heal:[50,30,5]},milktea:{n:'ミルクティー',p:170,heal:[10,40,25]},manasoda:{n:'マナソーダ',p:150,heal:[0,10,45]},stdrink:{n:'スタミナドリンク',p:500,heal:[30,90,30]},tree_apple:{n:'リンゴの木',p:300},tree_peach:{n:'モモの木',p:300},tree_orange:{n:'オレンジの木',p:300},ribbon:{n:'かわいいリボン',p:80},charmstone:{n:'魅惑の石',p:450},icecrystal:{n:'氷晶',p:350},snowfur:{n:'雪獣の毛皮',p:180},frostscale:{n:'氷竜のうろこ',p:2500},
   turnip:{n:'カブ',p:60,heal:[15,12]},strawberry:{n:'イチゴ',p:150,heal:[30,20]},tomato:{n:'トマト',p:220,heal:[45,30]},
   jelly:{n:'スライムゼリー',p:30},wing:{n:'コウモリの羽',p:45},ore:{n:'鉄鉱石',p:60},stone:{n:'石',p:5},goldore:{n:'金鉱石',p:120},whet:{n:'砥石',p:30,use:'whet'},feather:{n:'鳥の羽根',p:40},gem:{n:'魔石',p:160},
@@ -204,9 +204,9 @@ const SKILLS=[
   {id:'poisonrain',n:'毒矢の雨',k:'技',c:'射',t:2,cost:20,lv:18,req:'bow',d:'7本の毒矢を扇状に放つ（毒）'},
   {id:'pierce',n:'貫通矢',k:'技',c:'射',t:2,cost:22,lv:20,req:'bow',d:'敵をすべて貫く強力な一矢'},
   {id:'ranbu',n:'天翔乱舞',k:'技',c:'斬',t:3,cost:36,lv:26,d:'近くの敵へ次々と飛び移り8回斬る（無敵）'},
-  {id:'lunge',n:'一閃突き',k:'技',c:'突',t:1,cost:10,lv:9,d:'槍を構えて一気に踏み込み、貫く（その間は無敵）'},
-  {id:'whirl',n:'旋風槍',k:'技',c:'突',t:2,cost:22,lv:16,d:'槍を振り回し、まわりの広い範囲を何度も払う'},
-  {id:'tenkuu',n:'神槍・天穿',k:'技',c:'突',t:3,cost:40,lv:31,d:'光の大槍を投げ放ち、一直線の敵をすべて貫く'},
+  {id:'lunge',n:'一閃突き',k:'技',c:'突',t:1,cost:10,lv:9,d:'細剣を構えて一気に踏み込み、貫く（その間は無敵）'},
+  {id:'whirl',n:'旋風突き',k:'技',c:'突',t:2,cost:22,lv:16,d:'細剣で舞うように、まわりの広い範囲を何度も突く'},
+  {id:'tenkuu',n:'神剣・天穿',k:'技',c:'突',t:3,cost:40,lv:31,d:'光の大剣を撃ち放ち、一直線の敵をすべて貫く'},
   {id:'senbon',n:'千本突き',k:'技',c:'突',t:3,cost:34,lv:28,d:'前方へ目にも止まらぬ12連続突き'},
   {id:'haou',n:'覇王斬',k:'技',c:'斬',t:3,cost:42,lv:30,d:'巨大な斬撃を放ち、一直線の敵を薙ぎ払う'},
   {id:'ryusei',n:'流星群',k:'技',c:'射',t:3,cost:40,lv:32,req:'bow',d:'前方一帯に矢の雨を降らせる（足止め）'},
@@ -245,6 +245,8 @@ const SKILLS=[
   {id:'brave',n:'ブレイブ',k:'魔法',cat:'サポート',t:2,cost:12,book:1500,d:'30秒間 攻撃+30%（火）'},
   {id:'quick',n:'クイック',k:'魔法',cat:'サポート',t:2,cost:10,book:1200,d:'40秒間 移動速度+25%（風）'},
   {id:'focus',n:'フォーカス',k:'魔法',cat:'サポート',t:2,cost:12,book:1500,d:'30秒間 魔法の威力+30%（氷）'},
+  {id:'hawkeye',n:'ホークアイ',k:'魔法',cat:'サポート',t:2,cost:12,book:1500,d:'30秒間 急所率+20%（闇）'},
+  {id:'mirage',n:'ミラージュ',k:'魔法',cat:'サポート',t:2,cost:12,book:1500,d:'30秒間 回避率+15%（水）'},
   {id:'haste',n:'ヘイスト',k:'魔法',cat:'サポート',t:2,cost:12,book:1500,d:'30秒間 攻撃速度+25%（雷）'},
   {id:'rain',n:'レイン',k:'魔法',cat:'農業',t:3,cost:30,book:4000,d:'町じゅうの畑に雨を降らせ、すべてに水をまく'},
   {id:'earth',n:'アースクエイク',k:'魔法',cat:'攻撃',t:3,cost:28,book:5000,minlv:22,d:'まわりの敵すべてに大ダメージ（飛ぶ敵には効かない）'},
@@ -254,6 +256,15 @@ const SKILLS=[
   {id:'meteor',n:'メテオ',k:'魔法',cat:'攻撃',t:3,cost:40,book:8000,minlv:22,d:'近くの敵に隕石を7発落とす'},
   {id:'fullcare',n:'フルケア',k:'魔法',cat:'回復',t:3,cost:40,book:6000,minlv:22,d:'HP全回復・毒を治し、20秒リジェネ（水）'},
   {id:'enchant',n:'エンチャント',k:'魔法',cat:'サポート',t:3,cost:45,book:0,dun:1,minlv:22,d:'60秒間 攻撃+30%・防御+8・魔防+6・魔法+30%（聖）'}];
+const STANCES={calm:{n:'鎮静',lv:1,d:'攻撃しない間（3秒）、STとMPがわずかに回復し続ける',calm:1},rage:{n:'怒り',lv:1,d:'攻撃+10%・防御-2',atk:.1,def:-2},
+  focus:{n:'集中',lv:8,d:'急所率+10%・移動速度-10%',crit:.1,spd:-.1},guard:{n:'鉄壁',lv:12,d:'防御+4・攻撃速度-10%',def:4,aspd:-.1},
+  fury:{n:'闘気',lv:20,d:'攻撃+20%・攻撃速度+10%。STが3秒ごとに1減る',atk:.2,aspd:.1,drainSt:1},zen:{n:'明鏡止水',lv:28,d:'急所率+10%・回避率+10%。攻撃しない間STとMPがわずかに回復',crit:.1,eva:.1,calm:1}};
+const stv=k=>{const t=S.stance&&STANCES[S.stance];return t&&t[k]||0};
+function setStance(id,quiet){S.stance=id||null;if(id)S.stanceLast=id;if(!quiet)toast(id?`構え：${STANCES[id].n}（${STANCES[id].d}）`:'構えをといた')}
+function toggleStance(){if(S.stance)return setStance(null);const id=S.stanceLast&&S.lv>=STANCES[S.stanceLast].lv?S.stanceLast:'calm';setStance(id)}
+function stanceTick(dt){if(!S.stance||paused)return;P.stT=(P.stT||0)+dt;P.smT=(P.smT||0)+dt;const idle=clock-(P.atkT||-99)>3;
+  if(stv('calm')&&idle){if(P.stT>=1.5){P.stT=0;if(!P.fish)S.st=Math.min(S.mst,S.st+Math.max(1,Math.round(S.mst*.01)))}if(P.smT>=2){P.smT=0;S.mp=Math.min(S.mmp,S.mp+Math.max(1,Math.round(S.mmp*.01)))}}
+  else if(stv('drainSt')&&cur.kind==='dun'){if(P.stT>=3){P.stT=0;S.st=Math.max(0,S.st-1)}}else{P.stT=Math.min(P.stT,1.5);P.smT=Math.min(P.smT,2)}}
 const TIERN={技:['','特技','秘義','奥義'],魔法:['','初級','中級','上級']};
 for(const sk of SKILLS)if(sk.k==='技')sk.plv=Math.max(1,Math.round(sk.lv*.65));
 const GSK={axe:[[3,'伐採上手','木を切ると木材+1'],[6,'力強い一振り','木や切り株を少ない回数で切れる'],[10,'きこりの勘','伐採でときどきハチミツやリンゴも見つかる'],[15,'森の恵み','町の木から1日2回木材を取れる']],pick:[[3,'採石上手','岩を砕くと石+1'],[6,'岩砕き','岩や鉱脈を少ない回数で砕ける'],[10,'宝石の目利き','魔石が出やすい'],[15,'金脈探し','岩からときどき金鉱石が出る']]};
@@ -261,7 +272,9 @@ Object.assign(GSK,{hoe:[[3,'耕し上手','クワのST消費-30%'],[6,'石拾い
   can:[[3,'水やり上手','じょうろのST消費-30%'],[6,'たっぷりの水','水をやった作物がときどき1日余分に育つ'],[10,'恵みの水','上質（★）の作物が出やすい'],[15,'達人のじょうろ','じょうろのST消費がなくなる']],
   rod:[[3,'釣り上手','アタリが早く来る'],[6,'大物狙い','大きな魚が釣れやすい'],[10,'二匹釣り','ときどき2匹釣れる'],[15,'海の恵み','釣りのST消費が半分になる']],
   sword:[[5,'見切り','剣を持っている間、受けるダメージ-5%'],[12,'鋭い刃','剣の攻撃+8%'],[25,'剣聖','剣で使う技のST消費-20%']],
-  spear:[[5,'長柄の心得','槍のリーチがさらに伸びる'],[12,'急所突き','15%の確率で1.5倍のダメージ'],[25,'槍聖','槍で使う技のST消費-20%']],
+  spear:[[5,'踏み込み','細剣のリーチがさらに伸びる'],[12,'急所突き','細剣の急所率+10%'],[25,'細剣の極意','細剣で使う技のST消費-20%']],
+  dagger:[[5,'身軽','短剣の回避率+5%'],[12,'急所狙い','短剣の急所率+10%'],[25,'影走り','短剣で使う技のST消費-20%']],
+  great:[[5,'重い一撃','大剣の攻撃+8%'],[12,'不動','大剣を持っている間 受けるダメージ-10%'],[25,'剛剣','大剣で使う技のST消費-20%']],
   bow:[[5,'速射','弓の攻撃速度+10%'],[12,'狙い撃ち','弓のダメージ+10%'],[25,'弓聖','特殊な矢のMP消費-1']],
   staff:[[5,'魔力の流れ','杖のMP回復+50%'],[12,'精神集中','魔法弾の威力+15%'],[25,'大賢者','魔法のMP消費-15%']],
   rune:[[5,'魔剣の心得','魔法攻撃+5%'],[12,'魔力剣','攻撃に上乗せする魔法ダメージが増える'],[25,'魔剣聖','技と魔法の消費-10%']]});
@@ -270,7 +283,7 @@ const MELS=['fire','water','ice','thunder','wind','earth','holy','dark'];
 for(const e of MELS)GSK['m_'+e]=[[5,'節約','この属性の魔法のMP消費-10%'],[12,'強化','この属性の魔法の威力・効果+5%'],[25,'極意','MP消費-25%・威力・効果+10%']];
 Object.assign(GSK,{m_farm:[[5,'節約','農業魔法のMP消費-20%'],[12,'大節約','MP消費-40%'],[25,'極意','MP消費-60%']]});
 const SPEL={fire:'fire',flare:'fire',inferno:'fire',meteor:'fire',tidal:'water',maelstrom:'water',ice:'ice',blizzard:'ice',zero:'ice',thunder:'thunder',chain:'thunder',gigabolt:'thunder',wind:'wind',cyclone:'wind',tornado:'wind',stone:'earth',spike:'earth',earth:'earth',holy:'holy',cross:'holy',judge:'holy',dark:'dark',shadow:'dark',abyss:'dark'};
-Object.assign(SPEL,{aqua:'water',heal:'water',hiheal:'water',regen:'water',fullcare:'water',barrier:'earth',haste:'thunder',isearch:'wind',ssearch:'wind',cure:'dark',light:'holy',shell:'holy',enchant:'holy',brave:'fire',quick:'wind',focus:'ice'});
+Object.assign(SPEL,{aqua:'water',heal:'water',hiheal:'water',regen:'water',fullcare:'water',barrier:'earth',haste:'thunder',isearch:'wind',ssearch:'wind',cure:'dark',light:'holy',shell:'holy',enchant:'holy',brave:'fire',quick:'wind',focus:'ice',hawkeye:'dark',mirage:'water'});
 const mKey=sk=>SPEL[sk.id]?'m_'+SPEL[sk.id]:sk.cat==='農業'?'m_farm':null;
 function mCostMul(sk){const k=mKey(sk);if(!k)return 1;if(k==='m_farm')return gs(k,2)?.4:gs(k,1)?.6:gs(k,0)?.8:1;return gs(k,2)?.75:gs(k,0)?.9:1}
 const elemPow=k=>gs(k,2)?1.1:gs(k,1)?1.05:1;const healMul=()=>elemPow('m_water');const supMul=(k='m_holy')=>elemPow(k);const pName=w=>WEAP[w]?WEAP[w].n:TPN[w];
@@ -297,34 +310,36 @@ ITEMS.grass={n:'牧草',p:5};
 Object.assign(ITEMS,{yomogi:{n:'ヨモギ',p:30,heal:[8,0,0]},aloe:{n:'アロエ',p:60,heal:[15,0,0]},ginseng:{n:'高麗人参',p:220,heal:[20,40,0]},mandragora:{n:'マンドラゴラ',p:500},
   basil:{n:'バジル',p:30},mint:{n:'ミント',p:30,heal:[0,5,5]},rosemary:{n:'ローズマリー',p:40},rice:{n:'米',p:25},sugarcane:{n:'サトウキビ',p:30},sugar:{n:'砂糖',p:25},
   hipotion:{n:'上級回復薬',p:220,heal:[120,0,0]},powerpot:{n:'力の薬',p:300,heal:[0,0,0],buff:{atk:150}},guardpot:{n:'守りの薬',p:180,heal:[0,0,0],buff:{def:150}},swiftpot:{n:'疾風の薬',p:150,heal:[0,0,0],buff:{spd:150}},
-  spiritpot:{n:'精霊の秘薬',p:1500,heal:[999,999,999],buff:{atk:90,def:90,spd:90}},mintea:{n:'ミントティー',p:70,heal:[5,35,25]},pasta:{n:'トマトバジルパスタ',p:520,heal:[70,50,20]},herbfish:{n:'ハーブ焼き魚',p:130,heal:[60,40,10]},
+  spiritpot:{n:'精霊の秘薬',p:1500,heal:[999,999,999],buff:{atk:90,def:90,spd:90}},mintea:{n:'ミントティー',p:70,heal:[5,35,25],buff:{eva:60}},pasta:{n:'トマトバジルパスタ',p:520,heal:[70,50,20]},herbfish:{n:'ハーブ焼き魚',p:130,heal:[60,40,10]},
   onigiri:{n:'おにぎり',p:55,heal:[25,25,0]},takikomi:{n:'炊き込みご飯',p:320,heal:[60,50,10]},curryrice:{n:'カレーライス',p:650,heal:[180,150,30]},cake:{n:'ショートケーキ',p:800,heal:[60,70,40]},candy:{n:'ミントキャンディ',p:120,heal:[0,20,20]},
   manaherb:{n:'魔力草',p:60,heal:[0,0,10]},wheat:{n:'小麦',p:20},chili:{n:'トウガラシ',p:50,heal:[5,15,0]},
-  manapot:{n:'マナポーション',p:160,heal:[0,0,60]},herbtea:{n:'ハーブティー',p:150,heal:[10,30,30]},curry:{n:'カレー',p:520,heal:[120,100,20]},
+  manapot:{n:'マナポーション',p:160,heal:[0,0,60]},herbtea:{n:'ハーブティー',p:150,heal:[10,30,30]},curry:{n:'カレー',p:520,heal:[120,100,20],buff:{crit:90}},
   carrot:{n:'ニンジン',p:95,heal:[15,20,0]},cabbage:{n:'キャベツ',p:170,heal:[20,20,5]},pumpkin:{n:'カボチャ',p:260,heal:[35,30,10]},eggplant:{n:'ナス',p:130,heal:[20,15,5]},
   vegsoup:{n:'野菜スープ',p:520,heal:[60,60,15]},pumpkinpie:{n:'パンプキンパイ',p:650,heal:[70,60,20]},yakinasu:{n:'焼きナス',p:240,heal:[35,25,5]},
   pineapple:{n:'パイナップル',p:330,heal:[50,50,20]},mango:{n:'マンゴー',p:520,heal:[60,60,40]},shell:{n:'貝殻',p:40},coconut:{n:'ヤシの実',p:60,heal:[20,25,10]},obsidian:{n:'黒曜石',p:300},dragonscale:{n:'竜のうろこ',p:1500},
-  cocojuice:{n:'ココナッツジュース',p:120,heal:[20,40,20]},tropjuice:{n:'トロピカルジュース',p:1300,heal:[60,80,60]},mangopudding:{n:'マンゴープリン',p:950,heal:[60,50,60]},seagrill:{n:'海鮮焼き',p:180,heal:[80,50,10]}});
+  cocojuice:{n:'ココナッツジュース',p:120,heal:[20,40,20]},tropjuice:{n:'トロピカルジュース',p:1300,heal:[60,80,60]},mangopudding:{n:'マンゴープリン',p:950,heal:[60,50,60],buff:{eva:90}},seagrill:{n:'海鮮焼き',p:180,heal:[80,50,10]}});
 Object.assign(ITEMS,{potato:{n:'ジャガイモ',p:90,heal:[20,20,0]},berry:{n:'ブルーベリー',p:130,heal:[15,10,15]},corn:{n:'トウモロコシ',p:170,heal:[30,30,0]},melon:{n:'メロン',p:380,heal:[60,60,20]},
   fries:{n:'フライドポテト',p:180,heal:[30,30,0]},berryjam:{n:'ベリージャム',p:380,heal:[30,20,40]},cornsoup:{n:'コーンスープ',p:420,heal:[60,40,10]},melonpan:{n:'メロンパン',p:900,heal:[80,80,40]}});
 for(const t in CROPS)if(!CROPS[t].feed&&!CROPS[t].plant&&!CROPS[t].tree)ITEMS[t+'_q']={n:ITEMS[t].n+'★',p:Math.round(ITEMS[t].p*1.8),heal:ITEMS[t].heal.map(v=>Math.round(v*1.3))};
 const FAIRIES=[
-  {id:'lumina',n:'ルミナ',kind:'戦闘',el:'holy',trait:'pierce',col:'#ffe08a',fee:1500,d:'光の妖精（聖）。近くの敵へ追尾する光弾を撃つ。光弾は敵を貫く',atk:{cd:1.3,dmg:()=>2+S.lv*.6,range:100}},
+  {id:'lumina',n:'ルミナ',kind:'戦闘',el:'holy',trait:'pierce',col:'#ffe08a',fee:1500,d:'光の妖精（聖）。近くの敵へ追尾する光弾を撃つ。光弾は敵を貫く。ときどき急所率アップ（+20%・10秒）',atk:{cd:1.3,dmg:()=>2+S.lv*.6,range:100},buff:{every:20,type:'crit',dur:10}},
   {id:'sylfi',n:'シルフィ',kind:'戦闘',el:'wind',trait:'push',col:'#9ce0c0',fee:2500,d:'風の妖精（風）。風弾で敵を押し返し、ときどき攻撃力アップ（+30%・10秒）',atk:{cd:1.6,dmg:()=>1+S.lv*.6,range:110},buff:{every:20,type:'atk',dur:10}},
   {id:'mirel',n:'ミレル',kind:'戦闘',el:'water',col:'#f4a0c8',fee:3000,d:'癒しの妖精（水）。HPが減ると回復し、ときどき防御アップ（+5・12秒）。弱い水弾も撃つ',atk:{cd:2.2,dmg:()=>1+S.lv*.5,range:90},heal:{every:6,below:.7,amt:.12},buff:{every:24,type:'def',dur:12}},
   {id:'homura',n:'ホムラ',kind:'戦闘',el:'fire',trait:'burst',col:'#ff8a3a',fee:2800,d:'火の妖精。火の弾が当たると小さく爆発し、まわりの敵も焼く',atk:{cd:1.6,dmg:()=>2+S.lv*.7,range:110}},
   {id:'yuki',n:'ユキ',kind:'戦闘',el:'ice',trait:'frost',col:'#8ad0f8',fee:2800,d:'氷の妖精。敵の足元から氷を突き出し、動きを遅くして、ときどき凍らせる',atk:{cd:1.5,dmg:()=>2+S.lv*.6,range:110}},
   {id:'raika',n:'ライカ',kind:'戦闘',el:'thunder',trait:'chain',col:'#ffe060',fee:3200,d:'雷の妖精。敵の頭上に雷を落とす。雷は近くの敵へ連鎖する',atk:{cd:1.5,dmg:()=>2+S.lv*.6,range:120}},
   {id:'tsuchino',n:'ツチノ',kind:'戦闘',el:'earth',trait:'guard',col:'#c8a060',fee:2600,d:'地の妖精。重い石の弾で敵をはじき、ときどき防御アップ（+5・12秒）',atk:{cd:2,dmg:()=>3+S.lv*.8,range:95},buff:{every:18,type:'def',dur:12}},
-  {id:'yomi',n:'ヨミ',kind:'戦闘',el:'dark',trait:'drain',col:'#a060d0',fee:3500,d:'闇の妖精。与えたダメージの1割だけHPを吸い取ってくれる',atk:{cd:1.5,dmg:()=>2+S.lv*.65,range:110}},
+  {id:'yomi',n:'ヨミ',kind:'戦闘',el:'dark',trait:'drain',col:'#a060d0',fee:3500,d:'闇の妖精。与えたダメージの1割だけHPを吸い取ってくれる。ときどき回避率アップ（+15%・10秒）',atk:{cd:1.5,dmg:()=>2+S.lv*.65,range:110},buff:{every:22,type:'eva',dur:10}},
   {id:'popo',n:'ポポ',kind:'農業',col:'#c8a060',fee:1200,d:'土の妖精。農作業のST消費が半分。水をやった作物がときどき1日余分に育つ',farm:{stMul:.5,grow:.35}},
   {id:'nemu',n:'ネム',kind:'農業',col:'#f0a0d0',fee:2000,d:'花の妖精。収穫した作物が上質（★・高値）になりやすい。STが少しずつ回復（釣りの間は回復しない）',farm:{quality:.5,regen:1}},
+  {id:'minori',n:'ミノリ',kind:'農業',col:'#f0c860',fee:2400,d:'実りの妖精。町で、近くの畑の実った作物を収穫してかばんに入れてくれる（牧草は牧草入れへ）。レベルが上がると届く範囲が広がり、収穫も速くなる',harvest:{r:48,cd:2}},
   {id:'kiki',n:'キキ',kind:'共用',col:'#ffc890',fee:2200,d:'拾い物の妖精。町でもダンジョンでも付いてきて、近くに落ちているアイテムやお金を拾ってくる（町では薬草や熟した果物も）',collect:{r:40,cd:1.2}},
   {id:'fuu',n:'フウ',kind:'共用',col:'#a0d0f0',fee:1800,d:'そよ風の妖精。町でもダンジョンでも付いてきて、移動速度+20%、STが少しずつ回復（釣りの間は回復しない）、農作業のST消費-25%',farm:{speed:.2,regen:1,stMul:.75}},
   {id:'konoha',n:'コノハ',kind:'共用',col:'#8ad07a',fee:2500,d:'木と石の妖精。町でもダンジョンでも付いてきて、木材や石を集めてくる。レベルが上がると果物・鉄鉱石・ハチミツ・金鉱石・キノコ・魔石・琥珀も見つけてくる',gather:{cd:45,tbl:[[1,'wood',60],[1,'stone',60],[3,'fruit',20],[3,'ore',20],[5,'honey',12],[6,'goldore',5],[7,'kinoko',10],[9,'gem',3],[10,'amber',3]]}},
   {id:'sora',n:'ソラ',kind:'共用',col:'#b8e0ff',fee:3000,d:'いやしの風の妖精。町でもダンジョンでも付いてきて、HP・MP・STを少しずつ回復させる（釣りの間はSTは回復しない）',regen:{every:3}},
   {id:'nami',n:'ナミ',kind:'共用',col:'#6ac8e8',fee:2000,d:'水辺の妖精。釣りの間、魚が早くかかり、珍しい魚が少し出やすくなる',fish:{wait:.9,rare:1.1}},
   {id:'michi',n:'ミチ',kind:'探索',col:'#f0d080',fee:1800,d:'道しるべの妖精。ダンジョンで、ときどき階段（主の階では主）の方向を矢印で教えてくれる。Lv5からは近くのアイテムの方向も。MPは使わない',explore:{every:15,show:3}}];
+const BUFFN={atk:'攻撃',def:'防御',crit:'急所率',eva:'回避率'};
 const GNAME=id=>id==='fruit'?'果物':ITEMS[id].n;
 const FMAX=10,fNeed=lv=>30*lv,fLv=id=>((S.flv||{})[id])||1;
 const FSNACK={apple:10,peach:10,orange:10,banana:10,grape:12,chocolate:40,chocobanana:50,strawberry:8,juice:25,jam:25,berryjam:25,pudding:40,mangopudding:60,applepie:50,peachpie:50,cake:80};
@@ -337,6 +352,7 @@ function fScaled(b,lv){const k=b.id+lv;if(_fc[k])return _fc[k];const u=lv-1,o={.
   if(b.explore)o.explore={every:Math.max(4,b.explore.every-1.2*u),show:b.explore.show+.3*u};
   if(b.regen)o.regen={every:Math.max(1.2,b.regen.every-.2*u)};
   if(b.gather)o.gather={...b.gather,cd:Math.max(30,b.gather.cd*(1-.037*u))};
+  if(b.harvest)o.harvest={r:b.harvest.r+8*u,cd:Math.max(.6,b.harvest.cd-.14*u)};
   if(b.collect)o.collect={r:b.collect.r+7*u,cd:Math.max(.4,b.collect.cd-.08*u)};
   if(b.farm){const f=b.farm;o.farm={...f};if(f.stMul)o.farm.stMul=Math.max(.25,f.stMul*(1-.04*u));if(f.grow)o.farm.grow=Math.min(.8,f.grow+.04*u);if(f.quality)o.farm.quality=Math.min(.9,f.quality+.04*u);if(f.speed)o.farm.speed=f.speed+.015*u;if(f.regen)o.farm.regenT=Math.max(1.2,3-.2*u)}
   return _fc[k]=o}
@@ -352,7 +368,7 @@ const FST={},fst=id=>FST[id]||(FST[id]={x:P.x,y:P.y-18,cd:1,bt:8,ht:0,rt:0,ct:0}
 function fGain(v,id){if(!id||fLv(id)>=FMAX)return;S.fexp=S.fexp||{};S.flv=S.flv||{};S.fexp[id]=(S.fexp[id]||0)+v;let lv=fLv(id);
   while(lv<FMAX&&S.fexp[id]>=fNeed(lv)){S.fexp[id]-=fNeed(lv);lv++;S.flv[id]=lv;const n=FAIRIES.find(f=>f.id===id).n;setTimeout(()=>toast(`${n}がLv${lv}になった！`+(lv===5||lv===10?'（新しい力に目覚めた）':'')),300)}
   if(lv>=FMAX)S.fexp[id]=0}
-function fStats(f){const a=[];if(f.fish)a.push(`釣りの待ち時間×${f.fish.wait.toFixed(2)}・珍しい魚×${f.fish.rare.toFixed(2)}`);if(f.explore)a.push(`${f.explore.every.toFixed(1)}秒ごとに${f.explore.show.toFixed(1)}秒、階段の方向を示す`+(f.lv>=5?'・アイテムの方向も':'・Lv5でアイテムの方向も'));if(f.regen)a.push(`${f.regen.every.toFixed(1)}秒ごとに HP・MP 0.5%・ST 1 回復`);if(f.gather){const g=f.gather,on=g.tbl.filter(t=>f.lv>=t[0]),nx=g.tbl.find(t=>f.lv<t[0]);a.push(`採取 ${Math.round(g.cd)}秒ごと（${on.map(t=>GNAME(t[1])).join('・')}）`+(nx?`・Lv${nx[0]}で${GNAME(nx[1])}`:''))}if(f.collect)a.push(`回収範囲${f.collect.r}・${f.collect.cd.toFixed(1)}秒ごと`);if(f.atk)a.push(`攻撃${Math.round(f.atk.dmg())}×${f.shots}・間隔${f.atk.cd.toFixed(1)}秒・射程${f.atk.range}`);if(f.buff)a.push(`${f.buff.type==='atk'?'攻撃':'防御'}アップ ${f.buff.every}秒ごと${f.buff.dur}秒`);if(f.heal)a.push(`回復 ${Math.round(f.heal.amt*100)}%・${f.heal.every.toFixed(1)}秒ごと`);
+function fStats(f){const a=[];if(f.fish)a.push(`釣りの待ち時間×${f.fish.wait.toFixed(2)}・珍しい魚×${f.fish.rare.toFixed(2)}`);if(f.explore)a.push(`${f.explore.every.toFixed(1)}秒ごとに${f.explore.show.toFixed(1)}秒、階段の方向を示す`+(f.lv>=5?'・アイテムの方向も':'・Lv5でアイテムの方向も'));if(f.regen)a.push(`${f.regen.every.toFixed(1)}秒ごとに HP・MP 0.5%・ST 1 回復`);if(f.gather){const g=f.gather,on=g.tbl.filter(t=>f.lv>=t[0]),nx=g.tbl.find(t=>f.lv<t[0]);a.push(`採取 ${Math.round(g.cd)}秒ごと（${on.map(t=>GNAME(t[1])).join('・')}）`+(nx?`・Lv${nx[0]}で${GNAME(nx[1])}`:''))}if(f.collect)a.push(`回収範囲${f.collect.r}・${f.collect.cd.toFixed(1)}秒ごと`);if(f.harvest)a.push(`収穫範囲${f.harvest.r}・${f.harvest.cd.toFixed(1)}秒ごと`);if(f.atk)a.push(`攻撃${Math.round(f.atk.dmg())}×${f.shots}・間隔${f.atk.cd.toFixed(1)}秒・射程${f.atk.range}`);if(f.buff)a.push(`${BUFFN[f.buff.type]}アップ ${f.buff.every}秒ごと${f.buff.dur}秒`);if(f.heal)a.push(`回復 ${Math.round(f.heal.amt*100)}%・${f.heal.every.toFixed(1)}秒ごと`);
   if(f.farm){const m=f.farm;if(m.stMul)a.push(`農作業ST×${m.stMul.toFixed(2)}`);if(m.grow)a.push(`余分に育つ${Math.round(m.grow*100)}%`);if(m.quality)a.push(`上質${Math.round(m.quality*100)}%`);if(m.speed)a.push(`移動+${Math.round(m.speed*100)}%`);if(m.regen)a.push(`ST回復 ${m.regenT.toFixed(1)}秒ごと`)}return a.join('・')}
 function harvestId(t){if(CROPS[t].feed||CROPS[t].plant)return t;const q=(farmSum('quality')||.08)+accSum('quality')+(gs('can',2)?.1:0);return Math.random()<q?t+'_q':t}
 const ST_NAMES={k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台'};
@@ -374,13 +390,15 @@ const RECIPES={
      {up:1,n:'銀のじょうろ',d:'前方3マスに水やり',in:{ore:3,stone:2,wood:1},show:()=>!S.can,apply:()=>S.can=1},
      {up:1,n:'金のじょうろ',d:'前方3×3マスにまとめて水やり',in:{goldore:2,ore:3},show:()=>S.can===1,apply:()=>S.can=2}]};
 const EQ={
-  head:{n:'頭',col:['','#8a5a32','#a9b2bd','#9f7fe0','#e8b44a'],tiers:[null,{n:'革の帽子',def:1,in:{wing:2,jelly:2}},{n:'鉄の兜',def:3,in:{ore:4,wing:2}},{n:'魔石の兜',def:5,mdef:3,in:{ore:5,gem:3}},{n:'金の兜',def:7,mdef:4,in:{goldore:3,ore:3,stone:2}}]},
+  head:{n:'頭',col:['','#8a5a32','#a9b2bd','#9f7fe0','#e8b44a'],tiers:[null,{n:'革の帽子',def:1,crit:.01,in:{wing:2,jelly:2}},{n:'鉄の兜',def:3,crit:.02,in:{ore:4,wing:2}},{n:'魔石の兜',def:5,mdef:3,crit:.03,in:{ore:5,gem:3}},{n:'金の兜',def:7,mdef:4,crit:.05,in:{goldore:3,ore:3,stone:2}}]},
   body:{n:'体',col:['','#a9b2bd','#9f7fe0','#3f9a8a','#e8b44a','#b03028','#6aa8d8'],tiers:[null,{n:'鉄の鎧',def:2,in:{ore:4,jelly:3}},{n:'魔石の鎧',def:5,mdef:3,in:{ore:6,gem:3,jelly:5}},{n:'竜鱗の鎧',def:9,mdef:4,in:{ore:10,gem:6,wing:6}},{n:'黄金の鎧',def:12,mdef:5,in:{goldore:5,gem:4,ore:6}},{n:'竜王の鎧',def:16,mdef:8,in:{dragonscale:2,obsidian:3,goldore:3}},{n:'氷竜の鎧',def:20,mdef:12,in:{frostscale:2,icecrystal:5,snowfur:4}}]},
   shield:{n:'盾',col:['','#a9784a','#8a8f99','#a9b2bd','#9f7fe0','#e8b44a'],tiers:[null,{n:'木の盾',def:1,in:{wood:4}},{n:'石の盾',def:2,in:{stone:6,wood:2}},{n:'鉄の盾',def:3,in:{ore:3,stone:2,wood:1}},{n:'魔石の盾',def:6,mdef:3,in:{ore:6,gem:4}},{n:'金の盾',def:8,mdef:3,in:{goldore:3,ore:4}}]},
-  feet:{n:'足',col:['','#6b4423','#8a8f99','#e8b44a'],tiers:[null,{n:'革のブーツ',def:1,spd:.08,in:{wing:3,jelly:2}},{n:'鉄のブーツ',def:2,spd:.15,in:{ore:5,wing:4}},{n:'金のブーツ',def:3,spd:.22,in:{goldore:2,wing:4,stone:2}}]}};
-for(const slot in EQ)EQ[slot].tiers.forEach((t,i)=>{if(t)RECIPES.v.push({up:1,n:t.n,d:`${EQ[slot].n}の防具・防御+${t.def}`+(t.mdef?`・魔防+${t.mdef}`:'')+(t.spd?`・移動+${Math.round(t.spd*100)}%`:''),in:t.in,show:()=>eqMax(slot)===i-1,apply:()=>{S.eqMax=S.eqMax||{};S.eqMax[slot]=i;S.eq[slot]=i}})});
+  feet:{n:'足',col:['','#6b4423','#8a8f99','#e8b44a'],tiers:[null,{n:'革のブーツ',def:1,spd:.08,eva:.02,in:{wing:3,jelly:2}},{n:'鉄のブーツ',def:2,spd:.15,eva:.03,in:{ore:5,wing:4}},{n:'金のブーツ',def:3,spd:.22,eva:.05,in:{goldore:2,wing:4,stone:2}}]}};
+for(const slot in EQ)EQ[slot].tiers.forEach((t,i)=>{if(t)RECIPES.v.push({up:1,n:t.n,d:`${EQ[slot].n}の防具・防御+${t.def}`+(t.mdef?`・魔防+${t.mdef}`:'')+(t.spd?`・移動+${Math.round(t.spd*100)}%`:'')+(t.eva?`・回避+${Math.round(t.eva*100)}%`:'')+(t.crit?`・急所+${Math.round(t.crit*100)}%`:''),in:t.in,show:()=>eqMax(slot)===i-1,apply:()=>{S.eqMax=S.eqMax||{};S.eqMax[slot]=i;S.eq[slot]=i}})});
 const eqMax=sl=>Math.max((S.eqMax||{})[sl]||0,S.eq[sl]||0);
 const ACCS={
+  hawk:{n:'鷹の羽飾り',d:'急所率+10%',crit:.1,in:{feather:4,gem:1}},
+  mikiri:{n:'見切りの鈴',d:'回避率+8%',eva:.08,in:{ore:2,feather:2,gem:1}},
   power:{n:'力の指輪',d:'攻撃+3',atk:3,in:{gem:2,ore:1}},
   guard:{n:'守りの腕輪',d:'防御+3',def:3,in:{ore:4,jelly:2}},
   life:{n:'命の指輪',d:'最大HP+30',hp:30,in:{gem:1,apple:3}},
@@ -420,17 +438,20 @@ function equipAcc(id,on){const a=ACCS[id],sg=on?1:-1;
 const SWP=[0,3,7,12,16,22,28],WLP=[0,1,5,9];
 const WEAP={sword:{n:'剣',mult:1,d:'バランスのよい武器'},axe:{n:'オノ',mult:.75,vs:'wood',d:'木と木のモンスターに特攻。森の大木も切れる'},
   pick:{n:'ツルハシ',mult:.75,vs:'stone',d:'岩・鉱石と石のモンスターに特攻。大岩も砕ける'},bow:{n:'弓',mult:.7,vs:'fly',d:'矢を飛ばす。飛ぶモンスターに特攻'},
-  hand:{n:'素手',mult:.3,d:'STを使わない弱いパンチ'},
-  spear:{n:'槍',mult:1,d:'リーチが長く、突きの技が使える'},
+  hand:{n:'素手',mult:.1,d:'STを使わない弱いパンチ'},
+  spear:{n:'細剣',mult:.9,d:'突きの技が使える。持っている間 急所率+15%'},
+  dagger:{n:'短剣',mult:.75,d:'軽くて攻撃が速い。持っている間 回避率+10%'},
+  great:{n:'大剣',mult:1.55,d:'威力が高いが、攻撃も技も遅い'},
   staff:{n:'杖',mult:.55,d:'持っている間、魔攻と魔防が上がりMPが少しずつ回復する。通常攻撃は敵を追いかける魔法弾（魔攻の半分の威力）。技は使えない'},rune:{n:'魔法剣',mult:1,d:'剣の技が使える。攻撃は剣より低めだが、持っている間は魔攻と魔防も上がる'}};
-const STAFFD=[0,2,4,7],RUNEM2=[0,8,15,24],RUNED=[0,1,3,5],ASPDW={sword:1,rune:1,spear:.95,staff:.9,axe:.85,pick:.85,bow:1},STAFFM=[0,8,18,30],STAFFR=[0,.25,.4,.6],RUNEA=[0,4,10,15],RUNEM=[0,4,8,12];
+const STAFFD=[0,2,4,7],RUNEM2=[0,8,15,24],RUNED=[0,1,3,5],ASPDW={sword:1,rune:1,spear:1,dagger:1.3,great:.65,staff:.9,axe:.85,pick:.85,bow:1},STAFFM=[0,8,18,30],STAFFR=[0,.25,.4,.6],RUNEA=[0,4,10,15],RUNEM=[0,4,8,12];
 const heldW=()=>hasW(S.sel.weap)?S.sel.weap:weps()[0];
-const weps=()=>{const w=(S.weps||[]).filter(hasW).slice(0,2);return w.length?w:['sword']};
-function wEff(w,l){if(!l)return'';if(w==='spear')return`攻撃+${SPEARP[l]}・リーチが長い`;if(w==='axe'||w==='pick')return`威力+${WLP[l]}・${w==='axe'?'木':'石'}特攻・採取`;if(w==='staff')return`魔攻+${STAFFM[l]}・魔防+${STAFFD[l]}・MP回復 ${STAFFR[l]}/秒`;if(w==='rune')return`攻撃+${RUNEA[l]}・魔攻+${RUNEM2[l]}・魔防+${RUNED[l]}・攻撃に魔法ダメージを上乗せ`;return`威力+${WLP[l]}・${WEAP[w].vs==='wood'?'木':WEAP[w].vs==='stone'?'石':'飛行'}特攻`}
-const SPEARP=[0,5,11,18,24];
-const WNAMES={spear:['なし','鉄の槍','魔石の槍','金の槍','竜騎の槍'],axe:['なし','鉄のオノ','魔石のオノ','金のオノ'],pick:['なし','鉄のツルハシ','魔石のツルハシ','金のツルハシ'],bow:['なし','木の弓','精霊の弓','黄金の弓'],staff:['なし','樫の杖','魔石の杖','賢者の杖'],rune:['なし','ルーンソード','ミスリルの魔剣','星詠みの剣']};
-[['spear',1,{ore:3,wood:2}],['spear',2,{ore:5,gem:3,wood:2}],['spear',3,{goldore:4,gem:4,wood:2}],['spear',4,{dragonscale:2,obsidian:3,goldore:3}],['axe',1,{ore:2,stone:3,wood:2}],['axe',2,{ore:5,gem:2,wood:3}],['axe',3,{goldore:3,ore:3,wood:2}],['pick',1,{ore:2,stone:3,wood:1}],['pick',2,{ore:5,gem:2}],['pick',3,{goldore:3,ore:3,stone:2}],['bow',1,{wood:5,wing:2}],['bow',2,{wood:6,gem:2,feather:4}],['bow',3,{goldore:3,wood:4,feather:5}],['staff',1,{wood:4,gem:1}],['staff',2,{wood:5,gem:4,manaherb:3}],['staff',3,{goldore:3,gem:6,obsidian:2}],['rune',1,{ore:4,gem:2}],['rune',2,{ore:6,gem:5,goldore:1}],['rune',3,{goldore:4,gem:6,dragonscale:1}]]
-  .forEach(([w,l,inp])=>RECIPES.v.push({up:1,n:WNAMES[w][l],d:`${WEAP[w].d}（${wEff(w,l)}）`,in:inp,show:()=>(S.wl[w]||0)===l-1,apply:()=>{S.wl[w]=l;S.weps=S.weps||[];if(!S.weps.includes(w)&&S.weps.length<2)S.weps.push(w);toolbar()}}));
+const weps=()=>{const w=(S.weps||[]).filter(x=>hasW(x)&&!FARMW.includes(x)).slice(0,2);return w.length?w:['sword']};
+function wEff(w,l){if(!l)return'';if(w==='spear')return`攻撃+${SPEARP[l]}・急所率が高い`;if(w==='dagger')return`攻撃+${DAGP[l]}・速い・回避率が高い`;if(w==='great')return`攻撃+${GREATP[l]}・遅い`;if(w==='axe'||w==='pick')return`威力+${WLP[l]}・${w==='axe'?'木':'石'}特攻・採取`;if(w==='staff')return`魔攻+${STAFFM[l]}・魔防+${STAFFD[l]}・MP回復 ${STAFFR[l]}/秒`;if(w==='rune')return`攻撃+${RUNEA[l]}・魔攻+${RUNEM2[l]}・魔防+${RUNED[l]}・攻撃に魔法ダメージを上乗せ`;return`威力+${WLP[l]}・${WEAP[w].vs==='wood'?'木':WEAP[w].vs==='stone'?'石':'飛行'}特攻`}
+const SPEARP=[0,5,11,18,24],DAGP=[0,3,7,12,17],GREATP=[0,6,13,21,30];
+const WNAMES={spear:['なし','鉄の細剣','魔石の細剣','金の細剣','竜騎の細剣'],dagger:['なし','鉄の短剣','魔石の短剣','金の短剣','竜牙の短剣'],great:['なし','鉄の大剣','魔石の大剣','金の大剣','竜王の大剣'],axe:['なし','鉄のオノ','魔石のオノ','金のオノ'],pick:['なし','鉄のツルハシ','魔石のツルハシ','金のツルハシ'],bow:['なし','木の弓','精霊の弓','黄金の弓'],staff:['なし','樫の杖','魔石の杖','賢者の杖'],rune:['なし','ルーンソード','ミスリルの魔剣','星詠みの剣']};
+[['spear',1,{ore:3,wood:2}],['spear',2,{ore:5,gem:3,wood:2}],['spear',3,{goldore:4,gem:4,wood:2}],['spear',4,{dragonscale:2,obsidian:3,goldore:3}],['dagger',1,{ore:2,wing:1}],['dagger',2,{ore:3,gem:2,wing:2}],['dagger',3,{goldore:3,gem:3}],['dagger',4,{dragonscale:1,obsidian:2,goldore:3}],['great',1,{ore:6,wood:2}],['great',2,{ore:8,gem:4}],['great',3,{goldore:6,gem:4,ore:4}],['great',4,{dragonscale:3,obsidian:4,goldore:4}],['axe',1,{ore:2,stone:3,wood:2}],['axe',2,{ore:5,gem:2,wood:3}],['axe',3,{goldore:3,ore:3,wood:2}],['pick',1,{ore:2,stone:3,wood:1}],['pick',2,{ore:5,gem:2}],['pick',3,{goldore:3,ore:3,stone:2}],['bow',1,{wood:5,wing:2}],['bow',2,{wood:6,gem:2,feather:4}],['bow',3,{goldore:3,wood:4,feather:5}],['staff',1,{wood:4,gem:1}],['staff',2,{wood:5,gem:4,manaherb:3}],['staff',3,{goldore:3,gem:6,obsidian:2}],['rune',1,{ore:4,gem:2}],['rune',2,{ore:6,gem:5,goldore:1}],['rune',3,{goldore:4,gem:6,dragonscale:1}]]
+  .forEach(([w,l,inp])=>RECIPES.v.push({up:1,n:WNAMES[w][l],d:`${WEAP[w].d}（${wEff(w,l)}）`,in:inp,show:()=>(S.wl[w]||0)===l-1,apply:()=>{S.wl[w]=l;S.weps=S.weps||[];if(!FARMW.includes(w)&&!S.weps.includes(w)&&S.weps.length<2)S.weps.push(w);toolbar()}}));
+const FARMW=['axe','pick'];
 const hasW=id=>id==='sword'||id==='hand'||(S.wl[id]||0)>0;
 RECIPES.q.push({out:'chocolate',in:{cacao:2,sugar:1,milk:1}},{out:'chococake',in:{chocolate:1,flour:1,egg:1,butter:1}},{out:'cocoa',in:{cacao:1,milk:1,sugar:1}},{out:'bananajuice',in:{banana:1,milk:1}},{out:'chocobanana',in:{banana:1,chocolate:1}},{out:'grapejuice',in:{grape:2,water:1}},{out:'grapejelly',in:{grape:2,sugar:1}});
 RECIPES.q.push({out:'salt',in:{seawater:2}},{out:'butter',in:{milk:2}},{out:'soy',in:{soybean:2,salt:1},cnt:2},{out:'miso',in:{soybean:2,salt:1},cnt:2},{out:'oil',in:{sunflower:3}},{out:'vinegar',in:{rice:1,water:1}},
@@ -455,7 +476,7 @@ const HELPERS=[
   {id:'fruit',n:'ハナ',job:'果樹係',d:'実った果物の木から実をとって倉庫へ入れる（1日6本まで）',wage:30,pos:[40,4],hair:'#f2a3c4'},
   {id:'fish',n:'カイ',job:'釣り係',d:'日中、池や海で魚を3匹釣って倉庫へ入れる',wage:50,pos:[22,12],hair:'#3c78b8'},
   {id:'tiller',n:'ゴロウ',job:'耕し係',d:'収穫して空いた畑をクワで耕しなおす（1日40マスまで）',wage:40,pos:[37,43],hair:'#8a6a4a'},
-  {id:'brew',n:'セラ',job:'調合係',d:'倉庫の薬草で回復薬（薬草2つで1本・3本まで）、魔力草でマナポーション（2つで1本・2本まで）を作る',wage:40,pos:[24,32],hair:'#9a7cc0'}];
+  {id:'brew',n:'セラ',job:'調合係',d:'10時ごろからまほう店で働き、倉庫の薬草で回復薬（薬草2つで1本・3本まで）、魔力草でマナポーション（2つで1本・2本まで）を作って倉庫へ入れる',wage:40,pos:[24,32],hair:'#9a7cc0'}];
 const ROOFS=[['#4a78b0','#36598a','#6a96c8'],['#8a5a32','#6b4423','#a9784a'],['#c86a3a','#9c4f2a','#e0874f'],['#6e6a78','#55515e','#8f8a9c'],['#5a8f45','#456f35','#7fb069'],['#3f7f8a','#2e5f68','#5a9fa8']];
 const HMAP={},TW=64,TH=50,FOUNT={x:35,y:21,w:4,h:4};
 const HOME={x:10,y:22,w:5,h:3,n:'わが家',roof:['#b0503a','#8c3b2b','#d06a4f'],home:1};
@@ -468,15 +489,15 @@ const ORNS=['なし','花の窓台','ランタン','つた'];
 const HPOSD={tiller:[35,40],water:[18,30],harvest:[24,30],plant:[34,30],mine:[52,30],wood:[58,30],ranch:[57,22],fruit:[40,30],fish:[54,35],brew:[46,30],harune:[34,35],dolf:[40,35],tia:[24,35],miria:[18,35],gen:[48,35],nami:[51,22],luna:[56,40]};
 HELPERS.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:ROOFS[i]||[['#7a5aa0','#5c4280','#9a7cc0'],['#d87a96','#b05a76','#f0a0b8'],['#d0a030','#a87e20','#ecc050'],['#8a5a32','#6b4423','#a9784a'],['#3f7f8a','#2e5f68','#5a9fa8']][i-6]});
 const FOLK=[{id:'harune',n:'ハルニレ',job:'よろず屋',hair:'#c86a3a',work:[36,18]},{id:'dolf',n:'ドルフ',job:'鍛冶屋',hair:'#5a5249',work:[41,18]},{id:'tia',n:'ティア',job:'妖精の館',hair:'#c07fd0',work:[28,18]},
-  {id:'miria',n:'ミリア',job:'ギルド受付',hair:'#e8b44a',work:[47,18]},{id:'gen',n:'ゲン',job:'釣り具屋',hair:'#8a8f99',work:[50,43]},{id:'nami',n:'ナミ',job:'市場',hair:'#5ab0d0',work:[51,44]},{id:'luna',n:'ルーナ',job:'まほう店',hair:'#7a5ab0',work:[53,18]}];
+  {id:'miria',n:'ミリア',job:'ギルド受付',hair:'#e8b44a',work:[47,18]},{id:'gen',n:'ゲン',job:'釣り具屋',hair:'#8a8f99',work:[50,43]},{id:'nami',n:'ナミ',job:'市場',hair:'#5ab0d0',work:[51,44]},{id:'luna',n:'ルーナ',job:'まほう店',hair:'#7a5ab0',work:[21,18]}];
 FOLK.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:RPAL[[3,6,7,10,1,11,9][i]][1]});
 const RESID=[...HELPERS,...FOLK];
 const HINT={'!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'よろず屋',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
 const SEEDCOL={tree_banana:'#f0d040',tree_grape:'#7a4aa8',tree_cacao:'#a0522d',soybean:'#e0c890',sunflower:'#f0c030',pepper:'#3a3530',tree_apple:'#e0323b',tree_peach:'#f4a0a8',tree_orange:'#f0902a',yomogi:'#8ab070',aloe:'#5aa070',ginseng:'#e0c8a0',mandragora:'#a05a8a',basil:'#4fa040',mint:'#8ae0b0',rosemary:'#7a8ae0',rice:'#e8d070',sugarcane:'#9ad070',herb:'#6fc25a',manaherb:'#7a6ae0',wheat:'#e0c070',chili:'#d83a2a',carrot:'#f08a2a',cabbage:'#8ad070',pumpkin:'#e8902a',eggplant:'#6a3a8a',pineapple:'#e8b44a',mango:'#f08a3a',turnip:'#b46fc4',strawberry:'#e0323b',tomato:'#e4472e',grass:'#8cc163',potato:'#a9784a',berry:'#4a5ac8',corn:'#f0c030',melon:'#7fc060'};
-const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'槍',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
+const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'細剣',w:1},{id:'dagger',s:'短剣',w:1},{id:'great',s:'大剣',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
 const GORDER=[0,1,2,4];
 const TNAME=Object.fromEntries(TOOLS.map(t=>[t.id,t]));
-const GROUPS=[{n:'農具',ids:()=>['hand','hoe','can',...(S.rod?['rod']:[])]},{n:'種',ids:()=>Object.keys(CROPS).filter(t=>(S.seeds[t]||0)>0)},{n:'武器1',ids:()=>weps().slice(0,1)},{n:'釣り',ids:()=>S.rod?['rod']:[]},{n:'武器2',ids:()=>weps().slice(1,2)}];
+const GROUPS=[{n:'農具',ids:()=>['hand','hoe','can',...FARMW.filter(hasW),...(S.rod?['rod']:[])]},{n:'種',ids:()=>Object.keys(CROPS).filter(t=>(S.seeds[t]||0)>0)},{n:'武器1',ids:()=>weps().slice(0,1)},{n:'釣り',ids:()=>S.rod?['rod']:[]},{n:'武器2',ids:()=>weps().slice(1,2)}];
 function wSync(){if(S.grp===2||S.grp===4)S.grp=weps().indexOf(S.sel.weap)===1?4:2}
 const MON={
   slime:{hp:8,atk:3,sp:24,r:6,exp:3,gold:4,drop:'jelly',dp:.45},
@@ -534,7 +555,7 @@ for(const sl in COS)for(const id in COS[sl]){const c=COS[sl][id];RECIPES.k.push(
 (function guardPrices(){const fishMin=Math.min(...FISHIDS.map(f=>ITEMS[f].p));
   for(const st in RECIPES)for(const r of RECIPES[st]){if(r.up||!r.out)continue;const cost=Object.entries(r.in).reduce((a,[id,n])=>a+(id==='anyfish'?fishMin:ITEMS[id].p)*n,0);
     const min=Math.ceil(cost*1.1/(r.cnt||1));if(ITEMS[r.out].p<min){ITEMS[r.out].p=min;(window.__priceFix=window.__priceFix||[]).push(r.out)}}})();
-function newState(){return{townV:7,pt:{},sp:0,prof:{},ptV1:1,ptV2:1,day:1,time:360,gold:300,lv:1,exp:0,hp:50,mhp:50,st:60,mst:60,atk:3,sword:0,can:0,arm:0,hoe:0,ring:0,grp:0,sel:{farm:'hoe',seed:'turnip',weap:'sword'},quick:[null,null],mp:30,mmp:30,shieldV2:1,cleared:{},rod:0,dex:{},depth:{forest:0,cave:0,mountain:0},bin:0,wl:{axe:0,pick:0,bow:0},books:{},accs:{},acc:[null,null],animals:[],fairies:{},fairy:null,skill:'spin',fruit:{},eq:{head:0,body:0,shield:0,feet:0},store:{},hired:{},worked:{},wdone:{mine:0,wood:{w:0,h:0}},chop:{},pick:{},inv:{},seeds:{turnip:6,strawberry:0,tomato:0},soil:{},ship:{},deep:0,tool:0}}
+function newState(){return{townV:8,pt:{},sp:0,prof:{},ptV1:1,ptV2:1,day:1,time:360,gold:300,lv:1,exp:0,hp:50,mhp:50,st:60,mst:60,atk:3,sword:0,can:0,arm:0,hoe:0,ring:0,grp:0,sel:{farm:'hoe',seed:'turnip',weap:'sword'},quick:[null,null],mp:30,mmp:30,shieldV2:1,cleared:{},rod:0,dex:{},depth:{forest:0,cave:0,mountain:0},bin:0,wl:{axe:0,pick:0,bow:0},books:{},accs:{},acc:[null,null],animals:[],fairies:{},fairy:null,skill:'spin',fruit:{},eq:{head:0,body:0,shield:0,feet:0},store:{},hired:{},worked:{},wdone:{mine:0,wood:{w:0,h:0}},chop:{},pick:{},inv:{},seeds:{turnip:6,strawberry:0,tomato:0},soil:{},ship:{},deep:0,tool:0}}
 let S=newState();
 
 function buildTown(skip,hm=HMAP){
@@ -571,8 +592,8 @@ function buildTown(skip,hm=HMAP){
   rect(34,15,38,17,'S');m[17][36]='s';
   bld(40,15,4,3,'鍛冶屋',['#6e6a78','#55515e','#8f8a9c'],'j',1);
   bld(45,15,5,3,'冒険者ギルド',['#4f7a4a','#3b5e37','#6e9c66'],'i',2);
-  bld(51,15,5,3,'まほう店',['#5a3f86','#432e66','#7a5ab0'],'魔',2);rect(51,18,55,18,',');
-  bld(19,15,5,3,'ゆの花湯',['#3f7f8a','#2e5f68','#5a9fa8'],'^',2,{bath:1});m[16][24]='T';
+  bld(19,15,5,3,'まほう店',['#5a3f86','#432e66','#7a5ab0'],'魔',2);m[16][24]='T';
+  bld(27,8,5,3,'ゆの花湯',['#3f7f8a','#2e5f68','#5a9fa8'],'^',2,{bath:1});rect(29,11,31,11,',');
   // 湖・切り株
   rect(19,41,29,46,'W');
   for(const[x,y]of[[5,2],[13,2],[21,2],[53,11],[57,15],[61,19]])if(m[y][x]==='.'||m[y][x]==='*')m[y][x]='L';
@@ -611,8 +632,8 @@ function fStrike(dt){if(cur.kind!=='dun'){FSTR=[];return}for(const s of FSTR)s.t
     if(f.trait==='chain'){fx.push({type:'bolt',x:m.x,y:m.y,t:.25,max:.25})}else fx.push({type:'icespike',x:m.x,y:m.y,t:.45,max:.45});
     fx.push({type:'burst',x:m.x,y:m.y,t:.3,max:.3,c:col});hurtMon(m,fDmg(f,m),[0,0],col);fHit(f,m,0,0)}}
 function updFairy(dt){fStrike(dt);FREACH=cur.kind==='dun'&&mons.length&&partyF().some(f=>f.atk)?fReachMap(12):null;
-  if(B.atk>0)B.atk-=dt;if(B.def>0)B.def-=dt;if(B.mag>0)B.mag-=dt;if(B.spd>0)B.spd-=dt;if(B.bar>0)B.bar-=dt;if(B.aspd>0)B.aspd-=dt;if(B.mdef>0)B.mdef-=dt;
-  P.areg=(P.areg||0)+dt;if(P.areg>=3){P.areg=0;if(accSum('regen')&&!P.fish)S.st=Math.min(S.mst,S.st+1)}
+  if(B.atk>0)B.atk-=dt;if(B.def>0)B.def-=dt;if(B.mag>0)B.mag-=dt;if(B.spd>0)B.spd-=dt;if(B.bar>0)B.bar-=dt;if(B.aspd>0)B.aspd-=dt;if(B.mdef>0)B.mdef-=dt;if(B.crit>0)B.crit-=dt;if(B.eva>0)B.eva-=dt;
+  stanceTick(dt);P.areg=(P.areg||0)+dt;if(P.areg>=3){P.areg=0;if(accSum('regen')&&!P.fish)S.st=Math.min(S.mst,S.st+1)}
   partyF().forEach((f,i)=>{const F=fst(f.id),side=i?-1:1;
   const tx=P.x+(P.dir===3?-12*side:P.dir===2?12*side:10*side),ty=P.y-18-i*4+Math.sin(clock*3+i*2)*3;
   if(Math.hypot(F.x-P.x,F.y-P.y)>90){F.x=tx;F.y=ty}
@@ -625,7 +646,7 @@ function updFairy(dt){fStrike(dt);FREACH=cur.kind==='dun'&&mons.length&&partyF()
     if(t&&(f.trait==='chain'||f.trait==='frost')){const ts=mons.filter(m=>Math.hypot(m.x-P.x,m.y-P.y)<f.atk.range&&fPath(m)!==null).sort((a,b)=>fPath(a)-fPath(b));
       for(let si=0;si<f.shots;si++){const m=ts[si%ts.length],d=.22+si*.14;FSTR.push({t:d,f,m});fx.push({type:'ftell',m,x:m.x,y:m.y,t:d,max:d,ice:f.trait==='frost'})}F.cd=f.atk.cd}
     else if(t){const dx=t.x-F.x,dy=t.y-F.y,l=Math.hypot(dx,dy)||1;for(let si=0;si<f.shots;si++){const a=(si-(f.shots-1)/2)*.5,cx=Math.cos(a),sn=Math.sin(a),vx=(dx*cx-dy*sn)/l,vy=(dx*sn+dy*cx)/l;projs.push({x:F.x,y:F.y,vx:vx*120,vy:vy*120,life:2,type:'spark',fairy:1,pierce:f.trait==='pierce',col:fElem(f.id)==='none'?f.col:FELEM.find(e=>e[0]===fElem(f.id))[2],ghost:true,homing:t,hit:new Set(),dmg:m=>fDmg(f,m),onHit:m=>fHit(f,m,vx,vy),dir:[vx,vy]})}F.cd=f.atk.cd}else F.cd=.3}}
-  if(f.buff){F.bt-=dt;if(F.bt<=0&&mons.length){F.bt=f.buff.every;B[f.buff.type]=f.buff.dur;pop(P.x,P.y-24,f.buff.type==='atk'?'攻撃アップ！':'防御アップ！',f.col)}}
+  if(f.buff){F.bt-=dt;if(F.bt<=0&&mons.length){F.bt=f.buff.every;B[f.buff.type]=f.buff.dur;pop(P.x,P.y-24,BUFFN[f.buff.type]+'アップ！',f.col)}}
   if(f.heal){F.ht-=dt;if(F.ht<=0){F.ht=f.heal.every;if(S.hp<S.mhp*f.heal.below){const v=Math.ceil(S.mhp*f.heal.amt);S.hp=Math.min(S.mhp,S.hp+v);pop(P.x,P.y-18,'+'+v,'#9cf0a0');fx.push({type:'heal',x:P.x,y:P.y,t:.7,max:.7})}}}});
 }
 const FC={x:0,y:0,t:0};
@@ -643,7 +664,11 @@ function elemMul(el,k){const t=ELT[el];return t?(t[k||'none']||1):1}
 function updGather(dt){if(paused||!(cur===town||cur.kind==='dun'))return;for(const f of partyF()){const g=f.gather;if(!g)continue;const F=fst(f.id);if(F.gt===undefined)F.gt=g.cd;F.gt-=dt;if(F.gt>0)continue;F.gt=g.cd;
   const pool=g.tbl.filter(t=>f.lv>=t[0]);let r=Math.random()*pool.reduce((a,t)=>a+t[2],0),pk=pool[0];for(const t of pool){r-=t[2];if(r<0){pk=t;break}}
   const id=pk[1]==='fruit'?['apple','peach','orange'][Math.random()*3|0]:pk[1];S.inv[id]=(S.inv[id]||0)+1;sfx('pickup');pop(F.x,F.y-10,ITEMS[id].n,f.col);for(let i=0;i<5;i++)fx.push({type:'ember',x:F.x+(Math.random()-.5)*10,y:F.y,t:.5,max:.5,c:f.col,rise:1});fGain(6,f.id)}}
-function updCollector(dt){updGather(dt);for(const f of partyF()){const c=f.collect;if(!c)continue;const F=fst(f.id),id=f.id;
+function updHarvest(dt){if(paused||cur!==town)return;for(const f of partyF()){const h=f.harvest;if(!h)continue;const F=fst(f.id);F.hv=(F.hv??h.cd)-dt;if(F.hv>0)continue;F.hv=h.cd;
+  let best=null,bd=h.r;for(const[k,s]of Object.entries(S.soil)){if(!s.c||!CROPS[s.c.t]||CROPS[s.c.t].tree||s.c.age<CROPS[s.c.t].days)continue;const[x,y]=k.split(',').map(Number),d=Math.hypot(x*TS+8-P.x,y*TS+8-P.y);if(d<bd){bd=d;best=[k,s,x,y]}}
+  if(!best)continue;const[k,s,x,y]=best,C=CROPS[s.c.t],n=C.qty||1;fx.push({type:'zap',x:F.x,y:F.y,x2:x*TS+8,y2:y*TS+8,t:.2,max:.2,c:f.col});
+  if(C.feed){S.bin=(S.bin||0)+n;pop(x*TS+8,y*TS,'牧草→牧草入れ','#d9c46a')}else{const id=harvestId(s.c.t);S.inv[id]=(S.inv[id]||0)+n;pop(x*TS+8,y*TS,ITEMS[id].n+(n>1?'×'+n:''),f.col)}sfx('pickup');afterHarvest(k,s);fGain(2,f.id)}}
+function updCollector(dt){updGather(dt);updHarvest(dt);for(const f of partyF()){const c=f.collect;if(!c)continue;const F=fst(f.id),id=f.id;
   F.ct-=dt;if(F.ct>0||paused)continue;F.ct=c.cd;
   const grab=(x,y)=>{fx.push({type:'zap',x:F.x,y:F.y,x2:x,y2:y,t:.2,max:.2});for(let i=0;i<4;i++)fx.push({type:'ember',x:x+(Math.random()-.5)*8,y:y-4,t:.4,max:.4,c:f.col,rise:1});fGain(1,id)};
   if(cur.kind==='dun'&&dun.items){let best=-1,bd=c.r;dun.items.forEach((it,i)=>{const d=Math.hypot(it.x-P.x,it.y-P.y);if(d<bd){bd=d;best=i}});
@@ -793,7 +818,7 @@ let toastT;function toast(s){const t=$('#toast');t.textContent=s;t.hidden=false;
 function addItems(a){sfx('pickup');const t=[];for(const[id,n]of a){S.inv[id]=(S.inv[id]||0)+n;t.push(ITEMS[id].n+(n>1?'×'+n:''))}toast(t.join('・')+' を手に入れた')}
 function addItem(id,n){sfx('pickup');S.inv[id]=(S.inv[id]||0)+n;toast(`${ITEMS[id].n}${n>1?' ×'+n:''} を手に入れた`)}
 function mag(){const h=heldW();return 4+Math.round(S.lv*.5)+pt('mag')+accSum('mag')+(h==='staff'?STAFFM[S.wl.staff]+enh('staff'):h==='rune'?Math.round((RUNEM2[S.wl.rune]+0)*(gs('rune',0)?1.05:1)):0)}
-const WCAT={sword:['斬'],rune:['斬'],spear:['突'],staff:[],axe:[],pick:[],bow:['射']};
+const WCAT={sword:['斬'],rune:['斬'],dagger:['斬'],great:['斬'],spear:['突'],staff:[],axe:[],pick:[],bow:['射']};
 function loadOf(w=heldW()){S.load=S.load||{};return S.load[w]||(S.load[w]={t:[null,null,null],m:[null,null,null],s:0,mi:0})}
 const techOpts=(w,i)=>SKILLS.filter(s=>s.k==='技'&&s.t===i+1&&WCAT[w].includes(s.c)),magOpts=i=>SKILLS.filter(s=>s.k==='魔法').sort((a,b)=>a.t-b.t);
 function slotSk(kind,i,w=heldW()){const L=loadOf(w),opts=kind==='t'?techOpts(w,i):magOpts(i),id=L[kind][i];const sk=id&&opts.find(s=>s.id===id);if(sk&&known(sk))return sk;
@@ -813,10 +838,11 @@ function castSk(sk,go){
     const T=chantT(sk),pal=ELC[skEl(sk)]||ELC.magic;P.chant={sk,t:T,max:T};fx.push({type:'mcirc',x:P.x,y:P.y,t:T,max:T,c:pal[0],c2:pal[1],r:14+(sk.t||1)*3,_p:1,follow:1});sfx('menu');pop(P.x,P.y-30,sk.n+'…',pal[0]);return}
   if(!go&&busyCast())return;
   if(sk.req==='bow'&&!hasW('bow'))return toast(`${sk.n}には弓が必要です（鍛冶炉で作れる）`);
-  if(sk.k==='技'){const tc=Math.ceil(sk.cost*((hgs('sword',2)||hgs('spear',2))?.8:hgs('rune',2)?.9:1));if(S.st<tc)return toast('STが足りない');S.st-=tc}else{const c=Math.ceil(sk.cost*accMul('mpMul')*(hgs('staff',2)?.85:hgs('rune',2)?.9:1)*mCostMul(sk));if(S.mp<c)return toast('MPが足りない');S.mp-=c}
+  if(sk.k==='技'&&go==='wind'){}else if(sk.k==='技'){const tc=Math.ceil(sk.cost*((hgs('sword',2)||hgs('spear',2)||hgs('dagger',2)||hgs('great',2))?.8:hgs('rune',2)?.9:1));if(S.st<tc)return toast('STが足りない');S.st-=tc;if(heldW()==='great'){const cr=cur;P.cast=.5;pop(P.x,P.y-30,'ため…','#ffd060');sched(.4,()=>{if(cur===cr&&S.hp>0)castSk(sk,'wind')});return}}else{const c=Math.ceil(sk.cost*accMul('mpMul')*(hgs('staff',2)?.85:hgs('rune',2)?.9:1)*mCostMul(sk));if(S.mp<c)return toast('MPが足りない');S.mp-=c}
   if(sk.k==='魔法'){const mk=mKey(sk);if(mk&&(sk.cat!=='攻撃'||!MELS.includes(mk.slice(2))))profGain(mk,5)}
+  if(sk.k==='技'||sk.cat==='攻撃')P.atkT=clock;
   sfx(sk.k==='技'?'tech':/heal|regen|fullcare|hiheal/.test(sk.id)?'heal':'magic');
-  const d=DIRS[P.dir];P.cast=.3;{const col=(ELC[skEl(sk)]||ELC.magic)[0];skillFx(sk);pop(P.x,P.y-30,sk.n,col)}
+  const d=DIRS[P.dir];P.cast=heldW()==='great'?.55:heldW()==='dagger'?.2:.3;{const col=(ELC[skEl(sk)]||ELC.magic)[0];skillFx(sk);pop(P.x,P.y-30,sk.n,col)}
   if(sk.id==='spin'){P.spin=.4;fx.push({type:'ring',x:P.x,y:P.y,t:.35,max:.35});
     for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<28+m.r){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;hitMon(m,1.3,[dx/l,dy/l])}}
   else if(sk.id==='rush'){P.rush=.22;P.rushSp=260;P.rushMul=1.6;P.rushHit=new Set();P.cast=.1}
@@ -832,12 +858,12 @@ function castSk(sk,go){
   else if(sk.id==='thunder'){const ts=reachMons(110).slice(0,3);
     flash=.12;ts.forEach(m=>{fx.push({type:'bolt',x:m.x,y:m.y,t:.3,max:.3},{type:'burst',x:m.x,y:m.y-6,t:.35,max:.35,c:'#ffe08a'});hurtMon(m,magDmg(m,1.6,'thunder'),[0,0],'#ffe08a')});if(!ts.length)pop(P.x,P.y-18,'空振り','#ccc')}
 }
-function magDmg(m,mult,el,noProf){if(MELS.includes(el)&&!noProf){const k='m_'+el;if(m&&m.hp!==undefined)profGain(k,1);mult*=(1+.01*(profLv(k)-1))*(gs(k,2)?1.1:gs(k,1)?1.05:1)}if(el==='staff'){if(m&&m.hp!==undefined)profGain('staff',1);mult*=1+.01*(profLv('staff')-1)}let v=mag()*mult*accMul('magMul')*(B.mag>0?1.3:1);const k=MON[m.type].kind;if(k==='ghost')v*=2;v*=elemMul(el,k);return Math.max(1,Math.round(v*(.9+Math.random()*.2)))}
+function magDmg(m,mult,el,noProf){if(MELS.includes(el)&&!noProf){const k='m_'+el;if(m&&m.hp!==undefined)profGain(k,1);mult*=(1+.01*(profLv(k)-1))*(gs(k,2)?1.1:gs(k,1)?1.05:1)}if(el==='staff'){if(m&&m.hp!==undefined)profGain('staff',1);mult*=1+.01*(profLv('staff')-1)}let v=mag()*mult*accMul('magMul')*(B.mag>0?1.3:1);const k=MON[m.type].kind;if(k==='ghost')v*=2;v*=elemMul(el,k)*critRoll(m);return Math.max(1,Math.round(v*(.9+Math.random()*.2)))}
 let tims=[],traps=[];
 function sched(t,fn){tims.push({t,fn})}
 let parts=[];const FXS=1.6;
 const ELC={fire:['#ff7a2a','#ffd060','#ff4a1a'],water:['#4aa0f0','#bfe8ff','#7fb4e3'],ice:['#8ad0f8','#ffffff','#bfe8ff'],thunder:['#ffe060','#fffbe0','#ffd040'],wind:['#9ce0c0','#e8fff4','#c8f0e0'],earth:['#c8a060','#e0c08a','#8a6a40'],holy:['#fff6c8','#ffe08a','#ffffff'],dark:['#a060d0','#5a2a8a','#d0a0ff'],heal:['#9cf0a0','#e8ffe8','#c8f8c8'],sup:['#9cc9ec','#ffffff','#c8e0ff'],farm:['#c7e59a','#8ad070','#fff6c8'],magic:['#b493e8','#e8d8ff','#ffffff'],
-  sword:['#ffd060','#ffffff','#fff0b0'],spear:['#bfe0ff','#ffffff','#8ab0e0'],bow:['#c7e59a','#ffffff','#e0f0c0'],rune:['#c8a0ff','#ffffff','#9f7fe0'],axe:['#e0c08a','#ffffff','#c8a060'],pick:['#c0c6cc','#ffffff','#8a8f99'],hand:['#ffffff','#f3e7cf','#e0e0e0'],staff:['#c9a6ff','#ffffff','#9f7fe0']};
+  sword:['#ffd060','#ffffff','#fff0b0'],spear:['#bfe0ff','#ffffff','#8ab0e0'],dagger:['#e0e8f0','#ffffff','#a9b2bd'],great:['#ffb060','#ffffff','#e08a3a'],bow:['#c7e59a','#ffffff','#e0f0c0'],rune:['#c8a0ff','#ffffff','#9f7fe0'],axe:['#e0c08a','#ffffff','#c8a060'],pick:['#c0c6cc','#ffffff','#8a8f99'],hand:['#ffffff','#f3e7cf','#e0e0e0'],staff:['#c9a6ff','#ffffff','#9f7fe0']};
 function spark(x,y,col,n,o={}){for(let i=0;i<n;i++){if(parts.length>600)parts.shift();const a=o.a!=null?o.a+(Math.random()-.5)*(o.spread??6.28):Math.random()*6.28,sp=(o.sp??60)*(.4+Math.random()*.8),L=(o.life||.6)*(.7+Math.random()*.6);
   parts.push({x:x+(Math.random()-.5)*(o.r||0)*2,y:y+(Math.random()-.5)*(o.r||0)*(o.flat?1:2),vx:Math.cos(a)*sp,vy:Math.sin(a)*sp*(o.flat?.5:1)+(o.vy||0),g:o.g||0,life:L,max:L,col:Array.isArray(col)?col[i%col.length]:col,sz:o.sz||2,glow:o.glow!==false,shape:o.shape||'sq',drag:o.drag??.9})}}
 const skEl=sk=>{if(sk.k==='技')return heldW()||'sword';const k=mKey(sk);return k?k.slice(2):'magic'};
@@ -932,6 +958,8 @@ function castExtra(sk,d){
   if(sk.id==='brave'){B.atk=Math.max(B.atk||0,30*supMul('m_fire'));pop(P.x,P.y-22,'ブレイブ','#ff8a3a');return}
   if(sk.id==='quick'){B.spd=Math.max(B.spd||0,40*supMul('m_wind'));pop(P.x,P.y-22,'クイック','#8ae0e0');return}
   if(sk.id==='focus'){B.mag=Math.max(B.mag||0,30*supMul('m_ice'));pop(P.x,P.y-22,'フォーカス','#8ad0f8');return}
+  if(sk.id==='hawkeye'){B.crit=Math.max(B.crit||0,30*supMul('m_dark'));pop(P.x,P.y-22,'ホークアイ','#c8a0f0');return}
+  if(sk.id==='mirage'){B.eva=Math.max(B.eva||0,30*supMul('m_water'));pop(P.x,P.y-22,'ミラージュ','#9cd8f0');return}
   if(sk.id==='shell'){B.mdef=Math.max(B.mdef||0,20*supMul('m_holy'));pop(P.x,P.y-22,'シェル','#fff6c8');return}
   if(sk.id==='inferno'){for(let i=0;i<12;i++)sched(i*.25,()=>{fx.push({type:'flame',x:P.x,y:P.y,t:.3,max:.3});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<62+m.r)hurtMon(m,magDmg(m,.45,'fire'),[0,0],'#ff9a3a')});return}
   if(sk.id==='zero'){flash=.15;shake=.2;const rs=new Set(reachMons(170));for(const m of[...mons])if(rs.has(m)){fx.push({type:'burst',x:m.x,y:m.y-6,t:.4,max:.4,c:'#bfe8ff'});hurtMon(m,magDmg(m,3.2,'ice'),[0,0],'#bfe8ff');m.stun=m.boss?1.2:3;m.frz=m.stun}return}
@@ -958,16 +986,21 @@ function castExtra(sk,d){
     if(!ts.length){pop(P.x,P.y-18,'空振り','#ccc');return}for(let i=0;i<7;i++){const m=ts[i%ts.length];fx.push({type:'meteor',x:m.x,y:m.y,t:.45+i*.18,max:.45+i*.18,cb:()=>{shake=.12;if(mons.includes(m))hurtMon(m,magDmg(m,2.2,'fire'),[0,0],'#ffb84a')}})}}
 }
 
-function atk(){if(heldW()==='spear'){const a=S.atk+wPow('spear')+accSum('atk');return B.atk>0?Math.round(a*1.3):a}const st=heldW()==='staff',a=st?Math.round((S.atk+WLP[S.wl.staff]+accSum('atk'))*WEAP.staff.mult):S.atk+wPow('sword')+accSum('atk');return B.atk>0?Math.round(a*1.3):a}
-function dmgIn(a,magic){const v=Math.max(1,Math.round(a*.2),a-(magic?mdef():def()));return hgs('sword',0)?Math.max(1,Math.round(v*.95)):v}
+function atk(){if(['spear','dagger','great'].includes(heldW())){const h=heldW(),a=Math.round((S.atk+wPow(h)+accSum('atk'))*WEAP[h].mult);return B.atk>0?Math.round(a*1.3):a}const st=heldW()==='staff',a=st?Math.round((S.atk+WLP[S.wl.staff]+accSum('atk'))*WEAP.staff.mult):S.atk+wPow('sword')+accSum('atk');return B.atk>0?Math.round(a*1.3):a}
+function eqSum(k){let v=0;for(const sl in EQ){const t=EQ[sl].tiers[S.eq[sl]||0];if(t&&t[k])v+=t[k]}return v}
+const critRate=(w)=>Math.min(.75,.05+stv('crit')+accSum('crit')+eqSum('crit')+(B.crit>0?.2:0)+(w==='spear'?.15+(gs('spear',1)?.1:0):0)+(w==='dagger'&&gs('dagger',1)?.1:0));
+const evaRate=()=>Math.min(.5,.03+stv('eva')+accSum('eva')+eqSum('eva')+(B.eva>0?.15:0)+(heldW()==='dagger'?.1+(gs('dagger',0)?.05:0):0));
+function critRoll(m,w){if(!m||m.hp===undefined||Math.random()>=critRate(w))return 1;pop(m.x,m.y-22,'急所！','#ffd060');return 1.5}
+function evaded(){if(Math.random()>=evaRate())return false;P.inv=.4;pop(P.x,P.y-16,'かわした！','#bfe8ff');sfx('swing');return true}
+function dmgIn(a,magic){a=a*(.9+Math.random()*.2)*(hgs('great',1)?.9:1);const v=Math.max(1,Math.round(a*.2),Math.round(a-(magic?mdef():def())));return hgs('sword',0)?Math.max(1,Math.round(v*.95)):v}
 function mdef(){let d=Math.floor(S.lv*.4)+pt('mdef')+Math.floor(enh('body')/3)+Math.floor(enh('head')/3);for(const s in EQ){const t=EQ[s].tiers[S.eq[s]||0];if(t&&t.mdef)d+=t.mdef}const h=heldW();return d+(h==='staff'?STAFFD[S.wl.staff]:h==='rune'?RUNED[S.wl.rune]:0)+(B.mdef>0?6:0)+accSum('mdef')}
-function aspd(){return(ASPDW[heldW()]||1)*(hgs('bow',0)?1.1:1)*(1+accSum('aspd')+pt('aspd')*.01+(B.aspd>0?.25:0))}
-function def(){let d=0;for(const s in EQ){const t=EQ[s].tiers[S.eq[s]||0];if(t)d+=t.def}return d+pt('def')+['head','body','shield','feet'].reduce((a,k)=>a+Math.floor(enh(k)/2),0)+(B.def>0?5:0)+(B.bar>0?8:0)+accSum('def')}
+function aspd(){return(ASPDW[heldW()]||1)*(hgs('bow',0)?1.1:1)*(1+accSum('aspd')+pt('aspd')*.01+(B.aspd>0?.25:0)+stv('aspd'))}
+function def(){let d=0;for(const s in EQ){const t=EQ[s].tiers[S.eq[s]||0];if(t)d+=t.def}return d+pt('def')+['head','body','shield','feet'].reduce((a,k)=>a+Math.floor(enh(k)/2),0)+(B.def>0?5:0)+(B.bar>0?8:0)+accSum('def')+stv('def')}
 const pt=k=>((S.pt||{})[k])||0;
 const PTS=[['hp','体力','最大HP+5'],['st','スタミナ','最大ST+4'],['mp','魔力量','最大MP+4'],['atk','筋力','攻撃+1'],['mag','知力','魔法攻撃+1'],['def','守り','防御+1'],['mdef','精神','魔法防御+1'],['aspd','器用さ','攻撃速度+1%']];
 function addPt(k){if(!(S.sp>0))return;S.sp--;S.pt=S.pt||{};S.pt[k]=(S.pt[k]||0)+1;if(k==='hp'){S.mhp+=5;S.hp+=5}if(k==='st'){S.mst+=4;S.st+=4}if(k==='mp'){S.mmp+=4;S.mp+=4}if(k==='atk')S.atk+=1}
 function resetPts(){const q=S.pt||{};S.mhp-=5*(q.hp||0);S.mst-=4*(q.st||0);S.mmp-=4*(q.mp||0);S.atk-=(q.atk||0);S.hp=Math.min(S.hp,S.mhp);S.st=Math.min(S.st,S.mst);S.mp=Math.min(S.mp,S.mmp);S.sp=(S.sp||0)+Object.values(q).reduce((a,b)=>a+b,0);S.pt={}}
-function spdMul(){const t=EQ.feet.tiers[S.eq.feet||0];return 1+(t?t.spd:0)+farmSum('speed')+accSum('spd')+(B.spd>0?.25:0)}
+function spdMul(){const t=EQ.feet.tiers[S.eq.feet||0];return 1+(t?t.spd:0)+farmSum('speed')+accSum('spd')+(B.spd>0?.25:0)+stv('spd')}
 const have=id=>id==='anyfish'?FISHIDS.reduce((a,f)=>a+(S.inv[f]||0)+(S.store[f]||0),0):(S.inv[id]||0)+(S.store[id]||0);
 function take(id,n){if(id==='anyfish'){for(const f of FISHIDS){const k=Math.min(have(f),n);if(k)take(f,k);n-=k;if(!n)break}return}const a=Math.min(n,S.inv[id]||0);S.inv[id]=(S.inv[id]||0)-a;S.store[id]=(S.store[id]||0)-(n-a)}
 const toStore=(id,n)=>S.store[id]=(S.store[id]||0)+n;
@@ -1014,7 +1047,7 @@ function update(dt){
   for(const f of fx){if(!f._p){f._p=1;if(!f.cb){f.t*=FXS;f.max*=FXS}fxSpawn(f)}f.t-=dt;if(f.t<=0&&f.cb){const c=f.cb;f.cb=null;c()}}fx=fx.filter(f=>f.t>0);updParts(dt);
   if(B.bar>0&&Math.random()<.08)spark(P.x,P.y-6,ELC.sup,1,{sp:8,r:12,life:.6,shape:'star'});{const mv=Math.hypot(P.x-(P.lx??P.x),P.y-(P.ly??P.y))>.05;P.lx=P.x;P.ly=P.y;P.mvg=mv}if(B.spd>0&&P.mvg&&Math.random()<.35)spark(P.x,P.y-6,['#8ae0e0','#e8fff4'],1,{sp:5,life:.35,r:4});if(B.mag>0&&Math.random()<.1)spark(P.x,P.y-10,ELC.sword,1,{sp:6,vy:-25,life:.7,r:8,shape:'star'});if(P.regen>0&&Math.random()<.06)spark(P.x,P.y-4,ELC.heal,1,{sp:4,vy:-25,life:.9,r:8,shape:'plus'});
   for(const e of eprojs){e.x+=e.vx*dt;e.y+=e.vy*dt;e.life-=dt;if(solidPx(e.x,e.y))e.life=0;
-    if(e.life>0&&Math.hypot(e.x-P.x,e.y-(P.y-4))<8&&P.inv<=0&&P.rush<=0){e.life=0;const dm=dmgIn(e.dmg,e.type==='fireb'||e.type==='iceb'||e.type==='note');if(e.type==='note'&&Math.random()<.35){P.charm=3;pop(P.x,P.y-26,'魅了！','#f08ab0');sfx('charm')}S.hp-=dm;sfx('hurt');P.inv=.7;pop(P.x,P.y-16,dm,'#ff7a6e');if(S.hp<=0){S.hp=0;collapse();return}}}
+    if(e.life>0&&Math.hypot(e.x-P.x,e.y-(P.y-4))<8&&P.inv<=0&&P.rush<=0){e.life=0;if(evaded())continue;const dm=dmgIn(e.dmg,e.type==='fireb'||e.type==='iceb'||e.type==='note');if(e.type==='note'&&Math.random()<.35){P.charm=3;pop(P.x,P.y-26,'魅了！','#f08ab0');sfx('charm')}S.hp-=dm;sfx('hurt');P.inv=.7;pop(P.x,P.y-16,dm,'#ff7a6e');if(S.hp<=0){S.hp=0;collapse();return}}}
   eprojs=eprojs.filter(e=>e.life>0);
   for(const p of projs){
     if(p.homing){if(mons.includes(p.homing)){const dx=p.homing.x-p.x,dy=p.homing.y-4-p.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,dt*7);p.vx+=(dx/l*170-p.vx)*k;p.vy+=(dy/l*170-p.vy)*k}else p.homing=null}
@@ -1137,9 +1170,9 @@ function tackleMenu(){
     l.append(item('練りエサ','10G',`魚が早くかかり、珍しい魚も出やすい（手持ち ${have('bait')}）`,[btn('×1',()=>buy(()=>S.inv.bait=(S.inv.bait||0)+1,10)),btn('×10',()=>buy(()=>S.inv.bait=(S.inv.bait||0)+10,100))]));
     b.append(l,row(btn('つり図鑑',()=>{closeModal();dexMenu()}),btn('閉じる',closeModal)))};
   openModal(render)}
-function wPow(w){if(w==='spear')return SPEARP[S.wl.spear||0]+enh('spear');if(w==='sword')return heldW()==='rune'?RUNEA[S.wl.rune]+enh('rune'):SWP[S.sword]+enh('sword');if(w==='rune')return RUNEA[S.wl.rune||0]+enh('rune');return WLP[S.wl[w]||0]+enh(w)}
+function wPow(w){if(w==='spear')return SPEARP[S.wl.spear||0]+enh('spear');if(w==='dagger')return DAGP[S.wl.dagger||0]+enh('dagger');if(w==='great')return GREATP[S.wl.great||0]+enh('great');if(w==='sword')return heldW()==='rune'?RUNEA[S.wl.rune]+enh('rune'):SWP[S.sword]+enh('sword');if(w==='rune')return RUNEA[S.wl.rune||0]+enh('rune');return WLP[S.wl[w]||0]+enh(w)}
 const enh=k=>((S.enh||{})[k])||0,EMAX=10;
-function wDmg(w,m,mult=1){if(w==='sword'&&heldW()==='staff')w='staff';if(w==='sword'&&heldW()==='spear')w='spear';const pw=w==='sword'?heldW():w;if(m&&m.hp!==undefined)profGain(pw,1);mult*=1+.01*(profLv(pw)-1);if(pw==='sword'&&gs('sword',1))mult*=1.08;if(pw==='bow'&&gs('bow',1))mult*=1.1;if(pw==='spear'&&gs('spear',1)&&m&&m.hp!==undefined&&Math.random()<.15){mult*=1.5;pop(m.x,m.y-22,'急所！','#ffd060')}let b=S.atk+accSum('atk')+wPow(w);if(B.atk>0)b*=1.3;b*=WEAP[w].mult*mult;if(m&&WEAP[w].vs&&MON[m.type].kind===WEAP[w].vs)b*=2.2;if(m&&MON[m.type].kind==='ghost')b*=.5;return Math.max(1,Math.round(b*(.85+Math.random()*.3)))}
+function wDmg(w,m,mult=1){if(w==='sword'&&heldW()==='staff')w='staff';if(w==='sword'&&['spear','dagger','great'].includes(heldW()))w=heldW();const pw=w==='sword'?heldW():w;if(m&&m.hp!==undefined)profGain(pw,1);mult*=1+.01*(profLv(pw)-1);if(pw==='sword'&&gs('sword',1))mult*=1.08;if(pw==='bow'&&gs('bow',1))mult*=1.1;if(pw==='great'&&gs('great',0))mult*=1.08;mult*=critRoll(m,pw);let b=S.atk+accSum('atk')+wPow(w);if(B.atk>0)b*=1.3;b*=1+stv('atk');b*=WEAP[w].mult*mult;if(m&&WEAP[w].vs&&MON[m.type].kind===WEAP[w].vs)b*=2.2;if(m&&MON[m.type].kind==='ghost')b*=.5;return Math.max(1,Math.round(b*(.85+Math.random()*.3)))}
 const ARROWS={normal:{n:'木の矢',st:0,mp:0,d:'ふつうの矢'},pierce:{n:'貫通の矢',st:1,mp:1,d:'敵をすべて貫く',in:{ore:3,feather:3}},poison:{n:'毒の矢',st:1,mp:1,d:'当たった敵を毒にする',in:{kinoko:3,feather:2}},
   stun:{n:'痺れの矢',st:1,mp:2,d:'3割の確率で敵をしびれさせる',in:{wing:3,gem:1}},fire:{n:'火の矢',st:1,mp:2,el:'fire',d:'火属性',in:{flamestone:1,wood:3}},ice:{n:'氷の矢',st:1,mp:2,el:'ice',d:'氷属性・足止め',in:{icecrystal:1,feather:2}},
   thunder:{n:'雷の矢',st:1,mp:2,el:'thunder',d:'雷属性',in:{gem:2,feather:2}},bomb:{n:'爆裂の矢',st:2,mp:3,d:'当たると小さく爆発する（範囲）',in:{flamestone:2,ore:2}}};
@@ -1147,7 +1180,7 @@ for(const id in ARROWS){const a=ARROWS[id];if(a.in)RECIPES.k.push({up:1,n:a.n+'�
 const arrowOK=id=>id==='normal'||(S.arrows||{})[id];
 const staffEl=()=>S.staffEl||'none';
 function attack(){
-  const t=curT(),w=t&&WEAP[t.id]&&hasW(t.id)?t.id:'sword';P.wpn=w;if(w!=='hand')spend(1);sfx(w==='bow'?'bow':w==='staff'?'bolt':'swing');
+  const t=curT(),w=t&&WEAP[t.id]&&hasW(t.id)?t.id:'sword';P.wpn=w;P.atkT=clock;if(w!=='hand')spend(1);sfx(w==='bow'?'bow':w==='staff'?'bolt':'swing');
   P.swMax=(w==='bow'?.3:w==='staff'?.6:.28)/aspd();
   if(w!=='bow'&&w!=='staff'){const d=DIRS[P.dir],pal=ELC[w]||ELC.sword;if(w==='spear')fx.push({type:'thrust',x:P.x+d[0]*6,y:P.y-4+d[1]*6,d,t:.2,max:.2});else fx.push({type:'slash',x:P.x,y:P.y-4,a:Math.atan2(d[1],d[0]),t:.22,max:.22,c:pal[0],r:15,wid:2})}
   if(w==='staff'){P.swing=P.swMax;P.swHit=new Set();const d=DIRS[P.dir];let t=reachMons(150)[0]||null,bd=t?Math.hypot(t.x-P.x,t.y-P.y):150;
@@ -1163,7 +1196,7 @@ function attack(){
   P.swing=P.swMax;P.swHit=new Set()}
 function swingHits(){
   const w=P.wpn||'sword';if(w==='bow')return;
-  const d=DIRS[P.dir],rch=w==='spear'?(gs('spear',0)?22:18):11,bx=P.x+d[0]*rch,by=P.y+d[1]*rch;
+  const d=DIRS[P.dir],rch=w==='spear'?(gs('spear',0)?20:16):w==='great'?14:w==='dagger'?9:11,bx=P.x+d[0]*rch,by=P.y+d[1]*rch;
   if(w!=='staff')for(const m of[...mons]){if(P.swHit.has(m))continue;if(Math.hypot(m.x-bx,m.y-by)<11+m.r){P.swHit.add(m);hitMon(m,1,d,w)}}
   const tx=Math.floor(bx/TS),ty=Math.floor(by/TS),k=tx+','+ty,c=tileAt(tx,ty),fl=cur.floorCh||(cur.outdoor?'.':'o'),px=tx*TS+8,py=ty*TS+4;
   if(w==='hand')return;
@@ -1234,7 +1267,7 @@ function updMons(dt){
     if(dun.rooms&&!dun.rooms.has(Math.floor(m.x/TS)+','+Math.floor(m.y/TS))){m.x=ox;m.y=oy;m.kx=m.ky=0;if(m.st==='run'||m.st==='dive'){m.st='';m.cd=1.5}}
     const decay=Math.pow(.002,dt);m.kx*=decay;m.ky*=decay;
     if(m.boss){m.sum-=dt;if(m.sum<=0){m.sum=7;const D=DUNS[dun.id];if(mons.length<7)addMon(D.pool(floor)[0],floor+D.off,[m.x,m.y])}}
-    if(dist<m.r+5&&P.inv<=0&&P.rush<=0){const dm=dmgIn(m.atk,MON[m.type].kind==='ghost'||!!df.charm);S.hp-=dm;sfx('hurt');if(df.charm){P.charm=4;m.hp=Math.min(m.mhp,m.hp+dm);pop(P.x,P.y-26,'魅了！','#f08ab0')}P.inv=.9;pop(P.x,P.y-16,dm,'#ff7a6e');moveBody(P,dx/dist*8,dy/dist*8,5);
+    if(dist<m.r+5&&P.inv<=0&&P.rush<=0&&!evaded()){const dm=dmgIn(m.atk,MON[m.type].kind==='ghost'||!!df.charm);S.hp-=dm;sfx('hurt');if(df.charm){P.charm=4;m.hp=Math.min(m.mhp,m.hp+dm);pop(P.x,P.y-26,'魅了！','#f08ab0')}P.inv=.9;pop(P.x,P.y-16,dm,'#ff7a6e');moveBody(P,dx/dist*8,dy/dist*8,5);
       if(m.st==='run'){m.st='';m.cd=2}
       if(S.hp<=0){S.hp=0;collapse();return}}
   }
@@ -1414,7 +1447,7 @@ function jobTile(id,x,y){const c=town.m[y]&&town.m[y][x],k=x+','+y,s=S.soil[k];
   if(id==='tiller')return c==='F'&&!s&&(S.wdone.till||0)<40;
   if(id==='fruit')return c==='Y'&&(S.fruit[k]||0)<=S.day&&(S.wdone.fruit||0)<6;
   if(id==='fish')return c==='W'&&(S.wdone.fish||0)<3&&S.time<1020;
-  if(id==='brew'){const hs=HELPERS.find(h=>h.id==='brew').house;return c==='e'&&x===hs.x+2&&y===hs.y+hs.h-1&&!S.wdone.brew&&S.time>=600}
+  if(id==='brew')return c==='魔'&&!S.wdone.brew&&S.time>=600&&S.time<1020;
   return false}
 function npcFish(x,y){const loc=x>=44&&y>=44?'sea':'pond',c=FISH.filter(f=>f.loc.includes(loc)&&!f.rare&&!f.junk&&!f.night&&(f.rod||1)<=1),tot=c.reduce((a,f)=>a+f.w,0);let r=Math.random()*tot;for(const f of c){r-=f.w;if(r<=0)return f.id}return c[0].id}
 function brewWork(){S.wdone.brew=1;const a=Math.min(3,Math.floor(have('herb')/2)),b=Math.min(2,Math.floor(have('manaherb')/2));if(a){take('herb',a*2);toStore('potion',a)}if(b){take('manaherb',b*2);toStore('manapot',b)}return a+b?`回復薬×${a}${b?'・マナポーション×'+b:''}`:'材料なし'}
@@ -1445,7 +1478,7 @@ function finishNPC(n){
   else if(id==='tiller'){S.soil[k]={w:false,c:null};S.wdone.till=(S.wdone.till||0)+1;popT(x,y,'ザクッ','#c8a060')}
   else if(id==='fruit'){const f=fruitAt(x,y);S.fruit[k]=S.day+3;toStore(f,(S.deco||{})[k]?2:1);S.wdone.fruit=(S.wdone.fruit||0)+1;popT(x,y,ITEMS[f].n+'→倉庫','#f4a0a8')}
   else if(id==='fish'){const f=npcFish(x,y);toStore(f,1);S.wdone.fish=(S.wdone.fish||0)+1;popT(x,y,ITEMS[f].n+'→倉庫','#9cc9ec');n.wait=2.5}
-  else if(id==='brew'){popT(x,y,brewWork(),'#c7a6ff');n.wait=2}}
+  else if(id==='brew'){const r=brewWork();popT(x,y,r,'#c7a6ff');if(cur===town)toast(r==='材料なし'?'セラ：倉庫に薬草がなくて薬を作れなかった':`セラがまほう店で ${r} を作った（倉庫へ）`);n.atWork=true;n.hidden=true}}
 function updNPC(n,dt){
   if(n.inCave){if(S.time>=900){n.inCave=false;n.hidden=false;n.x=2*TS+8;n.y=26*TS+8;toast(`ガンツが洞窟から帰ってきた（${mineReward()}）`);n.wait=1}return}
   if(n.atWork){if(S.time>=1080){n.atWork=false;n.hidden=false;n.wait=.3}return}
@@ -1536,16 +1569,18 @@ function hireMenu(){
     b.append(list,row(btn('閉じる',closeModal)))};
   openModal(render);
 }
-function descOf(id){const it=ITEMS[id];if(it.heal){if(it.heal[0]>=999)return'HP・ST・MP全回復'+(it.buff?'＋攻撃・防御・移動アップ（90秒）':'');const p=[];['HP','ST','MP'].forEach((s,i)=>{if(it.heal[i])p.push(`${s}+${it.heal[i]}`)});if(it.buff){const bn={atk:'攻撃+30%',def:'防御+5',spd:'移動+25%'};p.push(Object.keys(it.buff).map(k=>bn[k]).join('・')+`（${it.buff[Object.keys(it.buff)[0]]}秒）`)}return p.join(' ')}if(it.use==='whet')return'使うと90秒間 攻撃力+30%';if(it.use==='grow')return'畑の作物が1日育つ';if(it.use==='place')return'畑に置くと毎朝周囲8マスに水やり';if(it.sell)return`換金用のお宝（出荷箱に入れると${it.p}G）`;return`売値 ${it.p}G`}
+function descOf(id){const it=ITEMS[id];if(it.heal){if(it.heal[0]>=999)return'HP・ST・MP全回復'+(it.buff?'＋攻撃・防御・移動アップ（90秒）':'');const p=[];['HP','ST','MP'].forEach((s,i)=>{if(it.heal[i])p.push(`${s}+${it.heal[i]}`)});if(it.buff){const bn={atk:'攻撃+30%',def:'防御+5',spd:'移動+25%',crit:'急所率+20%',eva:'回避率+15%'};p.push(Object.keys(it.buff).map(k=>bn[k]).join('・')+`（${it.buff[Object.keys(it.buff)[0]]}秒）`)}return p.join(' ')}if(it.use==='whet')return'使うと90秒間 攻撃力+30%';if(it.use==='grow')return'畑の作物が1日育つ';if(it.use==='place')return'畑に置くと毎朝周囲8マスに水やり';if(it.sell)return`換金用のお宝（出荷箱に入れると${it.p}G）`;return`売値 ${it.p}G`}
 const SWEETS=new Set(['chocolate','chococake','chocobanana','grapejelly','jam','applepie','peachpie','pudding','cake','candy','mangopudding','berryjam','honeytoast','melonpan','pumpkinpie']);
 const cookCat=r=>r.up?'料理':DRINK.has(r.out)?'飲み物':SWEETS.has(r.out)?'お菓子':!ITEMS[r.out].heal?'下ごしらえ':'料理';
-let CTAB='すべて';
+const CTABS={q:['すべて','料理','お菓子','飲み物','下ごしらえ','作れる'],p:['すべて','薬','染料','その他','作れる'],k:['すべて','道具','アクセサリー','見た目','矢','作れる'],v:['すべて','武器','防具','農具','作れる']};
+const recCat=(st,r)=>st==='q'?cookCat(r):st==='p'?(ITEMS[r.out].dye?'染料':ITEMS[r.out].heal||ITEMS[r.out].cure?'薬':'その他'):st==='k'?((r.d||'').startsWith('アクセサリー')?'アクセサリー':(r.d||'').startsWith('見た目')?'見た目':/矢/.test(r.n||'')?'矢':'道具'):st==='v'?((r.d||'').includes('の防具')?'防具':/クワ|じょうろ|オノ|ツルハシ/.test(r.n||'')?'農具':'武器'):'';
+const CTABV={};let CTAB='すべて';
 function craftMenu(st){let fk=null;
   const refocus=b=>{let t=fk!==null?b.querySelector(`button[data-rk="${fk}"]`):null;if(t&&t.disabled){t=t.closest('.item');t.tabIndex=-1}else if(!t)t=b.querySelector('button[data-rk]:not(:disabled)');if(t){t.focus({preventScroll:true});t.scrollIntoView({block:'nearest'})}};
   const render=b=>{const sy=mbox.scrollTop;b.innerHTML='';b.append(el('h2','',ST_NAMES[st]),el('div','muted',ST_HELP[st]+'。材料はかばんと倉庫の両方から使います。'));
-    if(st==='q')b.append(tabRow(CTAB,['すべて','料理','お菓子','飲み物','下ごしらえ','作れる'].map(k=>[k,k]),k=>{CTAB=k;fk=null;render(b);mbox.scrollTop=0;refocus(b)}));
+    CTAB=CTABV[st]||'すべて';if(CTABS[st])b.append(tabRow(CTAB,CTABS[st].map(k=>[k,k]),k=>{CTABV[st]=CTAB=k;fk=null;render(b);mbox.scrollTop=0;refocus(b)}));
     const list=el('div','list');let shown=0;
-    for(const[ri,r]of RECIPES[st].entries()){if(r.show&&!r.show())continue;if(st==='q'&&CTAB!=='すべて'){if(CTAB==='作れる'){if(!Object.entries(r.in).every(([id,n])=>have(id)>=n))continue}else if(cookCat(r)!==CTAB)continue}shown++;
+    for(const[ri,r]of RECIPES[st].entries()){if(r.show&&!r.show())continue;if(CTAB!=='すべて'){if(CTAB==='作れる'){if(!Object.entries(r.in).every(([id,n])=>have(id)>=n))continue}else if(recCat(st,r)!==CTAB)continue}shown++;
       const ok=Object.entries(r.in).every(([id,n])=>have(id)>=n);
       const need=Object.entries(r.in).map(([id,n])=>`${ITEMS[id].n} ${have(id)}/${n}`).join('　');
       const mk=btn('作る',()=>{for(const[id,n]of Object.entries(r.in))take(id,n);S.st=Math.max(0,S.st-2);
@@ -1553,7 +1588,7 @@ function craftMenu(st){let fk=null;
       mk.disabled=!ok;mk.dataset.rk=ri;
       const d=el('div','item'),l=el('div','l'),rr=el('div','r');if(!r.up)d.append(itemImg(r.out));
       l.append(el('span','',r.up?r.n:ITEMS[r.out].n),el('small','',r.up?r.d:descOf(r.out)),el('small',ok?'':'lack',need));if(!r.up){const hv=el('small','muted','所持 '+have(r.out));hv.style.cssText='font-size:11px;white-space:nowrap';rr.append(hv)}rr.append(mk);d.append(l,rr);list.append(d)}
-    if(!shown)list.append(el('div','muted',st==='q'&&CTAB!=='すべて'?(CTAB==='作れる'?'いまの材料で作れるものはない':'このカテゴリーの料理はない'):'ここで作れるものはすべて作った'));
+    if(!shown)list.append(el('div','muted',CTAB!=='すべて'?(CTAB==='作れる'?'いまの材料で作れるものはない':'このタブで作れるものはない'):'ここで作れるものはすべて作った'));
     b.append(list,row(btn('閉じる',closeModal)));if(sy)mbox.scrollTop=sy};
   openModal(render);refocus(mbox);
 }
@@ -1628,7 +1663,7 @@ function smithShop(){let tab='eq';
       for(const r of rs){const pr=smithPrice(r),bt=btn('買う',()=>{if(S.gold<pr)return toast('お金が足りない');S.gold-=pr;r.apply();sfx('coin');toast(`${r.n}を買った！`);render(b)},'pri');if(S.gold<pr)bt.disabled=true;l.append(item(r.n,pr+'G',r.d,[bt]))}
       if(!rs.length)l.append(el('div','muted','いま買える装備はない（次の段階は炉で珍しい素材を使って作ろう）'))}
     b.append(l,row(btn('閉じる',closeModal)))};openModal(render)}
-function townMigrate(){const v=(loadSave()||{}).townV||0;if(v>=7){S.townV=7;return -1}S.townV=7;if(v>=3&&S.houses){const hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h+1&&b.y<a.y+a.h+1;for(const id in S.houses){const q={...S.houses[id],w:5,h:3};if(hit(q,{x:51,y:15,w:5,h:3})||hit(q,{x:56,y:40,w:5,h:3}))delete S.houses[id]}}let refund=0;const store=(i,n)=>{S.store[i]=(S.store[i]||0)+n};
+function townMigrate(){const v=(loadSave()||{}).townV||0;if(v>=8){S.townV=8;return -1}S.townV=8;if(v>=3&&S.houses){const hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h+1&&b.y<a.y+a.h+1;for(const id in S.houses){const q={...S.houses[id],w:5,h:3};if(hit(q,{x:56,y:40,w:5,h:3})||hit(q,{x:27,y:8,w:5,h:4}))delete S.houses[id]}}let refund=0;const store=(i,n)=>{S.store[i]=(S.store[i]||0)+n};
   if(v<3){S.houses={};S.stump={};S.felled={};S.grown={};S.pick={};S.chop={}}for(const a of S.animals||[]){a.x=null;a.y=null;a.tx=null;a.ty=null}
   const base=buildTown(null,{}).m,at=k=>{const[x,y]=k.split(',').map(Number);return(base[y]||[])[x]};
   const refD=d=>{if((d.t==='8'||d.t==='Y')&&d.f){S.seeds['tree_'+d.f]=(S.seeds['tree_'+d.f]||0)+1;refund++}else if(d.t===',')store('stone',1);else if(d.t!=='.'&&DECO[d.t]){for(const[i,n]of Object.entries(DECO[d.t].in))store(i,n);refund++}if(d.base)refD(d.base)};
@@ -1713,7 +1748,7 @@ function drawStall(x,y,aw='#c8463d'){R(x-10,y-14,20,3,aw);for(let i=0;i<5;i++)R(
 function enhMat(n){return n<3?[['ore',2+n]]:n<6?[['ore',3],['gem',n-1]]:n<8?[['goldore',n-4],['gem',3]]:n<9?[['obsidian',2],['dragonscale',1]]:[['frostscale',1],['icecrystal',3]]}
 const enhCost=n=>100*(n+1)*(n+1);
 function enhanceMenu(){const render=b=>{b.innerHTML='';b.append(el('h2','','金床（装備の強化）'),el('div','muted',`所持金 ${S.gold} G　お金と素材で装備を最大+${EMAX}まで強化できる。武器は1段階ごとに威力+1（杖は魔攻+1）、防具は2段階ごとに防御+1（頭と体は3段階ごとに魔防+1）。強化は新しい装備に作り替えても引き継がれる。`));
-  const rows=[['sword','剣',()=>SWORDS[S.sword]],['spear','槍',()=>WNAMES.spear[S.wl.spear||0]],['rune','魔法剣',()=>WNAMES.rune[S.wl.rune||0]],['staff','杖',()=>WNAMES.staff[S.wl.staff||0]],['axe','オノ',()=>WNAMES.axe[S.wl.axe||0]],['pick','ツルハシ',()=>WNAMES.pick[S.wl.pick||0]],['bow','弓',()=>WNAMES.bow[S.wl.bow||0]],
+  const rows=[['sword','剣',()=>SWORDS[S.sword]],['spear','細剣',()=>WNAMES.spear[S.wl.spear||0]],['dagger','短剣',()=>WNAMES.dagger[S.wl.dagger||0]],['great','大剣',()=>WNAMES.great[S.wl.great||0]],['rune','魔法剣',()=>WNAMES.rune[S.wl.rune||0]],['staff','杖',()=>WNAMES.staff[S.wl.staff||0]],['axe','オノ',()=>WNAMES.axe[S.wl.axe||0]],['pick','ツルハシ',()=>WNAMES.pick[S.wl.pick||0]],['bow','弓',()=>WNAMES.bow[S.wl.bow||0]],
     ['head','頭',()=>(EQ.head.tiers[S.eq.head||0]||EQ.head.tiers[eqMax('head')]||{}).n],['body','体',()=>(EQ.body.tiers[S.eq.body||0]||EQ.body.tiers[eqMax('body')]||{}).n],['shield','盾',()=>(EQ.shield.tiers[S.eq.shield||0]||EQ.shield.tiers[eqMax('shield')]||{}).n],['feet','足',()=>(EQ.feet.tiers[S.eq.feet||0]||EQ.feet.tiers[eqMax('feet')]||{}).n]];
   for(const[grp,list]of[['武器',rows.slice(0,7)],['防具',rows.slice(7)]]){b.append(el('div','sum',grp));const l=el('div','list');
     for(const[k,nm,nf]of list){const own=k in EQ?eqMax(k)>0:hasW(k);if(!own)continue;const n=enh(k);
@@ -1833,7 +1868,7 @@ function secStatus(b,R){
      const used=Object.values(S.pt||{}).reduce((a,c)=>a+c,0),cost=200*S.lv;if(used)pl.append(item('振り直し',cost+'G','割り振ったポイントをすべて戻す',[btn('戻す',()=>{if(S.gold<cost)return toast('お金が足りない');S.gold-=cost;resetPts();R()})]));b.append(pl)}
     const st=el('div','stat');
     [['HP',`${S.hp} / ${S.mhp}`],['ST',`${S.st} / ${S.mst}`],['MP',`${S.mp} / ${S.mmp}`],['EXP',`${S.exp} / ${need()}`],
-     ['攻撃',(()=>{const h=heldW();if(h==='staff')return `魔法弾 ${Math.round(mag()*.5*accMul('magMul')*(B.mag>0?1.3:1))}（追尾・${(.6/aspd()).toFixed(2)}秒ごと）`;if(!['axe','pick','bow'].includes(h))return atk();const v=Math.round((S.atk+accSum('atk')+wPow(h))*WEAP[h].mult*(B.atk>0?1.3:1));return `${v}（${WEAP[h].n}）・技${atk()}`})()],['防御',def()],['魔法攻撃',mag()],['魔法防御',mdef()],['攻撃速度',`${Math.round(aspd()*100)}%`],['移動',`${Math.round(spdMul()*100)}%`],
+     ['攻撃',(()=>{const h=heldW();if(h==='staff')return `魔法弾 ${Math.round(mag()*.5*accMul('magMul')*(B.mag>0?1.3:1))}（追尾・${(.6/aspd()).toFixed(2)}秒ごと）`;if(!['axe','pick','bow'].includes(h))return atk();const v=Math.round((S.atk+accSum('atk')+wPow(h))*WEAP[h].mult*(B.atk>0?1.3:1));return `${v}（${WEAP[h].n}）・技${atk()}`})()],['防御',def()],['魔法攻撃',mag()],['魔法防御',mdef()],['攻撃速度',`${Math.round(aspd()*100)}%`],['急所率',`${Math.round(critRate(heldW())*100)}%（急所は1.5倍）`],['回避率',`${Math.round(evaRate()*100)}%`],['移動',`${Math.round(spdMul()*100)}%`],
      ['所持金',`${S.gold} G`],['最深到達',Object.keys(DUNS).map(id=>`${DUNS[id].n} ${Math.max((S.reach||{})[id]||0,(S.depth||{})[id]||0)}/${dmax(id)}${clearMax(id)>=dmax(id)?'★':''}`).join('・')],['日付',dateStr()],['雇用中',HELPERS.filter(h=>S.hired[h.id]).map(h=>h.n).join('・')||'なし'],['動物',S.animals.length+'頭']]
       .forEach(([k,v])=>st.append(el('span','k',k),el('span','v',String(v))));
     b.append(st);
@@ -1841,7 +1876,7 @@ function secStatus(b,R){
 function selRow(l,label,desc,opts,curv,fn){const sel=document.createElement('select');sel.className='psel';for(const[v,t]of opts){const o=document.createElement('option');o.value=v;o.textContent=t;if(String(v)===String(curv))o.selected=true;sel.append(o)}sel.onchange=()=>fn(sel.value);const it=item(label,'',desc,[]);it.querySelector('.r').append(sel);l.append(it);return sel}
 function secEquip(b,R){
     b.append(el('div','sum','武器'));
-    {const l=el('div','list'),ws=['sword','spear','rune','staff','axe','pick','bow'].filter(hasW),w0=heldW(),wn=w=>(w==='sword'?SWORDS[S.sword]:WNAMES[w][S.wl[w]])+(enh(w)?' +'+enh(w):''),wd=w=>w==='sword'?`攻撃+${SWP[S.sword]+enh('sword')}`:wEff(w,S.wl[w])+(enh(w)?`・強化+${enh(w)}`:'');
+    {const l=el('div','list'),ws=['sword','spear','dagger','great','rune','staff','bow'].filter(hasW),w0=heldW(),wn=w=>(w==='sword'?SWORDS[S.sword]:WNAMES[w][S.wl[w]])+(enh(w)?' +'+enh(w):''),wd=w=>w==='sword'?`攻撃+${SWP[S.sword]+enh('sword')}`:wEff(w,S.wl[w])+(enh(w)?`・強化+${enh(w)}`:'');
       l.append(el('div','muted','武器は2つまで装備できます。下のバーの武器の枠（R/F）で2つを持ち替え。'));const eq=weps();
       for(let i=0;i<2;i++){const c2=eq[i],other=eq[1-i];selRow(l,'武器'+(i+1)+(c2&&c2===w0?'・手持ち':''),c2?`${WEAP[c2].n}　${wd(c2)}`:'',[...(i?[['','なし']]:[]),...ws.filter(w=>w!==other).map(w=>[w,wn(w)])],c2||'',v=>{const np=[...eq];if(v)np[i]=v;else np.splice(i,1);S.weps=np.filter(Boolean);if(!S.weps.includes(S.sel.weap))S.sel.weap=S.weps[0];toolbar();R()})}
       if(weps().includes('bow')){const own=Object.keys(ARROWS).filter(arrowOK),cu=arrowOK(S.arrow)?S.arrow||'normal':'normal',A=ARROWS[cu];selRow(l,'矢（弓）',`${A.d}${A.st||A.mp?`（1発ごとにST+${A.st}・MP${A.mp}）`:''}`,own.map(id=>[id,ARROWS[id].n]),cu,v=>{S.arrow=v;R()})}
@@ -1861,28 +1896,31 @@ function secEquip(b,R){
       b.append(l)}
     b.append(el('div','muted','見た目の着替えは家のドレッサーで。'));}
 function secSkill(b,R){
-    b.append(el('div','sum','武器の熟練度'),el('div','muted','武器や道具を使うほど上がり、技やパッシブ・採取スキルを覚える。武器は1Lvごとに威力+1%。'));
-    {const pl=el('div','list');for(const w of['sword','spear','rune','staff','axe','pick','bow','hoe','can','rod']){if(TPN[w]?(w==='rod'&&!S.rod):!hasW(w))continue;const e=(S.prof||{})[w]||{lv:1,exp:0},nx=SKILLS.filter(sk=>sk.k==='技'&&(WCAT[w]||[]).includes(sk.c)&&sk.plv>e.lv).sort((a,c)=>a.plv-c.plv)[0];
-      pl.append(item(`${pName(w)}　Lv${e.lv}`,'',(e.lv<PMAX?`次のLvまで ${Math.ceil(pNeed(e.lv)-e.exp)}`:'最大')+(nx?`　次の技：Lv${nx.plv}「${nx.n}」`:(WCAT[w]||[]).length?'　技はすべて習得':'')+(GSK[w]?`　${WEAP[w]&&w!=='axe'&&w!=='pick'?'パッシブ':'採取スキル'}：`+GSK[w].map(g=>(e.lv>=g[0]?'◎':'Lv'+g[0])+g[1]+'（'+g[2]+'）').join('・'):''),[]))}b.append(pl)}
-    {b.append(el('div','sum','魔法の熟練度'),el('div','muted','その属性・種類の魔法を使うほど上がる。攻撃魔法は1Lvごとに威力+1%。'));const pl=el('div','list');let any=0;
+    const T=STAB==='magic';b.append(tabRow(STAB,[['tech','技'],['magic','魔法']],k=>{STAB=k;R()}));
+    if(!T){b.append(el('div','sum','武器の熟練度'),el('div','muted','武器や道具を使うほど上がり、技やパッシブ・採取スキルを覚える。武器は1Lvごとに威力+1%。'));
+    {const pl=el('div','list');for(const w of['sword','spear','dagger','great','rune','staff','bow','axe','pick','hoe','can','rod']){if(TPN[w]?(w==='rod'&&!S.rod):!hasW(w))continue;const e=(S.prof||{})[w]||{lv:1,exp:0},nx=SKILLS.filter(sk=>sk.k==='技'&&(WCAT[w]||[]).includes(sk.c)&&sk.plv>e.lv).sort((a,c)=>a.plv-c.plv)[0];
+      pl.append(item(`${pName(w)}　Lv${e.lv}`,'',(e.lv<PMAX?`次のLvまで ${Math.ceil(pNeed(e.lv)-e.exp)}`:'最大')+(nx?`　次の技：Lv${nx.plv}「${nx.n}」`:(WCAT[w]||[]).length?'　技はすべて習得':'')+(GSK[w]?`　${WEAP[w]&&w!=='axe'&&w!=='pick'?'パッシブ':'採取スキル'}：`+GSK[w].map(g=>(e.lv>=g[0]?'◎':'Lv'+g[0])+g[1]+'（'+g[2]+'）').join('・'):''),[]))}b.append(pl)}}
+    if(T){b.append(el('div','sum','魔法の熟練度'),el('div','muted','その属性・種類の魔法を使うほど上がる。攻撃魔法は1Lvごとに威力+1%。'));const pl=el('div','list');let any=0;
       for(const k of[...MELS.map(e=>'m_'+e),'m_farm']){const e=(S.prof||{})[k]||{lv:1,exp:0},mem=SKILLS.filter(sk=>sk.k==='魔法'&&mKey(sk)===k).map(sk=>sk.n).join('・');pl.append(item(`${TPN[k]}　Lv${e.lv}`,'',`（${mem}）　`+(e.lv<PMAX?`次のLvまで ${Math.ceil(pNeed(e.lv)-e.exp)}`:'最大')+'　'+GSK[k].map(g=>(e.lv>=g[0]?'◎':'Lv'+g[0])+g[1]+'（'+g[2]+'）').join('・'),[]))}
       b.append(pl)}
-    b.append(el('div','sum',`技・魔法（${WEAP[heldW()].n}）`),el('div','muted',`武器ごとに 特技・秘義・奥義 を1つずつと、魔法を3つまで（初級・中級・上級は自由）セット。技は使うたびに次の段へ自動で進み（2.5秒以内）、奥義のあとは始まりの段に戻る。魔法は切替（${kLabel((KB.magSw||[''])[0]||'')}・長押し）で選ぶ。`));
+    b.append(el('div','sum',`${T?'魔法':'技'}のセット（${WEAP[heldW()].n}）`),el('div','muted',T?`武器ごとに魔法を3つまで（初級・中級・上級は自由）セット。魔法は切替（${kLabel((KB.magSw||[''])[0]||'')}・長押し）で選ぶ。`:'武器ごとに 特技・秘義・奥義 を1つずつセット。技は使うたびに次の段へ自動で進み（2.5秒以内）、奥義のあとは始まりの段に戻る。'));
     const w=heldW(),L=loadOf(w),sl=el('div','list');
     const slotRow=(kind,i)=>{const opts=kind==='t'?techOpts(w,i):magOpts(i),cur=slotSk(kind,i,w),kn=opts.filter(known),tn=kind==='t'?TIERN.技[i+1]:'魔法の枠'+(i+1);
       const mark=kind==='t'?(L.s===i?'・始まり':''):(L.mi===i?'・選択中':'');
       if(!kn.length){sl.append(item(`${tn}：—`,'',kind==='t'?`まだ覚えていない（${opts.map(o=>o.n).join('・')}）`:'魔法をまだ覚えていない（まほう店で魔導書）',[]));return}
       selRow(sl,tn+mark,cur?`${cur.k==='技'?'ST':'MP'}${cur.cost}${cur.k==='魔法'?'・詠唱'+chantT(cur).toFixed(1)+'秒':''}　${cur.d}`:'',kn.map(o=>[o.id,kind==='m'?`${o.n}（${TIERN.魔法[o.t]}）`:o.n]),cur?cur.id:kn[0].id,v=>{setSlot(kind,i,v,w);R()})};
-    for(let i=0;i<3;i++)slotRow('t',i);
-    if((WCAT[w]||[]).length)selRow(sl,'技の始まり','技を使うとここから順に自動で進む',[0,1,2].map(i=>[i,TIERN.技[i+1]+(slotSk('t',i,w)?'：'+slotSk('t',i,w).n:'')]),L.s,v=>{L.s=+v;P.chainT=0;R()});
-    for(let i=0;i<3;i++)slotRow('m',i);
-    {const ms=[0,1,2].filter(i=>slotSk('m',i,w));if(ms.length)selRow(sl,'使う魔法',`${kLabel((KB.magic||[''])[0]||'')}（魔法ボタン）で使う魔法。${kLabel((KB.magSw||[''])[0]||'')}でも切り替えられる`,ms.map(i=>[i,'枠'+(i+1)+'：'+slotSk('m',i,w).n]),L.mi,v=>{L.mi=+v;R()})}
-    b.append(sl,el('div','sum','技・魔法の一覧'));const al2=el('div','list');
-    let grp='';for(const sk of[...SKILLS].sort((a,b)=>(a.k===b.k?0:a.k==='技'?-1:1)||a.t-b.t)){const k=known(sk),gn=sk.k+'・'+TIERN[sk.k][sk.t];if(gn!==grp){grp=gn;al2.append(el('div','muted',`― ${sk.k==='技'?'技':'魔法'}：${TIERN[sk.k][sk.t]} ―`))}
+    if(!T)for(let i=0;i<3;i++)slotRow('t',i);
+    if(!T){const own=Object.keys(STANCES).filter(id=>S.lv>=STANCES[id].lv);selRow(sl,'構え（自己バフ）',`${kLabel((KB.stance||[''])[0]||'')}キーでON/OFF。`+(S.stance?STANCES[S.stance].d:'構えていない'),[['','なし'],...own.map(id=>[id,STANCES[id].n])],S.stance||'',v=>{setStance(v||null,true);R()})}
+    if(!T&&(WCAT[w]||[]).length)selRow(sl,'技の始まり','技を使うとここから順に自動で進む',[0,1,2].map(i=>[i,TIERN.技[i+1]+(slotSk('t',i,w)?'：'+slotSk('t',i,w).n:'')]),L.s,v=>{L.s=+v;P.chainT=0;R()});
+    if(T)for(let i=0;i<3;i++)slotRow('m',i);
+    if(T){const ms=[0,1,2].filter(i=>slotSk('m',i,w));if(ms.length)selRow(sl,'使う魔法',`${kLabel((KB.magic||[''])[0]||'')}（魔法ボタン）で使う魔法。${kLabel((KB.magSw||[''])[0]||'')}でも切り替えられる`,ms.map(i=>[i,'枠'+(i+1)+'：'+slotSk('m',i,w).n]),L.mi,v=>{L.mi=+v;R()})}
+    b.append(sl,el('div','sum',T?'魔法の一覧':'技の一覧'));const al2=el('div','list');
+    if(!T){al2.append(el('div','muted','― 構え（自己バフ・どの武器でも使える）―'));for(const id in STANCES){const t=STANCES[id];al2.append(item(`[構え] ${t.n}`,'',(S.lv>=t.lv?t.d:`Lv${t.lv}で覚える`)+(S.stance===id?'　（構え中）':''),[]))}}
+    let grp='';for(const sk of[...SKILLS].filter(sk=>(sk.k==='魔法')===T).sort((a,b)=>(a.k===b.k?0:a.k==='技'?-1:1)||a.t-b.t)){const k=known(sk),gn=sk.k+'・'+TIERN[sk.k][sk.t];if(gn!==grp){grp=gn;al2.append(el('div','muted',`― ${sk.k==='技'?'技':'魔法'}：${TIERN[sk.k][sk.t]} ―`))}
       const ws=sk.k==='技'?Object.keys(WCAT).filter(x=>WCAT[x].includes(sk.c)).map(x=>WEAP[x].n).join('・'):'';
       al2.append(item(`${sk.c?'['+sk.c+'] ':sk.cat?'['+sk.cat+'] ':''}${sk.n}`,(sk.k==='技'?'ST':'MP')+sk.cost,(sk.k==='技'?`【熟練度Lv${sk.plv}】`:'')+(k?sk.d:(sk.k==='技'?`熟練度Lv${sk.plv}で覚える`:sk.dun?'ダンジョンの主やお宝から手に入る魔導書で覚える':sk.minlv&&S.lv<sk.minlv?`Lv${sk.minlv}になると魔導書が店に並ぶ（ダンジョンの主からも出る）`:'まほう店の魔導書（ダンジョンの主からも出る）'))+(ws?`　使える武器：${ws}`:''),[]))}
     b.append(al2);}
-let MTAB='status';
+let MTAB='status',STAB='tech';
 const MTABS=[['status','ステータス'],['equip','装備'],['skill','術技'],['bag','かばん']];
 function renderMenu(b){b.innerHTML='';const tb=el('div','tabs');for(const[k,n]of MTABS){const t=btn(n+(k==='status'&&S.sp>0?'＋':''),()=>{MTAB=k;mTop=true;renderMenu(b)},MTAB===k?'pri':'');tb.append(t)}b.append(tb);
   const body=el('div','tabbody');b.append(body);const R=()=>{const y=mbox.scrollTop;renderMenu(b);mbox.scrollTop=y};
@@ -2054,7 +2092,9 @@ function drawIcon(id,ox,oy){
   else if(id==='axe'){for(let i=0;i<9;i++)R(ox+3+i,oy+13-i,2,2,'#8a5a32');R(ox+9,oy+1,5,6,'#a9b2bd');R(ox+13,oy+2,1,4,'#dfe6ee')}
   else if(id==='pick'){for(let i=0;i<9;i++)R(ox+3+i,oy+13-i,2,2,'#8a5a32');R(ox+6,oy+2,9,2,'#8a8f99');R(ox+5,oy+3,2,3,'#8a8f99');R(ox+14,oy+3,2,3,'#8a8f99')}
   else if(id==='bow'){G.strokeStyle='#8a5a32';G.lineWidth=2;G.beginPath();G.arc(ox+5,oy+8,7,-1.25,1.25);G.stroke();R(ox+7,oy+2,1,12,'#f3e7cf');R(ox+3,oy+8,11,1,'#d9c49c');R(ox+12,oy+7,2,3,'#c0c6cc')}
-  else if(id==='spear'){for(let i=0;i<11;i++)R(ox+2+i,oy+14-i,1,2,'#8a5a32');poly([ox+11,oy+5,ox+15,oy+1,ox+13,oy+6],'#dfe6ee');R(ox+10,oy+5,3,1,'#c8463d')}
+  else if(id==='spear'){for(let i=0;i<10;i++)R(ox+5+i,oy+10-i,1,1,'#e8f4fc');R(ox+4,oy+10,1,1,'#dfe6ee');C(ox+5,oy+11,2.2,'#e8b44a');R(ox+2,oy+13,3,2,'#7a4a2a')}
+  else if(id==='dagger'){for(let i=0;i<5;i++)R(ox+7+i,oy+8-i,2,2,'#dfe6ee');R(ox+5,oy+8,4,2,'#8a8f99');R(ox+6,oy+7,2,4,'#8a8f99');R(ox+3,oy+11,3,3,'#5a3a2a')}
+  else if(id==='great'){for(let i=0;i<10;i++)R(ox+4+i,oy+10-i,3,3,'#c8d0d8');R(ox+2,oy+10,6,2,'#e8b44a');R(ox+4,oy+8,2,6,'#e8b44a');R(ox+1,oy+13,3,3,'#7a4a2a')}
   else if(id==='staff'){for(let i=0;i<10;i++)R(ox+2+i,oy+14-i,2,2,'#8a5a32');C(ox+12.5,oy+3.5,3,'#b493e8');C(ox+12,oy+3,1.2,'#efe4ff');R(ox+10,oy+6,2,1,'#e8b44a')}
   else if(id==='rune'){for(let i=0;i<9;i++)R(ox+5+i,oy+9-i,2,2,'#c9b4f0');R(ox+7,oy+6,1,1,'#ffffff');R(ox+10,oy+3,1,1,'#ffffff');R(ox+3,oy+9,5,2,'#7f5fd0');R(ox+5,oy+7,2,5,'#7f5fd0');R(ox+2,oy+12,3,3,'#3a2a5a')}
   else{R(ox+4,oy+6,8,9,'#d9c49c');R(ox+5,oy+4,6,2,'#d9c49c');R(ox+5,oy+5,6,1,'#9a6d40');C(ox+8,oy+10.5,2.5,SEEDCOL[id])}
@@ -2113,7 +2153,9 @@ function drawSwing(x,y){
   if(w==='axe'){R(0,-1,13,2,'#7a4a2a');R(10,-4,4,7,'#a9b2bd');R(13,-3,1,5,'#dfe6ee')}
   else if(w==='pick'){R(0,-1,13,2,'#7a4a2a');R(11,-5,2,11,'#8a8f99');R(10,-6,2,2,'#8a8f99');R(10,5,2,2,'#8a8f99')}
   else if(w==='hand'){C(12,0,2.6,'#f2c9a0')}
-  else if(w==='spear'){const th=Math.sin((1-P.swing/Math.max(P.swing,P.swMax||.28))*Math.PI)*5;G.restore();G.save();G.translate(x,y-4);G.rotate(base);R(th,-1,18,1,'#8a5a32');G.fillStyle='#dfe6ee';G.beginPath();G.moveTo(th+18,-3);G.lineTo(th+24,0);G.lineTo(th+18,3);G.fill();R(th+16,-2,2,4,'#c8463d')}
+  else if(w==='spear'){const th=Math.sin((1-P.swing/Math.max(P.swing,P.swMax||.28))*Math.PI)*5;G.restore();G.save();G.translate(x,y-4);G.rotate(base);R(th,-1,3,2,'#7a4a2a');C(th+4,0,2,'#e8b44a');R(th+5,-.5,15,1,'#e8f4fc');R(th+19,-.5,2,1,'#ffffff')}
+  else if(w==='dagger'){R(3,-1,7,2,'#dfe6ee');R(2,-2,2,4,'#8a8f99');R(0,-1,2,2,'#5a3a2a')}
+  else if(w==='great'){R(4,-2,15,4,'#c8d0d8');R(6,-1,11,1,'#eef2f6');R(3,-4,2,8,'#e8b44a');R(0,-1,3,2,'#7a4a2a')}
   else if(w==='staff'){R(0,-1,13,2,'#8a5a32');C(14,0,2.6,'#b493e8');C(14,-.5,1,'#efe4ff')}
   else if(w==='rune'||(w==='sword'&&heldW()==='rune')){R(4,-1,11,2,'#c9b4f0');R(7,0,6,1,'#efe4ff');R(3,-3,2,6,'#7f5fd0');R(0,-1,3,2,'#3a2a5a')}
   else{R(4,-1,11,2,S.sword===6?'#8ad0f8':S.sword===5?'#ff6a4a':S.sword===4?'#ffd94a':S.sword===2?'#bfe8f0':'#dfe6ee');R(3,-3,2,6,'#e8b44a');R(0,-1,3,2,'#7a4a2a')}
@@ -2262,7 +2304,7 @@ function draw(){
     const bo=mons.find(m=>m.boss);bo?arw(bo.x,bo.y,24,'#ff3a3a'):arw(dun.dx*TS+8,dun.dy*TS+8,24,'#ff8ac8');
     if(ef.lv>=5&&dun.items&&dun.items.length){let n=null,bd=1e9;for(const it of dun.items){const d=Math.hypot(it.x-P.x,it.y-P.y);if(d<bd){bd=d;n=it}}if(n&&bd>20)arw(n.x,n.y,32,'#9cf0a0')}}}
   g.font='8px "DotGothic16",monospace';g.textAlign='center';
-  {const bt=[];if(B.atk>0)bt.push('攻撃↑');if(B.mag>0)bt.push('魔攻↑');if(P.charm>0)bt.push('魅了');if(B.aspd>0)bt.push('攻速↑');if(B.spd>0)bt.push('速さ↑');if(B.bar>0)bt.push('バリア');if(P.regen>0)bt.push('リジェネ');if(P.poison>0)bt.push('毒');if(B.def>0)bt.push('防御↑');if(bt.length){g.textAlign='right';g.fillStyle='#000';g.fillText(bt.join(' '),VW-3,33);g.fillStyle='#ffe08a';g.fillText(bt.join(' '),VW-4,32);g.textAlign='center'}}
+  {const bt=[];if(B.atk>0)bt.push('攻撃↑');if(B.mag>0)bt.push('魔攻↑');if(P.charm>0)bt.push('魅了');if(B.aspd>0)bt.push('攻速↑');if(B.spd>0)bt.push('速さ↑');if(B.bar>0)bt.push('バリア');if(P.regen>0)bt.push('リジェネ');if(P.poison>0)bt.push('毒');if(B.def>0)bt.push('防御↑');if(B.crit>0)bt.push('急所↑');if(B.eva>0)bt.push('回避↑');if(S.stance&&STANCES[S.stance])bt.push('構:'+STANCES[S.stance].n);if(bt.length){g.textAlign='right';g.fillStyle='#000';g.fillText(bt.join(' '),VW-3,33);g.fillStyle='#ffe08a';g.fillText(bt.join(' '),VW-4,32);g.textAlign='center'}}
   for(const l of labels){const x=Math.round(l.x-cx),y=Math.round(l.y-cy);g.fillStyle='#000';g.fillText(l.s,x+1,y+1);g.fillStyle='#f3e7cf';g.fillText(l.s,x,y)}
   g.lineJoin='round';for(const p of pops){const x=Math.round(p.x-cx),y=Math.round(p.y-cy),big=/^\d+$/.test(p.s)&&+p.s>=100;if(big)g.font='10px "DotGothic16",monospace';g.strokeStyle='rgba(0,0,0,.85)';g.lineWidth=2.5;g.strokeText(p.s,x,y);g.fillStyle=p.c;g.fillText(p.s,x,y);if(big)g.font='8px "DotGothic16",monospace'}
 }
@@ -2407,8 +2449,8 @@ function kbNav(e,box){
   const bs=[...box.querySelectorAll('button:not(:disabled)')];if(!bs.length)return true;
   const i=bs.indexOf(document.activeElement),t=bs[i<0?0:(i+n+bs.length)%bs.length];t.focus();t.scrollIntoView({block:'nearest'});return true}
 const KDEF={up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],dash:['KeyZ'],act:['Space','Enter'],
-  bag:['KeyX'],status:['KeyJ'],ret:['KeyP'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyH'],techSt:['KeyG'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],bgm:[],build:['KeyM'],hand:[],g1:['Digit1'],g2:['Digit2'],g3:['Digit3'],g4:['Digit4']};
-const KNAME={up:'上',down:'下',left:'左',right:'右',dash:'ダッシュ切替',act:'使う・攻撃',bag:'かばん',status:'ステータス',ret:'ダンジョンから帰る・町では家の前へ',tech:'技',magic:'魔法',magSw:'魔法の切替',techSt:'技の始まりを切替',q1:'アイテム1',q2:'アイテム2',slotL:'道具の枠 ←',slotR:'道具の枠 →',cycL:'中身を切替 ↑',cycR:'中身を切替 ↓',bgm:'BGM ON/OFF',build:'町づくり',hand:'素手にする',g1:'農具（釣り竿も）',g2:'種',g3:'武器1',g4:'武器2'};
+  bag:['KeyX'],status:['KeyJ'],ret:['KeyP'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyH'],techSt:['KeyG'],stance:['KeyT'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],bgm:[],build:['KeyM'],hand:[],g1:['Digit1'],g2:['Digit2'],g3:['Digit3'],g4:['Digit4']};
+const KNAME={up:'上',down:'下',left:'左',right:'右',dash:'ダッシュ切替',act:'使う・攻撃',bag:'かばん',status:'ステータス',ret:'ダンジョンから帰る・町では家の前へ',tech:'技',magic:'魔法',magSw:'魔法の切替',techSt:'技の始まりを切替',stance:'構え ON/OFF',q1:'アイテム1',q2:'アイテム2',slotL:'道具の枠 ←',slotR:'道具の枠 →',cycL:'中身を切替 ↑',cycR:'中身を切替 ↓',bgm:'BGM ON/OFF',build:'町づくり',hand:'素手にする',g1:'農具（釣り竿も）',g2:'種',g3:'武器1',g4:'武器2'};
 let KB=JSON.parse(JSON.stringify(KDEF)),KCAP=null;
 try{const q=JSON.parse(localStorage.getItem('mebuki-keys')||'null');if(q){if(!q._v){if(JSON.stringify(q.dash)==='["ShiftLeft","ShiftRight"]')delete q.dash;if(JSON.stringify(q.tech)==='["ShiftLeft","ShiftRight"]')delete q.tech;if(JSON.stringify(q.ret)==='["KeyC"]')delete q.ret;if(JSON.stringify(q.bgm)==='["KeyN"]')delete q.bgm;if(JSON.stringify(q.status)==='["KeyC"]')delete q.status;if(JSON.stringify(q.magSw)==='["KeyT"]')delete q.magSw;if(JSON.stringify(q.hand)==='["KeyH"]')delete q.hand;if(JSON.stringify(q.magic)==='["KeyM"]'&&JSON.stringify(q.build)==='["KeyB"]'){delete q.magic;delete q.build}if(JSON.stringify(q.magic)==='["AltLeft","AltRight","KeyM"]')delete q.magic;if(JSON.stringify(q.q1)==='["KeyZ"]')delete q.q1;if(JSON.stringify(q.q2)==='["KeyX"]')delete q.q2;const OLD={act:'["Space","KeyJ","Enter"]',bag:'["KeyK","KeyI"]',tech:'["KeyL"]',magic:'["KeyM","KeyU"]',g2:'["Digit2"]',g3:'["Digit3"]'};for(const k in OLD)if(JSON.stringify(q[k])===OLD[k])delete q[k];}for(const k in KDEF)if(Array.isArray(q[k]))KB[k]=q[k];if(!q.g4&&Object.values(q).some(v=>Array.isArray(v)&&v.includes('Digit4')))KB.g4=[]}}catch(e){}
 const altBound=()=>!!(KMAP.AltLeft||KMAP.AltRight);let KMAP={};function kRebuild(){KMAP={};for(const a in KB)for(const c of KB[a])if(!KMAP[c])KMAP[c]=a}kRebuild();setTimeout(kHelp);
@@ -2420,9 +2462,9 @@ function kSave(){kRebuild();kHelp();try{localStorage.setItem('mebuki-keys',JSON.
 function kHelp(){const K=a=>(KB[a]||[]).map(kLabel).join('・')||'なし',P2=(a,b)=>(KB[a]||[]).length&&(KB[b]||[]).length?K(a)+'/'+K(b):K(a)+'・'+K(b);
   const dm=['up','left','down','right'].every(a=>JSON.stringify(KB[a])===JSON.stringify(KDEF[a])),mv=dm?'WASD／矢印':['up','left','down','right'].map(K).join(' ');
   const opt=[['bgm','BGM'],['hand','素手']].filter(([a])=>(KB[a]||[]).length);
-  const kp=[['移動',mv],['ダッシュ',K('dash')+'（押すたびに切替）'],['使う',K('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替（'+K('g1')+' 農具・'+K('g2')+' 種・'+K('g3')+' 武器1・'+K('g4')+' 武器2 で直接選択・釣り竿は農具の枠）'],['アイテム',P2('q1','q2')],['技',K('tech')+'（'+K('techSt')+'で始まりの技を切替）'],['魔法',K('magic')+'（'+K('magSw')+'で切替）'],['かばん',K('bag')],['ステータス',K('status')],['帰る',K('ret')+'（ダンジョン→町／町→家の前）'],['町づくり',K('build')],...opt.map(([a,n])=>[n,K(a)])];
+  const kp=[['移動',mv],['ダッシュ',K('dash')+'（押すたびに切替）'],['使う',K('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替（'+K('g1')+' 農具・'+K('g2')+' 種・'+K('g3')+' 武器1・'+K('g4')+' 武器2 で直接選択・釣り竿は農具の枠）'],['アイテム',P2('q1','q2')],['技',K('tech')+'（'+K('techSt')+'で始まりの技を切替）'],['魔法',K('magic')+'（'+K('magSw')+'で切替）'],['構え',K('stance')+'（ON/OFF）'],['かばん',K('bag')],['ステータス',K('status')],['帰る',K('ret')+'（ダンジョン→町／町→家の前）'],['町づくり',K('build')],...opt.map(([a,n])=>[n,K(a)])];
   const e=$('#keys');if(e){e.innerHTML='';kp.forEach(([n,v],i)=>{if(i)e.append('　');e.append(el('b','',n),' '+v)})}
-  const t=$('#thelpPC');if(t){t.innerHTML='';t.append(`PC：${mv}で移動、${K('dash')}でダッシュ切替、${K('act')}で使う`,el('br'),`${P2('slotL','slotR')} 道具の枠を移動　${P2('cycL','cycR')} 中身を切替　${K('g1')} 農具　${K('g2')} 種　${K('g3')}・${K('g4')} 武器1・2　${P2('q1','q2')} アイテム　${K('tech')} 技　${K('magic')} 魔法　${K('magSw')} 魔法切替　${K('techSt')} 技の始まり　${K('bag')} かばん　${K('status')} ステータス　${K('ret')} 帰る（町では家の前へ）`+opt.map(([a,n])=>`　${K(a)} ${n}`).join('')+'（キー設定で変更可）')}}
+  const t=$('#thelpPC');if(t){t.innerHTML='';t.append(`PC：${mv}で移動、${K('dash')}でダッシュ切替、${K('act')}で使う`,el('br'),`${P2('slotL','slotR')} 道具の枠を移動　${P2('cycL','cycR')} 中身を切替　${K('g1')} 農具　${K('g2')} 種　${K('g3')}・${K('g4')} 武器1・2　${P2('q1','q2')} アイテム　${K('tech')} 技　${K('magic')} 魔法　${K('magSw')} 魔法切替　${K('techSt')} 技の始まり　${K('stance')} 構え　${K('bag')} かばん　${K('status')} ステータス　${K('ret')} 帰る（町では家の前へ）`+opt.map(([a,n])=>`　${K(a)} ${n}`).join('')+'（キー設定で変更可）')}}
 const MOVEA={up:1,down:1,left:1,right:1};
 let dashOn=false;function toggleDash(){dashOn=!dashOn;const b=$('#bD');if(b){b.classList.toggle('on',dashOn);b.textContent=dashOn?'ダッシュON':'ダッシュ'}toast(dashOn?'ダッシュ ON':'ダッシュ OFF')}
 addEventListener('keydown',e=>{
@@ -2439,7 +2481,7 @@ addEventListener('keydown',e=>{
   else if(a==='bag')bagMenu();else if(a==='status')statusMenu();
   else if(a==='ret'){if(cur.kind==='dun')upMenu();else if(cur===town){toTown(HOME.x+2,HOME.y+3,1);toast('家の前に戻った')}}
   else if(a==='tech'){if(!e.repeat)castSkill()}else if(a==='magic'){if(!e.repeat)castMagic()}
-  else if(a==='magSw')cycleMagic();else if(a==='techSt')cycleStart();
+  else if(a==='magSw')cycleMagic();else if(a==='techSt')cycleStart();else if(a==='stance'){if(!e.repeat)toggleStance()}
   else if(a==='build')buildMenu();
   else if(a==='hand'){S.grp=0;S.sel.farm='hand';toolbar();toast('素手')}
   else if(a==='bgm'){setSnd('bgm',!AU.bgm);toast('BGM '+(AU.bgm?'ON':'OFF'))}
@@ -2485,7 +2527,8 @@ function startGame(fresh){
   if(S.books&&S.books.mine){delete S.books.mine;S.gold+=2200;setTimeout(()=>toast('魔法陣の罠はなくなった（魔導書代2200Gを返金）'),900)}
   if(S.prof){for(const[o,n]of[['m_heal','m_water'],['m_sup','m_holy']])if(S.prof[o]){const a=S.prof[o],b2=S.prof[n];if(!b2||a.lv>b2.lv||(a.lv===b2.lv&&a.exp>b2.exp))S.prof[n]=a;delete S.prof[o]}}
   if(S.fairies&&S.fairies.ruri){const both=!!S.fairies.konoha;S.fairies.konoha=1;delete S.fairies.ruri;S.flv=S.flv||{};S.fexp=S.fexp||{};if((S.flv.ruri||1)>(S.flv.konoha||1)||!both){S.flv.konoha=S.flv.ruri||1;S.fexp.konoha=S.fexp.ruri||0}delete S.flv.ruri;delete S.fexp.ruri;S.party=[...new Set((S.party||[]).map(x=>x==='ruri'?'konoha':x))];if(both){S.gold+=2000;setTimeout(()=>toast('ルリとコノハが1人の妖精になった（2000Gを返金）'),800)}}
-  if(!Array.isArray(S.weps)){const h=hasW(S.sel.weap)?S.sel.weap:'sword';S.weps=[h,...['sword','spear','rune','staff','bow','axe','pick'].filter(w=>w!==h&&hasW(w))].slice(0,2)}
+  if(!Array.isArray(S.weps)){const h=hasW(S.sel.weap)?S.sel.weap:'sword';S.weps=[h,...['sword','spear','dagger','great','rune','staff','bow'].filter(w=>w!==h&&hasW(w))].slice(0,2)}
+  S.weps=S.weps.filter(w=>!FARMW.includes(w));if(FARMW.includes(S.sel.weap)){S.sel.weap=S.weps[0]||'sword'}
   if(!Array.isArray(S.party))S.party=[S.fairyD,S.fairyC,S.fairyT].filter(Boolean).slice(0,2);for(const k in FST)delete FST[k];S.eqMax=S.eqMax||{};for(const sl in EQ)S.eqMax[sl]=Math.max(S.eqMax[sl]||0,S.eq[sl]||0);
   if(!fresh&&!(loadSave()||{}).ptV1){S.ptV1=1;S.pt=S.pt||{};S.pt.mag=(S.pt.mag||0)+Math.round(S.lv*1.0);S.sp=S.sp||0;S.prof=S.prof||{};for(const w of['sword','rune','staff','axe','pick','bow'])if(hasW(w))S.prof[w]=S.prof[w]||{lv:Math.min(PMAX,Math.max(1,Math.round(S.lv*.65))),exp:0}}
   {const RMF={funa:15,koi:35,bass:70,goldkoi:500,ika:70,katsuo:140,nettai:60,lobster:250};let g=0;for(const o of[S.inv,S.store,S.ship])for(const k in RMF)for(const[id,m]of[[k,1],[k+'_q',1.8]])if(o[id]){g+=Math.round(RMF[k]*m)*o[id];delete o[id]}if(S.dex)for(const k in RMF)delete S.dex[k];if(g){S.gold+=g;setTimeout(()=>toast(`取り扱いがなくなった魚を市場が${g}Gで引き取ってくれた`),800)}}
@@ -2516,7 +2559,7 @@ function startGame(fresh){
 toTown(HOME.x+2,HOME.y+3,0);initNPCs();toolbar();fit();
 if(document.fonts)document.fonts.ready.then(fit);
 let last=performance.now();
-function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;if(!paused)update(dt);draw();hud();requestAnimationFrame(loop)}
+function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;if(!paused)update(dt);else if(cur===ROOMS.home&&!modal.hidden&&S.hp>0){timeAcc+=dt;if(timeAcc>=4.5){timeAcc=0;S.time=Math.min(1550,S.time+10)}}draw();hud();requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
 </script>
 
