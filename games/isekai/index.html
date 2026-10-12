@@ -1607,12 +1607,20 @@ function townMigrate(){const v=(loadSave()||{}).townV||0;if(v>=6){S.townV=6;retu
   S.soil=soil;S.deco=deco;S.ftype=ft;S.fruit=fr;
   {const m2=base.map(r=>r.slice());applyDeco(m2);if(unreach(m2,[HOME.x+2,HOME.y+3]).length){for(const k in S.deco){const d=S.deco[k];if(d.o!=='F'&&DECO[d.t]&&DECO[d.t].solid){refD(d);delete S.deco[k]}}}}
   return v<3?refund:-1}
-const BATHCD=180,BATHFEE=30;
-function bathMenu(){const now=S.day*1440+S.time,left=(S.bathT||-1e9)+BATHCD-now;
-  openModal(b=>{b.append(el('h2','','ゆの花湯'),el('div','muted',`番台「いらっしゃい。入浴料は${BATHFEE}Gだよ。ゆっくりつかればHP・ST・MPがぜんぶ回復するさ（${BATHCD/60}時間に1回・30分かかる）」`),el('div','muted',`所持金 ${S.gold} G`));
-    const go=btn('お湯につかる（'+BATHFEE+'G）',()=>{if(S.gold<BATHFEE)return toast('お金が足りない');S.gold-=BATHFEE;S.hp=S.mhp;S.st=S.mst;S.mp=S.mmp;S.time+=30;S.bathT=S.day*1440+S.time;closeModal();sfx('heal');flash=.15;spark(P.x,P.y-8,['#ffffff','#e8f4fc','#9cc9ec'],30,{sp:30,vy:-35,life:1.4,r:14,glow:false,sz:3,drag:.96});toast('いいお湯だった〜。HP・ST・MPが全回復！')},'pri');
-    if(left>0){go.disabled=true;b.append(el('div','warn',`さっき入ったばかり。あと${Math.ceil(left/60)}時間ほどしたらまた入れるよ`))}
-    b.append(row(go,btn('やめる',closeModal)))})}
+const BATHCD=180,BATHMIN=10;
+const bathNeed=()=>({hp:Math.max(0,S.mhp-S.hp),st:Math.max(0,S.mst-S.st),mp:Math.max(0,S.mmp-S.mp)});
+const bathFee=(n=bathNeed())=>BATHMIN+Math.ceil(n.hp*1+n.st*5+n.mp*2);
+function bathSoak(pay,frac){const n=bathNeed();S.gold-=pay;S.hp=Math.min(S.mhp,S.hp+Math.round(n.hp*frac));S.st=Math.min(S.mst,S.st+Math.round(n.st*frac));S.mp=Math.min(S.mmp,S.mp+Math.round(n.mp*frac));S.time+=30;S.bathT=S.day*1440+S.time}
+function bathMenu(){const now=S.day*1440+S.time,left=(S.bathT||-1e9)+BATHCD-now,n=bathNeed(),fee=bathFee(n);
+  openModal(b=>{b.append(el('h2','','ゆの花湯'),el('div','muted',`番台「いらっしゃい。入浴料は回復するぶんだけいただくよ。基本${BATHMIN}G＋HP1につき1G・ST1につき5G・MP1につき2G。足りなければ、持っているぶんだけ回復するさ（${BATHCD/60}時間に1回・30分かかる）」`));
+    b.append(el('div','stat',''));const st=b.lastChild;for(const[k,v]of[['回復するぶん',`HP ${n.hp}・ST ${n.st}・MP ${n.mp}`],['入浴料',fee+' G'],['所持金',S.gold+' G']]){st.append(el('span','k',k),el('span','v',v))}
+    const done=t=>{closeModal();sfx('heal');flash=.15;spark(P.x,P.y-8,['#ffffff','#e8f4fc','#9cc9ec'],30,{sp:30,vy:-35,life:1.4,r:14,glow:false,sz:3,drag:.96});toast(t)};
+    const bs=[];
+    if(S.gold>=fee)bs.push(btn(`お湯につかる（${fee}G）`,()=>{bathSoak(fee,1);done('いいお湯だった〜。HP・ST・MPが全回復！')},'pri'));
+    else if(S.gold>=BATHMIN){const fr=(S.gold-BATHMIN)/(fee-BATHMIN),pay=S.gold;bs.push(btn(`持っているぶんでつかる（${pay}G・${Math.floor(fr*100)}%回復）`,()=>{bathSoak(pay,fr);done(`ちょっとだけつかった（${Math.floor(fr*100)}%回復）`)},'pri'))}
+    else{const x=btn(`お金が足りない（最低${BATHMIN}G）`,()=>{});x.disabled=true;bs.push(x)}
+    if(left>0){bs.forEach(x=>x.disabled=true);b.append(el('div','warn',`さっき入ったばかり。あと${Math.ceil(left/60)}時間ほどしたらまた入れるよ`))}
+    b.append(row(...bs,btn('やめる',closeModal)))})}
 function buildMenu(){if(cur!==town)return toast('町の中で使おう');const d=DIRS[P.dir],tx=Math.floor((P.x+d[0]*14)/TS),ty=Math.floor((P.y+d[1]*14)/TS),k=tx+','+ty,c=tileAt(tx,ty),dd=(S.deco||{})[k];
   const render=b=>{b.innerHTML='';b.append(el('h2','','町づくり'),el('div','muted',`所持金 ${S.gold} G　目の前（向いている先のマス）に飾りを置きます。置けるのは草地・道だけ。片付けると材料の半分が戻ります。置いた数：${Object.values(S.deco||{}).filter(v=>v.t!==','&&v.t!=='.').length}`));
     const l=el('div','list');
