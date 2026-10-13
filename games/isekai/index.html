@@ -535,7 +535,7 @@ const RESID=[...HELPERS,...FOLK];
 const HINT={'樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'よろず屋',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
 const SEEDCOL={dragonfruit:'#e0407a',lotus:'#e8c8c0',makomo:'#d8e0b0',tree_banana:'#f0d040',tree_grape:'#7a4aa8',tree_cacao:'#a0522d',soybean:'#e0c890',sunflower:'#f0c030',pepper:'#3a3530',tree_apple:'#e0323b',tree_peach:'#f4a0a8',tree_orange:'#f0902a',yomogi:'#8ab070',aloe:'#5aa070',ginseng:'#e0c8a0',mandragora:'#a05a8a',basil:'#4fa040',mint:'#8ae0b0',rosemary:'#7a8ae0',rice:'#e8d070',sugarcane:'#9ad070',herb:'#6fc25a',manaherb:'#7a6ae0',wheat:'#e0c070',chili:'#d83a2a',carrot:'#f08a2a',cabbage:'#8ad070',pumpkin:'#e8902a',eggplant:'#6a3a8a',pineapple:'#e8b44a',mango:'#f08a3a',turnip:'#b46fc4',strawberry:'#e0323b',tomato:'#e4472e',grass:'#8cc163',potato:'#a9784a',berry:'#4a5ac8',corn:'#f0c030',melon:'#7fc060'};
 const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'細剣',w:1},{id:'dagger',s:'短剣',w:1},{id:'great',s:'大剣',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
-const GORDER=[0,1,2,4];
+const GORDER=[0,2,4],GKEY={0:'g1',2:'g3',4:'g4'};
 const TNAME=Object.fromEntries(TOOLS.map(t=>[t.id,t]));
 const GROUPS=[{n:'農具',ids:()=>['hand','hoe','can',...FARMW.filter(hasW),...(S.rod?['rod']:[])]},{n:'種',ids:()=>Object.keys(CROPS).filter(t=>(S.seeds[t]||0)>0)},{n:'武器1',ids:()=>weps().slice(0,1)},{n:'釣り',ids:()=>S.rod?['rod']:[]},{n:'武器2',ids:()=>weps().slice(1,2)}];
 function wSync(){if(S.grp===2||S.grp===4)S.grp=weps().indexOf(S.sel.weap)===1?4:2}
@@ -2711,8 +2711,9 @@ function curSeed(){const ok=GROUPS[1].ids();if(!ok.length)return null;if(!ok.inc
 function curT(){if(S.grp===3){S.grp=0;if(S.rod)S.sel.farm='rod'}const g=S.grp||0;if(g===1)return{id:'seed',seed:1,crop:curSeed()};if(g===0)return TNAME[S.sel.farm]||TNAME.hoe;if(g===2||g===4)return TNAME[hasW(S.sel.weap)?S.sel.weap:'sword'];return S.rod?TNAME.rod:TNAME.hoe}
 function announce(){const t=curT();toast(t.seed?(t.crop?`${CROPS[t.crop].n}の種（×${S.seeds[t.crop]}）`:'手持ちの種がない'):t.s)}
 function moveSlot(d){const ok=g=>g===1?GROUPS[1].ids().length>0:g===4?weps().length>1:true,L=GORDER.length;let pos=Math.max(0,GORDER.indexOf(S.grp||0));for(let n=0;n<L;n++){pos=(pos+d+L)%L;if(ok(GORDER[pos]))break}S.grp=GORDER[pos];if(S.grp===2||S.grp===4)S.sel.weap=weps()[S.grp===2?0:1];toolbar();announce()}
-function selGroup(g){if(g===3&&!S.rod)return toast('釣り竿は作業台かゲンの釣り具屋で手に入ります');if(g===2||g===4){const w=weps()[g===2?0:1];if(!w)return toast('2つ目の武器は装備画面で選べます');S.sel.weap=w;S.grp=g;toolbar();return announce()}if(g===1&&!GROUPS[1].ids().length)return toast('手持ちの種がない（よろず屋・種屋・モンスターから）');if((S.grp||0)===g&&g!==3)return cycleIn(1);S.grp=g;toolbar();announce()}
-function cycleIn(d,g=S.grp||0){if(g===2||g===4){if(weps().length>1)selGroup(g===2?4:2);return}const key=['farm','seed','weap'][g];if(!key)return;const ids=GROUPS[g].ids();if(!ids.length)return toast(g===1?'手持ちの種がない（よろず屋・モンスターから）':'');
+function selGroup(g){if(g===3&&!S.rod)return toast('釣り竿は作業台かゲンの釣り具屋で手に入ります');if(g===2||g===4){const w=weps()[g===2?0:1];if(!w)return toast('2つ目の武器は装備画面で選べます');S.sel.weap=w;S.grp=g;toolbar();return announce()}if(g===1&&!GROUPS[1].ids().length)return toast('手持ちの種がない（よろず屋・種屋・モンスターから）');if((S.grp||0)===g&&g!==3||g===0&&S.grp===1)return cycleIn(1,g);S.grp=g;toolbar();announce()}
+function farmIds(){return[...GROUPS[0].ids(),...GROUPS[1].ids().map(t=>'seed:'+t)]}
+function cycleIn(d,g=S.grp||0){if(g===0){const ids=farmIds(),now=S.grp===1?'seed:'+curSeed():S.sel.farm;let i=ids.indexOf(now);const nx=ids[(i+d+ids.length)%ids.length];if(nx.startsWith('seed:')){S.sel.seed=nx.slice(5);S.grp=1}else{S.sel.farm=nx;S.grp=0}toolbar();announce();return}if(g===2||g===4){if(weps().length>1)selGroup(g===2?4:2);return}const key=['farm','seed','weap'][g];if(!key)return;const ids=GROUPS[g].ids();if(!ids.length)return toast(g===1?'手持ちの種がない（よろず屋・モンスターから）':'');
   const now=g===1?curSeed():g===0?S.sel.farm:(hasW(S.sel.weap)?S.sel.weap:'sword');const i=ids.indexOf(now);S.sel[key]=ids[(i+d+ids.length)%ids.length];S.grp=g;toolbar();announce()}
 function drawItemIcon(id){const it=ITEMS[id],h=it.heal||[0,0,0],col=(h[2]||0)>h[0]&&(h[2]||0)>=h[1]?'#a77fe0':h[1]>h[0]?'#5aa0d6':'#d9534f';
   if(DRINK.has(id)){R(6,2,4,3,'#c0c6cc');R(4,5,8,9,'#cfe8f0');R(5,8,6,5,col);R(5,6,2,2,'#fff')}else{G.fillStyle='#efe0bf';G.beginPath();G.ellipse(8,11,7,3,0,0,7);G.fill();C(8,8,4,col==='#d9534f'?'#e0a03a':col);R(6,6,2,1,'#fff6')}}
@@ -2724,13 +2725,13 @@ function toolbar(){
   const nav=$('#tools');wSync();
   if(!nav.children.length){
     GORDER.forEach((i,pos)=>{const g=GROUPS[i];const b=el('button','slot');b.id='slot'+i;b.setAttribute('aria-label',g.n);const c=document.createElement('canvas');c.width=c.height=16;
-      b.append(c,el('span','nm',g.n),el('em','ct'),el('b','gk',String(pos+1)));b.onclick=()=>{selGroup(i);b.blur()};nav.append(b)});
+      b.append(c,el('span','nm',g.n),el('em','ct'),el('b','gk',kLabel((KB[GKEY[i]]||[''])[0]||'')));b.onclick=()=>{selGroup(i);b.blur()};nav.append(b)});
     nav.append(el('div','sep'));
     [0,1].forEach(i=>{const b=el('button','slot qs');b.id='qs'+i;b.setAttribute('aria-label','アイテム枠'+(i+1));const c=document.createElement('canvas');c.width=c.height=16;
       b.append(c,el('span','nm',''),el('em','ct'),el('b','gk',kLabel((KB['q'+(i+1)]||[''])[0]||'')));b.onclick=()=>{useQuick(i);b.blur()};nav.append(b)})}
   const o=G;
-  GORDER.forEach(i=>{const g=GROUPS[i],b=$('#slot'+i);if(!b)return;b.classList.toggle('on',(S.grp||0)===i);let id,label,ct='';
-    if(i===0){id=(S.sel.farm==='rod'&&!S.rod)?'hoe':S.sel.farm;label=TNAME[id].s}else if(i===1){const sd=curSeed();id=sd||'turnip';label=sd?CROPS[sd].n:'種なし';ct=sd?'×'+S.seeds[sd]:''}
+  GORDER.forEach(i=>{const g=GROUPS[i],b=$('#slot'+i);if(!b)return;b.classList.toggle('on',(S.grp||0)===i||i===0&&S.grp===1);let id,label,ct='';
+    if(i===0&&S.grp===1&&curSeed()){const sd=curSeed();id=sd;label=CROPS[sd].n+'の種';ct='×'+S.seeds[sd]}else if(i===0){id=(S.sel.farm==='rod'&&!S.rod)?'hoe':S.sel.farm;label=TNAME[id].s}else if(i===1){const sd=curSeed();id=sd||'turnip';label=sd?CROPS[sd].n:'種なし';ct=sd?'×'+S.seeds[sd]:''}
     else if(i===2||i===4){const w=weps()[i===2?0:1];id=w||'hand';label=w?TNAME[w].s:'なし'}else{id='rod';label='釣り竿'}
     b.classList.toggle('off',(i===1&&!curSeed())||(i===3&&!S.rod)||(i===4&&!weps()[1]));b.querySelector('.nm').textContent=label;b.querySelector('.ct').textContent=ct;
     const c=b.querySelector('canvas');G=c.getContext('2d');G.clearRect(0,0,16,16);drawIcon(id,0,0)});
@@ -2747,7 +2748,7 @@ function kbNav(e,box){
   const i=bs.indexOf(document.activeElement),t=bs[i<0?0:(i+n+bs.length)%bs.length];t.focus();t.scrollIntoView({block:'nearest'});return true}
 const KDEF={up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],dash:['KeyZ'],act:['Space','Enter'],
   bag:['KeyX'],status:['KeyJ'],ret:['KeyP'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyH'],techSt:['KeyG'],stance:['KeyT'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],bgm:[],build:['KeyM'],hand:[],g1:['Digit1'],g2:['Digit2'],g3:['Digit3'],g4:['Digit4']};
-const KNAME={up:'上',down:'下',left:'左',right:'右',dash:'ダッシュ切替',act:'使う・攻撃',bag:'かばん',status:'ステータス',ret:'ダンジョンから帰る・町では家の前へ',tech:'技',magic:'魔法',magSw:'魔法の切替',techSt:'技の始まりを切替',stance:'構え ON/OFF',q1:'アイテム1',q2:'アイテム2',slotL:'道具の枠 ←',slotR:'道具の枠 →',cycL:'中身を切替 ↑',cycR:'中身を切替 ↓',bgm:'BGM ON/OFF',build:'町づくり',hand:'素手にする',g1:'農具（釣り竿も）',g2:'種',g3:'武器1',g4:'武器2'};
+const KNAME={up:'上',down:'下',left:'左',right:'右',dash:'ダッシュ切替',act:'使う・攻撃',bag:'かばん',status:'ステータス',ret:'ダンジョンから帰る・町では家の前へ',tech:'技',magic:'魔法',magSw:'魔法の切替',techSt:'技の始まりを切替',stance:'構え ON/OFF',q1:'アイテム1',q2:'アイテム2',slotL:'道具の枠 ←',slotR:'道具の枠 →',cycL:'中身を切替 ↑',cycR:'中身を切替 ↓',bgm:'BGM ON/OFF',build:'町づくり',hand:'素手にする',g1:'農具・種（釣り竿も）',g2:'種へ直接',g3:'武器1',g4:'武器2'};
 let KB=JSON.parse(JSON.stringify(KDEF)),KCAP=null;
 try{const q=JSON.parse(localStorage.getItem('mebuki-keys')||'null');if(q){if(!q._v){if(JSON.stringify(q.dash)==='["ShiftLeft","ShiftRight"]')delete q.dash;if(JSON.stringify(q.tech)==='["ShiftLeft","ShiftRight"]')delete q.tech;if(JSON.stringify(q.ret)==='["KeyC"]')delete q.ret;if(JSON.stringify(q.bgm)==='["KeyN"]')delete q.bgm;if(JSON.stringify(q.status)==='["KeyC"]')delete q.status;if(JSON.stringify(q.magSw)==='["KeyT"]')delete q.magSw;if(JSON.stringify(q.hand)==='["KeyH"]')delete q.hand;if(JSON.stringify(q.magic)==='["KeyM"]'&&JSON.stringify(q.build)==='["KeyB"]'){delete q.magic;delete q.build}if(JSON.stringify(q.magic)==='["AltLeft","AltRight","KeyM"]')delete q.magic;if(JSON.stringify(q.q1)==='["KeyZ"]')delete q.q1;if(JSON.stringify(q.q2)==='["KeyX"]')delete q.q2;const OLD={act:'["Space","KeyJ","Enter"]',bag:'["KeyK","KeyI"]',tech:'["KeyL"]',magic:'["KeyM","KeyU"]',g2:'["Digit2"]',g3:'["Digit3"]'};for(const k in OLD)if(JSON.stringify(q[k])===OLD[k])delete q[k];}for(const k in KDEF)if(Array.isArray(q[k]))KB[k]=q[k];if(!q.g4&&Object.values(q).some(v=>Array.isArray(v)&&v.includes('Digit4')))KB.g4=[]}}catch(e){}
 const altBound=()=>!!(KMAP.AltLeft||KMAP.AltRight);let KMAP={};function kRebuild(){KMAP={};for(const a in KB)for(const c of KB[a])if(!KMAP[c])KMAP[c]=a}kRebuild();setTimeout(kHelp);
@@ -2777,14 +2778,14 @@ function keyMenu(){const render=b=>{b.innerHTML='';b.append(el('h2','','キー�
   b.append(l,row(btn('初期設定に戻す',()=>{KB=JSON.parse(JSON.stringify(KDEF));kSave();render(b)}),btn('閉じる',()=>{KCAP=null;closeModal()},'pri')));keyMenu.r=()=>render(b)};openModal(render)}
 function kSave(){kRebuild();kHelp();try{localStorage.setItem('mebuki-keys',JSON.stringify({...KB,_v:71}))}catch(e){}}
 function padHelpLine(){const B=a=>(GPB[a]||[]).map(i=>BNAME[i]).join('・')||'なし',P2=(a,b)=>B(a)+'／'+B(b);
-  const opt=[['build','町づくり'],['bgm','BGM'],['hand','素手'],['g1','農具'],['g2','種'],['g3','武器1'],['g4','武器2']].filter(([a])=>(GPB[a]||[]).length);
+  const opt=[['build','町づくり'],['bgm','BGM'],['hand','素手'],['g1','農具・種'],['g2','種へ'],['g3','武器1'],['g4','武器2']].filter(([a])=>(GPB[a]||[]).length);
   return[['コントローラー',''],['移動','左スティック'],['ダッシュ',B('dash')+'（押すたびに切替）'],['使う',B('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替'],['アイテム',P2('q1','q2')],['技',B('tech')+'（'+B('techSt')+'で始まりの技を切替）'],['魔法',B('magic')+'（'+B('magSw')+'で切替）'],['構え',B('stance')],['かばん',B('bag')],['ステータス',B('status')],['帰る',B('ret')],...opt.map(([a,n])=>[n,B(a)]),['メニュー','十字キー・左スティックで選ぶ／'+(B('act')!=='A'&&(GPB.act||[]).length?B('act')+'・':'')+'Aで決定／Bで閉じる／右スティックでカーソル（端に寄せるとスクロール）／LB・RBでタブ切替']]}
 function kHelp(){const K=a=>(KB[a]||[]).map(kLabel).join('・')||'なし',P2=(a,b)=>(KB[a]||[]).length&&(KB[b]||[]).length?K(a)+'/'+K(b):K(a)+'・'+K(b);
   const dm=['up','left','down','right'].every(a=>JSON.stringify(KB[a])===JSON.stringify(KDEF[a])),mv=dm?'WASD／矢印':['up','left','down','right'].map(K).join(' ');
   const opt=[['bgm','BGM'],['hand','素手']].filter(([a])=>(KB[a]||[]).length);
-  const kp=[['移動',mv],['ダッシュ',K('dash')+'（押すたびに切替）'],['使う',K('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替（'+K('g1')+' 農具・'+K('g2')+' 種・'+K('g3')+' 武器1・'+K('g4')+' 武器2 で直接選択・釣り竿は農具の枠）'],['アイテム',P2('q1','q2')],['技',K('tech')+'（'+K('techSt')+'で始まりの技を切替）'],['魔法',K('magic')+'（'+K('magSw')+'で切替）'],['構え',K('stance')+'（ON/OFF）'],['かばん',K('bag')],['ステータス',K('status')],['帰る',K('ret')+'（ダンジョン→町／町→家の前）'],['町づくり',K('build')],...opt.map(([a,n])=>[n,K(a)])];
+  const kp=[['移動',mv],['ダッシュ',K('dash')+'（押すたびに切替）'],['使う',K('act')+'（長押しで連続）'],['道具',P2('slotL','slotR')+' で枠を移動・'+P2('cycL','cycR')+' で中身を切替（'+K('g1')+' 農具・種・'+K('g3')+' 武器1・'+K('g4')+' 武器2 で直接選択・'+K('g2')+' で種へ・種と釣り竿は農具の枠）'],['アイテム',P2('q1','q2')],['技',K('tech')+'（'+K('techSt')+'で始まりの技を切替）'],['魔法',K('magic')+'（'+K('magSw')+'で切替）'],['構え',K('stance')+'（ON/OFF）'],['かばん',K('bag')],['ステータス',K('status')],['帰る',K('ret')+'（ダンジョン→町／町→家の前）'],['町づくり',K('build')],...opt.map(([a,n])=>[n,K(a)])];
   const e=$('#keys');if(e){e.innerHTML='';const L=(typeof GP!=='undefined'&&GP.on)?padHelpLine():kp;L.forEach(([n,v],i)=>{if(i)e.append('　');e.append(el('b','',n),v?' '+v:'')})}
-  const t=$('#thelpPC');if(t){t.innerHTML='';t.append(`PC：${mv}で移動、${K('dash')}でダッシュ切替、${K('act')}で使う`,el('br'),`${P2('slotL','slotR')} 道具の枠を移動　${P2('cycL','cycR')} 中身を切替　${K('g1')} 農具　${K('g2')} 種　${K('g3')}・${K('g4')} 武器1・2　${P2('q1','q2')} アイテム　${K('tech')} 技　${K('magic')} 魔法　${K('magSw')} 魔法切替　${K('techSt')} 技の始まり　${K('stance')} 構え　${K('bag')} かばん　${K('status')} ステータス　${K('ret')} 帰る（町では家の前へ）`+opt.map(([a,n])=>`　${K(a)} ${n}`).join('')+'（キー設定で変更可）')}}
+  const t=$('#thelpPC');if(t){t.innerHTML='';t.append(`PC：${mv}で移動、${K('dash')}でダッシュ切替、${K('act')}で使う`,el('br'),`${P2('slotL','slotR')} 道具の枠を移動　${P2('cycL','cycR')} 中身を切替　${K('g1')} 農具・種　${K('g2')} 種へ　${K('g3')}・${K('g4')} 武器1・2　${P2('q1','q2')} アイテム　${K('tech')} 技　${K('magic')} 魔法　${K('magSw')} 魔法切替　${K('techSt')} 技の始まり　${K('stance')} 構え　${K('bag')} かばん　${K('status')} ステータス　${K('ret')} 帰る（町では家の前へ）`+opt.map(([a,n])=>`　${K(a)} ${n}`).join('')+'（キー設定で変更可）')}}
 const MOVEA={up:1,down:1,left:1,right:1};
 let dashOn=false;function toggleDash(){dashOn=!dashOn;const b=$('#bD');if(b){b.classList.toggle('on',dashOn);b.textContent=dashOn?'ダッシュON':'ダッシュ'}toast(dashOn?'ダッシュ ON':'ダッシュ OFF')}
 addEventListener('keydown',e=>{
@@ -2806,9 +2807,9 @@ addEventListener('keydown',e=>{
   else if(a==='hand'){S.grp=0;S.sel.farm='hand';toolbar();toast('素手')}
   else if(a==='bgm'){setSnd('bgm',!AU.bgm);toast('BGM '+(AU.bgm?'ON':'OFF'))}
   else if(a==='q1'){if(!e.repeat)useQuick(0)}else if(a==='q2'){if(!e.repeat)useQuick(1)}
-  else if(a==='cycL')cycleIn(-1);else if(a==='cycR')cycleIn(1);
+  else if(a==='cycL'||a==='cycR')cycleIn(a==='cycL'?-1:1,S.grp===1?0:S.grp||0);
   else if(a==='slotL')moveSlot(-1);else if(a==='slotR')moveSlot(1);
-  else if(a[0]==='g')selGroup(GORDER[+a[1]-1]);
+  else if(a[0]==='g')selGroup([0,1,2,4][+a[1]-1]);
 });
 addEventListener('keyup',e=>{if((e.altKey||e.code==='AltLeft'||e.code==='AltRight')&&altBound())e.preventDefault();const a=KMAP[e.code];if(MOVEA[a])keys[a]=false;if(a==='act')actHeld=false});
 addEventListener('blur',()=>{actHeld=false;for(const k in keys)keys[k]=false});
