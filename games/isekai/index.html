@@ -883,7 +883,7 @@ function addMon(type,fl,at){
   if(at){x=at[0];y=at[1]}else{let tx,ty,t=0;do{tx=1+(Math.random()*(dun.W-2)|0);ty=1+(Math.random()*(dun.H-2)|0);t++}while(t<500&&((dun.reach&&!dun.reach.has(tx+','+ty))||(dun.rooms&&!dun.rooms.has(tx+','+ty))||SOLID.has(dun.m[ty][tx])||'udQV='.includes(dun.m[ty][tx])||Math.hypot(tx*TS+8-dun.sx,ty*TS+8-dun.sy)<110));x=tx*TS+8;y=ty*TS+8}
   const hp=Math.round(d.hp*sc);
   mons.push({type,x,y,r:d.r,hp,mhp:hp,atk:Math.round(d.atk*(1+(fl-1)*.15)),exp:Math.round(d.exp*Math.sqrt(sc)),gold:Math.round(d.gold*sc),t:Math.random()*5,hurt:0,kx:0,ky:0,wt:0,wx:0,wy:0,boss:!!d.boss,sum:5,cd:1+Math.random()*2,st:'',fo:Math.random()*6.28,lv:fl,tint:re?1:0});const mm=mons[mons.length-1];
-  if(dun&&dun.hard){mm.hard=1;mm.lv=hardLv(fl);mm.hp=mm.mhp=Math.round(mm.mhp*HSC);mm.atk=Math.round(mm.atk*HSC);mm.exp=Math.round(mm.exp*HSC);mm.gold=Math.round(mm.gold*HSC)}return mm;
+  if(dun&&dun.hard){mm.hard=1;mm.lv=hardLv(fl);mm.hp=mm.mhp=Math.round(mm.mhp*HSC);mm.atk=Math.round(mm.atk*HATK);mm.exp=Math.round(mm.exp*HSC);mm.gold=Math.round(mm.gold*HSC)}return mm;
 }
 function floorLabel(){return(dun.id==='cave'?`地下${floor}階`:`${floor}F`)+`/${dmax(dun.id)}`+(floor>DUNS[dun.id].max?'（深層）':'')}
 const TREASURE={jungle:{g:40000,it:[['plume',4],['venom',4],['junglewood',10]],seed:['dragonfruit',5]},swamp:{g:40000,it:[['swamppearl',3],['wispcrystal',5],['peat',10]],seed:['lotus',5]},island:{g:25000,it:[['dragonscale',2],['obsidian',5],['goldore',8]],seed:['mango',5]},forest:{g:3000,it:[['gem',3],['goldore',2]],seed:['berry',5]},cave:{g:6000,it:[['goldore',5],['gem',5],['flamestone',2]],seed:['potato',5]},mountain:{g:12000,it:[['goldore',10],['gem',8],['flamestone',4],['reifu',3]],seed:['melon',5]},ice:{g:40000,it:[['frostscale',2],['icecrystal',8],['dragonscale',2]],seed:['mandragora',5]}};
@@ -892,7 +892,7 @@ function clearDun(){const id=dun.id,hd=!!dun.hard,ck=hkey(id),T=TREASURE[id],mx=
   setTimeout(()=>openModal(b=>{b.append(el('h2','',`${DUNS[id].n}${hd?'（上位）':''}を踏破した！`+(st?`（${mx}階）`:'')),el('div','sum',`お宝　${g} G`),el('div','muted',got.map(([i,n])=>ITEMS[i].n+'×'+n).join('・')+`・${CROPS[T.seed[0]].n}の種×${T.seed[1]}`),
     ...(bk?[el('div','sum',`魔導書「${bk.n}」（${TIERN.魔法[bk.t]}）を手に入れた！`)]:[]),el('div','muted',first?'この深さを初めて踏破したボーナスつき！':'2回目以降のお宝は少なめです'),el('div','muted',!hd&&st<pioMax(id)?'開拓者ギルドでさらに奥を開拓できるようになった。':''),el('div','muted','主のいた場所に出口が現れた。'),...(newHard?[el('div','sum',`${DUNS[id].n}の上位ダンジョンに入れるようになった！（入口で「上位」を選ぶ）`)]:[]),...(newRoute?[el('div','sum','船頭から知らせ：新しい航路が見つかった！ 船着き場から「密林の島」「沼地の島」へ渡れる')]:[]),row(btn('やったね',closeModal,'pri')))}),700)}
 const hkey=id=>dun&&dun.hard?id+'_h':id,hardOpen=id=>clearMax(id)>=DUNS[id].max;
-const HSC=1.5,hardLv=fl=>Math.round(fl+(HSC-1)*(1+(fl-1)*.22)/.22);
+const HSC=1.5,HATK=1.3,hardLv=fl=>Math.round(fl+(HSC-1)*(1+(fl-1)*.22)/.22);
 const HSK={forest:'psn',cave:'mud',mountain:'mud',island:'psn',ice:'mud',jungle:'psn',swamp:'mud'};
 function enterDun(id,f,hard){
   sfx('stairs');
@@ -914,7 +914,7 @@ function dunMenu(id){const D=DUNS[id],dp=S.depth[id]||0,lb=f=>id==='cave'?`地�
     if(dp>=5&&dp<dmax(id))r.append(btn(lb(dp+1)+'から',()=>{closeModal();enterDun(id,dp+1)}));
     b.append(r);
     if(hardOpen(id)){const hp=S.depth[id+'_h']||0,r2=row(btn('上位 '+lb(1)+'から',()=>{closeModal();enterDun(id,1,true)}));if(hp>=5&&hp<dmax(id))r2.append(btn('上位 '+lb(hp+1)+'から',()=>{closeModal();enterDun(id,hp+1,true)}));
-      b.append(el('div','sum','上位ダンジョン'),el('div','muted',`同じ階・同じ魔物だが、強さ・経験値・お金が${HSC}倍。主は毒や鈍足の弾をまき散らす。上位でしか手に入らない「${ITEMS[HMAT[id]].n}」が出る。`+(S.cleared[id+'_h']?`（上位の踏破${S.cleared[id+'_h']}回）`:'')),r2)}
+      b.append(el('div','sum','上位ダンジョン'),el('div','muted',`同じ階・同じ魔物だが、体力・経験値・お金が${HSC}倍、攻撃が${HATK}倍。主は毒や鈍足の弾をまき散らす。上位でしか手に入らない「${ITEMS[HMAT[id]].n}」が出る。`+(S.cleared[id+'_h']?`（上位の踏破${S.cleared[id+'_h']}回）`:'')),r2)}
     else b.append(el('div','muted',`${D.max}階の主を倒すと、上位ダンジョンに入れるようになる。`));
     b.append(row(btn('やめる',closeModal)))})}
 
