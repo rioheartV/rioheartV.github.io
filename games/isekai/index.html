@@ -688,7 +688,7 @@ const MON={
   icegolem:{hp:48,atk:10,sp:16,r:8,exp:24,gold:24,drop:'icecrystal',dp:.4,kind:'ice',ai:'thrower'},
   frost:{hp:30,atk:10,sp:22,r:6,exp:22,gold:22,drop:'icecrystal',dp:.45,kind:'ice',ai:'shooter'},
   yetiking:{hp:180,atk:13,sp:24,r:14,exp:300,gold:500,drop:'snowfur',dp:1,kind:'ice',boss:1,ai:'charge'},
-  abyssking:{hp:300,atk:16,sp:26,r:15,exp:2500,gold:5000,drop:'voidcrystal',dp:1,kind:'dark',boss:1,ai:'dragon',shot:'psn',slowHit:1},icedragon:{hp:230,atk:13,sp:24,r:14,exp:800,gold:1500,drop:'frostscale',dp:1,kind:'ice',boss:1,ai:'dragon'},
+  abyssking:{hp:300,atk:16,sp:26,r:15,exp:1500,gold:1600,drop:'voidcrystal',dp:1,kind:'dark',boss:1,ai:'dragon',shot:'psn',slowHit:1},icedragon:{hp:230,atk:13,sp:24,r:14,exp:800,gold:1500,drop:'frostscale',dp:1,kind:'ice',boss:1,ai:'dragon'},
   frog:{hp:28,atk:9,sp:22,r:6,exp:18,gold:18,drop:'venom',dp:.4,kind:'water',ai:'shooter',shot:'psn'},
   vine:{hp:44,atk:11,sp:8,r:8,exp:22,gold:20,drop:'junglewood',dp:.6,kind:'wood',ai:'lash'},
   leopard:{hp:34,atk:12,sp:58,r:7,exp:22,gold:22,drop:'fur',dp:.5,ai:'dive'},
@@ -1020,7 +1020,7 @@ function enterDun(id,f,hard){if(cur===town&&(S.grp||0)<=1){S.grp=2;S.sel.weap=we
   if(id==='cave'&&f>=2&&Math.random()<.4){const m=addMon('mimic',lv);m.dormant=true}
   if(dun.mh){const r=dun.mh;for(let k=0;k<8+Math.floor(f/3);k++){const t=pool[Math.random()*pool.length|0];let x,y,tr=0;do{x=r.x+(Math.random()*r.w|0);y=r.y+(Math.random()*r.h|0);tr++}while(tr<30&&SOLID.has(dun.m[y][x]));const m=addMon(t,lv,[x*TS+8,y*TS+8]);m.sleep=true}}
   if(dun.boss){const bm=addMon(typeof D.boss==='function'?D.boss(f):D.boss,f===dmax(id)?lv+2:lv,[dun.dx*TS+8,dun.dy*TS+8]);if(f===dmax(id)){bm.final=true;bm.hp=bm.mhp=Math.round(bm.mhp*1.3);dun.final=true}}
-  if(id===ABY){if(f>=50){const pb=(f-45)/300;for(let i=0;i<n;i++)if(Math.random()<pb){const m=addMon(ABB[Math.random()*ABB.length|0],lv);m.boss=false;m.fb=1;m.sum=99;m.hp=m.mhp=Math.round(m.mhp*.7)}}for(const m of mons)m.tint=1}
+  if(id===ABY){if(f>=50){const pb=(f-45)/300;for(let i=0;i<n;i++)if(Math.random()<pb){const m=addMon(ABB[Math.random()*ABB.length|0],lv);m.boss=false;m.fb=1;m.sum=99;m.hp=m.mhp=Math.round(m.mhp*.7);m.gold=Math.round(m.gold*FBG);m.exp=Math.round(m.exp*FBX)}}for(const m of mons)m.tint=1}
   P.x=dun.sx;P.y=dun.sy;P.dir=0;P.lastTile=Math.floor(P.x/TS)+','+Math.floor(P.y/TS);
   toast(`${D.n}${hard?'（上位）':''} ${floorLabel()}`+(dun.boss?'　…主の気配がする':dun.big?'　…大部屋だ！':''));
 }
@@ -1564,7 +1564,7 @@ function updMons(dt){
     const decay=Math.pow(.002,dt);m.kx*=decay;m.ky*=decay;
     if(m.boss&&m.hard&&m.hurt<=0){m.hsk=(m.hsk??4)-dt;if(m.hsk<=0&&dist<200){m.hsk=6;m.htel=m.htelM=.5}}
     if(m.htel>0){m.htel-=dt;if(m.htel<=0){m.htel=0;const tp=HSK[dun.id]||'psn';for(let k=0;k<8;k++){const a=k*Math.PI/4+m.t;eprojs.push({x:m.x,y:m.y-8,vx:Math.cos(a)*95,vy:Math.sin(a)*95,life:1.9,dmg:Math.round(m.atk*.7),type:tp})}fx.push({type:'ring',x:m.x,y:m.y,t:.4,max:.4})}}
-    if(m.boss){m.sum-=dt;if(m.sum<=0){m.sum=7;const D=DUNS[dun.id];if(mons.length<7)addMon(D.pool(floor)[0],floor+D.off,[m.x,m.y])}}
+    if(m.boss){m.sum-=dt;if(m.sum<=0){m.sum=7;const D=DUNS[dun.id];if(mons.length<7){const mm=addMon(D.pool(floor)[0],D.lvf?D.lvf(floor):floor+D.off,[m.x,m.y]);if(dun.id==='abyss')mm.tint=1}}}
     if(dist<m.r+5&&P.inv<=0&&P.rush<=0&&!evaded()){const dm=dmgIn(m.atk,MON[m.type].kind==='ghost'||!!df.charm);S.hp-=dm;sfx('hurt');if(df.charm){P.charm=4;m.hp=Math.min(m.mhp,m.hp+dm);pop(P.x,P.y-26,'魅了！','#f08ab0')}if(df.drain){m.hp=Math.min(m.mhp,m.hp+dm*2);pop(m.x,m.y-18,'吸血','#d04050')}if(df.slowHit)slowP(3.5);if(set4('ice')&&Math.random()<.3){m.stun=m.boss?.5:1.5;m.frz=m.stun;pop(m.x,m.y-16,'凍った','#bfe8ff')}P.inv=.9;pop(P.x,P.y-16,dm,'#ff7a6e');moveBody(P,dx/dist*8,dy/dist*8,5);
       if(m.st==='run'){m.st='';m.cd=2}
       if(S.hp<=0){S.hp=0;collapse();return}}
@@ -1937,10 +1937,10 @@ function collapse(){S.hp=Math.ceil(S.mhp*.5);S.st=Math.ceil(S.mst*.5);S.mp=Math.
 // ---- レアドロップ ----
 const RAREB={ent:'r_ent',king:'r_king',titan:'r_titan',bigcrab:'r_bigcrab',magmaking:'r_magma',dragon:'r_dragon',yetiking:'r_yeti',icedragon:'r_icedragon',toadking:'r_toad',serpent:'r_serpent',mudking:'r_mud',croc:'r_croc',abyssking:'r_abyss'};
 const RAREM={wolf:'a_wolf',harpy:'a_harpy',golem:'a_golem',ghost:'a_ghost',witch:'a_witch',lilim:'a_lilim',yukionna:'a_yuki',leopard:'a_leopard',wisp:'a_wisp',mimic:'a_mimic'};
-const RAREP=.08,RAREPF=.15,RAREPM=.01;
+const RAREP=.08,RAREPF=.15,RAREPM=.004,FBG=.2,FBX=.4,FBR=.5;
 function rareFx(m,s){pop(m.x,m.y-30,s,'#ff9af0');spark(m.x,m.y-8,['#ff9af0','#fff6c8','#ffffff'],18,{sp:110,life:.7,shape:'star'});sfx('lvup')}
 function rareDrop(m){const lk=(accSum('luck')?1.2:1)*(m.hard?1.3:1)*(dun&&dun.id===ABY?1.5:1),rb=RAREB[m.type],ra=RAREM[m.type];
-  if(rb&&(m.boss||m.fb)&&Math.random()<(m.final?RAREPF:RAREP)*lk){S.inv[rb]=(S.inv[rb]||0)+1;rareFx(m,'レア！');setTimeout(()=>toast(`レア！ ${ITEMS[rb].n} を手に入れた`),300)}
+  if(rb&&(m.boss||m.fb)&&Math.random()<(m.final?RAREPF:RAREP)*lk*(m.fb?FBR:1)){S.inv[rb]=(S.inv[rb]||0)+1;rareFx(m,'レア！');setTimeout(()=>toast(`レア！ ${ITEMS[rb].n} を手に入れた`),300)}
   if(ra&&Math.random()<RAREPM*lk){rareFx(m,'レア装備！');setTimeout(()=>grantAcc(ra),300)}}
 function grantAcc(id){const a=ACCS[id];if(S.accs[id]||(S.accStore||{})[id]){const g=a.sell||1000;S.gold+=g;return toast(`${a.n}（もう持っているので ${g}G で売った）`)}
   S.accs[id]=1;if(S.acc.includes(null))equipAcc(id,true);toast(`${a.n}（アクセサリー）を手に入れた！`)}
@@ -2105,9 +2105,9 @@ const stallOpen=()=>stOpen(STALL);
 function genStall(){const it=[],R=a=>a[Math.random()*a.length|0],sh=a=>a.sort(()=>Math.random()-.5);
   for(const id of sh(['ore','gem','goldore','obsidian','flamestone','reifu','fur','wool','yarn','dragonscale','icecrystal','snowfur','charmstone','ribbon']).slice(0,3))it.push({k:'item',id,p:Math.ceil(ITEMS[id].p*1.6),n:2+(Math.random()*4|0)});
   for(const t of sh(Object.keys(CROPS).filter(t=>CROPS[t].drop)).slice(0,2))it.push({k:'seed',id:t,p:250+CROPS[t].days*50,n:2+(Math.random()*3|0)});
-  const mat=o=>Object.entries(o).reduce((a,[i,n])=>a+(ITEMS[i]?ITEMS[i].p:0)*n,0);
-  if(Math.random()<.6){const c=Object.keys(ACCS).filter(id=>!S.accs[id]&&!(S.accStore||{})[id]);if(c.length){const id=R(c);it.push({k:'acc',id,p:Math.round(mat(ACCS[id].in)*1.4/10)*10+200,n:1})}}
-  if(Math.random()<.45){const sl=R(Object.keys(EQ)),nx=eqMax(sl)+1,t=EQ[sl].tiers[nx];if(t)it.push({k:'eq',id:sl,t:nx,p:Math.round(mat(t.in)*1.5/10)*10+300,n:1})}
+  const RAREIN=o=>!o||Object.keys(o).some(i=>i.startsWith('r_')||i==='abyssshard'||i==='abysscore'||i==='voidcrystal'),mat=o=>Object.entries(o).reduce((a,[i,n])=>a+(ITEMS[i]?ITEMS[i].p:0)*n,0);
+  if(Math.random()<.6){const c=Object.keys(ACCS).filter(id=>!S.accs[id]&&!(S.accStore||{})[id]&&!ACCS[id].drop&&!RAREIN(ACCS[id].in));if(c.length){const id=R(c);it.push({k:'acc',id,p:Math.round(mat(ACCS[id].in)*1.4/10)*10+200,n:1})}}
+  if(Math.random()<.45){const sl=R(Object.keys(EQ)),nx=eqMax(sl)+1,t=EQ[sl].tiers[nx];if(t&&!RAREIN(t.in))it.push({k:'eq',id:sl,t:nx,p:Math.round(mat(t.in)*1.5/10)*10+300,n:1})}
   if(Math.random()<.4){const c=[];for(const sl in COS)for(const id in COS[sl])if(!(S.cos||{})[id])c.push([sl,id]);if(c.length){const[sl,id]=R(c);it.push({k:'cos',id,sl,p:800+(Math.random()*8|0)*100,n:1})}}
   if(Math.random()<.25){const c=SKILLS.filter(sk=>sk.k==='魔法'&&!S.books[sk.id]&&S.lv>=(sk.minlv||0));if(c.length){const sk=R(c);it.push({k:'book',id:sk.id,p:sk.book?Math.round(sk.book*1.3):12000,n:1})}}
   return it}
@@ -2837,7 +2837,7 @@ function draw(){
     if(f.type==='ftell'){const m=f.m;if(m){f.x=m.x;f.y=m.y}const X=f.x-cx,Y=f.y-cy,a=Math.min(1,(1-k)*2+.3);G.globalAlpha=a;if(f.ice){G.strokeStyle='#bfe8ff';G.lineWidth=1;G.beginPath();G.ellipse(X,Y+3,8*(1.2-k*.4),3*(1.2-k*.4),0,0,7);G.stroke();R(X-1,Y+2,2,2,'#e8f8ff')}else{C(X-4,Y-44,5,'#5a5470');C(X+3,Y-45,6,'#6a6480');C(X,Y-41,5,'#4a4460');if(Math.random()<.3)R(X-1,Y-38,2,3,'#ffe08a')}G.globalAlpha=1}
     else if(f.type==='icespike'){const g=1-k,h=Math.min(1,g/.25),a=Math.min(1,k*3);G.globalAlpha=a;for(const[ox,hh]of[[-5,9],[0,15],[5,10]]){const H=hh*h;G.fillStyle='#8ad0f8';G.beginPath();G.moveTo(x+ox-3,y+3);G.lineTo(x+ox,y+3-H);G.lineTo(x+ox+3,y+3);G.fill();G.fillStyle='#e8f8ff';G.beginPath();G.moveTo(x+ox-1,y+3);G.lineTo(x+ox,y+3-H);G.lineTo(x+ox+1,y+3);G.fill()}G.globalAlpha=1}
     else if(f.type==='lash'){const ex=f.ex-cx,ey=f.ey-cy,n=8;G.globalAlpha=Math.min(1,k*2);G.strokeStyle='#4f9a3c';G.lineWidth=2;G.beginPath();for(let i=0;i<=n;i++){const t2=i/n,px=x+(ex-x)*t2,py=y+(ey-y)*t2+Math.sin(t2*9+clock*20)*3;i?G.lineTo(px,py):G.moveTo(px,py)}G.stroke();C(ex,ey,2.5,'#86c463');G.globalAlpha=1}
-    else if(f.type==='beam'){const X=P.x-cx,Y=P.y-cy-4,dd=f.d,L=f.len,a=Math.min(1,k*4,(1-k)*8+.2);G.globalAlpha=a;G.strokeStyle=f.c;G.lineCap='round';G.lineWidth=f.w*2*(0.85+Math.sin(clock*40)*.15);G.beginPath();G.moveTo(X+dd[0]*6,Y+dd[1]*6);G.lineTo(X+dd[0]*L,Y+dd[1]*L);G.stroke();G.strokeStyle=f.c2;G.lineWidth=f.w*.8;G.stroke();G.lineCap='butt';G.globalAlpha=1;if(Math.random()<.6)spark(P.x+dd[0]*Math.random()*L,P.y-4+dd[1]*Math.random()*L,[f.c,f.c2],1,{sp:20,life:.3,r:2,glow:1})}
+    else if(f.type==='beam'&&f.d){const X=P.x-cx,Y=P.y-cy-4,dd=f.d,L=f.len,a=Math.min(1,k*4,(1-k)*8+.2);G.globalAlpha=a;G.strokeStyle=f.c;G.lineCap='round';G.lineWidth=f.w*2*(0.85+Math.sin(clock*40)*.15);G.beginPath();G.moveTo(X+dd[0]*6,Y+dd[1]*6);G.lineTo(X+dd[0]*L,Y+dd[1]*L);G.stroke();G.strokeStyle=f.c2;G.lineWidth=f.w*.8;G.stroke();G.lineCap='butt';G.globalAlpha=1;if(Math.random()<.6)spark(P.x+dd[0]*Math.random()*L,P.y-4+dd[1]*Math.random()*L,[f.c,f.c2],1,{sp:20,life:.3,r:2,glow:1})}
     else if(f.type==='bolt'){G.globalAlpha=k;G.strokeStyle='#ffe08a';G.lineWidth=2;G.beginPath();G.moveTo(x,y-70);G.lineTo(x+5,y-46);G.lineTo(x-4,y-30);G.lineTo(x+3,y-12);G.lineTo(x,y);G.stroke();G.globalAlpha=1}
     else if(f.type==='heal'){for(let i=0;i<6;i++)R(x+Math.sin(i*2.3)*8,y-(1-k)*22-i*3,2,2,'#9cf0a0')}
     else if(f.type==='drop')R(x,y-k*8,1,3,'#9cc9ec');
