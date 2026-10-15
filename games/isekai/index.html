@@ -1020,7 +1020,7 @@ function enterDun(id,f,hard){if(cur===town&&(S.grp||0)<=1){S.grp=2;S.sel.weap=we
   if(id==='cave'&&f>=2&&Math.random()<.4){const m=addMon('mimic',lv);m.dormant=true}
   if(dun.mh){const r=dun.mh;for(let k=0;k<8+Math.floor(f/3);k++){const t=pool[Math.random()*pool.length|0];let x,y,tr=0;do{x=r.x+(Math.random()*r.w|0);y=r.y+(Math.random()*r.h|0);tr++}while(tr<30&&SOLID.has(dun.m[y][x]));const m=addMon(t,lv,[x*TS+8,y*TS+8]);m.sleep=true}}
   if(dun.boss){const bm=addMon(typeof D.boss==='function'?D.boss(f):D.boss,f===dmax(id)?lv+2:lv,[dun.dx*TS+8,dun.dy*TS+8]);if(f===dmax(id)){bm.final=true;bm.hp=bm.mhp=Math.round(bm.mhp*1.3);dun.final=true}}
-  if(id===ABY){if(f>=50){const pb=(f-45)/300;for(let i=0;i<n;i++)if(Math.random()<pb){const m=addMon(ABB[Math.random()*ABB.length|0],lv);m.boss=false;m.fb=1;m.sum=99;m.hp=m.mhp=Math.round(m.mhp*.7);m.gold=Math.round(m.gold*FBG);m.exp=Math.round(m.exp*FBX)}}for(const m of mons)m.tint=1}
+  if(id===ABY){if(f>=50){const pb=(f-45)/300;for(let i=0;i<n;i++)if(Math.random()<pb){const m=addMon(ABB[Math.random()*ABB.length|0],lv);m.boss=false;m.fb=1;m.sum=99;m.hp=m.mhp=Math.round(m.mhp*.7);m.gold=Math.round(m.gold*FBG);m.exp=Math.round(m.exp*FBX)}}for(const m of mons)abyApply(m,f)}
   P.x=dun.sx;P.y=dun.sy;P.dir=0;P.lastTile=Math.floor(P.x/TS)+','+Math.floor(P.y/TS);
   toast(`${D.n}${hard?'（上位）':''} ${floorLabel()}`+(dun.boss?'　…主の気配がする':dun.big?'　…大部屋だ！':''));
 }
@@ -1564,7 +1564,7 @@ function updMons(dt){
     const decay=Math.pow(.002,dt);m.kx*=decay;m.ky*=decay;
     if(m.boss&&m.hard&&m.hurt<=0){m.hsk=(m.hsk??4)-dt;if(m.hsk<=0&&dist<200){m.hsk=6;m.htel=m.htelM=.5}}
     if(m.htel>0){m.htel-=dt;if(m.htel<=0){m.htel=0;const tp=HSK[dun.id]||'psn';for(let k=0;k<8;k++){const a=k*Math.PI/4+m.t;eprojs.push({x:m.x,y:m.y-8,vx:Math.cos(a)*95,vy:Math.sin(a)*95,life:1.9,dmg:Math.round(m.atk*.7),type:tp})}fx.push({type:'ring',x:m.x,y:m.y,t:.4,max:.4})}}
-    if(m.boss){m.sum-=dt;if(m.sum<=0){m.sum=7;const D=DUNS[dun.id];if(mons.length<7){const mm=addMon(D.pool(floor)[0],D.lvf?D.lvf(floor):floor+D.off,[m.x,m.y]);if(dun.id==='abyss')mm.tint=1}}}
+    if(m.boss){m.sum-=dt;if(m.sum<=0){m.sum=7;const D=DUNS[dun.id];if(mons.length<7){const mm=addMon(D.pool(floor)[0],D.lvf?D.lvf(floor):floor+D.off,[m.x,m.y]);if(dun.id==='abyss')abyApply(mm,floor)}}}
     if(dist<m.r+5&&P.inv<=0&&P.rush<=0&&!evaded()){const dm=dmgIn(m.atk,MON[m.type].kind==='ghost'||!!df.charm);S.hp-=dm;sfx('hurt');if(df.charm){P.charm=4;m.hp=Math.min(m.mhp,m.hp+dm);pop(P.x,P.y-26,'魅了！','#f08ab0')}if(df.drain){m.hp=Math.min(m.mhp,m.hp+dm*2);pop(m.x,m.y-18,'吸血','#d04050')}if(df.slowHit)slowP(3.5);if(set4('ice')&&Math.random()<.3){m.stun=m.boss?.5:1.5;m.frz=m.stun;pop(m.x,m.y-16,'凍った','#bfe8ff')}P.inv=.9;pop(P.x,P.y-16,dm,'#ff7a6e');moveBody(P,dx/dist*8,dy/dist*8,5);
       if(m.st==='run'){m.st='';m.cd=2}
       if(S.hp<=0){S.hp=0;collapse();return}}
@@ -1939,15 +1939,19 @@ const RAREB={ent:'r_ent',king:'r_king',titan:'r_titan',bigcrab:'r_bigcrab',magma
 const RAREM={wolf:'a_wolf',harpy:'a_harpy',golem:'a_golem',ghost:'a_ghost',witch:'a_witch',lilim:'a_lilim',yukionna:'a_yuki',leopard:'a_leopard',wisp:'a_wisp',mimic:'a_mimic'};
 const RAREP=.08,RAREPF=.15,RAREPM=.004,FBG=.2,FBX=.4,FBR=.5;
 function rareFx(m,s){pop(m.x,m.y-30,s,'#ff9af0');spark(m.x,m.y-8,['#ff9af0','#fff6c8','#ffffff'],18,{sp:110,life:.7,shape:'star'});sfx('lvup')}
-function rareDrop(m){const lk=(accSum('luck')?1.2:1)*(m.hard?1.3:1)*(dun&&dun.id===ABY?1.5:1),rb=RAREB[m.type],ra=RAREM[m.type];
+function rareDrop(m){const lk=(accSum('luck')?1.2:1)*(m.hard?1.3:1)*(dun&&dun.id===ABY?1.5*abyMul(floor).r:1),rb=RAREB[m.type],ra=RAREM[m.type];
   if(rb&&(m.boss||m.fb)&&Math.random()<(m.final?RAREPF:RAREP)*lk*(m.fb?FBR:1)){S.inv[rb]=(S.inv[rb]||0)+1;rareFx(m,'レア！');setTimeout(()=>toast(`レア！ ${ITEMS[rb].n} を手に入れた`),300)}
   if(ra&&Math.random()<RAREPM*lk){rareFx(m,'レア装備！');setTimeout(()=>grantAcc(ra),300)}}
 function grantAcc(id){const a=ACCS[id];if(S.accs[id]||(S.accStore||{})[id]){const g=a.sell||1000;S.gold+=g;return toast(`${a.n}（もう持っているので ${g}G で売った）`)}
   S.accs[id]=1;if(S.acc.includes(null))equipAcc(id,true);toast(`${a.n}（アクセサリー）を手に入れた！`)}
 // ---- 深淵 ----
+const ABYDH=1.84,ABYDA=1.42,ABYL=.2,ABYLR=.1;
+const abyLap=()=>{const A=abyS();return A.ng?(A.clears||0):0};
+function abyMul(f){const t=f>50?(f-50)/49:0,L=abyLap();return{h:(1+t*(ABYDH-1))*(1+ABYL*L),a:(1+t*(ABYDA-1))*(1+ABYL*L),g:1+ABYL*L,r:Math.min(2,1+ABYLR*L)}}
+function abyApply(m,f){const k=abyMul(f);m.hp=m.mhp=Math.round(m.mhp*k.h);m.atk=Math.round(m.atk*k.a);m.gold=Math.round(m.gold*k.g);m.exp=Math.round(m.exp*k.g);m.tint=1}
 const abyOpen=()=>Object.keys(DUNS).some(id=>id!==ABY&&clearMax(id+'_h')>0);
 const abyS=()=>S.abyss||(S.abyss={best:0,runs:0,clears:0});
-function abyRew(f,fin){const first=f>abyS().best,g=Math.round((fin?40000:1500*Math.pow(f/10,1.5))*(first?2:1)),it=[['abyssshard',Math.ceil(f/2)]];
+function abyRew(f,fin){const first=f>abyS().best,g=Math.round((fin?40000:1500*Math.pow(f/10,1.5))*(first?2:1)*abyMul(f).g),it=[['abyssshard',Math.ceil(f/2)]];
   if(f>=20)it.push(['abysscore',Math.floor(f/20)+(fin?2:0)]);if(f>=60)it.push(['elixir',2]);if(fin)it.push(['voidcrystal',first?3:1]);
   const acc=first&&f>=50&&!(S.accs.abyssring||(S.accStore||{}).abyssring)?'abyssring':null,acc2=first&&fin?'voidcrown':null;return{g,it,first,acc,acc2}}
 function abyBossDown(m){const f=floor,fin=f>=dmax(ABY);S.depth.abyss=Math.max(S.depth.abyss||0,f);
@@ -1959,7 +1963,8 @@ function abyExit(){const{f,fin}=dun.abyR,r=abyRew(f,fin);openModal(b=>{b.append(
   row(btn('報酬を受け取って町へ',()=>{const A=abyS();A.best=Math.max(A.best,f);A.runs++;if(fin)A.clears++;S.cleared.abyss=(S.cleared.abyss||0)+(fin?1:0);if(fin){S.clearMax=S.clearMax||{};S.clearMax.abyss=99}
     S.gold+=r.g;for(const[i,n]of r.it)S.inv[i]=(S.inv[i]||0)+n;closeModal();const g=DUNS.abyss.gate;toTown(g[0],g[1],g[2]);sfx('coin');toast(`深淵 ${f}F から帰還した（${r.g}G）`);if(r.acc)setTimeout(()=>grantAcc(r.acc),900);if(r.acc2)setTimeout(()=>grantAcc(r.acc2),1800)},'pri'),...(fin?[]:[btn('さらに潜る',closeModal)])))})}
 function abyBoat(l){if(!abyOpen())return l.append(item('？？？','','海の底へ続く裂け目があるらしい（上位ダンジョンをどれか踏破すると見つかる）',[]));
-  const A=abyS();l.append(item('深淵の海溝　★★★★★+','',`全99階・毎回1Fから。10階ごとに地形と魔物が変わり、主がいる。主を倒すと帰還陣が現れ、深さに応じた報酬を持ち帰れる。50Fからは主も普通の魔物のように現れる。中では時間が進まない。最高 ${A.best}F・最深 ${S.depth.abyss||0}F`+(A.clears?`・踏破 ${A.clears}回`:''),[btn('潜る',()=>{closeModal();enterDun(ABY,1)},'pri')]))}
+  const A=abyS(),L=abyLap();l.append(item('深淵の海溝　★★★★★+'+(L?`　周回${L}`:''),'',`全99階・毎回1Fから。10階ごとに地形と魔物が変わり、主がいる。主を倒すと帰還陣が現れ、深さに応じた報酬を持ち帰れる。50Fからは主も普通の魔物のように現れる。中では時間が進まない。最高 ${A.best}F・最深 ${S.depth.abyss||0}F`+(A.clears?`・踏破 ${A.clears}回`:'')+`。周回で強くなる：${A.ng?`する（99Fを踏破するたび、敵の体力と攻撃・お金と経験値・報酬のお金が+${Math.round(ABYL*100)}%、レアが+${Math.round(ABYLR*100)}%。今は周回${L}）`:'しない'}`,
+  [btn('潜る',()=>{closeModal();enterDun(ABY,1)},'pri'),btn(A.ng?'周回で強く：する':'周回で強く：しない',()=>{A.ng=!A.ng;toast(A.ng?`周回で強くなる：する（今は周回${abyLap()}）`:'周回で強くなる：しない');closeModal();boatMenu()})]))}
 function upMenu(){if(dun.id===ABY&&dun.abyR)return abyExit();openModal(b=>{b.append(el('h2','','出口'),el('div','muted','町へ戻りますか？'),row(btn('町へ戻る',()=>{closeModal();const g=DUNS[dun.id].gate;toTown(g[0],g[1],g[2])},'pri'),btn('探索を続ける',closeModal)))})}
 function caveMenu(){dunMenu('cave')}
 const DECO={'1':{n:'街灯',in:{ironbar:1,wood:1},g:150,solid:1},'2':{n:'植木',in:{wood:2,herb:2},g:50,solid:1},'3':{n:'花壇',in:{herb:3},g:30},'4':{n:'ベンチ',in:{wood:4},g:50,solid:1},'5':{n:'木の柵',in:{wood:1},g:10,solid:1},'6':{n:'石畳',in:{stone:2},g:10},'7':{n:'こんもりした木',in:{wood:3,herb:1},g:80,solid:1},'9':{n:'樽',in:{wood:3},g:30,solid:1},'0':{n:'井戸',in:{stone:6,wood:2},g:200,solid:1},'%':{n:'石像',in:{stone:8},g:300,solid:1},'!':{n:'ひまわり花壇',in:{sunflower:3},g:20},'&':{n:'花のアーチ',in:{wood:3,herb:4},g:120},'8':{n:'果樹の苗木',in:{},g:0,solid:1,hidden:1}};
