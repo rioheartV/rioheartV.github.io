@@ -1180,7 +1180,7 @@ const noPsn=()=>!!(accSum('noPsn')||eqSum('noPsn')||set4('water')||set4('earth')
 function psnP(t){if(noPsn()){pop(P.x,P.y-22,'毒をふせいだ','#9cf0a0');return}P.poison=Math.max(P.poison||0,t);pop(P.x,P.y-22,'毒！','#c07fd0')}
 function slowP(t){if(noSlow()){pop(P.x,P.y-30,'鈍足をふせいだ','#9cf0a0');return}if(!(P.slowD>0))pop(P.x,P.y-30,'鈍足！','#c8a060');P.slowD=Math.max(P.slowD||0,t)}
 function evaded(){if(Math.random()>=evaRate())return false;P.inv=.4;pop(P.x,P.y-16,'かわした！','#bfe8ff');sfx('swing');return true}
-function dmgIn(a,magic){a=a*(.9+Math.random()*.2)*(hgs('great',1)?.9:1);if(P.guard){const ok=S.st>=3;if(ok)S.st-=3;a*=ok?(magic?.5:.25):.6;pop(P.x,P.y-28,'ガード','#e8d8a0');spark(P.x+DIRS[P.dir][0]*8,P.y-6,['#e8d8a0','#ffffff'],6,{sp:40,life:.3,r:2})}const v=Math.max(1,Math.round(a*.2),Math.round(a-(magic?mdef():def())));return hgs('sword',0)?Math.max(1,Math.round(v*.95)):v}
+function dmgIn(a,magic){P.hurtT=.3;a=a*(.9+Math.random()*.2)*(hgs('great',1)?.9:1);if(P.guard){const ok=S.st>=3;if(ok)S.st-=3;a*=ok?(magic?.5:.25):.6;pop(P.x,P.y-28,'ガード','#e8d8a0');spark(P.x+DIRS[P.dir][0]*8,P.y-6,['#e8d8a0','#ffffff'],6,{sp:40,life:.3,r:2})}const v=Math.max(1,Math.round(a*.2),Math.round(a-(magic?mdef():def())));return hgs('sword',0)?Math.max(1,Math.round(v*.95)):v}
 function mdef(){let d=Math.floor(S.lv*.4)+pt('mdef')+Math.floor(enh('body')/3)+Math.floor(enh('head')/3);for(const s in EQ){const t=eqT(s);if(t&&t.mdef)d+=t.mdef}const h=heldW();return d+(h==='staff'?STAFFD[S.wl.staff]:h==='rune'?RUNED[S.wl.rune]:0)+(B.mdef>0?6:0)+accSum('mdef')+stv('mdef')}
 function aspd(){return(P.slowD>0?.8:1)*(set4('thunder')?1.2:1)*(ASPDW[heldW()]||1)*(hgs('bow',0)?1.1:1)*(1+accSum('aspd')+pt('aspd')*.01+(B.aspd>0?.25:0)+stv('aspd'))}
 function def(){let d=0;for(const s in EQ){const t=eqT(s);if(t)d+=t.def}return d+(set4('earth')?10:0)+pt('def')+['head','body','shield','feet'].reduce((a,k)=>a+Math.floor(enh(k)/2),0)+(B.def>0?5:0)+(B.bar>0?8:0)+accSum('def')+stv('def')}
@@ -1218,7 +1218,7 @@ function update(dt){
   if(P.rush>0){fx.push({type:'after',x:P.x,y:P.y,t:.2,max:.2});P.rush-=dt;const d=DIRS[P.dir];moveBody(P,d[0]*(P.rushSp||260)*dt,d[1]*(P.rushSp||260)*dt,5);P.inv=Math.max(P.inv,.15);P.anim+=dt*14;
     for(const m of[...mons])if(!P.rushHit.has(m)&&Math.hypot(m.x-P.x,m.y-P.y)<m.r+11){P.rushHit.add(m);hitMon(m,P.rushMul||1.6)}}
   else if(l>.15){if(!busy&&!actHeld){if(Math.abs(vx)>Math.abs(vy))P.dir=vx>0?3:2;else P.dir=vy>0?0:1}
-    P.dash=dashOn&&!busy&&!actHeld;
+    P.dash=dashOn&&!busy&&!actHeld;if(P.dash&&Math.random()<.35)spark(P.x-vx/l*5,P.y+5,cur.kind==='dun'&&!cur.outdoor?['#8a7f72','#a89c8c']:['#c8b490','#e0d0b0'],1,{sp:12,vy:-12,life:.4,r:2,sz:2});
     const sp=(actHeld?48:busy?20:P.dash?115:66)*spdMul()*(P.chant?.4:1);P.anim+=dt*(P.dash?13:8);moveBody(P,vx*sp*dt,vy*sp*dt,5)}else P.anim=0;
   updFish(dt,l>.15);
   if(P.swing>0){P.swing-=dt;if(cur.kind==='dun')swingHits()}
@@ -1421,11 +1421,11 @@ function setHit(m,dv,dir){const e=set3();if(!e||!mons.includes(m))return;const e
   sched(.06,()=>{if(!mons.includes(m))return;hurtMon(m,ex,[0,0],MSTC[e]);if(!mons.includes(m)){if(e==='dark')S.hp=Math.min(S.mhp,S.hp+Math.ceil(ex/2));return}
     if(e==='fire')m.psn=Math.max(m.psn||0,3);else if(e==='water')S.hp=Math.min(S.mhp,S.hp+1);else if(e==='ice')m.slow=Math.max(m.slow||0,1.5);else if(e==='thunder'){if(Math.random()<.12)m.stun=m.boss?.3:.8}
     else if(e==='wind'){m.kx=(dir[0]||0)*(m.boss?60:220);m.ky=(dir[1]||0)*(m.boss?60:220)}else if(e==='holy'){if(Math.random()<.1)S.mp=Math.min(S.mmp,S.mp+2)}else if(e==='dark')S.hp=Math.min(S.mhp,S.hp+Math.ceil(ex/2))})}
-function hitMon(m,mult=1,dir=DIRS[P.dir],w='sword'){if(charmMiss(m))return;if(heldW()==='rune'&&(w==='rune'||w==='sword')){const ex=Math.round(mag()*(gs('rune',1)?.25:.15)*mult*(MON[m.type].kind==='ghost'?2:1));if(ex>0)sched(.05,()=>{if(mons.includes(m))hurtMon(m,ex,[0,0],'#c9b4f0')})}const eff=WEAP[w].vs&&MON[m.type].kind===WEAP[w].vs;const dv=wDmg(w,m,mult);hurtMon(m,dv,dir,eff?'#ffd060':'#fff');if(eff)pop(m.x,m.y-20,'特攻！','#ffd060');setHit(m,dv,dir);const dr=accSum('drain')+(set4('dark')?2:0);if(dr)S.hp=Math.min(S.mhp,S.hp+dr)}
+function hitMon(m,mult=1,dir=DIRS[P.dir],w='sword'){if(charmMiss(m))return;hitStop=Math.max(hitStop,m.boss?.05:.035);if(heldW()==='rune'&&(w==='rune'||w==='sword')){const ex=Math.round(mag()*(gs('rune',1)?.25:.15)*mult*(MON[m.type].kind==='ghost'?2:1));if(ex>0)sched(.05,()=>{if(mons.includes(m))hurtMon(m,ex,[0,0],'#c9b4f0')})}const eff=WEAP[w].vs&&MON[m.type].kind===WEAP[w].vs;const dv=wDmg(w,m,mult);hurtMon(m,dv,dir,eff?'#ffd060':'#fff');if(eff)pop(m.x,m.y-20,'特攻！','#ffd060');setHit(m,dv,dir);const dr=accSum('drain')+(set4('dark')?2:0);if(dr)S.hp=Math.min(S.mhp,S.hp+dr)}
 function hurtMon(m,dmg,d,col){
   if(!mons.includes(m))return;if(m.sleep&&dun){dun.mhAwake=true}m.hp-=dmg;sfx(m.hp<=0?'kill':'hit');m.hurt=.2;
   const kb=m.boss?40:130;m.kx=d[0]*kb;m.ky=d[1]*kb;pop(m.x,m.y-12,dmg,col);spark(m.x,m.y-6,[typeof col==='string'?col:'#ffffff','#ffffff'],m.hp<=0?16:6,{sp:m.hp<=0?120:90,life:m.hp<=0?.6:.35});
-  if(m.hp<=0){mons.splice(mons.indexOf(m),1);gainExp(m.exp);profGain(heldW(),3);fGainKind('戦闘',m.exp);const gd=Math.max(1,Math.round(m.gold*MGOLD*(accSum('luck')?1.5:1)));S.gold+=gd;pop(m.x,m.y-4,'+'+gd+'G','#e8b44a');
+  if(m.hp<=0){mons.splice(mons.indexOf(m),1);dying.push({m:{...m,hurt:.2},t:.35,max:.35});gainExp(m.exp);profGain(heldW(),3);fGainKind('戦闘',m.exp);const gd=Math.max(1,Math.round(m.gold*MGOLD*(accSum('luck')?1.5:1)));S.gold+=gd;pop(m.x,m.y-4,'+'+gd+'G','#e8b44a');
     const df=MON[m.type];if(Math.random()<.2)addItem('herb',1);if(MEAT[m.type]&&Math.random()<(m.boss?1:.4))addItem(MEAT[m.type],m.boss?3:1);if(Math.random()<df.dp*(accSum('luck')?1.2:1)*(m.hard?1.3:1))addItem(df.drop,m.boss?3:1);{const ks=MSTDROP[df.kind];if(ks&&Math.random()<(m.boss?.5:.04))addItem('mst_'+ks[Math.random()*ks.length|0],1)}if(m.hard&&HMAT[dun.id]&&(m.boss||Math.random()<.06))addItem(HMAT[dun.id],m.final?3:m.boss?2:1);
     {const sd=dun&&dun.id&&DUNS[dun.id].seeds;if(sd&&Math.random()<(m.boss?1:.12)){const t=sd[Math.random()*sd.length|0],n=m.boss?3:1;S.seeds[t]=(S.seeds[t]||0)+n;pop(m.x,m.y-22,'種！','#c7e59a');setTimeout(()=>toast(`${CROPS[t].n}の種${n>1?'×'+n:''}を手に入れた`),500)}}
     if(m.boss){const dk=hkey(dun.id);S.depth[dk]=Math.max(S.depth[dk]||0,floor);if(dun.id==='cave')S.deep=Math.max(S.deep,floor);
@@ -2497,6 +2497,11 @@ function drawGirl(m,x,y,fl){const g=GIRLS[m.type],b=m.type==='lilim'||m.type==='
 const TCV=document.createElement('canvas');TCV.width=TCV.height=96;const TGX=TCV.getContext('2d');
 function drawTinted(m,x,y){x=Math.round(x);y=Math.round(y);const o=G;G=TGX;TGX.clearRect(0,0,96,96);drawMon({...m,hp:m.mhp},48,64);TGX.globalCompositeOperation='source-atop';TGX.globalAlpha=.3;TGX.fillStyle=m.hard?'#2a0820':dun.id==='swamp'?'#3a6a1a':'#c02a8a';TGX.globalAlpha=m.hard?.42:.3;TGX.fillRect(0,0,96,96);TGX.globalAlpha=1;TGX.globalCompositeOperation='source-over';G=o;
   G.drawImage(TCV,x-48,y-64);if(m.hp<m.mhp){const w=14,top=y-m.r*2-6;R(x-w/2,top,w,2,'#000');R(x-w/2,top,Math.max(1,w*m.hp/m.mhp),2,'#d9534f')}}
+let dying=[],hitStop=0;
+function monMove(m,x,y){if(m.ph==null)m.ph=Math.random()*6.28;const mv=Math.hypot(m.x-(m.px??m.x),m.y-(m.py??m.y))>.15;m.px=m.x;m.py=m.y;
+  let sy=1+Math.sin(clock*(mv?13:3.4)+m.ph)*(mv?.07:.045),sx=2-sy;const hop=mv&&(MON[m.type]||{}).kind!=='fly'?-Math.abs(Math.sin(clock*13+m.ph))*1.4:0;
+  if(m.hurt>0){const k=m.hurt/.2;sx*=1+.22*k;sy*=1-.18*k}if(m.stun>0||m.frz>0){sx=1;sy=1}
+  const fy=y+m.r;G.save();G.translate(x,fy+hop);G.scale(sx,sy);G.translate(-x,-fy);(m.tint||m.hard)?drawTinted(m,x,y):drawMon(m,x,y);G.restore()}
 function drawMon(m,x,y){
   x=Math.round(x);y=Math.round(y);const fl=m.hurt>0&&Math.floor(m.hurt*30)%2;
   G.fillStyle='rgba(40,30,50,.2)';G.beginPath();G.ellipse(x,y+m.r-1,m.r+1,m.r*.4,0,0,7);G.fill();
@@ -2611,7 +2616,7 @@ function draw(){
   if(GFX)gfxEdges(x0,y0,x1,y1,cx,cy);
   if(cur.kind==='dun'&&dun.items)for(const it of dun.items){const ix=Math.round(it.x-cx),iy=Math.round(it.y-cy);if(it.id==='gold'){C(ix,iy+2,3.5,'#c8901a');C(ix,iy+1,3,'#e8b44a');R(ix-1,iy,1,1,'#fff6c8')}else{G.fillStyle='rgba(0,0,0,.25)';G.beginPath();G.ellipse(ix,iy+6,5,2,0,0,7);G.fill();G.drawImage(itemCanvas(it.id),ix-8,iy-8+Math.round(Math.sin(clock*3+it.x)))}if(Math.sin(clock*5+it.x)>.7)R(ix+3,iy-5,1,1,'#fff')}
   
-  const OL=(fn,x,y)=>GFX?drawOutlined((a,b)=>fn(a,b),x,y):fn(x,y);const ents=mons.map(m=>({y:m.y,d:()=>OL((a,b)=>(m.tint||m.hard)?drawTinted(m,a,b):drawMon(m,a,b),m.x-cx,m.y-cy)}));ents.push({y:P.y,d:()=>OL((a,b)=>drawPlayer(a,b),P.x-cx,P.y-cy)});
+  const OL=(fn,x,y)=>GFX?drawOutlined((a,b)=>fn(a,b),x,y):fn(x,y);if(P.hurtT>0)P.hurtT-=1/60;const ents=mons.map(m=>({y:m.y,d:()=>OL((a,b)=>monMove(m,a,b),m.x-cx,m.y-cy)}));for(const g2 of dying)ents.push({y:g2.m.y,d:()=>{const k=g2.t/g2.max;G.globalAlpha=k;const x=g2.m.x-cx,y=g2.m.y-cy+g2.m.r;G.save();G.translate(x,y);G.scale(1+(1-k)*.5,k);G.translate(-x,-y);(g2.m.tint||g2.m.hard)?drawTinted(g2.m,x,g2.m.y-cy):drawMon(g2.m,x,g2.m.y-cy);G.restore();G.globalAlpha=1}});ents.push({y:P.y,d:()=>{const hk=Math.max(0,P.hurtT||0)/.3,ox=hk>0?Math.sin(clock*70)*1.5*hk:0;OL((a,b)=>drawPlayer(a,b),P.x-cx+ox,P.y-cy-hk*1.5);if(hk>.5){G.globalAlpha=(hk-.5)*1.2;C(P.x-cx,P.y-cy-6,9,'rgba(255,255,255,.55)');G.globalAlpha=1}}});
   const labels=[];
   if(cur===town)for(const a of S.animals)if(a.x!=null)ents.push({y:a.y,d:()=>drawAnimal(a,a.x-cx,a.y-cy)});
   for(const st of STALLS)if(stOpen(st)){const sx=st.x*TS+8,sy=st.y*TS+8;ents.push({y:sy-12,d:()=>drawNPC(sx-cx,sy-12-cy,st.npc)},{y:sy,d:()=>drawStall(sx-cx,sy-cy,st.aw)});if(Math.hypot(P.x-sx,P.y-sy)<44)labels.push({x:sx,y:sy-34,s:st.n})}
@@ -2684,7 +2689,7 @@ function draw(){
   g.font='8px "DotGothic16",monospace';g.textAlign='center';
   {const bt=[];if(B.atk>0)bt.push('攻撃↑');if(B.mag>0)bt.push('魔攻↑');if(P.charm>0)bt.push('魅了');if(B.aspd>0)bt.push('攻速↑');if(B.spd>0)bt.push('速さ↑');if(B.bar>0)bt.push('バリア');if(P.regen>0)bt.push('リジェネ');if(P.poison>0)bt.push('毒');if(P.slowD>0)bt.push('鈍足');if(B.def>0)bt.push('防御↑');if(B.crit>0)bt.push('急所↑');if(B.eva>0)bt.push('回避↑');if(S.stance&&STANCES[S.stance])bt.push('構:'+STANCES[S.stance].n);}
   for(const l of labels){const x=Math.round(l.x-cx),y=Math.round(l.y-cy);g.fillStyle='#000';g.fillText(l.s,x+1,y+1);g.fillStyle=l.c||'#f3e7cf';g.fillText(l.s,x,y)}
-  g.lineJoin='round';for(const p of pops){const x=Math.round(p.x-cx),y=Math.round(p.y-cy),big=/^\d+$/.test(p.s)&&+p.s>=100;if(big)g.font='10px "DotGothic16",monospace';g.strokeStyle='rgba(0,0,0,.85)';g.lineWidth=2.5;g.strokeText(p.s,x,y);g.fillStyle=p.c;g.fillText(p.s,x,y);if(big)g.font='8px "DotGothic16",monospace'}
+  g.lineJoin='round';for(const p of pops){const x=Math.round(p.x-cx),y=Math.round(p.y-cy-(p.t<.18?Math.sin(p.t/.18*3.14)*4:0)),big=/^\d+$/.test(p.s)&&+p.s>=100;if(big)g.font='10px "DotGothic16",monospace';g.strokeStyle='rgba(0,0,0,.85)';g.lineWidth=2.5;g.strokeText(p.s,x,y);g.fillStyle=p.c;g.fillText(p.s,x,y);if(big)g.font='8px "DotGothic16",monospace'}
 }
 
 
@@ -3063,7 +3068,7 @@ let NAVI=-1;const navEls=()=>[...mbox.querySelectorAll('button:not(:disabled),se
 mbox.addEventListener('focusin',e=>{NAVI=navEls().indexOf(e.target)});
 new MutationObserver(()=>{if(modal.hidden||!GP.on)return;const a=document.activeElement;if(a&&mbox.contains(a))return;const bs=navEls();if(!bs.length)return;const t=bs[Math.max(0,Math.min(NAVI,bs.length-1))];t.focus({preventScroll:true});t.scrollIntoView({block:'nearest'})}).observe(mbox,{childList:true,subtree:true});
 addEventListener('gamepaddisconnected',()=>{GP.prev={};GP.sent={}});
-function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;try{gpPoll(dt)}catch(e){}if(!paused)update(dt);else if(cur===ROOMS.home&&!modal.hidden&&S.hp>0){timeAcc+=dt;if(timeAcc>=4.5){timeAcc=0;S.time=Math.min(1550,S.time+10)}}draw();hud();requestAnimationFrame(loop)}
+function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;try{gpPoll(dt)}catch(e){}for(const g2 of dying)g2.t-=dt;dying=dying.filter(g2=>g2.t>0);if(hitStop>0)hitStop-=dt;else if(!paused)update(dt);else if(cur===ROOMS.home&&!modal.hidden&&S.hp>0){timeAcc+=dt;if(timeAcc>=4.5){timeAcc=0;S.time=Math.min(1550,S.time+10)}}draw();hud();requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
 </script>
 
