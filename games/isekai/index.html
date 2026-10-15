@@ -14,6 +14,11 @@
   color-scheme:dark;
 }
 [hidden]{display:none!important}
+select.pk-sel{display:none}
+.pick{display:inline-flex;align-items:stretch;gap:3px;max-width:100%}
+#mbox .pick button{padding:5px 8px}#mbox .pick .pk-a{padding:5px 7px;font-size:12px}
+#mbox .pick .pk-m{min-width:120px;max-width:220px;text-align:left;display:flex;flex-direction:column;gap:1px}.pk-v{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pk-h{font-size:9px;color:var(--muted)}
+.plist{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:45;max-height:72vh;overflow:auto;min-width:240px;max-width:90vw;box-sizing:border-box;background:var(--panel);border:2px solid var(--gold);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.5);padding:12px;display:flex;flex-direction:column;gap:6px}
 select.psel{font-family:var(--pix);font-size:13px;background:var(--panel2);color:var(--fg);border:2px solid var(--line);border-radius:10px;padding:6px 8px;max-width:100%;min-width:120px}
 #mbtns{display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}
 #mbtns .ovb{position:static;padding:5px 12px}
@@ -1517,7 +1522,7 @@ let mScroll=0,mTop=false;mbox.addEventListener('scroll',()=>{mScroll=mbox.scroll
 new MutationObserver(()=>{if(modal.hidden)return;if(mTop){mTop=false;mScroll=0}if(mbox.scrollTop!==mScroll)mbox.scrollTop=mScroll}).observe(mbox,{childList:true});
 function clearInput(){offQ=false;offHeld=false;for(const k in keys)keys[k]=false;joy.x=joy.y=0;padId=null;$('#knob').style.transform='';actQ=false;actHeld=false}
 function openModal(build){sfx('menu');paused=true;clearInput();modal.hidden=false;mScroll=0;mTop=true;mbox.scrollTop=0;mbox.innerHTML='';build(mbox);const f=mbox.querySelector('button.pri')||mbox.querySelector('button');if(f)f.focus({preventScroll:true})}
-function closeModal(){modal.hidden=true;paused=false;KCAP=null;try{PCAP=null}catch(e){}}
+function closeModal(){PICK=null;modal.hidden=true;paused=false;KCAP=null;try{PCAP=null}catch(e){}}
 modal.addEventListener('pointerdown',e=>{if(e.target===modal){e.preventDefault();closeModal()}});
 function el(t,cls,txt){const e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 function btn(label,fn,cls){const b=el('button',cls,label);b.onclick=fn;return b}
@@ -2166,7 +2171,16 @@ function secStatus(b,R){
       .forEach(([k,v])=>st.append(el('span','k',k),el('span','v',String(v))));
     b.append(st);
     b.append(el('div','sum','サウンド・設定'),row(btn('BGM '+(AU.bgm?'ON':'OFF'),()=>{setSnd('bgm',!AU.bgm);R()}),btn('効果音 '+(AU.se?'ON':'OFF'),()=>{setSnd('se',!AU.se);R()}),btn('キー設定（PC）',()=>{closeModal();keyMenu()}),btn('コントローラー',()=>{closeModal();padHelp()}),btn('グラフィック '+['標準','強化','強化＋素材'][GFX],()=>{setGfx((GFX+1)%3);R()}),btn('画面の向き '+ORIN[ORI],()=>{setOri({auto:'land',land:'port',port:'auto'}[ORI]);R()})));}
-function selRow(l,label,desc,opts,curv,fn){const sel=document.createElement('select');sel.className='psel';for(const[v,t]of opts){const o=document.createElement('option');o.value=v;o.textContent=t;if(String(v)===String(curv))o.selected=true;sel.append(o)}sel.onchange=()=>fn(sel.value);const it=item(label,'',desc,[]);it.querySelector('.r').append(sel);l.append(it);return sel}
+let PICK=null;
+function closePick(){if(!PICK)return;const{box,from}=PICK;PICK=null;box.remove();if(from&&document.contains(from))from.focus()}
+function pickStep(sel,n){const j=sel.selectedIndex+n;if(j<0||j>=sel.options.length)return;sel.selectedIndex=j;sel.dispatchEvent(new Event('change'))}
+function openPick(sel,from,label){closePick();const box=el('div','plist');box.append(el('div','sum',label||'選ぶ'),el('div','muted','↑↓で選んで決定・キャンセルで閉じる'));
+  [...sel.options].forEach((o,i)=>{const b=btn(o.textContent,()=>{closePick();if(sel.selectedIndex!==i){sel.selectedIndex=i;sel.dispatchEvent(new Event('change'))}},i===sel.selectedIndex?'pri':'');box.append(b)});
+  box.append(btn('やめる',closePick));mbox.append(box);PICK={box,from};(box.querySelector('button.pri')||box.querySelector('button')).focus()}
+function selRow(l,label,desc,opts,curv,fn){const sel=document.createElement('select');sel.className='psel pk-sel';for(const[v,t]of opts){const o=document.createElement('option');o.value=v;o.textContent=t;if(String(v)===String(curv))o.selected=true;sel.append(o)}sel.onchange=()=>fn(sel.value);
+  const cur=()=>sel.options[sel.selectedIndex]?sel.options[sel.selectedIndex].textContent:'—',w=el('span','pick'),bl=btn('◀',()=>pickStep(sel,-1),'pk-a'),bm=btn('',()=>openPick(sel,bm,label),'pk-m'),br=btn('▶',()=>pickStep(sel,1),'pk-a');
+  bl.tabIndex=-1;br.tabIndex=-1;bm.append(el('span','pk-v',cur()),el('small','pk-h','決定で選ぶ・◀▶で切替'));bm.pk=sel;if(sel.options.length<2){bl.disabled=true;br.disabled=true}
+  w.append(bl,bm,br,sel);const it=item(label,'',desc,[]);it.querySelector('.r').append(w);l.append(it);return sel}
 function secEquip(b,R){
     b.append(el('div','sum','武器'));
     {const l=el('div','list'),ws=['sword','spear','dagger','great','rune','staff','bow','shield','blink'].filter(hasW),w0=OFFH.includes(S.sel.weap)&&(S.grp===2||S.grp===4)?S.sel.weap:heldW(),wn=w=>w==='blink'?'疾風の羽衣（回避）':w==='shield'?'盾（'+((eqT('shield')||{}).n||'盾')+'）':(w==='sword'?SWORDS[S.sword]:WNAMES[w][S.wl[w]])+(enh(w)?' +'+enh(w):''),wd=w=>w==='blink'?`持って「使う」で短い距離を瞬間移動（移動している方向・止まっていれば向いている方向）。無敵${BLINKINV}秒・1回 ST${BLINKST}・${BLINKCD}秒に1回`:w==='shield'?`持って「使う」を長押しでガード（受けるダメージ 物理-60%・魔法-35%、1回 ST${GUARDST}）`:w==='sword'?`攻撃+${SWP[S.sword]+enh('sword')}`:wEff(w,S.wl[w])+(enh(w)?`・強化+${enh(w)}`:'');
@@ -2946,8 +2960,10 @@ function toolbar(){
 /* ---------- input ---------- */
 function kbNav(e,box){
   const n={ArrowDown:1,KeyS:1,ArrowRight:1,KeyD:1,ArrowUp:-1,KeyW:-1,ArrowLeft:-1,KeyA:-1}[e.code];if(!n)return false;e.preventDefault();
+  if(PICK)box=PICK.box;
+  {const fa=document.activeElement;if(!PICK&&fa&&fa.pk&&/Left|Right|KeyA|KeyD/.test(e.code)){pickStep(fa.pk,n);return true}}
   const fa=document.activeElement;if(fa&&fa.tagName==='SELECT'&&box.contains(fa)&&/Left|Right|KeyA|KeyD/.test(e.code)){const j=fa.selectedIndex+n;if(j>=0&&j<fa.options.length){fa.selectedIndex=j;fa.dispatchEvent(new Event('change'))}return true}
-  const bs=[...box.querySelectorAll('button:not(:disabled),select')];if(!bs.length)return true;
+  const bs=[...box.querySelectorAll('button:not(:disabled):not(.pk-a),select:not(.pk-sel)')].filter(b=>PICK||!b.closest('.plist'));if(!bs.length)return true;
   const i=bs.indexOf(document.activeElement),t=bs[i<0?0:(i+n+bs.length)%bs.length];t.focus();t.scrollIntoView({block:'nearest'});return true}
 const KDEF={up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],dash:['KeyZ'],act:['Space','Enter'],
   bag:['KeyX'],status:['KeyJ'],ret:['KeyP'],tech:['KeyV'],magic:['KeyB'],magSw:['KeyH'],techSt:['KeyG'],stance:['KeyT'],q1:['Digit5'],q2:['Digit6'],slotL:['KeyQ'],slotR:['KeyE'],cycL:['KeyR'],cycR:['KeyF'],off:['KeyC'],bgm:[],build:['KeyM'],hand:[],g1:['Digit1'],g2:['Digit2'],g3:['Digit3'],g4:['Digit4']};
@@ -2996,7 +3012,7 @@ addEventListener('keydown',e=>{
   if(KCAP){e.preventDefault();e.stopPropagation();if(e.code!=='Escape'){for(const a in KB)KB[a]=KB[a].filter(c=>c!==e.code);KB[KCAP]=[e.code];kSave()}KCAP=null;keyMenu.r&&keyMenu.r();return}
   let a=KMAP[e.code];if(KB.ret.includes(e.code)&&cur&&cur.kind==='dun'&&modal.hidden)a='ret';else if(a==='ret'&&KB.status.includes(e.code))a='status';
   if(!$('#title').hidden){if(!kbNav(e,$('#tbtns'))&&(e.code==='Enter'||e.code==='Space')&&!(document.activeElement instanceof HTMLButtonElement)){e.preventDefault();$('#tbtns button').click()}return}
-  if(!modal.hidden){if(e.code==='Escape'){e.preventDefault();closeModal();return}if(a==='bag'||a==='status'){e.preventDefault();if(mbox.querySelector('.tabs'))menu(a);else closeModal();return}if(!kbNav(e,mbox)&&(e.code==='Enter'||e.code==='Space'||a==='act')){e.preventDefault();const f=document.activeElement;if(mbox.contains(f)&&f.tagName!=='BUTTON')return;(mbox.contains(f)&&f.tagName==='BUTTON'?f:mbox.querySelector('button.pri:not(:disabled)')||mbox.querySelector('button:not(:disabled)'))?.click()}return}
+  if(!modal.hidden){if(e.code==='Escape'){e.preventDefault();if(PICK)closePick();else closeModal();return}if(a==='bag'||a==='status'){e.preventDefault();if(mbox.querySelector('.tabs'))menu(a);else closeModal();return}if(!kbNav(e,mbox)&&(e.code==='Enter'||e.code==='Space'||a==='act')){e.preventDefault();const f=document.activeElement;if(mbox.contains(f)&&f.tagName!=='BUTTON')return;(mbox.contains(f)&&f.tagName==='BUTTON'?f:mbox.querySelector('button.pri:not(:disabled)')||mbox.querySelector('button:not(:disabled)'))?.click()}return}
   if(!a)return;
   if(MOVEA[a]){keys[a]=true;e.preventDefault();return}
   e.preventDefault();
@@ -3138,7 +3154,7 @@ function gpCursor(ax,ay,dt){const m=Math.hypot(ax,ay);if(m<.22){return}
 // メニューのタブを LB/RB で切り替える
 function gpTab(d){const tb=mbox.querySelector('.tabs');if(!tb)return false;const bs=[...tb.querySelectorAll('button')];if(bs.length<2)return false;let i=bs.findIndex(b=>b.classList.contains('pri'));if(i<0)i=0;const t=bs[(i+d+bs.length)%bs.length];t.click();setTimeout(()=>{const f=mbox.querySelector('.tabs button.pri');if(f)f.focus({preventScroll:true})},0);return true}
 // メニューが描き直されても、コントローラーのカーソル位置を保つ
-let NAVI=-1;const navEls=()=>[...mbox.querySelectorAll('button:not(:disabled),select')];
+let NAVI=-1;const navEls=()=>[...mbox.querySelectorAll('button:not(:disabled):not(.pk-a),select:not(.pk-sel)')].filter(b=>!b.closest('.plist'));
 mbox.addEventListener('focusin',e=>{NAVI=navEls().indexOf(e.target)});
 new MutationObserver(()=>{if(modal.hidden||!GP.on)return;const a=document.activeElement;if(a&&mbox.contains(a))return;const bs=navEls();if(!bs.length)return;const t=bs[Math.max(0,Math.min(NAVI,bs.length-1))];t.focus({preventScroll:true});t.scrollIntoView({block:'nearest'})}).observe(mbox,{childList:true,subtree:true});
 addEventListener('gamepaddisconnected',()=>{GP.prev={};GP.sent={}});
