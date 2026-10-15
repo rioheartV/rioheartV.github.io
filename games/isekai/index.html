@@ -1211,9 +1211,9 @@ const ZONES={res:[[43,29,82,48]],com:[[24,14,58,28],[24,29,41,33]],ind:[[43,1,82
 function zoneAt(x,y){for(const z in ZONES)for(const[a,b,c,d]of ZONES[z])if(x>=a&&x<=c&&y>=b&&y<=d)return z;return null}
 const inZone=(z,x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(zoneAt(x,y)!==z)return false;return true};
 // 工業区の加工所：材料を入れると翌朝に倉庫へ（1回 5G・1日 30回まで）
-const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:4},out:'charcoal',n:2}]},
+const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:8},out:'charcoal',n:3}]},
   mill:{n:'製粉所',d:'粉をひく・しぼる',r:[{in:{wheat:2},out:'flour',n:3},{in:{sugarcane:1},out:'sugar',n:3},{in:{sunflower:2},out:'oil',n:1}]},
-  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:2,charcoal:1},out:'ironbar',n:2},{in:{stone:2,charcoal:1},out:'glass',n:2},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]}},PROCFEE=5,PROCCAP=30;
+  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:4,charcoal:2},out:'ironbar',n:3},{in:{stone:4,charcoal:2},out:'glass',n:3},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]}},PROCFEE=5,PROCCAP=30;
 function procMenu(f){const F=PROC[f];S.proc=S.proc||{};S.proc[f]=S.proc[f]||[];
   const render=b=>{b.innerHTML='';const q=S.proc[f],used=q.reduce((a,x)=>a+x[1],0);b.append(el('h2','',F.n),el('div','muted',`${F.d}。材料を入れると翌朝に倉庫へ届く（1回 ${PROCFEE}G・1日 ${PROCCAP}回まで）。今日：${used}/${PROCCAP}回　所持金 ${S.gold}G`));
     const l=el('div','list');F.r.forEach((r,ri)=>{const mx=Math.min(PROCCAP-used,Math.floor(S.gold/PROCFEE),...Object.entries(r.in).map(([i,n])=>Math.floor(have(i)/n)));
@@ -2069,7 +2069,7 @@ function dresserMenu(){const L=()=>S.look||(S.look={});
 function shade(c,k){const n=parseInt(c.slice(1),16);let r=n>>16,g2=n>>8&255,b2=n&255;r=Math.round(r*k);g2=Math.round(g2*k);b2=Math.round(b2*k);return'#'+((1<<24)+(Math.min(255,r)<<16)+(Math.min(255,g2)<<8)+Math.min(255,b2)).toString(16).slice(1)}
 const PIOMAT={jungle:[['junglewood',8],['goldore',8]],swamp:[['peat',8],['goldore',8]],forest:[['wood',15],['stone',10]],cave:[['ore',10],['stone',15]],mountain:[['goldore',5],['ore',10]],island:[['obsidian',4],['goldore',6]],ice:[['icecrystal',6],['goldore',8]]};
 const ADVS=[{id:'pico',n:'ピコ',r:'見習い冒険者',p:1,need:null},{id:'kyle',n:'カイル',r:'剣士',p:2,need:null},{id:'sora',n:'ソラ',r:'魔導士',p:3,need:'cave'},{id:'bald',n:'バルド',r:'竜狩り',p:4,need:'mountain'},{id:'seres',n:'セレス',r:'聖騎士',p:5,need:'island'}];
-const DFEE={forest:180,cave:320,mountain:550,island:850,ice:1300,jungle:1300,swamp:1300},DDAYS={forest:1,cave:1,mountain:2,island:2,ice:3,jungle:3,swamp:3};
+const DFEE={forest:230,cave:410,mountain:700,island:1200,ice:2050,jungle:1400,swamp:1740},DDAYS={forest:1,cave:1,mountain:2,island:2,ice:3,jungle:3,swamp:3};
 const advFee=(a,id)=>Math.round(DFEE[id]*(1+.25*(a.p-DUNS[id].stars)));
 const advOpen=a=>!a.need||clearMax(a.need)>0;
 function advLoot(a,id){const D=DUNS[id],mx=dmax(id),deep=mx>D.max,n=4+2*(a.p-D.stars)+Math.floor(mx/5),got={};let gold=0;const add=(k,c=1)=>got[k]=(got[k]||0)+c;
