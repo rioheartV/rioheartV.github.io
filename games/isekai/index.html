@@ -2760,7 +2760,18 @@ for(const k in SONGS){const s2=SONGS[k];s2.L=s2.lead.split(' ');s2.Bs=s2.bass.sp
 function bgmFor(){if(!$('#title').hidden)return'home';if(cur.kind==='dun'){if(dun.boss&&mons.some(m=>m.boss))return'boss';if(dun.id==='ice')return'ice';if(dun.id==='island')return floor>12?'volcano':'beach';if(dun.id==='jungle'||dun.id==='swamp')return dun.id;return'dungeon'}
   if(cur.kind==='room')return'home';return S.time>=1080||S.time<360?'night':'town'}
 function playPart(arr,i,t,sd,type,v){const n=arr[i%arr.length];if(!n||n==='-'||n==='.')return;let len=1;while(arr[(i+len)%arr.length]==='-'&&len<16)len++;const f=nf(n);if(f)tone(f,t,sd*len*.92,type,v,AU.bg)}
-function auTick(){if(!AU.ctx)return;const want=bgmFor();if(want!==AU.track){AU.track=want;AU.step=0;AU.next=AU.ctx.currentTime+.08}
+// ---- BGM のファイル（場面ごとに 1 曲・ループ）
+const FB={off:null,nbad:0,cur:null,key:null,bad:{},vol:.55,fade:[]};
+function bgmFile(){if(!$('#title').hidden)return'title';if(cur.kind==='dun'){if(dun.boss&&mons.some(m=>m.boss))return dun.hard?'hardboss':'boss';if(dun.id==='island')return floor>12?'volcano':'beach';return dun.id}
+  if(cur.kind==='room')return'home';return S.time>=1080||S.time<360?'night':'town'}
+function fbFade(a,to,t,end){const st=a.volume,t0=performance.now();FB.fade.push({a,st,to,t0,t,end})}
+function fbTick(){const now=performance.now();FB.fade=FB.fade.filter(f=>{const k=Math.min(1,(now-f.t0)/(f.t*1000));f.a.volume=Math.max(0,Math.min(1,f.st+(f.to-f.st)*k));if(k>=1){if(f.end)f.end();return false}return true});
+  if(FB.off)return false;const key=bgmFile(),vol=AU.bgm?FB.vol:0;
+  if(key!==FB.key){FB.key=key;const old=FB.cur;if(old)fbFade(old,0,.8,()=>{old.pause()});FB.cur=null;
+    if(!FB.bad[key]){const a=new Audio('bgm/'+key+'.mp3');a.loop=true;a.volume=0;a.preload='auto';a.addEventListener('error',()=>{FB.bad[key]=1;if(FB.cur===a)FB.cur=null;if(FB.off===null&&++FB.nbad>=2)FB.off=true});
+      a.addEventListener('playing',()=>{FB.off=false;a.ok=1});a.play().then(()=>{a.ok=1;fbFade(a,vol,1.2)}).catch(()=>{});FB.cur=a}}
+  const a=FB.cur;if(a&&a.ok){if(Math.abs(a.volume-vol)>.01&&!FB.fade.some(f=>f.a===a))a.volume=vol;return true}return false}
+function auTick(){if(!AU.ctx)return;if(fbTick()){AU.track=null;return}const want=bgmFor();if(want!==AU.track){AU.track=want;AU.step=0;AU.next=AU.ctx.currentTime+.08}
   const sg=SONGS[AU.track];if(!sg)return;const sd=60/sg.bpm/2;
   while(AU.next<AU.ctx.currentTime+.25){const t=AU.next,i=AU.step;if(AU.bgm){playPart(sg.L,i,t,sd,sg.lw,sg.lv);playPart(sg.Bs,i,t,sd,sg.bw,sg.bv);
     if(sg.dr){if(i%4===0)tone(150,t,.08,'triangle',.3,AU.bg,.3);if(i%4===2)noise(t,.08,sg.dr>1?.16:.1,2500,AU.bg);if(i%2===1)noise(t,.025,.05,8000,AU.bg)}
