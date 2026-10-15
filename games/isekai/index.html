@@ -571,32 +571,34 @@ RECIPES.k.push({out:'bait',in:{flour:1},cnt:5},
   {up:1,n:'魔石の釣り竿',d:'さらに釣りやすい。湖のヌシも狙える',in:{gem:2,ore:3,feather:2},show:()=>S.rod===2,apply:()=>S.rod=3});
 const SWORDS=['木の剣','鉄の剣','魔石の剣','竜牙の剣','黄金の剣','竜王の剣','氷竜の剣','星輝の剣'];
 const HELPERS=[
-  {id:'water',n:'ミナ',job:'水やり係',d:'日中、耕した畑を回って水をまく',wage:40,pos:[15,10],hair:'#5aa0d6'},
-  {id:'harvest',n:'トーマ',job:'収穫係',d:'実った作物を収穫して出荷箱へ入れる',wage:60,pos:[15,13],hair:'#8a5a32'},
-  {id:'plant',n:'ニコ',job:'植え付け係',d:'空いた畑に種をまく（高い作物から・手持ちの種が先）。種を買うときは翌朝の給金分のお金を残す',wage:30,pos:[15,16],hair:'#e0874f'},
-  {id:'mine',n:'ガンツ',job:'採掘係',d:'洞窟にもぐり、15時ごろ鉄鉱石や魔石を倉庫へ持ち帰る（到達階で増える）',wage:100,pos:[21,7],hair:'#6e6a78'},
-  {id:'wood',n:'リリ',job:'採集係',d:'日中、木材3つと薬草2つを集めて倉庫へ入れる',wage:30,pos:[3,6],hair:'#7fb069'},
-  {id:'ranch',n:'マーサ',job:'牧場係',d:'牧場の動物をなでて、とれた品を倉庫へ入れる',wage:50,pos:[55,10],hair:'#d9b26a'},
-  {id:'fruit',n:'ハナ',job:'果樹係',d:'実った果物の木から実をとって倉庫へ入れる（1日6本まで）',wage:30,pos:[40,4],hair:'#f2a3c4'},
-  {id:'fish',n:'カイ',job:'釣り係',d:'日中、池や海で魚を3匹釣って倉庫へ入れる',wage:50,pos:[22,12],hair:'#3c78b8'},
-  {id:'tiller',n:'ゴロウ',job:'耕し係',d:'収穫して空いた畑をクワで耕しなおす（1日40マスまで）',wage:40,pos:[37,43],hair:'#8a6a4a'},
-  {id:'brew',n:'セラ',job:'調合係',d:'10時ごろからまほう店で働き、倉庫の薬草で回復薬（薬草2つで1本・3本まで）、魔力草でマナポーション（2つで1本・2本まで）を作って倉庫へ入れる',wage:40,pos:[24,32],hair:'#9a7cc0'}];
+  {id:'water',n:'ミナ',job:'水やり係',d:'日中、耕した畑を回って水をまく',wage:40,pos:[20,8],hair:'#5aa0d6'},
+  {id:'harvest',n:'トーマ',job:'収穫係',d:'実った作物を収穫して出荷箱へ入れる',wage:60,pos:[20,10],hair:'#8a5a32'},
+  {id:'plant',n:'ニコ',job:'植え付け係',d:'空いた畑に種をまく（高い作物から・手持ちの種が先）。種を買うときは翌朝の給金分のお金を残す',wage:30,pos:[20,12],hair:'#e0874f'},
+  {id:'mine',n:'ガンツ',job:'採掘係',d:'洞窟にもぐり、15時ごろ鉄鉱石や魔石を倉庫へ持ち帰る（到達階で増える）',wage:100,pos:[3,22],hair:'#6e6a78'},
+  {id:'wood',n:'リリ',job:'採集係',d:'日中、木材3つと薬草2つを集めて倉庫へ入れる',wage:30,pos:[30,4],hair:'#7fb069'},
+  {id:'ranch',n:'マーサ',job:'牧場係',d:'牧場の動物をなでて、とれた品を倉庫へ入れる',wage:50,pos:[18,30],hair:'#d9b26a'},
+  {id:'fruit',n:'ハナ',job:'果樹係',d:'実った果物の木から実をとって倉庫へ入れる（1日6本まで）',wage:30,pos:[26,34],hair:'#f2a3c4'},
+  {id:'fish',n:'カイ',job:'釣り係',d:'日中、池や海で魚を3匹釣って倉庫へ入れる',wage:50,pos:[28,11],hair:'#3c78b8'},
+  {id:'tiller',n:'ゴロウ',job:'耕し係',d:'収穫して空いた畑をクワで耕しなおす（1日40マスまで）',wage:40,pos:[20,14],hair:'#8a6a4a'},
+  {id:'brew',n:'セラ',job:'調合係',d:'10時ごろからまほう店で働き、倉庫の薬草で回復薬（薬草2つで1本・3本まで）、魔力草でマナポーション（2つで1本・2本まで）を作って倉庫へ入れる',wage:40,pos:[45,18],hair:'#9a7cc0'}];
 const ROOFS=[['#4a78b0','#36598a','#6a96c8'],['#8a5a32','#6b4423','#a9784a'],['#c86a3a','#9c4f2a','#e0874f'],['#6e6a78','#55515e','#8f8a9c'],['#5a8f45','#456f35','#7fb069'],['#3f7f8a','#2e5f68','#5a9fa8']];
-const HMAP={},TW=84,TH=50,FOUNT={x:35,y:21,w:4,h:4};
-const HOME={x:10,y:22,w:5,h:3,n:'わが家',roof:['#b0503a','#8c3b2b','#d06a4f'],home:1};
+const HMAP={},TW=84,TH=50,FOUNT={x:40,y:22,w:4,h:4};
+// 空き区画：居住区は通りに面した家の区画（住人の家が入っていない所）、ほかの区は将来の建物の場所
+const LOTS=[...[29,35,41,45].flatMap(y=>[45,51,57,63,69,75].map(x=>({x,y,z:'res'}))),{x:25,y:15,z:'com'},{x:53,y:15,z:'com'},{x:25,y:30,z:'com'},{x:67,y:9,z:'ind'},{x:74,y:9,z:'ind'},{x:62,y:16,z:'ind'},{x:69,y:16,z:'ind'},{x:76,y:16,z:'ind'}];
+const HOME={x:22,y:17,w:5,h:3,n:'わが家',roof:['#b0503a','#8c3b2b','#d06a4f'],home:1};
 const RPAL=[['赤レンガ',['#b0503a','#8c3b2b','#d06a4f']],['青',['#4a78b0','#36598a','#6a96c8']],['こげ茶',['#8a5a32','#6b4423','#a9784a']],['オレンジ',['#c86a3a','#9c4f2a','#e0874f']],['灰',['#6e6a78','#55515e','#8f8a9c']],['緑',['#5a8f45','#456f35','#7fb069']],['青緑',['#3f7f8a','#2e5f68','#5a9fa8']],
   ['紫',['#7a5aa0','#5c4280','#9a7cc0']],['桃色',['#d87a96','#b05a76','#f0a0b8']],['黒',['#3a3640','#26232b','#56525e']],['山吹',['#d0a030','#a87e20','#ecc050']],['空色',['#6ab0e0','#4a8cc0','#90cbf0']],['わら',['#c8a860','#a08440','#e0c880']],['白',['#e8e4dc','#b8b0a4','#fbf8f2']]];
 const RSTY=['しま','うろこ','わらぶき','瓦'];
 const WALLS=[['木の壁',['#d9c49c','#6b4a2e','#a88a60'],0],['しっくい',['#f2eee4','#7a5a3a','#d8d0c0'],1],['レンガ',['#c0644a','#7a3a2a','#d88a6a'],2],['石積み',['#a8a39a','#6e6a62','#c4c0b6'],3],['丸太',['#a0703a','#6b4423','#c08a50'],4],
   ['桃色',['#f2c4cc','#a0606a','#fbe0e4'],1],['水色',['#bcd8ec','#4a6a8a','#e0f0fa'],1],['若草',['#cce8b8','#4f7a3a','#e8f6dc'],1],['こげ茶の板',['#7a5a3a','#4a3020','#9a7a50'],0]];
 const ORNS=['なし','花の窓台','ランタン','つた'];
-const HPOSD={tiller:[35,40],water:[18,30],harvest:[24,30],plant:[34,30],mine:[52,30],wood:[58,30],ranch:[57,22],fruit:[40,30],fish:[54,35],brew:[46,30],harune:[34,35],dolf:[40,35],tia:[24,35],miria:[18,35],gen:[48,35],nami:[51,22],luna:[56,40]};
+const HPOSD={water:[45,29],harvest:[51,29],plant:[57,29],mine:[63,29],wood:[69,29],ranch:[75,29],fruit:[45,35],fish:[51,35],tiller:[57,35],brew:[63,35],harune:[69,35],dolf:[75,35],tia:[45,41],miria:[51,41],gen:[57,41],nami:[63,41],luna:[69,41]};
 HELPERS.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:ROOFS[i]||[['#7a5aa0','#5c4280','#9a7cc0'],['#d87a96','#b05a76','#f0a0b8'],['#d0a030','#a87e20','#ecc050'],['#8a5a32','#6b4423','#a9784a'],['#3f7f8a','#2e5f68','#5a9fa8']][i-6]});
-const FOLK=[{id:'harune',n:'ハルニレ',job:'よろず屋',hair:'#c86a3a',work:[36,18]},{id:'dolf',n:'ドルフ',job:'鍛冶屋',hair:'#5a5249',work:[41,18]},{id:'tia',n:'ティア',job:'妖精の館',hair:'#c07fd0',work:[28,18]},
-  {id:'miria',n:'ミリア',job:'ギルド受付',hair:'#e8b44a',work:[47,18]},{id:'gen',n:'ゲン',job:'釣り具屋',hair:'#8a8f99',work:[50,43]},{id:'nami',n:'ナミ',job:'市場',hair:'#5ab0d0',work:[51,44]},{id:'luna',n:'ルーナ',job:'まほう店',hair:'#7a5ab0',work:[21,18]}];
+const FOLK=[{id:'harune',n:'ハルニレ',job:'よろず屋',hair:'#c86a3a',work:[33,18]},{id:'dolf',n:'ドルフ',job:'鍛冶屋',hair:'#5a5249',work:[32,34]},{id:'tia',n:'ティア',job:'妖精の館',hair:'#c07fd0',work:[38,18]},
+  {id:'miria',n:'ミリア',job:'ギルド受付',hair:'#e8b44a',work:[37,34]},{id:'gen',n:'ゲン',job:'釣り具屋',hair:'#8a8f99',work:[27,40]},{id:'nami',n:'ナミ',job:'市場',hair:'#5ab0d0',work:[30,26]},{id:'luna',n:'ルーナ',job:'まほう店',hair:'#7a5ab0',work:[45,18]}];
 FOLK.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:RPAL[[3,6,7,10,1,11,9][i]][1]});
 const RESID=[...HELPERS,...FOLK];
-const HINT={'樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'よろず屋',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
+const HINT={'空':'空き区画（いずれ建物が建つ場所）','樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'よろず屋',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
 const SEEDCOL={dragonfruit:'#e0407a',lotus:'#e8c8c0',makomo:'#d8e0b0',tree_banana:'#f0d040',tree_grape:'#7a4aa8',tree_cacao:'#a0522d',soybean:'#e0c890',sunflower:'#f0c030',pepper:'#3a3530',tree_apple:'#e0323b',tree_peach:'#f4a0a8',tree_orange:'#f0902a',yomogi:'#8ab070',aloe:'#5aa070',ginseng:'#e0c8a0',mandragora:'#a05a8a',basil:'#4fa040',mint:'#8ae0b0',rosemary:'#7a8ae0',rice:'#e8d070',sugarcane:'#9ad070',herb:'#6fc25a',manaherb:'#7a6ae0',wheat:'#e0c070',chili:'#d83a2a',carrot:'#f08a2a',cabbage:'#8ad070',pumpkin:'#e8902a',eggplant:'#6a3a8a',pineapple:'#e8b44a',mango:'#f08a3a',turnip:'#b46fc4',strawberry:'#e0323b',tomato:'#e4472e',grass:'#8cc163',potato:'#a9784a',berry:'#4a5ac8',corn:'#f0c030',melon:'#7fc060'};
 const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'細剣',w:1},{id:'dagger',s:'短剣',w:1},{id:'great',s:'大剣',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
 const GORDER=[0,2,4],GKEY={0:'g1',2:'g3',4:'g4'};
@@ -685,51 +687,42 @@ function buildTown(skip,hm=HMAP){
   const fence=(x0,y0,x1,y1)=>{for(let x=x0;x<=x1;x++){m[y0][x]='f';m[y1][x]='f'}for(let y=y0;y<=y1;y++){m[y][x0]='f';m[y][x1]='f'}};
   const bld=(x,y,w,h,n,roof,door,dx,opt={})=>{rect(x,y,x+w-1,y+h-1,'h');m[y+h-1][x+dx]=door;const o={x,y,w,h,n,roof,...opt};for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)hm[xx+','+yy]=o};
   const under={},fix=(x,y,c)=>{if(!'.*,'.includes(m[y][x]))return;under[x+','+y]=m[y][x];m[y][x]=c};
-  // ダンジョンの門（すべて町のはし）：北=氷の洞窟・東=森・西=洞窟・南=山
-  m[0][32]='x';m[25][W-1]='Q';for(let y=23;y<=27;y++)m[y][0]='C';m[25][0]='c';m[H-1][32]='V';
-  // 道
-  rect(1,25,W-2,25,',');rect(32,1,32,17,',');rect(32,29,32,H-2,',');rect(17,38,W-4,38,',');rect(17,33,W-4,33,',');
-  rect(8,18,8,24,',');rect(46,39,46,43,',');
-  // 畑（左上・入口は下）
-  fence(1,6,16,17);rect(2,7,15,16,'F');m[17][8]=',';
-  // 自宅（左側）：左に出荷箱・右にチェスト・その左に依頼掲示板
-  m[24][9]='B';m[24][15]='K';m[24][6]='N';
-  // 牧場（左下）
-  fence(1,31,16,42);rect(2,32,15,41,'.');m[31][8]=',';rect(8,26,8,30,',');m[32][6]='b';m[32][7]='b';
-  rect(11,32,15,34,'h');m[34][13]='m';{const rh={x:11,y:32,w:5,h:3,n:'牧場',chim:false,roof:['#b0503a','#8c3b2b','#d06a4f']};for(let y=32;y<=34;y++)for(let x=11;x<=15;x++)hm[x+','+y]=rh}
-  // 果樹園・池・公園・東の果樹林
-  for(const x of[36,40,44,48,52,56,60])m[2][x]='Y';
-  rect(20,7,26,11,'W');
-  for(let x=34;x<=48;x+=2){m[6][x]='T';m[12][x]='T'}for(const y of[8,10]){m[y][34]='T';m[y][48]='T'}for(const y of[8,10])for(let x=36;x<=46;x++)m[y][x]='*';
-  for(const y of[9,13,17])for(const x of[53,57,61])m[y][x]='Y';for(const[x,y]of[[55,7],[59,7],[51,11],[55,11],[59,11],[51,15],[55,15],[59,15],[55,19],[59,19],[51,19]])m[y][x]='T';
-  for(let x=3;x<=29;x+=4)m[1][x]='T';
-  // 工業区（北東）：元の果樹林を作業場に。広場の北から道でつなぐ
-  rect(50,1,62,12,',');rect(50,13,62,17,'.');rect(33,13,62,13,',');rect(56,12,56,13,',');
-  bld(51,2,5,3,'製材所',['#8a5a32','#6b4423','#a9784a'],'材',2,{fac:'saw'});bld(57,2,5,3,'製粉所',['#c8b060','#a08a40','#e0d080'],'粉',2,{fac:'mill'});bld(54,8,5,3,'製鉄所',['#5a5f69','#3f434a','#7a808a'],'鉄',2,{fac:'smelt'});
-  for(const[x,y,c]of[[50,6,'9'],[62,6,'9'],[50,11,'5'],[62,11,'5'],[51,6,'1'],[61,6,'1']])m[y][x]=c;
-  // 東の果樹園（町を広げた所）
-  for(const y of[3,7,11,15,19])for(const x of[66,70,74,78])m[y][x]='Y';for(const[x,y]of[[68,5],[72,9],[76,13],[80,17],[68,21],[80,3]])m[y][x]='T';for(const[x,y]of[[72,5],[76,21]])m[y][x]='L';
-  // 噴水広場（北側にお店）
-  rect(19,18,50,28,',');rect(FOUNT.x,FOUNT.y,FOUNT.x+FOUNT.w-1,FOUNT.y+FOUNT.h-1,'U');m[28][19]='Y';m[28][50]='Y';
-  for(const[x,y]of[[33,20],[40,20],[33,26],[40,26],[24,19],[44,19],[21,24],[48,24]])fix(x,y,'1');
-  for(let x=34;x<=39;x++){fix(x,19,'3');fix(x,27,'3')}for(const x of[25,26,27,42,43,44])fix(x,27,'3');for(let x=20;x<=23;x++){fix(x,20,'3')}
-  for(const[x,y]of[[31,21],[42,21],[22,26],[47,22]])fix(x,y,'4');
-  bld(26,15,5,3,'妖精の館',['#c07fd0','#9c5fb0','#dca0e8'],'z',2);
-  rect(34,15,38,17,'S');m[17][36]='s';
-  bld(40,15,4,3,'鍛冶屋',['#6e6a78','#55515e','#8f8a9c'],'j',1);
-  bld(45,15,5,3,'冒険者ギルド',['#4f7a4a','#3b5e37','#6e9c66'],'i',2);
-  bld(19,15,5,3,'まほう店',['#5a3f86','#432e66','#7a5ab0'],'魔',2);m[16][24]='T';
-  bld(27,8,5,3,'ゆの花湯',['#3f7f8a','#2e5f68','#5a9fa8'],'^',2,{bath:1});rect(29,11,31,11,',');
-  // 果樹林の跡（工業区に入らなかった所は草地に）
-  for(let y=14;y<=20;y++)for(let x=50;x<=62;x++)if('YTL'.includes(m[y][x]))m[y][x]='.';
-  // 湖・切り株
-  rect(19,41,29,46,'W');
-  for(const[x,y]of[[5,2],[13,2],[21,2],[53,11],[57,15],[61,19]])if(m[y][x]==='.'||m[y][x]==='*')m[y][x]='L';
-  // 漁港と釣り具屋（右下）
-  rect(44,45,W-1,H-1,'W');rect(44,44,W-2,44,'n');rect(54,44,54,46,'=');m[47][54]='M';m[44][50]='G';
-  bld(48,40,5,3,'ゲンの釣り具屋',['#3c78b8','#2e5f8a','#5a96d0'],'J',2);
-  // 住宅街の飾り（街灯・植木）
-  for(const[x,y,c]of[[17,23,'0'],[30,36,'0'],[23,34,'1'],[39,34,'1'],[45,34,'1'],[29,34,'1'],[57,34,'1'],[23,29,'1'],[45,29,'1'],[16,24,'1'],[50,24,'1'],[23,32,'2'],[29,32,'2'],[39,32,'2'],[45,32,'2'],[51,32,'2'],[57,32,'2'],[23,37,'2'],[29,37,'2'],[39,37,'2'],[53,37,'2']])if('.*'.includes(m[y][x]))fix(x,y,c);
+  // ダンジョンの門（町のまん中から 4 方向）：北=氷の洞窟・東=森・西=洞窟・南=山
+  m[0][41]='x';m[25][W-1]='Q';for(let y=23;y<=27;y++)m[y][0]='C';m[25][0]='c';m[H-1][41]='V';
+  // 大通り（東西・南北、2 マス幅）
+  rect(1,24,W-2,25,',');rect(41,1,42,H-2,',');
+  // ---- 北西：畑と自宅
+  fence(4,4,19,15);rect(5,5,18,14,'F');m[15][11]=',';rect(11,16,11,23,',');
+  rect(22,5,27,9,'W');
+  rect(24,20,24,23,',');rect(20,20,28,20,',');
+  m[19][21]='B';m[19][27]='K';m[19][18]='N';
+  for(const x of[22,26,30,34,38])m[2][x]='Y';for(const[x,y]of[[31,6],[35,6],[31,10],[35,10],[33,14],[38,8],[29,13],[37,13]])m[y][x]='T';
+  // ---- 中央：商業区（広場と店）
+  rect(24,18,57,28,',');for(const[x,y]of[[24,18],[25,18],[24,19],[57,18],[56,18],[57,19],[24,28],[25,28],[24,27],[57,28],[56,28],[57,27]])m[y][x]='.';rect(24,28,24,28,',');rect(FOUNT.x,FOUNT.y,FOUNT.x+FOUNT.w-1,FOUNT.y+FOUNT.h-1,'U');
+  rect(24,33,40,33,',');rect(24,29,24,32,',');
+  rect(31,15,35,17,'S');m[17][33]='s';
+  bld(36,15,5,3,'妖精の館',['#c07fd0','#9c5fb0','#dca0e8'],'z',2);
+  bld(43,15,5,3,'まほう店',['#5a3f86','#432e66','#7a5ab0'],'魔',2);
+  bld(48,15,5,3,'ゆの花湯',['#3f7f8a','#2e5f68','#5a9fa8'],'^',2,{bath:1});
+  bld(31,30,4,3,'鍛冶屋',['#6e6a78','#55515e','#8f8a9c'],'j',1);
+  bld(35,30,5,3,'冒険者ギルド',['#4f7a4a','#3b5e37','#6e9c66'],'i',2);
+  for(const[x,y]of[[26,20],[55,20],[26,27],[55,27],[33,19],[50,19]])fix(x,y,'1');for(const x of[29,30,52,53])fix(x,28,'3');
+  // ---- 北東：工業区（加工所は道に面して並ぶ）
+  rect(43,12,W-2,12,',');rect(59,19,W-2,19,',');rect(59,13,59,18,',');
+  bld(46,9,5,3,'製材所',['#8a5a32','#6b4423','#a9784a'],'材',2,{fac:'saw'});bld(53,9,5,3,'製粉所',['#c8b060','#a08a40','#e0d080'],'粉',2,{fac:'mill'});bld(60,9,5,3,'製鉄所',['#5a5f69','#3f434a','#7a808a'],'鉄',2,{fac:'smelt'});
+  for(const[x,y]of[[45,11],[52,11],[59,11]])fix(x,y,'9');for(const[x,y]of[[44,13],[66,13],[74,13]])fix(x,y,'1');
+  // ---- 南東：居住区（通りごとに家の区画が並ぶ）
+  for(const r of[32,38,44,48])rect(43,r,W-2,r,',');
+  // ---- 南西：牧場・果樹園・港
+  fence(2,28,17,39);rect(3,29,16,38,'.');m[28][9]=',';rect(9,26,9,27,',');m[30][5]='b';m[30][6]='b';
+  rect(11,29,15,31,'h');m[31][13]='m';{const rh={x:11,y:29,w:5,h:3,n:'牧場',chim:false,roof:['#b0503a','#8c3b2b','#d06a4f']};for(let y=29;y<=31;y++)for(let x=11;x<=15;x++)hm[x+','+y]=rh}
+  for(const[x,y]of[[20,35],[23,35],[33,35],[36,35],[39,35],[20,38],[23,38],[33,38],[36,38],[39,38],[21,30],[19,33]])m[y][x]='Y';
+  rect(18,40,40,40,',');rect(1,41,40,41,'n');rect(1,42,40,H-1,'W');rect(30,41,30,44,'=');m[45][30]='M';m[41][34]='G';
+  bld(25,37,5,3,'ゲンの釣り具屋',['#3c78b8','#2e5f8a','#5a96d0'],'J',2);
+  for(const[x,y]of[[5,2],[13,2],[17,21],[30,22]])if(m[y][x]==='.'||m[y][x]==='*')m[y][x]='L';
+  fix(17,23,'0');for(const[x,y]of[[44,30],[44,36],[44,42],[44,46]])fix(x,y,'2');for(const[x,y]of[[43,26],[40,26],[40,23],[43,23]])fix(x,y,'1');
+  // ---- 空き区画（いずれ建物が建つ所。入り口の前は道）
+  for(const L of LOTS){if(L.z==='res'&&RESID.some(h=>h.house.x===L.x&&h.house.y===L.y))continue;if(RESID.some(h=>{const q=h.house;return q.x<L.x+5&&L.x<q.x+5&&q.y<L.y+3&&L.y<q.y+3}))continue;if(m[L.y+2]&&'.*'.includes(m[L.y+2][L.x+2]))m[L.y+2][L.x+2]='空'}
   // 住人の家（噴水広場をかこむ住宅街）と自宅
   RESID.forEach(h=>{if(h.id===skip)return;const hs=h.house;rect(hs.x,hs.y,hs.x+hs.w-1,hs.y+hs.h-1,'h');m[hs.y+hs.h-1][hs.x+2]='e';
     for(let y=hs.y;y<hs.y+hs.h;y++)for(let x=hs.x;x<hs.x+hs.w;x++)hm[x+','+y]=hs});
@@ -739,7 +732,7 @@ function buildTown(skip,hm=HMAP){
 const ROOMS={};
 function buildRoom(id,name,rows,spawn,exit){const m=rows.map(r=>r.split(''));ROOMS[id]={m,W:m[0].length,H:m.length,kind:'room',id,name,spawn,exit}}
 buildRoom('home','わが家',['IIIIIIIIIIII','IZPaqPpPkPKI','IPPPPPPPPPPI','IPPPttPPPPPI','IPPPttPPPPPI','IPPPPPPPPPPI','IPPPPPPPPPPI','IIIIIEIIIIII'],[5,6],[4,4,0]);
-buildRoom('smithy','鍛冶屋',['IIIIIIIIII','IPvPPAP$PI','IPPPPPPPPI','IPPPPPPPPI','IPPPPPPPPI','IPPPPPPPPI','IIIIEIIIII'],[4,5],[41,18,0]);
+buildRoom('smithy','鍛冶屋',['IIIIIIIIII','IPvPPAP$PI','IPPPPPPPPI','IPPPPPPPPI','IPPPPPPPPI','IPPPPPPPPI','IIIIEIIIII'],[4,5],[32,33,0]);
 function enterRoom(id,sx,sy,dir){const r=ROOMS[id];cur=r;P.chant=null;mons=[];projs=[];fx=[];parts=[];eprojs=[];pops=[];tims=[];traps=[];P.charm=0;P.slowD=0;P.fish=null;P.swing=P.use=0;
   P.x=(sx??r.spawn[0])*TS+8;P.y=(sy??r.spawn[1])*TS+8;P.dir=dir??1;P.lastTile=Math.floor(P.x/TS)+','+Math.floor(P.y/TS)}
 const town=buildTown();
@@ -858,7 +851,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function loadSave(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 
 function tileAt(tx,ty){if(tx<0||ty<0||tx>=cur.W||ty>=cur.H)return'X';return cur.m[ty][tx]}
-const SOLID=new Set('^1245789%0aiTHSCWfBDscXrkqvpNhegYzmbLOwJRjIZtAKUylMG$蜂魔密葦樹炭材粉鉄');
+const SOLID=new Set('^1245789%0aiTHSCWfBDscXrkqvpNhegYzmbLOwJRjIZtAKUylMG$蜂魔密葦樹炭材粉鉄空');
 function solidPx(px,py){return SOLID.has(tileAt(Math.floor(px/TS),Math.floor(py/TS)))}
 function free(x,y,h){return!solidPx(x-h,y-h)&&!solidPx(x+h-.01,y-h)&&!solidPx(x-h,y+h-.01)&&!solidPx(x+h-.01,y+h-.01)}
 function moveBody(o,dx,dy,h){if(dx&&free(o.x+dx,o.y,h))o.x+=dx;if(dy&&free(o.x,o.y+dy,h))o.y+=dy}
@@ -871,19 +864,19 @@ const DUNS={
     loot:['herb','herb','wood','apple','peach','orange','jelly','gold']},
   cave:{n:'洞窟',max:15,seeds:['tomato','potato','potato','eggplant','eggplant','turnip','ginseng'],off:2,stars:2,outdoor:false,wall:'X',floor:'o',pool:f=>f<3?['slime','bat','goblin','lanta']:f<8?['slime','bat','goblin','golem','ghost','lanta']:['slime','bat','goblin','golem','ghost','lanta','witch'],boss:'king',gate:[1,25,3],
     loot:['ore','ore','stone','stone','gem','potion','jelly','gold','gold']},
-  mountain:{n:'山',max:20,seeds:['corn','corn','potato','pumpkin','berry','melon','ginseng','ginseng'],off:7,stars:3,outdoor:true,wall:'C',floor:'.',pool:f=>f<10?['harpy','wolf','salamander','golem','bat','kumo']:['harpy','wolf','salamander','golem','bat','kumo','dryad','witch'],boss:'titan',gate:[32,48,1],
+  mountain:{n:'山',max:20,seeds:['corn','corn','potato','pumpkin','berry','melon','ginseng','ginseng'],off:7,stars:3,outdoor:true,wall:'C',floor:'.',pool:f=>f<10?['harpy','wolf','salamander','golem','bat','kumo']:['harpy','wolf','salamander','golem','bat','kumo','dryad','witch'],boss:'titan',gate:[41,48,1],
     loot:['ore','stone','goldore','gem','gem','feather','mpot','stpot','gold','gold']},
   island:{n:'孤島',max:25,seeds:['pineapple','pineapple','mango','corn','mandragora','pepper','pepper','tree_cacao'],off:9,stars:4,outdoor:true,wall:f=>f>12?'C':'y',floor:f=>f>12?'o':'n',
-    pool:f=>f<=12?['crab','crab','monkey','gull','siren']:['magma','firebat','lavagolem','salamander','lilim'],boss:f=>f===dmax('island')?'dragon':f<=12?'bigcrab':'magmaking',gate:[54,46,1],
+    pool:f=>f<=12?['crab','crab','monkey','gull','siren']:['magma','firebat','lavagolem','salamander','lilim'],boss:f=>f===dmax('island')?'dragon':f<=12?'bigcrab':'magmaking',gate:[30,43,1],
     loot:['shell','coconut','gem','goldore','obsidian','flamestone','gold','gold']},
   ice:{n:'氷の洞窟',max:30,seeds:['cabbage','turnip','ginseng','mandragora','manaherb'],off:15,stars:5,outdoor:false,wall:'X',floor:'o',
-    pool:f=>f<=10?['snowwolf','icebat','yeti','pengu']:f<=20?['snowwolf','icebat','yeti','frost','icegolem','pengu','yukionna']:['snowwolf','yeti','frost','icegolem','yukionna','lilim','lilim'],boss:f=>f===dmax('ice')?'icedragon':'yetiking',gate:[32,1,0],
+    pool:f=>f<=10?['snowwolf','icebat','yeti','pengu']:f<=20?['snowwolf','icebat','yeti','frost','icegolem','pengu','yukionna']:['snowwolf','yeti','frost','icegolem','yukionna','lilim','lilim'],boss:f=>f===dmax('ice')?'icedragon':'yetiking',gate:[41,1,0],
     loot:['icecrystal','icecrystal','goldore','gem','obsidian','mpot2','snowfur','gold','gold']},
-  jungle:{n:'密林の島',max:30,seeds:['tree_cacao','tree_banana','dragonfruit','dragonfruit','pineapple','chili'],off:15,stars:5,outdoor:true,wall:'密',floor:'ジ',isle:1,gate:[54,46,1],
+  jungle:{n:'密林の島',max:30,seeds:['tree_cacao','tree_banana','dragonfruit','dragonfruit','pineapple','chili'],off:15,stars:5,outdoor:true,wall:'密',floor:'ジ',isle:1,gate:[30,43,1],
     pool:f=>f<=10?['bee','mushroom','boar','monkey','treant','frog','parrot']:f<=20?['boar','monkey','treant','frog','frog','parrot','vine','leopard']:['frog','vine','leopard','leopard','parrot','vine','treant'],boss:f=>f===dmax('jungle')?'serpent':'toadking',
     native:['frog','vine','leopard','parrot','toadking','serpent'],reuse:['herb','honey','feather','wood','banana','kinoko'],nw:['junglewood','plume','venom','junglewood'],
     loot:['herb','honey','feather','wood','banana','kinoko','junglewood','plume','venom','gold','gold']},
-  swamp:{n:'沼地の島',max:30,seeds:['lotus','lotus','makomo','makomo','rice','manaherb'],off:15,stars:5,outdoor:true,wall:'葦',floor:'泥',isle:1,gate:[54,46,1],
+  swamp:{n:'沼地の島',max:30,seeds:['lotus','lotus','makomo','makomo','rice','manaherb'],off:15,stars:5,outdoor:true,wall:'葦',floor:'泥',isle:1,gate:[30,43,1],
     pool:f=>f<=10?['slime','bat','ghost','witch','mudslime','leech']:f<=20?['slime','ghost','witch','mudslime','leech','swamplizard','wisp']:['mudslime','leech','swamplizard','swamplizard','wisp','wisp','witch'],boss:f=>f===dmax('swamp')?'croc':'mudking',
     native:['mudslime','leech','swamplizard','wisp','mudking','croc'],reuse:['jelly','reifu','manaherb','kinoko'],nw:['peat','wispcrystal','peat','swamppearl'],
     loot:['jelly','reifu','manaherb','kinoko','peat','wispcrystal','swamppearl','gold','gold']}};
@@ -1208,7 +1201,7 @@ const have=id=>id==='anyfish'?FISHIDS.reduce((a,f)=>a+(S.inv[f]||0)+(S.store[f]|
 function take(id,n){if(id==='anyfish'){for(const f of FISHIDS){const k=Math.min(have(f),n);if(k)take(f,k);n-=k;if(!n)break}return}const a=Math.min(n,S.inv[id]||0);S.inv[id]=(S.inv[id]||0)-a;S.store[id]=(S.store[id]||0)-(n-a)}
 const toStore=(id,n)=>S.store[id]=(S.store[id]||0)+n;
 // 町の区画（四角の組）：res 居住区・com 商業区・ind 工業区・orc 果樹園（それ以外は畑・牧場・港・公園など）
-const ZONES={res:[[1,18,16,30],[17,29,82,43],[51,18,82,24],[64,26,82,28]],com:[[17,13,50,28]],ind:[[50,1,63,17]],orc:[[64,1,82,23]]},ZONEN={res:'居住区',com:'商業区',ind:'工業区',orc:'果樹園'};
+const ZONES={res:[[43,29,82,48]],com:[[24,14,58,28],[24,29,41,33]],ind:[[43,1,82,13],[59,14,82,22]],orc:[[18,34,40,39],[19,29,23,33]],farm:[[1,1,40,22]],ranch:[[1,26,17,40]],port:[[1,40,40,48]]},ZONEN={res:'居住区',com:'商業区',ind:'工業区',orc:'果樹園',farm:'畑と家',ranch:'牧場',port:'港'};
 function zoneAt(x,y){for(const z in ZONES)for(const[a,b,c,d]of ZONES[z])if(x>=a&&x<=c&&y>=b&&y<=d)return z;return null}
 const inZone=(z,x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(zoneAt(x,y)!==z)return false;return true};
 // 工業区の加工所：材料を入れると翌朝に倉庫へ（1回 5G・1日 30回まで）
@@ -1300,7 +1293,7 @@ function action(){
   if(c==='A')return enhanceMenu();
   if(c==='0'&&cur===town){P.use=.35;sfx('pickup');spark(tx*TS+8,ty*TS+6,ELC.water,8,{sp:40,vy:-30,life:.5});S.inv.water=(S.inv.water||0)+1;return pop(tx*TS+8,ty*TS,'水 +1（'+S.inv.water+'）','#9cc9ec')}
   if(c==='^')return bathMenu();
-  if(c==='W'&&cur===town&&tx>=44&&ty>=44&&curT().id!=='rod'){P.use=.35;sfx('pickup');spark(tx*TS+8,ty*TS+6,ELC.water,8,{sp:40,vy:-30,life:.5});S.inv.seawater=(S.inv.seawater||0)+1;return pop(tx*TS+8,ty*TS,'海水 +1（'+S.inv.seawater+'）','#9cc9ec')}
+  if(c==='W'&&cur===town&&isSea(tx,ty)&&curT().id!=='rod'){P.use=.35;sfx('pickup');spark(tx*TS+8,ty*TS+6,ELC.water,8,{sp:40,vy:-30,life:.5});S.inv.seawater=(S.inv.seawater||0)+1;return pop(tx*TS+8,ty*TS,'海水 +1（'+S.inv.seawater+'）','#9cc9ec')}
   if(c==='$')return smithShop();
   if(c==='B')return shipMenu();
   if(c==='s')return shopMenu();
@@ -1358,7 +1351,8 @@ function doBlink(){if((P.blinkCd||0)>0||P.rush>0)return;if(S.st<BLINKST){P.blink
   const n=4;for(let i=0;i<n;i++)fx.push({type:'after',x:x0+(P.x-x0)*i/n,y:y0+(P.y-y0)*i/n,t:.18+i*.04,max:.3});
   spark(P.x,P.y-6,['#9ce0c0','#e8fff4','#ffffff'],10,{sp:50,life:.35,r:3});spark(x0,y0-6,['#9ce0c0','#e8fff4'],6,{sp:30,life:.3,r:3});
   P.inv=Math.max(P.inv,BLINKINV);P.blinkT=BLINKINV;sfx('swing');if(Math.abs(v[0])>Math.abs(v[1]))P.dir=v[0]>0?3:2;else if(v[1])P.dir=v[1]>0?0:1;P.use=.08}
-function fishLoc(tx,ty){if(cur===town)return tx>=44&&ty>=44?'sea':'pond';if(dun.id==='island')return'island';if(dun.id==='forest')return'forest';if(dun.id==='mountain'){for(let y=ty-4;y<=ty+4;y++)for(let x=tx-4;x<=tx+4;x++)if(tileAt(x,y)==='w')return'fall';return'lake'}return null}
+const isSea=(tx,ty)=>ty>=41&&tx<=40;
+function fishLoc(tx,ty){if(cur===town)return isSea(tx,ty)?'sea':'pond';if(dun.id==='island')return'island';if(dun.id==='forest')return'forest';if(dun.id==='mountain'){for(let y=ty-4;y<=ty+4;y++)for(let x=tx-4;x<=tx+4;x++)if(tileAt(x,y)==='w')return'fall';return'lake'}return null}
 const fishF=k=>partyF().reduce((m,f)=>m*((f.fish&&f.fish[k])||1),1);
 function startFish(){
   if(!S.rod)return toast('釣り竿は作業台で作れます');
@@ -1787,9 +1781,9 @@ function storeMenu(){let tab='put';
   openModal(render);
 }
 const HIVEMAX=4,HIVEP=800,HIVECAP=3;
-function hiveSpot(){const H=S.hive||{at:[]},taken=new Set(H.at.map(a=>a+''));for(const y of[41,40])for(let x=2;x<=15;x+=2)if(town.m[y][x]==='.'&&!(S.deco||{})[x+','+y]&&!taken.has([x,y]+''))return[x,y];return null}
+function hiveSpot(){const H=S.hive||{at:[]},taken=new Set(H.at.map(a=>a+''));for(const y of[38,37])for(let x=3;x<=16;x+=2)if(town.m[y][x]==='.'&&!(S.deco||{})[x+','+y]&&!taken.has([x,y]+''))return[x,y];return null}
 function hiveAct(tx,ty){const H=S.hive;const i=H?H.at.findIndex(a=>a[0]===tx&&a[1]===ty):-1;if(i<0)return;P.use=.2;const n=H.h[i]||0;if(!n)return toast(`まだハチミツがたまっていない（毎朝1つ・${HIVECAP}つまで）`);H.h[i]=0;addItem('honey',n)}
-const PAST={x0:2*TS+6,x1:15*TS+10,y0:35*TS+6,y1:40*TS+10};
+const PAST={x0:3*TS+6,x1:16*TS+10,y0:33*TS+6,y1:37*TS+10};
 function prodId(a){return ANIMALS[a.type].prod+(a.aff>=5&&Math.random()<.3+a.aff*.07?'_q':'')}
 function ranchWork(){{const H=S.hive;if(H&&H.at)H.at.forEach((_,i)=>{if(H.h[i]){toStore('honey',H.h[i]);H.h[i]=0}})}for(const a of S.animals){if(a.prod){toStore(prodId(a),1);a.prod=false}if(!a.pet){a.pet=true;a.aff=Math.min(10,a.aff+1)}}S.wdone.ranch=1}
 function petAnimal(a){a.pet=true;a.aff=Math.min(10,a.aff+(accSum('bell')?2:1));pop(a.x,a.y-16,'♥','#ff7a9a');toast(`${a.name}をなでた（♥${a.aff}）`)}
@@ -1892,8 +1886,9 @@ function houseSpot(id,tx,ty){const hs=HLIST().find(e=>e[0]===id)[1],x0=tx-2,y0=t
   if(x0+4>=40&&x0<=51&&ty>=29&&y0<=36)return'牧場の中には建てられない';
   if(hs.x===x0&&hs.y===y0)return'もうここに建っている';
   if(!inZone('res',x0,y0,x0+4,ty))return'家は居住区にしか建てられない';
+  if(town.m[ty+1]&&town.m[ty+1][tx]!==',')return'家の入り口の前に道が要る（看板のある空き区画に建てよう）';
   const tm=buildTown(id,{}).m;applyDeco(tm);
-  for(let y=y0;y<=ty;y++)for(let x=x0;x<=x0+4;x++)if(!'.*'.includes(tm[y][x])||(S.deco||{})[x+','+y]||S.soil[x+','+y])return'横5×縦3マスの草地が必要';
+  for(let y=y0;y<=ty;y++)for(let x=x0;x<=x0+4;x++)if(!'.*空'.includes(tm[y][x])||(S.deco||{})[x+','+y]||S.soil[x+','+y])return'横5×縦3マスの草地が必要';
   const inF=(qx,qy)=>{const ax=Math.floor(qx/TS),ay=Math.floor(qy/TS);return ax>=x0&&ax<=x0+4&&ay>=y0&&ay<=ty};
   if(inF(P.x,P.y)||npcs.some(n=>!n.hidden&&inF(n.x,n.y))||S.animals.some(a=>a.x!=null&&inF(a.x,a.y)))return'人や動物がいる';
   if([...Object.values(DUNS).map(D=>D.gate),...STALLS.flatMap(st=>[[st.x,st.y],[st.x,st.y-1]])].some(g=>g[0]>=x0&&g[0]<=x0+4&&g[1]>=y0&&g[1]<=ty+1))return'出入り口や露店の場所には建てられない';
@@ -1939,12 +1934,17 @@ function smithShop(){let tab='eq';
       for(const r of rs){const pr=smithPrice(r),bt=btn('買う',()=>{if(S.gold<pr)return toast('お金が足りない');S.gold-=pr;r.apply();sfx('coin');toast(`${r.n}を買った！`);render(b)},'pri');if(S.gold<pr)bt.disabled=true;l.append(item(r.n,pr+'G',r.d,[bt]))}
       if(!rs.length)l.append(el('div','muted','いま買える装備はない（次の段階は炉で珍しい素材を使って作ろう）'))}
     b.append(l,row(btn('閉じる',closeModal)))};openModal(render)}
-function zoneMigrate(){if(S.zoneV>=1)return null;S.zoneV=1;const base=buildTown(null,{}).m,at=k=>{const[x,y]=k.split(',').map(Number);return(base[y]||[])[x]};let nd=0,nh=0;
-  const back=d=>{if((d.t==='8'||d.t==='Y')&&d.f)S.seeds['tree_'+d.f]=(S.seeds['tree_'+d.f]||0)+1;else if(d.t===',')toStore('stone',1);else if(d.t!=='.'&&d.t!=='F'&&DECO[d.t])for(const[i,n]of Object.entries(DECO[d.t].in))toStore(i,n);if(d.base)back(d.base)};
-  for(const k in S.deco||{}){const d=S.deco[k],b=at(k),[x,y]=k.split(',').map(Number),ok=zoneAt(x,y)!=='ind'&&(d.o==='F'?b==='F':d.t==='.'?b===',':'.,*'.includes(b));if(!ok){back(d);delete S.deco[k];if(S.ftype)delete S.ftype[k];nd++}}
-  for(const o of[S.fruit,S.ftype])if(o)for(const k in o)if(at(k)!=='Y'&&!(S.deco||{})[k])delete o[k];
-  for(const id in S.houses||{}){const h=S.houses[id];if(!inZone('res',h.x,h.y,h.x+4,h.y+2)){delete S.houses[id];nh++}}
-  return{nd,nh}}
+function zoneMigrate(){if(S.zoneV>=2)return null;S.zoneV=2;const OX=3,OY=-2,inOld=(x,y)=>x>=2&&x<=15&&y>=7&&y<=16,mv=k=>{const[x,y]=k.split(',').map(Number);return(x+OX)+','+(y+OY)};
+  let nd=0,nf=0,nh=Object.keys(S.houses||{}).length,g=0;
+  const back=d=>{if((d.t==='8'||d.t==='Y')&&d.f)S.seeds['tree_'+d.f]=(S.seeds['tree_'+d.f]||0)+1;else if(d.t===',')toStore('stone',1);else if(d.t==='F')g+=FIELDG;else if(d.t!=='.'&&DECO[d.t])for(const[i,n]of Object.entries(DECO[d.t].in))toStore(i,n);if(d.base)back(d.base)};
+  const soil={},deco={},ft={},fr={};
+  for(const k in S.soil||{}){const[x,y]=k.split(',').map(Number),so=S.soil[k];if(inOld(x,y))soil[mv(k)]=so;else{if(so.c&&CROPS[so.c.t])S.seeds[so.c.t]=(S.seeds[so.c.t]||0)+1;if(so.spr)S.inv.sprinkler=(S.inv.sprinkler||0)+1;nf++}}
+  for(const k in S.deco||{}){const[x,y]=k.split(',').map(Number),d=S.deco[k];if(d.o==='F'&&inOld(x,y)){const n=mv(k);deco[n]=d;if((S.ftype||{})[k])ft[n]=S.ftype[k];if((S.fruit||{})[k])fr[n]=S.fruit[k]}else{back(d);nd++}}
+  S.soil=soil;S.deco=deco;S.ftype=ft;S.fruit=fr;S.gold+=g;S.houses={};S.stump={};S.felled={};S.chop={};S.pick={};
+  for(const a of S.animals||[]){a.x=null;a.y=null;a.tx=null;a.ty=null}
+  if(S.hive&&S.hive.at){S.hive.re=S.hive.at.length;S.hive.at=[]}
+  return{nd,nf,nh}}
+function hiveRe(){const H=S.hive;if(!H||!H.re)return;const n=H.re;delete H.re;H.at=[];const h=H.h||[];for(let i=0;i<n;i++){const sp=hiveSpot();if(!sp)break;H.at.push(sp);town.m[sp[1]][sp[0]]='蜂'}H.h=h.slice(0,H.at.length)}
 function townMigrate(){const v=(loadSave()||{}).townV||0;if(v>=8){S.townV=8;return -1}S.townV=8;if(v>=3&&S.houses){const hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h+1&&b.y<a.y+a.h+1;for(const id in S.houses){const q={...S.houses[id],w:5,h:3};if(hit(q,{x:56,y:40,w:5,h:3})||hit(q,{x:27,y:8,w:5,h:4}))delete S.houses[id]}}let refund=0;const store=(i,n)=>{S.store[i]=(S.store[i]||0)+n};
   if(v<3){S.houses={};S.stump={};S.felled={};S.grown={};S.pick={};S.chop={}}for(const a of S.animals||[]){a.x=null;a.y=null;a.tx=null;a.ty=null}
   const base=buildTown(null,{}).m,at=k=>{const[x,y]=k.split(',').map(Number);return(base[y]||[])[x]};
@@ -1991,10 +1991,10 @@ function buildMenu(){if(cur!==town)return toast('町の中で使おう');const d
     pv.append(item('畑をなくす',P.pave==='unfield'?'実行中':'無料','オンにすると、歩いた畑が草地にもどる（作物やスプリンクラーのある所はそのまま。自分で作った畑は'+FIELDG/2+'G戻る）',[btn(P.pave==='unfield'?'やめる':'はじめる',()=>{P.pave=P.pave==='unfield'?null:'unfield';closeModal();if(P.pave)paveAt(Math.floor(P.x/TS),Math.floor(P.y/TS));toast(P.pave?'畑なくし：歩いた畑が草地になる':'畑なくしを終えた')})]));
     pv.append(item('家の移動・デザイン','','自分の家や住人の家を好きな場所へ移したり、屋根や壁を変えられる',[btn('ひらく',houseMenu)]));
     b.append(el('div','sum','道・畑・家'),pv,el('div','sum','飾り'),l,row(btn('閉じる',closeModal)))};openModal(render)}
-const STALLS=[{id:'trav',n:'行商人',x:26,y:22,col:'#6b4a7a',aw:'#c8463d',talk:'旅の途中で仕入れた品だよ。今日だけの品ぞろえさ'},
-  {id:'seed',n:'種屋のノノ',x:29,y:24,col:'#7fb069',aw:'#5a8f45',talk:'今日のおすすめの種だよ！品ぞろえは毎日かわるからね'},
-  {id:'mat',n:'素材屋のガルド',x:44,y:23,col:'#8a6a4a',aw:'#6e6a78',talk:'あちこちで集めた素材だ。日がわりで入れかわるぜ'},
-  {id:'food',n:'屋台のミミ',x:47,y:26,col:'#e0874f',aw:'#e8b44a',talk:'できたてのごはんだよ〜。メニューは毎日かわるよ'}],STALL=STALLS[0];
+const STALLS=[{id:'trav',n:'行商人',x:29,y:26,col:'#6b4a7a',aw:'#c8463d',talk:'旅の途中で仕入れた品だよ。今日だけの品ぞろえさ'},
+  {id:'seed',n:'種屋のノノ',x:33,y:26,col:'#7fb069',aw:'#5a8f45',talk:'今日のおすすめの種だよ！品ぞろえは毎日かわるからね'},
+  {id:'mat',n:'素材屋のガルド',x:50,y:26,col:'#8a6a4a',aw:'#6e6a78',talk:'あちこちで集めた素材だ。日がわりで入れかわるぜ'},
+  {id:'food',n:'屋台のミミ',x:54,y:26,col:'#e0874f',aw:'#e8b44a',talk:'できたてのごはんだよ〜。メニューは毎日かわるよ'}],STALL=STALLS[0];
 for(const st of STALLS)st.npc={h:{hair:st.col,house:{roof:[st.aw]},id:'merchant'},dir:0,anim:0,act:0};
 const STGEN={seed:()=>{const sh=a=>a.sort(()=>Math.random()-.5),it=[];
     for(const t of sh(Object.keys(CROPS).filter(t=>CROPS[t].drop)).slice(0,2))it.push({k:'seed',id:t,p:220+CROPS[t].days*45,n:2+(Math.random()*4|0)});
@@ -2231,7 +2231,7 @@ function sand(x,y,tx,ty){if(atlOK())return atl('sand',hash(tx,ty)*89|0,x,y);R(x,
 function jground(x,y,tx,ty){R(x,y,16,16,'#4a7a34');const h=hash(tx,ty);R(x+(h*13|0),y+((h*97)%12|0)+2,2,1,'#3a6a28');R(x+((h*71)%13|0),y+((h*31)%11|0)+3,1,2,'#5a9040');if(h<.2){R(x+3,y+10,3,1,'#2f5a22');R(x+4,y+9,1,1,'#2f5a22')}}
 function mudG(x,y,tx,ty){R(x,y,16,16,'#6b5a3c');const h=hash(tx,ty);R(x+(h*13|0),y+((h*97)%12|0)+2,2,1,'#5a4a30');R(x+((h*41)%12|0)+1,y+((h*29)%12|0)+2,1,1,'#7a6a4a');if(h<.25){R(x+3,y+9,5,2,'#5a6a4a');R(x+4,y+9,2,1,'#8a9a7a')}}
 const bgT=(x,y,tx,ty)=>cur.kind==='dun'&&(cur.floorCh==='ジ'||cur.floorCh==='泥')?gnd(x,y,tx,ty):grass(x,y,tx,ty);
-function gnd(x,y,tx,ty){if(cur.floorCh==='ジ')return jground(x,y,tx,ty);if(cur.floorCh==='泥')return mudG(x,y,tx,ty);if(cur.floorCh==='n'||(cur===town&&tx>=44&&ty===44))sand(x,y,tx,ty);else grass(x,y,tx,ty)}
+function gnd(x,y,tx,ty){if(cur.floorCh==='ジ')return jground(x,y,tx,ty);if(cur.floorCh==='泥')return mudG(x,y,tx,ty);if(cur.floorCh==='n'||(cur===town&&ty===41&&tx<=40))sand(x,y,tx,ty);else grass(x,y,tx,ty)}
 function grass(x,y,tx,ty){if(atlOK()){const hh=hash(tx*3+1,ty*7+2);return atl('grass',hh<.12?(hh*50|0)%2?0:5:2+(hh*97|0)%3,x,y)}R(x,y,16,16,'#6fae4f');const h=hash(tx,ty);if(h>.4){R(x+(h*13|0),y+((h*97)%12|0)+2,1,2,'#5a963f');R(x+((h*71)%13|0),y+((h*31)%11|0)+3,1,2,'#5a963f')}if(h<.15)R(x+3,y+11,2,1,'#86c463')}
 function drawCrop(c,x,y){
   const days=CROPS[c.t].days,a=c.age;
@@ -2328,6 +2328,7 @@ function drawTile(c,x,y,tx,ty){
       if((S.fruit[tx+','+ty]||0)<=S.day){const fc=FRUITCOL[fruitAt(tx,ty)];C(x+4,y+8,1.8,fc);C(x+11,y+5,1.8,fc);C(x+9,y+10,1.8,fc);C(x+6,y+4,1.6,fc)}break}
     case'b':{grass(x,y,tx,ty);R(x+1,y+12,2,4,'#5c3720');R(x+13,y+12,2,4,'#5c3720');R(x,y+5,16,8,'#8a5a32');R(x,y+5,16,1,'#a9784a');
       const lv=Math.min(5,Math.ceil((S.bin||0)/4));if(lv){R(x+1,y+6-lv+1,14,lv+1,'#d9c46a');for(let i=0;i<4;i++)R(x+2+i*4,y+5-lv+(i%2),2,1,'#efe0a0')}else R(x+1,y+6,14,2,'#3a2414');R(x,y+9,16,1,'#6b4423');break}
+    case'空':{grass(x,y,tx,ty);R(x+7,y+8,2,8,'#6b4423');R(x+2,y+3,12,6,'#a9784a');R(x+2,y+3,12,1,'#c8925a');R(x+4,y+5,8,1,'#6b4423');R(x+4,y+7,5,1,'#6b4423');break}
     case'蜂':{grass(x,y,tx,ty);R(x+2,y+14,12,2,'#5c3720');R(x+3,y+6,10,8,'#d9b26a');R(x+3,y+9,10,1,'#a9784a');R(x+3,y+12,10,1,'#a9784a');R(x+2,y+4,12,3,'#8a5a32');R(x+1,y+4,14,1,'#a9784a');R(x+7,y+12,2,1,'#3a2414');
       const H=S.hive,i=H?H.at.findIndex(a=>a[0]===tx&&a[1]===ty):-1,hn=i>=0?H.h[i]||0:0;if(hn){R(x+4,y+7,2,hn+1,'#f0a830')}
       for(let k=0;k<2;k++){const a=clock*3+k*3.1+tx;R(x+8+Math.round(Math.cos(a)*6),y+5+Math.round(Math.sin(a*1.3)*4),1,1,k?'#2a2414':'#ffd94a')}break}
@@ -3072,7 +3073,7 @@ function startGame(fresh){
   if(!fresh&&!(loadSave()||{}).ptV1){S.ptV1=1;S.pt=S.pt||{};S.pt.mag=(S.pt.mag||0)+Math.round(S.lv*1.0);S.sp=S.sp||0;S.prof=S.prof||{};for(const w of['sword','rune','staff','axe','pick','bow'])if(hasW(w))S.prof[w]=S.prof[w]||{lv:Math.min(PMAX,Math.max(1,Math.round(S.lv*.65))),exp:0}}
   {const RMF={funa:15,koi:35,bass:70,goldkoi:500,ika:70,katsuo:140,nettai:60,lobster:250};let g=0;for(const o of[S.inv,S.store,S.ship])for(const k in RMF)for(const[id,m]of[[k,1],[k+'_q',1.8]])if(o[id]){g+=Math.round(RMF[k]*m)*o[id];delete o[id]}if(S.dex)for(const k in RMF)delete S.dex[k];if(g){S.gold+=g;setTimeout(()=>toast(`取り扱いがなくなった魚を市場が${g}Gで引き取ってくれた`),800)}}
   for(const f of['apple','peach','orange'])if(S.inv['sap_'+f]){S.seeds['tree_'+f]=(S.seeds['tree_'+f]||0)+S.inv['sap_'+f];delete S.inv['sap_'+f]}
-  P.pave=null;const tmig=fresh?-1:townMigrate();const zmig=fresh?(S.zoneV=1,null):zoneMigrate();rebuildTown();if(zmig)setTimeout(()=>openModal(b=>b.append(el('h2','','町が3つの区に分かれた'),el('div','muted','広場のまわりが商業区、南と東が居住区、北東の果樹林が工業区（製材所・製粉所・製鉄所）になり、果樹は町の東の端へ移りました。町は東へ広がっています。'),el('div','muted','家は居住区にしか移せません。加工所は材料を入れると翌朝に倉庫へ届けてくれます。'+(zmig.nd||zmig.nh?`（新しい地図に合わない飾り${zmig.nd}個は片付けて材料を倉庫へ、居住区の外にあった家${zmig.nh}軒は元の場所へ戻しました）`:'')),row(btn('閉じる',closeModal,'pri')))),600);
+  P.pave=null;const tmig=fresh?-1:townMigrate();const zmig=fresh?(S.zoneV=2,null):zoneMigrate();rebuildTown();hiveRe();if(zmig)setTimeout(()=>openModal(b=>b.append(el('h2','','町が新しくなった！'),el('div','muted','まん中の円い広場から、4本の大通りが東西南北の門へのびています。北西が畑と家、北東が工業区（製材所・製粉所・製鉄所）、南東が居住区、南西が牧場・果樹園・港、広場のまわりが商業区です。'),el('div','muted','畑の作物・水やり・スプリンクラー・畑の上の果樹は、同じ並びのまま新しい畑へ移しました。'+(zmig.nf?`畑づくりで広げた畑${zmig.nf}マスは、作物を種に戻して代金を返しました。`:'')+(zmig.nd?`町づくりの飾り・道${zmig.nd}個は、材料を倉庫へ戻しました（町づくりで置き直せます）。`:'')+(zmig.nh?`移していた家${zmig.nh}軒は、居住区の新しい区画へ（見た目はそのまま）。`:'')),el('div','muted','看板の立っている所は空き区画です。家は居住区の空き区画に移せます。'),row(btn('閉じる',closeModal,'pri')))),600);
   enterRoom('home');initNPCs();$('#title').hidden=true;paused=false;toolbar();
   if(fresh){save();openModal(b=>{b.append(el('h2','','はじめに'),
     el('div','muted','① クワで畑を耕す → 種をまく → じょうろで水やり'),
