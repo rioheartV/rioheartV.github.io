@@ -483,8 +483,9 @@ const SETB={
   dark:{3:'追加の闇ダメージ＋その半分だけHPを吸う',4:'宵闇：急所率+15%・攻撃が当たるたびHP+2'}};
 const setDesc=e=>`2個：${ELN[e]}の魔法の威力+20%・MP消費-15%／3個：通常攻撃と技に${SETB[e][3]}／4個：${SETB[e][4]}`;
 const SETS={};for(const e of MELS)for(const sl in SETPC){const p=SETPC[sl];SETS[e+'_'+sl]={n:SETN[e]+'の'+p.n,def:p.def,mdef:p.mdef,spd:p.spd||0,set:e,in:p.in(e)}}
-const eqT=sl=>{const v=S.eq[sl];if(typeof v==='string')return SETS[v]||null;return EQ[sl].tiers[v||0]||null};
-const setN=e=>{let n=0;for(const sl in EQ){const v=S.eq[sl];if(typeof v==='string'&&SETS[v]&&SETS[v].set===e)n++}return n};
+const shIn=()=>(S.weps||[]).includes('shield'),shOwn=()=>{const o=[];const mx=Math.max((S.eqMax||{}).shield||0,typeof S.eq.shield==='number'?S.eq.shield:0);for(let i=1;i<=mx;i++)if(EQ.shield.tiers[i])o.push([i,EQ.shield.tiers[i].n]);for(const e of MELS){const k=e+'_shield';if((S.setOwn||{})[k])o.push([k,SETS[k].n+'（セット）'])}return o};
+const eqT=sl=>{if(sl==='shield'&&!shIn())return null;const v=S.eq[sl];if(typeof v==='string')return SETS[v]||null;return EQ[sl].tiers[v||0]||null};
+const setN=e=>{let n=0;for(const sl in EQ){if(sl==='shield'&&!shIn())continue;const v=S.eq[sl];if(typeof v==='string'&&SETS[v]&&SETS[v].set===e)n++}return n};
 const set3=()=>MELS.find(e=>setN(e)>=3)||null,set4=e=>setN(e)>=4;
 for(const e of MELS)for(const sl in SETPC){const k=e+'_'+sl,t=SETS[k];RECIPES.v.push({up:1,set:1,n:t.n,d:`${EQ[sl].n}の防具・防御+${t.def}・魔防+${t.mdef}`+(t.spd?`・移動+${Math.round(t.spd*100)}%`:'')+`。${SETN[e]}のセット（${setDesc(e)}）`,in:t.in,show:()=>!(S.setOwn||{})[k],apply:()=>{S.setOwn=S.setOwn||{};S.setOwn[k]=1;S.eq[sl]=k}})}
 const ACCS={
@@ -551,7 +552,7 @@ const WNAMES={spear:['なし','鉄の細剣','魔石の細剣','金の細剣','�
 [['spear',1,{ore:3,wood:2}],['spear',2,{ore:5,gem:3,wood:2}],['spear',3,{goldore:4,gem:4,wood:2}],['spear',4,{dragonscale:2,obsidian:3,goldore:3}],['dagger',1,{ore:2,wing:1}],['dagger',2,{ore:3,gem:2,wing:2}],['dagger',3,{goldore:3,gem:3}],['dagger',4,{dragonscale:1,obsidian:2,goldore:3}],['great',1,{ore:6,wood:2}],['great',2,{ore:8,gem:4}],['great',3,{goldore:6,gem:4,ore:4}],['great',4,{dragonscale:3,obsidian:4,goldore:4}],['axe',1,{ore:2,stone:3,wood:2}],['axe',2,{ore:5,gem:2,wood:3}],['axe',3,{goldore:3,ore:3,wood:2}],['pick',1,{ore:2,stone:3,wood:1}],['pick',2,{ore:5,gem:2}],['pick',3,{goldore:3,ore:3,stone:2}],['bow',1,{wood:5,wing:2}],['bow',2,{wood:6,gem:2,feather:4}],['bow',3,{goldore:3,wood:4,feather:5}],['staff',1,{wood:4,gem:1}],['staff',2,{wood:5,gem:4,manaherb:3}],['staff',3,{goldore:3,gem:6,obsidian:2}],['rune',1,{ore:4,gem:2}],['rune',2,{ore:6,gem:5,goldore:1}],['rune',3,{goldore:4,gem:6,dragonscale:1}]]
   .forEach(([w,l,inp])=>RECIPES.v.push({up:1,n:WNAMES[w][l],d:`${WEAP[w].d}（${wEff(w,l)}）`,in:inp,show:()=>(S.wl[w]||0)===l-1,apply:()=>{S.wl[w]=l;S.weps=S.weps||[];if(!FARMW.includes(w)&&!S.weps.includes(w)&&S.weps.length<2)S.weps.push(w);toolbar()}}));
 const FARMW=['axe','pick'];
-const hasW=id=>id==='sword'||id==='hand'||(id==='shield'?!!(S.eq&&S.eq.shield):id==='blink'?!!S.blink:(S.wl[id]||0)>0);
+const hasW=id=>id==='sword'||id==='hand'||(id==='shield'?shOwn().length>0:id==='blink'?!!S.blink:(S.wl[id]||0)>0);
 RECIPES.k.push({out:'plank',in:{wood:2}},{out:'rope',in:{grass:3}},{out:'ironbar',in:{ore:2,charcoal:1}},{out:'glass',in:{stone:2,charcoal:1}},
   {out:'lantern',in:{glass:1,ironbar:1,oil:1}},{out:'woodbox',in:{plank:3,rope:1}},{out:'vase',in:{glass:2,sunflower:1}},{out:'stained',in:{glass:4,dye_red:1,dye_blue:1,dye_yellow:1}});
 RECIPES.p.push({out:'smoke',in:{charcoal:1,herb:1},cnt:2},{out:'salve',in:{herb:2,oil:1}});
@@ -2137,12 +2138,12 @@ function secEquip(b,R){
     b.append(el('div','sum','武器'));
     {const l=el('div','list'),ws=['sword','spear','dagger','great','rune','staff','bow','shield','blink'].filter(hasW),w0=OFFH.includes(S.sel.weap)&&(S.grp===2||S.grp===4)?S.sel.weap:heldW(),wn=w=>w==='blink'?'疾風の羽衣（回避）':w==='shield'?'盾（'+((eqT('shield')||{}).n||'盾')+'）':(w==='sword'?SWORDS[S.sword]:WNAMES[w][S.wl[w]])+(enh(w)?' +'+enh(w):''),wd=w=>w==='blink'?`持って「使う」で短い距離を瞬間移動（移動している方向・止まっていれば向いている方向）。無敵${BLINKINV}秒・1回 ST${BLINKST}・${BLINKCD}秒に1回`:w==='shield'?`持って「使う」を長押しでガード（受けるダメージ 物理-60%・魔法-35%、1回 ST${GUARDST}）`:w==='sword'?`攻撃+${SWP[S.sword]+enh('sword')}`:wEff(w,S.wl[w])+(enh(w)?`・強化+${enh(w)}`:'');
       l.append(el('div','muted','武器は2つまで装備できます（片方を盾か回避の羽衣にもできる）。下のバーの武器の枠で持ち替え。盾・羽衣を持っている間も、もう片方の武器の技・魔法を使えます。'));const eq=weps();
-      for(let i=0;i<2;i++){const c2=eq[i],other=eq[1-i];selRow(l,'武器'+(i+1)+(c2&&c2===w0?'・手持ち':''),c2?`${c2==='shield'?'盾':c2==='blink'?'回避':WEAP[c2].n}　${wd(c2)}`:'',[...(i?[['','なし']]:[]),...ws.filter(w=>w!==other).map(w=>[w,wn(w)])],c2||'',v=>{const np=[...eq];if(v)np[i]=v;else np.splice(i,1);S.weps=np.filter(Boolean);if(!S.weps.includes(S.sel.weap))S.sel.weap=S.weps[0];toolbar();R()})}
+      for(let i=0;i<2;i++){const c2=eq[i],other=eq[1-i];selRow(l,'武器'+(i+1)+(c2&&c2===w0?'・手持ち':''),c2?`${c2==='shield'?'盾':c2==='blink'?'回避':WEAP[c2].n}　${wd(c2)}`:'',[...(i?[['','なし']]:[]),...ws.filter(w=>w!==other).flatMap(w=>w==='shield'?shOwn().map(([v2,n2])=>['shield:'+v2,'盾：'+n2]):[[w,wn(w)]])],c2==='shield'?'shield:'+S.eq.shield:c2||'',v=>{if(v&&v.startsWith('shield:')){const x=v.slice(7);S.eq.shield=SETS[x]?x:+x;v='shield'}const np=[...eq];if(v)np[i]=v;else np.splice(i,1);S.weps=np.filter(Boolean);if(!S.weps.includes(S.sel.weap))S.sel.weap=S.weps[0];toolbar();R()})}
       if(weps().includes('bow')){const own=Object.keys(ARROWS).filter(arrowOK),cu=arrowOK(S.arrow)?S.arrow||'normal':'normal',A=ARROWS[cu];selRow(l,'矢（弓）',`${A.d}${A.st||A.mp?`（1発ごとにST+${A.st}・MP${A.mp}）`:''}`,own.map(id=>[id,ARROWS[id].n]),cu,v=>{S.arrow=v;R()})}
       if(weps().includes('staff')){const cu=staffEl();selRow(l,'魔法弾の属性（杖）',cu==='none'?'無属性はMPを使わない':'1発ごとにMP1を使う',FELEM.map(e=>[e[0],e[1]]),cu,v=>{S.staffEl=v;R()})}
       b.append(l)}
-    b.append(el('div','sum','防具'),el('div','muted','作ったことのある防具から選べます（新しく作ると自動で着替え）。'));
-    {const l=el('div','list');for(const sl in EQ){const mx=eqMax(sl),c2=S.eq[sl]||0,t=eqT(sl);const opts=[[0,'なし']];for(let i=1;i<=mx;i++)opts.push([i,EQ[sl].tiers[i].n+(i===c2&&enh(sl)?' +'+enh(sl):'')]);for(const e of MELS){const k=e+'_'+sl;if((S.setOwn||{})[k])opts.push([k,SETS[k].n+'（セット）'+(k===c2&&enh(sl)?' +'+enh(sl):'')])}
+    b.append(el('div','sum','防具'),el('div','muted','作ったことのある防具から選べます（新しく作ると自動で着替え）。盾は上の武器の枠で選びます。'));
+    {const l=el('div','list');for(const sl in EQ){if(sl==='shield')continue;const mx=eqMax(sl),c2=S.eq[sl]||0,t=eqT(sl);const opts=[[0,'なし']];for(let i=1;i<=mx;i++)opts.push([i,EQ[sl].tiers[i].n+(i===c2&&enh(sl)?' +'+enh(sl):'')]);for(const e of MELS){const k=e+'_'+sl;if((S.setOwn||{})[k])opts.push([k,SETS[k].n+'（セット）'+(k===c2&&enh(sl)?' +'+enh(sl):'')])}
       selRow(l,EQ[sl].n,t?`防御+${t.def+Math.floor(enh(sl)/2)}${t.mdef?`・魔防+${t.mdef}`:''}${t.spd?`・移動+${Math.round(t.spd*100)}%`:''}`:(mx>0?'':'鍛冶炉や鍛冶屋で手に入る'),opts,c2,v=>{S.eq[sl]=SETS[v]?v:+v;R()})}b.append(l);{const on=MELS.filter(e=>setN(e)>=2);b.append(el('div','muted',on.length?on.map(e=>`${SETN[e]}のセット ${setN(e)}個：`+['','',`${ELN[e]}の魔法+20%・MP-15%`,`${ELN[e]}の魔法+20%・${SETB[e][3]}`,`${ELN[e]}の魔法+20%・${SETB[e][3]}・${SETB[e][4]}`][setN(e)]).join('／'):'セット装備（鍛冶炉の「セット」）は、同じ属性を2・3・4個そろえると効果が増える'))}}
     b.append(el('div','sum','アクセサリー（2つまで）'));
     {const l=el('div','list'),own=Object.keys(ACCS).filter(id=>S.accs[id]);if(!own.length)l.append(el('div','muted','作業台で作れます'));
@@ -2456,7 +2457,7 @@ function drawPlayer(x,y){
   else if(lk.hat==='bigrib'){const rc=HC||'#e0505a';G.fillStyle=rc;G.beginPath();G.moveTo(x,y-16);G.lineTo(x-7,y-20);G.lineTo(x-7,y-13);G.moveTo(x,y-16);G.lineTo(x+7,y-20);G.lineTo(x+7,y-13);G.fill();R(x-1,y-17,3,3,shade(rc,.75));R(x-6,y-18,2,1,shade(rc,1.25));R(x+5,y-18,2,1,shade(rc,1.25))}
   else if(E.head){const hc=eqc('head');R(x-5,y-15,10,3,hc);R(x-5,y-15,10,1,'#fff6');R(x-5,y-13,10,1,shade(hc,.7))}
   else{const rc=HC||'#e0505a',bx=d===1?-1:d===2?2:d===3?-4:1;R(x+bx,y-17,2,3,rc);R(x+bx+3,y-17,2,3,rc);R(x+bx+2,y-16,1,1,shade(rc,.7));R(x+bx,y-17,1,1,shade(rc,1.3))}
-  if(E.shield&&d!==1){const sc=eqc('shield'),sx=d===3?x-7:x+3;R(sx+(d===0?-9:0),y-6,5,7,sc);R(sx+(d===0?-8:1),y-5,3,1,'#fff6');R(sx+(d===0?-9:0)+4,y-6,1,7,shade(sc,.7))}
+  if(E.shield&&shIn()&&d!==1){const sc=eqc('shield'),sx=d===3?x-7:x+3;R(sx+(d===0?-9:0),y-6,5,7,sc);R(sx+(d===0?-8:1),y-5,3,1,'#fff6');R(sx+(d===0?-9:0)+4,y-6,1,7,shade(sc,.7))}
   if(P.use>0&&cur.kind!=='dun'){const t=curT(),v=DIRS[d];drawIcon(t.seed?(t.crop||'turnip'):t.id,x+v[0]*10-8,y+v[1]*6-12)}
 }
 function drawNPC(x,y,n){
@@ -2760,17 +2761,27 @@ for(const k in SONGS){const s2=SONGS[k];s2.L=s2.lead.split(' ');s2.Bs=s2.bass.sp
 function bgmFor(){if(!$('#title').hidden)return'home';if(cur.kind==='dun'){if(dun.boss&&mons.some(m=>m.boss))return'boss';if(dun.id==='ice')return'ice';if(dun.id==='island')return floor>12?'volcano':'beach';if(dun.id==='jungle'||dun.id==='swamp')return dun.id;return'dungeon'}
   if(cur.kind==='room')return'home';return S.time>=1080||S.time<360?'night':'town'}
 function playPart(arr,i,t,sd,type,v){const n=arr[i%arr.length];if(!n||n==='-'||n==='.')return;let len=1;while(arr[(i+len)%arr.length]==='-'&&len<16)len++;const f=nf(n);if(f)tone(f,t,sd*len*.92,type,v,AU.bg)}
-// ---- BGM のファイル（場面ごとに 1 曲・ループ）
-const FB={off:null,nbad:0,cur:null,key:null,bad:{},vol:.55,fade:[]};
+// ---- BGM のファイル（場面ごとに 1 曲・すき間なくループ）。無い時は自動演奏
+const FB={off:null,nbad:0,key:null,cur:null,bad:{},buf:{},load:{},vol:.5};
 function bgmFile(){if(!$('#title').hidden)return'title';if(cur.kind==='dun'){if(dun.boss&&mons.some(m=>m.boss))return dun.hard?'hardboss':'boss';if(dun.id==='island')return floor>12?'volcano':'beach';return dun.id}
   if(cur.kind==='room')return'home';return S.time>=1080||S.time<360?'night':'town'}
-function fbFade(a,to,t,end){const st=a.volume,t0=performance.now();FB.fade.push({a,st,to,t0,t,end})}
-function fbTick(){const now=performance.now();FB.fade=FB.fade.filter(f=>{const k=Math.min(1,(now-f.t0)/(f.t*1000));f.a.volume=Math.max(0,Math.min(1,f.st+(f.to-f.st)*k));if(k>=1){if(f.end)f.end();return false}return true});
-  if(FB.off)return false;const key=bgmFile(),vol=AU.bgm?FB.vol:0;
-  if(key!==FB.key){FB.key=key;const old=FB.cur;if(old)fbFade(old,0,.8,()=>{old.pause()});FB.cur=null;
-    if(!FB.bad[key]){const a=new Audio('bgm/'+key+'.mp3');a.loop=true;a.volume=0;a.preload='auto';a.addEventListener('error',()=>{FB.bad[key]=1;if(FB.cur===a)FB.cur=null;if(FB.off===null&&++FB.nbad>=2)FB.off=true});
-      a.addEventListener('playing',()=>{FB.off=false;a.ok=1});a.play().then(()=>{a.ok=1;fbFade(a,vol,1.2)}).catch(()=>{});FB.cur=a}}
-  const a=FB.cur;if(a&&a.ok){if(Math.abs(a.volume-vol)>.01&&!FB.fade.some(f=>f.a===a))a.volume=vol;return true}return false}
+// 先頭と末尾のほぼ無音を切り、末尾 40ms を先頭に重ねてからループさせる
+function fbPrep(ab){const c=AU.ctx,sr=ab.sampleRate,n=Math.floor(sr*.04),ch=ab.numberOfChannels,L=ab.length;let s0=0,e0=L;
+  const d0=ab.getChannelData(0),th=.0015;while(s0<L-1&&Math.abs(d0[s0])<th)s0++;while(e0>s0+n*4&&Math.abs(d0[e0-1])<th)e0--;
+  const len=e0-s0-n;if(len<sr)return ab;const out=c.createBuffer(ch,len,sr);
+  for(let k=0;k<ch;k++){const src=ab.getChannelData(k),dst=out.getChannelData(k);dst.set(src.subarray(s0+n,e0-n+n*0),0);
+    for(let i=0;i<n;i++){const t=i/n,a=Math.sin(t*Math.PI/2),b=Math.cos(t*Math.PI/2);dst[len-n+i]=src[e0-n+i]*b+src[s0+i]*a}}
+  return out}
+function fbLoad(key){if(FB.buf[key]||FB.load[key]||FB.bad[key])return;FB.load[key]=1;
+  fetch('bgm/'+key+'.mp3').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(x=>new Promise((ok,ng)=>AU.ctx.decodeAudioData(x,ok,ng))).then(ab=>{FB.buf[key]=fbPrep(ab);FB.off=false;delete FB.load[key];
+      for(const k in FB.buf)if(k!==key&&k!==FB.key)delete FB.buf[k]})
+    .catch(()=>{FB.bad[key]=1;delete FB.load[key];if(FB.off===null&&++FB.nbad>=2)FB.off=true})}
+function fbStop(t){const x=FB.cur;if(!x)return;FB.cur=null;const c=AU.ctx;x.g.gain.cancelScheduledValues(c.currentTime);x.g.gain.setValueAtTime(x.g.gain.value,c.currentTime);x.g.gain.linearRampToValueAtTime(0,c.currentTime+t);try{x.s.stop(c.currentTime+t+.05)}catch(e){}}
+function fbTick(){if(FB.off)return false;const c=AU.ctx,key=bgmFile();
+  if(key!==FB.key){FB.key=key;fbStop(.8);fbLoad(key)}
+  if(!FB.cur&&FB.buf[key]&&c.state==='running'){const s=c.createBufferSource(),g=c.createGain();s.buffer=FB.buf[key];s.loop=true;g.gain.value=0;s.connect(g);g.connect(AU.m);s.start();g.gain.linearRampToValueAtTime(AU.bgm?FB.vol:0,c.currentTime+1.2);FB.cur={s,g,key}}
+  const x=FB.cur;if(x){const v=AU.bgm?FB.vol:0;if(Math.abs(x.g.gain.value-v)>.02&&x.g.gain.value>0.001&&!AU.bgm)x.g.gain.setTargetAtTime(0,c.currentTime,.1);else if(AU.bgm&&x.g.gain.value<.001)x.g.gain.setTargetAtTime(v,c.currentTime,.2);return true}
+  return !!(FB.load[key]&&FB.off===false)}
 function auTick(){if(!AU.ctx)return;if(fbTick()){AU.track=null;return}const want=bgmFor();if(want!==AU.track){AU.track=want;AU.step=0;AU.next=AU.ctx.currentTime+.08}
   const sg=SONGS[AU.track];if(!sg)return;const sd=60/sg.bpm/2;
   while(AU.next<AU.ctx.currentTime+.25){const t=AU.next,i=AU.step;if(AU.bgm){playPart(sg.L,i,t,sd,sg.lw,sg.lv);playPart(sg.Bs,i,t,sd,sg.bw,sg.bv);
@@ -2876,6 +2887,8 @@ function setQuickAt(id,i){for(let j=0;j<S.quick.length;j++)if(S.quick[j]===id)S.
 function setQuick(id){const i=S.quick.indexOf(id);if(i>=0){S.quick[i]=null;return}const e=S.quick.indexOf(null);if(e>=0)S.quick[e]=id;else S.quick=[id,S.quick[0]];toolbar()}
 let tbSig='';
 function toolbar(){
+  if((S.weps||[]).includes('shield'))S.shAuto=1;
+  if(!S.shAuto&&S.eq&&S.eq.shield&&shOwn().length&&(S.weps||[]).filter(w=>hasW(w)).length<2&&!(S.weps||[]).includes('shield')){S.shAuto=1;S.weps=[...(S.weps&&S.weps.length?S.weps.filter(hasW).slice(0,1):['sword']),'shield'];setTimeout(()=>toast('盾は武器の枠（装備2）に入れました'),300)}
   const nav=$('#tools');wSync();{const o=$('#bO'),bt=$('#btns'),w=w2();if(o){o.hidden=!w;bt.classList.toggle('off',!!w);o.textContent='';if(w){o.append('B',el('small','',w==='shield'?'盾':w==='blink'?'回避':TNAME[w].s))}o.classList.toggle('blink',w==='blink')}}
   if(!nav.children.length){
     GORDER.forEach((i,pos)=>{const g=GROUPS[i];const b=el('button','slot');b.id='slot'+i;b.setAttribute('aria-label',g.n);const c=document.createElement('canvas');c.width=c.height=16;
