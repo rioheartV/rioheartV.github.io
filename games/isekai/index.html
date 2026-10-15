@@ -1616,7 +1616,8 @@ const seedKeep=()=>HELPERS.reduce((a,h)=>a+(S.hired[h.id]?h.wage:0),0);
 function useSeed(t){const ss=S.seedStore||{};if(S.seeds[t]>0)S.seeds[t]--;else if(popt().store&&ss[t]>0)ss[t]--;else{S.gold-=CROPS[t].seed;S.seedBuy=(S.seedBuy||0)+CROPS[t].seed}}
 function mineReward(){const n=2+Math.floor(S.deep/5);toStore('ore',n);toStore('stone',3);let t=`鉄鉱石×${n}・石×3`;if(Math.random()<.05+S.deep*.01){toStore('goldore',1);t+='・金鉱石×1'}if(Math.random()<.25+S.deep*.02){toStore('gem',1);t+='・魔石×1'}S.wdone.mine=1;return t+' を倉庫へ'}
 const REH=3;
-function afterHarvest(k,s){const C=CROPS[s.c.t];s.w=false;if(C.regrow&&(s.c.h||1)<REH){s.c.h=(s.c.h||1)+1;s.c.age=Math.max(0,C.days-C.regrow)}else delete S.soil[k]}
+const SEEDP=.15;
+function afterHarvest(k,s){const C=CROPS[s.c.t];s.w=false;if(!C.tree&&Math.random()<SEEDP){const t=s.c.t;S.seeds[t]=(S.seeds[t]||0)+1;S.seedGot=(S.seedGot||0)+1;if(cur===town){const[x,y]=k.split(',').map(Number);pop(x*TS+8,y*TS-6,C.n+'の種 +1','#c7e59a')}}if(C.regrow&&(s.c.h||1)<REH){s.c.h=(s.c.h||1)+1;s.c.age=Math.max(0,C.days-C.regrow)}else delete S.soil[k]}
 function catchUp(){const w=S.worked||{},soils=Object.values(S.soil);
   if(w.tiller){let n=S.wdone.till||0;for(let y=0;y<town.H&&n<40;y++)for(let x=0;x<town.W&&n<40;x++){const k=x+','+y;if(town.m[y][x]==='F'&&!S.soil[k]){S.soil[k]={w:false,c:null};n++}}}
   if(w.harvest)for(const[k,s]of Object.entries(S.soil))if(s.c&&s.c.age>=CROPS[s.c.t].days){reapCrop(s.c.t);afterHarvest(k,s)}
