@@ -212,7 +212,7 @@ Object.assign(ITEMS,{plank:{n:'板材',p:25},ironbar:{n:'鉄材',p:120},glass:{n
   bento:{n:'お弁当',p:650,heal:[200,150,40]},pancake:{n:'ホットケーキ',p:170,heal:[70,60,20]},salve:{n:'薬草の軟膏',p:90,heal:[70,20,0]},
   woodbox:{n:'木箱',p:150},vase:{n:'ガラスの花瓶',p:330},stained:{n:'ステンドグラス',p:950}});
 Object.assign(ITEMS,{charcoal:{n:'木炭',p:55},woodbowl:{n:'木の器',p:50},woodcarving:{n:'木彫りの置物',p:120},campfire:{n:'たき火セット',p:60,use:'fire'}});
-const DRINK=new Set(['cocoa','bananajuice','grapejuice','water','mugicha','appletea','peachnectar','berrysoda','carrotjuice','tomatojuice','milktea','manasoda','stdrink','hipotion','powerpot','guardpot','swiftpot','spiritpot','mintea','manapot','herbtea','cocojuice','tropjuice','potion','stpot','elixir','juice','mpot','mpot2','milk','milk_q','hotmilk','honeymilk','antidote']);
+const DRINK=new Set(['tk_juice','cocoa','bananajuice','grapejuice','water','mugicha','appletea','peachnectar','berrysoda','carrotjuice','tomatojuice','milktea','manasoda','stdrink','hipotion','powerpot','guardpot','swiftpot','spiritpot','mintea','manapot','herbtea','cocojuice','tropjuice','potion','stpot','elixir','juice','mpot','mpot2','milk','milk_q','hotmilk','honeymilk','antidote']);
 const FISH=[
   {id:'yamame',n:'ヤマメ',p:45,loc:['forest','fall','pond'],w:25,min:15,max:30},
   {id:'masu',n:'ニジマス',p:55,loc:['lake','fall','forest','pond'],w:18,min:20,max:50},
@@ -388,6 +388,11 @@ Object.assign(ITEMS,{dragonfruit:{n:'ドラゴンフルーツ',p:300,heal:[40,50
 DRINK.add('dragonjuice');
 // 上位ダンジョンの素材（ダンジョンごとに1つ）
 const HMAT={forest:'kojuu',cave:'deepore',mountain:'stormplume',island:'crimsoncore',ice:'eternalice',jungle:'emeraldfang',swamp:'darkpearl'};
+// 建築の素材（v123）：粘土・砂は掘る、ほかは加工所で作る
+Object.assign(ITEMS,{clay:{n:'粘土',p:8},sand:{n:'砂',p:6},lumber:{n:'角材',p:40},nail:{n:'釘',p:15},straw:{n:'わら束',p:45},cutstone:{n:'石材',p:30},plaster:{n:'漆喰',p:55},brick:{n:'レンガ',p:25},rooftile:{n:'瓦',p:33},pane:{n:'窓ガラス',p:180}});
+// 料理屋のテイクアウト（v125）：料理屋でだけ買える。売値は買値の約4割
+Object.assign(ITEMS,{tk_onigiri:{n:'おにぎり弁当',p:45,heal:[80,80,0]},tk_sand:{n:'カツサンド',p:100,heal:[120,100,0],buff:{def:150}},tk_bento:{n:'料理屋の特製弁当',p:180,heal:[220,160,40],buff:{atk:150}},
+  tk_soup:{n:'持ち帰りスープ',p:120,heal:[100,60,100],buff:{mag:150}},tk_pie:{n:'焼きたてミートパイ',p:140,heal:[150,120,0],buff:{crit:150}},tk_juice:{n:'料理屋のミックスジュース',p:80,heal:[40,120,60],buff:{spd:150}}});
 // レアドロップ（主）と深淵の素材
 Object.assign(ITEMS,{r_ent:{n:'古樹の心核',p:2000},r_king:{n:'スライム王の冠片',p:1500},r_titan:{n:'巨人の心臓石',p:2500},r_bigcrab:{n:'王蟹の甲羅片',p:2500},r_magma:{n:'溶岩王の核',p:3000},r_dragon:{n:'竜王の逆鱗',p:5000},
   r_yeti:{n:'雪王の大牙',p:4000},r_icedragon:{n:'氷竜の宝玉',p:6000},r_toad:{n:'毒王の宝珠',p:4000},r_serpent:{n:'大蛇の瞳',p:6000},r_mud:{n:'泥王の心核',p:4000},r_croc:{n:'鰐王の顎骨',p:6000},r_abyss:{n:'深淵竜の瞳',p:15000},
@@ -594,7 +599,7 @@ const WNAMES={spear:['なし','鉄の細剣','魔石の細剣','金の細剣','�
   .forEach(([w,l,inp])=>RECIPES.v.push({up:1,n:WNAMES[w][l],d:`${WEAP[w].d}（${wEff(w,l)}）`,in:inp,show:()=>(S.wl[w]||0)===l-1,apply:()=>{S.wl[w]=l;S.weps=S.weps||[];if(!FARMW.includes(w)&&!S.weps.includes(w)&&S.weps.length<2)S.weps.push(w);toolbar()}}));
 const FARMW=['axe','pick'];
 const hasW=id=>id==='sword'||id==='hand'||(id==='shield'?shOwn().length>0:id==='blink'?!!S.blink:(S.wl[id]||0)>0);
-RECIPES.k.push({out:'plank',in:{wood:2}},{out:'rope',in:{grass:3}},{out:'ironbar',in:{ore:2,charcoal:1}},{out:'glass',in:{stone:2,charcoal:1}},
+RECIPES.k.push({out:'plank',in:{wood:2}},{out:'rope',in:{grass:3}},{out:'ironbar',in:{ore:2,charcoal:1}},{out:'glass',in:{sand:2,charcoal:1}},
   {out:'lantern',in:{glass:1,ironbar:1,oil:1}},{out:'woodbox',in:{plank:3,rope:1}},{out:'vase',in:{glass:2,sunflower:1}},{out:'stained',in:{glass:4,dye_red:1,dye_blue:1,dye_yellow:1}});
 RECIPES.p.push({out:'smoke',in:{charcoal:1,herb:1},cnt:2},{out:'salve',in:{herb:2,oil:1}});
 RECIPES.q.push({out:'bento',in:{onigiri:1,karaage:1,yasaiitame:1}},{out:'pancake',in:{flour:1,egg:1,milk:1,honey:1}});
@@ -623,9 +628,24 @@ const HELPERS=[
   {id:'tiller',n:'ゴロウ',job:'耕し係',d:'収穫して空いた畑をクワで耕しなおす（1日40マスまで）',wage:40,pos:[20,14],hair:'#8a6a4a'},
   {id:'brew',n:'セラ',job:'調合係',d:'10時ごろからまほう店で働き、倉庫の薬草で回復薬（薬草2つで1本・3本まで）、魔力草でマナポーション（2つで1本・2本まで）を作って倉庫へ入れる',wage:40,pos:[45,18],hair:'#9a7cc0'}];
 const ROOFS=[['#4a78b0','#36598a','#6a96c8'],['#8a5a32','#6b4423','#a9784a'],['#c86a3a','#9c4f2a','#e0874f'],['#6e6a78','#55515e','#8f8a9c'],['#5a8f45','#456f35','#7fb069'],['#3f7f8a','#2e5f68','#5a9fa8']];
-const HMAP={},TW=84,TH=50,FOUNT={x:40,y:22,w:4,h:4};
+const HMAP={},TW=124,TH=50,FOUNT={x:40,y:22,w:4,h:4};
 // 空き区画：居住区は通りに面した家の区画（住人の家が入っていない所）、ほかの区は将来の建物の場所
-const LOTS=[...[29,35,41,45].flatMap(y=>[45,51,57,63,69,75].map(x=>({x,y,z:'res'}))),{x:25,y:15,z:'com'},{x:53,y:15,z:'com'},{x:25,y:30,z:'com'},{x:67,y:9,z:'ind'},{x:74,y:9,z:'ind'},{x:62,y:16,z:'ind'},{x:69,y:16,z:'ind'},{x:76,y:16,z:'ind'}];
+const LOTS=[...[29,35,41,45].flatMap(y=>[45,51,57,63,69,75].map(x=>({x,y,z:'res'}))),{x:25,y:15,z:'com'},{x:53,y:15,z:'com'},{x:25,y:30,z:'com'},{x:67,y:9,z:'ind'},{x:74,y:9,z:'ind'},{x:62,y:16,z:'ind'},{x:69,y:16,z:'ind'},{x:76,y:16,z:'ind'},
+  ...[5,13].flatMap(y=>[104,110,116].map(x=>({x,y,z:'ind'}))),...[28,33].flatMap(y=>[86,93].map(x=>({x,y,z:'com'}))),...[27,33,39,44].flatMap(y=>[104,110,116].map(x=>({x,y,z:'res'})))];
+// 空き区画に建てる物（v123）。z＝建てられる区。lots＝区画をいくつ使うか（2＝右どなりの区画もいっしょに）。cap＝住める人数
+const BTYPES={cabin:{n:'丸太小屋',z:'res',lots:1,cap:1,g:1000,in:{wood:20,straw:6,nail:10,stone:10},d:'一人用。かやぶき屋根と丸太の壁'},
+  town:{n:'白壁の二階建て',z:'res',lots:1,cap:4,g:5000,in:{lumber:12,plaster:8,cutstone:10,pane:6,plank:20,nail:30},d:'数人用。スレート屋根・白壁と木組み・花のバルコニー'},
+  dorm:{n:'赤レンガの寮「メブキ荘」',z:'res',lots:2,cap:10,g:20000,in:{brick:60,cutstone:20,plaster:10,pane:24,lumber:20,ironbar:10,nail:60},d:'大人数用。3 階建て。となり合う区画を 2 つ使う'},
+  kiln:{n:'窯',z:'ind',lots:1,fac:'kiln',door:'窯',g:3000,in:{stone:30,plank:10,ironbar:4},d:'粘土や砂を焼く加工所（レンガ・瓦・漆喰・ガラス・窓ガラス）'},
+  stone:{n:'石工所',z:'ind',lots:1,fac:'stone',door:'工',g:3000,in:{plank:20,ironbar:6,stone:10},d:'石を切る・砕く加工所（石材・砂）'},
+  diner:{n:'料理屋',z:'com',lots:1,fac:'cook',door:'料',g:4000,in:{plank:20,brick:20,cutstone:6,pane:4,nail:20},d:'料理を作る施設。料理人ポポを雇うと、作業用チェストの食材で料理を作り続け、ポポのいる日は店で食べられる（10:00〜20:00・テイクアウトもある）'}};
+BTYPES.grocer={n:'食材屋',z:'com',lots:1,door:'食',fixed:1,g:0,in:{},d:'食材の店'};
+// 最初からある建物（空き区画を使う）
+BTYPES.windmill={n:'風車',z:'farm2',lots:1,door:'h',fixed:1,g:0,in:{},d:'東の農園の風車'};
+const FIXB=[{x:53,y:15,t:'grocer'},{x:86,y:19,t:'windmill'}];
+const bfoot=(L,t)=>{const T=BTYPES[t];return{x:L.x,y:L.y,w:T.lots===2?11:5,h:3}};
+const bLotFree=L=>town.m[L.y+2]&&town.m[L.y+2][L.x+2]==='空';
+const popCap=()=>(S.builds||[]).reduce((a,b)=>a+(BTYPES[b.t].cap||0),0);
 const HOME={x:22,y:17,w:5,h:3,n:'わが家',roof:['#b0503a','#8c3b2b','#d06a4f'],home:1};
 const RPAL=[['赤レンガ',['#b0503a','#8c3b2b','#d06a4f']],['青',['#4a78b0','#36598a','#6a96c8']],['こげ茶',['#8a5a32','#6b4423','#a9784a']],['オレンジ',['#c86a3a','#9c4f2a','#e0874f']],['灰',['#6e6a78','#55515e','#8f8a9c']],['緑',['#5a8f45','#456f35','#7fb069']],['青緑',['#3f7f8a','#2e5f68','#5a9fa8']],
   ['紫',['#7a5aa0','#5c4280','#9a7cc0']],['桃色',['#d87a96','#b05a76','#f0a0b8']],['黒',['#3a3640','#26232b','#56525e']],['山吹',['#d0a030','#a87e20','#ecc050']],['空色',['#6ab0e0','#4a8cc0','#90cbf0']],['わら',['#c8a860','#a08440','#e0c880']],['白',['#e8e4dc','#b8b0a4','#fbf8f2']]];
@@ -635,11 +655,11 @@ const WALLS=[['木の壁',['#d9c49c','#6b4a2e','#a88a60'],0],['しっくい',['#
 const ORNS=['なし','花の窓台','ランタン','つた'];
 const HPOSD={water:[45,29],harvest:[51,29],plant:[57,29],mine:[63,29],wood:[69,29],ranch:[75,29],fruit:[45,35],fish:[51,35],tiller:[57,35],brew:[63,35],harune:[69,35],dolf:[75,35],tia:[45,41],miria:[51,41],gen:[57,41],nami:[63,41],luna:[69,41]};
 HELPERS.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:ROOFS[i]||[['#7a5aa0','#5c4280','#9a7cc0'],['#d87a96','#b05a76','#f0a0b8'],['#d0a030','#a87e20','#ecc050'],['#8a5a32','#6b4423','#a9784a'],['#3f7f8a','#2e5f68','#5a9fa8']][i-6]});
-const FOLK=[{id:'harune',n:'ハルニレ',job:'よろず屋',hair:'#c86a3a',work:[33,18]},{id:'dolf',n:'ドルフ',job:'鍛冶屋',hair:'#5a5249',work:[32,34]},{id:'tia',n:'ティア',job:'妖精の館',hair:'#c07fd0',work:[38,18]},
+const FOLK=[{id:'harune',n:'ハルニレ',job:'花屋',hair:'#c86a3a',work:[33,18]},{id:'dolf',n:'ドルフ',job:'鍛冶屋',hair:'#5a5249',work:[32,34]},{id:'tia',n:'ティア',job:'妖精の館',hair:'#c07fd0',work:[38,18]},
   {id:'miria',n:'ミリア',job:'ギルド受付',hair:'#e8b44a',work:[37,34]},{id:'gen',n:'ゲン',job:'釣り具屋',hair:'#8a8f99',work:[27,40]},{id:'nami',n:'ナミ',job:'市場',hair:'#5ab0d0',work:[30,26]},{id:'luna',n:'ルーナ',job:'まほう店',hair:'#7a5ab0',work:[45,18]}];
 FOLK.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:RPAL[[3,6,7,10,1,11,9][i]][1]});
 const RESID=[...HELPERS,...FOLK];
-const HINT={'空':'空き区画（いずれ建物が建つ場所）','樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'よろず屋',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
+const HINT={'桜':'桜の木（花の公園）','食':'食材屋（9:00〜18:00）','庫':'作業用チェスト（村人の作業の材料・できた物を入れる箱）','料':'料理屋','空':'空き区画（いずれ建物が建つ場所）','樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'花屋 ハルニレ（種と苗）',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
 const SEEDCOL={dragonfruit:'#e0407a',lotus:'#e8c8c0',makomo:'#d8e0b0',tree_banana:'#f0d040',tree_grape:'#7a4aa8',tree_cacao:'#a0522d',soybean:'#e0c890',sunflower:'#f0c030',pepper:'#3a3530',tree_apple:'#e0323b',tree_peach:'#f4a0a8',tree_orange:'#f0902a',yomogi:'#8ab070',aloe:'#5aa070',ginseng:'#e0c8a0',mandragora:'#a05a8a',basil:'#4fa040',mint:'#8ae0b0',rosemary:'#7a8ae0',rice:'#e8d070',sugarcane:'#9ad070',herb:'#6fc25a',manaherb:'#7a6ae0',wheat:'#e0c070',chili:'#d83a2a',carrot:'#f08a2a',cabbage:'#8ad070',pumpkin:'#e8902a',eggplant:'#6a3a8a',pineapple:'#e8b44a',mango:'#f08a3a',turnip:'#b46fc4',strawberry:'#e0323b',tomato:'#e4472e',grass:'#8cc163',potato:'#a9784a',berry:'#4a5ac8',corn:'#f0c030',melon:'#7fc060'};
 const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'細剣',w:1},{id:'dagger',s:'短剣',w:1},{id:'great',s:'大剣',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
 const GORDER=[0,2,4],GKEY={0:'g1',2:'g3',4:'g4'};
@@ -749,11 +769,11 @@ function buildTown(skip,hm=HMAP){
   bld(35,30,5,3,'冒険者ギルド',['#4f7a4a','#3b5e37','#6e9c66'],'i',2);
   for(const[x,y]of[[26,20],[55,20],[26,27],[55,27],[33,19],[50,19]])fix(x,y,'1');for(const x of[29,30,52,53])fix(x,28,'3');
   // ---- 北東：工業区（加工所は道に面して並ぶ）
-  rect(43,12,W-2,12,',');rect(59,19,W-2,19,',');rect(59,13,59,18,',');
+  rect(43,12,82,12,',');rect(59,19,82,19,',');rect(59,13,59,18,',');
   bld(46,9,5,3,'製材所',['#8a5a32','#6b4423','#a9784a'],'材',2,{fac:'saw'});bld(53,9,5,3,'製粉所',['#c8b060','#a08a40','#e0d080'],'粉',2,{fac:'mill'});bld(60,9,5,3,'製鉄所',['#5a5f69','#3f434a','#7a808a'],'鉄',2,{fac:'smelt'});
   for(const[x,y]of[[45,11],[52,11],[59,11]])fix(x,y,'9');for(const[x,y]of[[44,13],[66,13],[74,13]])fix(x,y,'1');
   // ---- 南東：居住区（通りごとに家の区画が並ぶ）
-  for(const r of[32,38,44,48])rect(43,r,W-2,r,',');
+  for(const r of[32,38,44,48])rect(43,r,82,r,',');
   // ---- 南西：牧場・果樹園・港
   fence(2,28,17,39);rect(3,29,16,38,'.');m[28][9]=',';rect(9,26,9,27,',');m[30][5]='b';m[30][6]='b';
   rect(11,29,15,31,'h');m[31][13]='m';{const rh={x:11,y:29,w:5,h:3,n:'牧場',chim:false,roof:['#b0503a','#8c3b2b','#d06a4f']};for(let y=29;y<=31;y++)for(let x=11;x<=15;x++)hm[x+','+y]=rh}
@@ -762,8 +782,26 @@ function buildTown(skip,hm=HMAP){
   bld(25,37,5,3,'ゲンの釣り具屋',['#3c78b8','#2e5f8a','#5a96d0'],'J',2);
   for(const[x,y]of[[5,2],[13,2],[17,21],[30,22]])if(m[y][x]==='.'||m[y][x]==='*')m[y][x]='L';
   fix(17,23,'0');for(const[x,y]of[[44,30],[44,36],[44,42],[44,46]])fix(x,y,'2');for(const[x,y]of[[43,26],[40,26],[40,23],[43,23]])fix(x,y,'1');
+  // ---- 東の新しい町（v126）。前の町との境は木の並び（大通りだけ通れる）
+  for(let y=1;y<H-1;y++)if(y<24||y>25)m[y][83]='T';
+  rect(84,3,84,21,'W');rect(100,2,101,H-2,',');
+  // 東の農園：柵の中は耕した畑（168 マス）、入口は下。西は小川（粘土が掘れる）、左下に風車
+  fence(86,3,99,18);rect(87,4,98,17,'F');m[18][93]=',';rect(93,19,93,23,',');
+  // 東の工業区（空き区画 6・道 y8・y16）
+  rect(102,8,W-2,8,',');rect(102,16,W-2,16,',');for(const[x,y]of[[103,11],[109,11],[115,11],[121,11]])fix(x,y,'9');
+  // 東の市場通り（商業の空き区画 4・道 y31・y36）
+  rect(85,31,99,31,',');rect(85,36,99,36,',');rect(91,26,92,36,',');
+  // 花の公園：池のまわりを回る道・桜・花壇・ベンチ
+  rect(86,39,97,39,',');rect(86,46,97,46,',');rect(86,39,86,46,',');rect(97,39,97,46,',');rect(98,42,99,42,',');rect(91,37,92,38,',');rect(88,41,95,44,'W');
+  for(const[x,y]of[[87,40],[90,40],[96,40],[87,45],[93,45],[96,45],[85,41],[85,44],[98,40],[98,45]])if('.*'.includes(m[y][x]))m[y][x]='桜';
+  for(const[x,y]of[[88,40],[89,40],[94,40],[95,40],[88,45],[89,45],[91,45],[94,45]])fix(x,y,'3');for(const[x,y]of[[92,40],[90,45]])fix(x,y,'4');
+  // 東の居住区（空き区画 12・道 y30・y36・y42・y47）
+  for(const r of[30,36,42,47])rect(102,r,W-2,r,',');
+  for(const[x,y]of[[88,23],[96,23],[104,23],[112,23],[120,23],[88,26],[97,26],[104,26],[112,26],[120,26],[99,30],[99,37],[102,9],[102,17],[102,31],[102,37],[102,43]])fix(x,y,'1');
   // ---- 空き区画（いずれ建物が建つ所。入り口の前は道）
-  for(const L of LOTS){if(L.z==='res'&&RESID.some(h=>h.house.x===L.x&&h.house.y===L.y))continue;if(RESID.some(h=>{const q=h.house;return q.x<L.x+5&&L.x<q.x+5&&q.y<L.y+3&&L.y<q.y+3}))continue;if(m[L.y+2]&&'.*'.includes(m[L.y+2][L.x+2]))m[L.y+2][L.x+2]='空'}
+  const BL=[...FIXB,...(S.builds||[])],bUsed=L=>BL.some(b=>{const f=bfoot(b,b.t);return L.x>=f.x&&L.x<f.x+f.w&&L.y===f.y});
+  for(const b of BL){const T=BTYPES[b.t];if(!T)continue;const f=bfoot(b,b.t);rect(f.x,f.y,f.x+f.w-1,f.y+f.h-1,'h');const dx=T.lots===2?5:2;m[f.y+f.h-1][f.x+dx]=T.door||'e';const o={...f,n:T.n,custom:b.t,cap:T.cap||0,fac:T.fac,roof:['#8a5a32','#6b4423','#a9784a']};for(let yy=f.y;yy<f.y+f.h;yy++)for(let xx=f.x;xx<f.x+f.w;xx++)hm[xx+','+yy]=o}
+  for(const L of LOTS){if(bUsed(L))continue;if(L.z==='res'&&RESID.some(h=>h.house.x===L.x&&h.house.y===L.y))continue;if(RESID.some(h=>{const q=h.house;return q.x<L.x+5&&L.x<q.x+5&&q.y<L.y+3&&L.y<q.y+3}))continue;if(m[L.y+2]&&'.*'.includes(m[L.y+2][L.x+2]))m[L.y+2][L.x+2]='空'}
   // 住人の家（噴水広場をかこむ住宅街）と自宅
   RESID.forEach(h=>{if(h.id===skip)return;const hs=h.house;rect(hs.x,hs.y,hs.x+hs.w-1,hs.y+hs.h-1,'h');m[hs.y+hs.h-1][hs.x+2]='e';
     for(let y=hs.y;y<hs.y+hs.h;y++)for(let x=hs.x;x<hs.x+hs.w;x++)hm[x+','+y]=hs});
@@ -892,7 +930,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function loadSave(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 
 function tileAt(tx,ty){if(tx<0||ty<0||tx>=cur.W||ty>=cur.H)return'X';return cur.m[ty][tx]}
-const SOLID=new Set('^1245789%0aiTHSCWfBDscXrkqvpNhegYzmbLOwJRjIZtAKUylMG$蜂魔密葦樹炭材粉鉄空');
+const SOLID=new Set('^1245789%0aiTHSCWfBDscXrkqvpNhegYzmbLOwJRjIZtAKUylMG$蜂魔密葦樹炭材粉鉄空窯工料庫食桜');
 function solidPx(px,py){return SOLID.has(tileAt(Math.floor(px/TS),Math.floor(py/TS)))}
 function free(x,y,h){return!solidPx(x-h,y-h)&&!solidPx(x+h-.01,y-h)&&!solidPx(x-h,y+h-.01)&&!solidPx(x+h-.01,y+h-.01)}
 function moveBody(o,dx,dy,h){if(dx&&free(o.x+dx,o.y,h))o.x+=dx;if(dy&&free(o.x,o.y+dy,h))o.y+=dy}
@@ -901,7 +939,7 @@ function toTown(tx,ty,dir){if(cur&&cur.kind==='dun'&&(S.grp===2||S.grp===4))S.gr
   if(!walkT(tx,ty)){let best=null;for(let r=1;r<8&&!best;r++)for(let dy=-r;dy<=r&&!best;dy++)for(let dx=-r;dx<=r;dx++)if(Math.max(Math.abs(dx),Math.abs(dy))===r&&walkT(tx+dx,ty+dy)){best=[tx+dx,ty+dy];break}if(best)[tx,ty]=best}
   P.x=tx*TS+8;P.y=ty*TS+8;P.dir=dir;P.lastTile=tx+','+ty;P.swing=P.use=0;P.ua=null}
 const DUNS={
-  forest:{n:'森',max:10,seeds:['turnip','strawberry','grass','berry','berry','pumpkin','rosemary','rosemary'],off:0,stars:1,outdoor:true,wall:'T',floor:'.',pool:f=>f<3?['slime','bird','mushroom','bee','mofu']:f<5?['slime','bird','mushroom','bee','treant','boar','boar','mofu']:['slime','bird','mushroom','bee','treant','boar','boar','mofu','dryad'],boss:'ent',gate:[82,25,2],
+  forest:{n:'森',max:10,seeds:['turnip','strawberry','grass','berry','berry','pumpkin','rosemary','rosemary'],off:0,stars:1,outdoor:true,wall:'T',floor:'.',pool:f=>f<3?['slime','bird','mushroom','bee','mofu']:f<5?['slime','bird','mushroom','bee','treant','boar','boar','mofu']:['slime','bird','mushroom','bee','treant','boar','boar','mofu','dryad'],boss:'ent',gate:[TW-2,25,2],
     loot:['herb','herb','wood','apple','peach','orange','jelly','gold']},
   cave:{n:'洞窟',max:15,seeds:['tomato','potato','potato','eggplant','eggplant','turnip','ginseng'],off:2,stars:2,outdoor:false,wall:'X',floor:'o',pool:f=>f<3?['slime','bat','goblin','lanta']:f<8?['slime','bat','goblin','golem','ghost','lanta']:['slime','bat','goblin','golem','ghost','lanta','witch'],boss:'king',gate:[1,25,3],
     loot:['ore','ore','stone','stone','gem','potion','jelly','gold','gold']},
@@ -931,6 +969,15 @@ DUNS.abyss={n:'深淵',max:99,seeds:['dragonfruit','mandragora','ginseng','melon
   boss:f=>{if(f>=99)return'abyssking';const k=Math.floor(f/10)-1,pk=a=>a[Math.random()*a.length|0];return k<6?pk(ABB.slice(k*2,k*2+2)):pk(ABB)},
   loot:['gold']};
 // 島の床の落とし物：浅い階は流用素材が多め、深い階ほど新素材が出やすい
+function digKind(x,y){const c=tileAt(x,y);if(c==='n')return'sand';if(c==='.'&&DIRS.some(([a,b])=>tileAt(x+a,y+b)==='W'))return'clay';return null}
+function lotMenu(tx,ty){const L=LOTS.find(l=>l.x+2===tx&&l.y+2===ty);if(!L)return;const ZN={res:'居住区',com:'商業区',ind:'工業区'};
+  openModal(b=>{b.append(el('h2','',`空き区画（${ZN[L.z]}）`),el('div','muted',`材料はかばんと倉庫の両方から使います。建てるとすぐに建ちます（大工の仕事は次の版）。町の住民 ${popCap()}人`));const l=el('div','list');let any=0;
+    for(const t in BTYPES){const T=BTYPES[t];if(T.z!==L.z||T.fixed)continue;any=1;const L2=T.lots===2?LOTS.find(q=>q.x===L.x+6&&q.y===L.y):null;const room=T.lots===1||(L2&&bLotFree(L2));
+      const f=bfoot(L,t);let deco=false;for(let y=f.y;y<f.y+f.h;y++)for(let x=f.x;x<f.x+f.w;x++)if((S.deco||{})[x+','+y]&&!(x===L.x+2&&y===L.y+2))deco=true;
+      const ok=room&&!deco&&S.gold>=T.g&&Object.entries(T.in).every(([i,n])=>have(i)>=n);
+      const bt=btn('建てる',()=>{S.gold-=T.g;for(const[i,n]of Object.entries(T.in))take(i,n);S.builds=S.builds||[];S.builds.push({t,x:L.x,y:L.y});rebuildTown();sfx('lvup');closeModal();toast(`${T.n}が建った！`+(T.cap?`（住民 +${T.cap}人・町の住民 ${popCap()}人）`:''))},'pri');if(!ok)bt.disabled=true;
+      l.append(item(T.n+(T.cap?`（${T.cap}人）`:''),T.g+'G',T.d+'。材料：'+Object.entries(T.in).map(([i,n])=>`${ITEMS[i].n}×${n}（${have(i)}）`).join('・')+(!room?'。右どなりの区画が空いていない':deco?'。区画の中の飾りを片付けてから':''),[bt]))}
+    if(!any)l.append(el('div','muted','ここに建てられる物はまだない（料理屋は次の版）'));b.append(l,row(btn('閉じる',closeModal)))})}
 function lootOf(id,f){if(id===ABY){const t=abyT(f),L=lootOf(t,Math.min(f,DUNS[t].max)).slice();for(let i=0;i<1+Math.floor(f/15);i++)L.push('abyssshard');if(f>=40)L.push('abysscore');return L}const D=DUNS[id];let L=D.loot;if(D.nw){const w=Math.min(.7,.15+f*.02),n=20,k=Math.round(n*w);L=[];for(let i=0;i<k;i++)L.push(D.nw[i%D.nw.length]);for(let i=k;i<n-3;i++)L.push(D.reuse[i%D.reuse.length]);L.push('gold','gold','gold')}return f>D.max?L.concat(DEEP[id].loot):L}
 // 敵Lv：Lv から強さを計算。流用の敵は島に合わせて底上げ
 const isleNative=(id,t)=>!DUNS[id].native||DUNS[id].native.includes(t);
@@ -1254,22 +1301,178 @@ const have=id=>id==='anyfish'?FISHIDS.reduce((a,f)=>a+(S.inv[f]||0)+(S.store[f]|
 function take(id,n){if(id==='anyfish'){for(const f of FISHIDS){const k=Math.min(have(f),n);if(k)take(f,k);n-=k;if(!n)break}return}const a=Math.min(n,S.inv[id]||0);S.inv[id]=(S.inv[id]||0)-a;S.store[id]=(S.store[id]||0)-(n-a)}
 const toStore=(id,n)=>S.store[id]=(S.store[id]||0)+n;
 // 町の区画（四角の組）：res 居住区・com 商業区・ind 工業区・orc 果樹園（それ以外は畑・牧場・港・公園など）
-const ZONES={res:[[43,29,82,48]],com:[[24,14,58,28],[24,29,41,33]],ind:[[43,1,82,13],[59,14,82,22]],orc:[[18,34,40,39],[19,29,23,33]],farm:[[1,1,40,22]],ranch:[[1,26,17,40]],port:[[1,40,40,48]]},ZONEN={res:'居住区',com:'商業区',ind:'工業区',orc:'果樹園',farm:'畑と家',ranch:'牧場',port:'港'};
+const ZONES={farm2:[[84,2,99,23]],park:[[85,38,99,48]],res:[[43,29,82,48],[102,26,122,48]],com:[[24,14,58,28],[24,29,41,33],[85,26,99,37]],ind:[[43,1,82,13],[59,14,82,22],[102,2,122,22]],orc:[[18,34,40,39],[19,29,23,33]],farm:[[1,1,40,22]],ranch:[[1,26,17,40]],port:[[1,40,40,48]]},ZONEN={farm2:'東の農園',park:'花の公園',res:'居住区',com:'商業区',ind:'工業区',orc:'果樹園',farm:'畑と家',ranch:'牧場',port:'港'};
 function zoneAt(x,y){for(const z in ZONES)for(const[a,b,c,d]of ZONES[z])if(x>=a&&x<=c&&y>=b&&y<=d)return z;return null}
 const inZone=(z,x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(zoneAt(x,y)!==z)return false;return true};
 // 工業区の加工所：材料を入れると翌朝に倉庫へ（1回 5G・1日 30回まで）
-const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:8},out:'charcoal',n:3}]},
-  mill:{n:'製粉所',d:'粉をひく・しぼる',r:[{in:{wheat:2},out:'flour',n:3},{in:{sugarcane:1},out:'sugar',n:3},{in:{sunflower:2},out:'oil',n:1}]},
-  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:4,charcoal:2},out:'ironbar',n:3},{in:{stone:4,charcoal:2},out:'glass',n:3},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]}},PROCFEE=5,PROCCAP=30;
-function procMenu(f){const F=PROC[f];S.proc=S.proc||{};S.proc[f]=S.proc[f]||[];
-  const render=b=>{b.innerHTML='';const q=S.proc[f],used=q.reduce((a,x)=>a+x[1],0);b.append(el('h2','',F.n),el('div','muted',`${F.d}。材料を入れると翌朝に倉庫へ届く（1回 ${PROCFEE}G・1日 ${PROCCAP}回まで）。今日：${used}/${PROCCAP}回　所持金 ${S.gold}G`));
-    const l=el('div','list');F.r.forEach((r,ri)=>{const mx=Math.min(PROCCAP-used,Math.floor(S.gold/PROCFEE),...Object.entries(r.in).map(([i,n])=>Math.floor(have(i)/n)));
+const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:8},out:'charcoal',n:3},{in:{wood:3},out:'lumber',n:1}]},
+  mill:{n:'製粉所',d:'粉をひく・しぼる',r:[{in:{wheat:2},out:'flour',n:3},{in:{sugarcane:1},out:'sugar',n:3},{in:{sunflower:2},out:'oil',n:1},{in:{wheat:3},out:'straw',n:2},{in:{rice:3},out:'straw',n:2}]},
+  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:4,charcoal:2},out:'ironbar',n:3},{in:{sand:4,charcoal:2},out:'glass',n:3},{in:{ironbar:1},out:'nail',n:10},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]},
+  kiln:{n:'窯',d:'粘土や砂を焼く',r:[{in:{clay:2,charcoal:1},out:'brick',n:4},{in:{clay:2,charcoal:1},out:'rooftile',n:3},{in:{shell:2,stone:1},out:'plaster',n:2},{in:{sand:4,charcoal:2},out:'glass',n:3},{in:{glass:2},out:'pane',n:1}]},
+  stone:{n:'石工所',d:'石を切る・砕く',r:[{in:{stone:4},out:'cutstone',n:1},{in:{stone:1},out:'sand',n:2}]}},PROCFEE=5,PROCCAP=30;
+function procMenu(f,tab0){const F=PROC[f];S.proc=S.proc||{};S.proc[f]=S.proc[f]||[];let tab=tab0||(f==='cook'?'shop':'own'),all=false;
+  const render=b=>{const sy=mbox.scrollTop;b.innerHTML='';b.append(el('h2','',F.n),tabRow(tab,[...(f==='cook'?[['shop','お店']]:[]),['own','自分で頼む'],['w','作業員と運搬']],k=>{tab=k;render(b);mbox.scrollTop=0}));
+    if(tab==='w'){procW(b,f,render);mbox.scrollTop=sy;return}
+    if(tab==='shop'){restShop(b,render);mbox.scrollTop=sy;return}
+    const q=S.proc[f],used=q.reduce((a,x)=>a+x[1],0);b.append(el('div','muted',`${F.d}。材料を入れると翌朝に倉庫へ届く（1回 ${PROCFEE}G・1日 ${PROCCAP}回まで）。今日：${used}/${PROCCAP}回　所持金 ${S.gold}G`));
+    const l=el('div','list');let sh=0;F.r.forEach((r,ri)=>{const mx=Math.min(PROCCAP-used,Math.floor(S.gold/PROCFEE),...Object.entries(r.in).map(([i,n])=>Math.floor(have(i)/n)));if(f==='cook'&&!all&&mx<1)return;sh++;
       const put=k=>{k=Math.min(k,mx);if(k<=0)return;for(const[i,n]of Object.entries(r.in))take(i,n*k);S.gold-=PROCFEE*k;const e=q.find(x=>x[0]===ri);if(e)e[1]+=k;else q.push([ri,k]);sfx('pickup');render(b)};
       const bs=[1,5].map(k=>{const bt=btn('×'+k,()=>put(k));if(mx<k)bt.disabled=true;return bt});const ba=btn('最大',()=>put(mx),'pri');if(mx<1)ba.disabled=true;
-      l.append(item(`${Object.entries(r.in).map(([i,n])=>ITEMS[i].n+'×'+n).join('＋')} → ${ITEMS[r.out].n}×${r.n}`,'',`持っている数：`+Object.keys(r.in).map(i=>`${ITEMS[i].n} ${have(i)}`).join('・'),[...bs,ba]))});
-    b.append(l);if(q.length){b.append(el('div','sum','明日の朝に届く物'));const l2=el('div','list');for(const[ri,k]of q){const r=F.r[ri];l2.append(item(`${ITEMS[r.out].n}×${r.n*k}`,'',`${k}回分`,[btn('取り消す',()=>{for(const[i,n]of Object.entries(r.in))toStore(i,n*k);S.gold+=PROCFEE*k;S.proc[f]=S.proc[f].filter(x=>x[0]!==ri);render(b)})]))}b.append(l2)}
-    b.append(row(btn('閉じる',closeModal,'pri')))};openModal(render)}
+      l.append(item(rlabel(r),'',`持っている数：`+Object.keys(r.in).map(i=>`${ITEMS[i].n} ${have(i)}`).join('・'),[...bs,ba]))});
+    if(f==='cook'&&!sh)l.append(el('div','muted','いまの材料（かばん・倉庫）で作れる料理はない'));
+    b.append(l);if(f==='cook')b.append(row(btn(all?'作れる料理だけ表示':'ぜんぶの料理を表示',()=>{all=!all;render(b)})));
+    if(q.length){b.append(el('div','sum','明日の朝に届く物'));const l2=el('div','list');for(const[ri,k]of q){const r=F.r[ri];l2.append(item(`${ITEMS[r.out].n}×${r.n*k}`,'',`${k}回分`,[btn('取り消す',()=>{for(const[i,n]of Object.entries(r.in))toStore(i,n*k);S.gold+=PROCFEE*k;S.proc[f]=S.proc[f].filter(x=>x[0]!==ri);render(b)})]))}b.append(l2)}
+    b.append(row(btn('閉じる',closeModal,'pri')));mbox.scrollTop=sy};openModal(render)}
 function procDeliver(log){if(!S.proc)return;for(const f in S.proc){const F=PROC[f];if(!F)continue;const t=[];for(const[ri,k]of S.proc[f]){const r=F.r[ri];if(!r)continue;toStore(r.out,r.n*k);t.push(`${ITEMS[r.out].n}×${r.n*k}`)}if(t.length)log.push(`${F.n}：${t.join('・')}が倉庫に届いた`);S.proc[f]=[]}}
+// ---------- 物流（v124）：作業用チェスト・運搬係・施設の作業員・料理屋・運搬先・出荷箱の自動 ----------
+// 料理屋（PROC.cook）のレシピは調理台の料理（魚の種類を問わない物は除く）
+let COOKR=null;Object.defineProperty(PROC,'cook',{enumerable:true,get:()=>({n:'料理屋',d:'料理を作る',r:COOKR||(COOKR=RECIPES.q.filter(r=>!r.up&&r.out&&ITEMS[r.out]&&!r.in.anyfish).map(r=>({in:r.in,out:r.out,n:r.cnt||1})))})});
+const FACCH={saw:'材',mill:'粉',smelt:'鉄',kiln:'窯',stone:'工',cook:'料'};
+const LOGIW=[{id:'carry',n:'ロビン',job:'運搬係',wage:50,hair:'#c08040',cl:'#5a7a9a',look:['M','short','#3a5a8a'],d:'作業用チェストから施設へ材料を運び、できた物を運搬先へ運ぶ（1回 20個まで・8:00〜18:00）。作業員がいない施設にも材料を貯めておく（1回分の5倍まで）'},
+  {id:'w_saw',fac:'saw',n:'キコ',job:'製材所の作業員',wage:40,hair:'#6b4423',cl:'#8a6a3a',look:['M','spiky','#5a3a2a',1]},
+  {id:'w_mill',fac:'mill',n:'ムギ',job:'製粉所の作業員',wage:40,hair:'#e0c070',cl:'#c8a860',look:['F','bun','#6a4a2a']},
+  {id:'w_smelt',fac:'smelt',n:'テツ',job:'製鉄所の作業員',wage:40,hair:'#3a3a44',cl:'#6e6a78',look:['M','short','#3a3a4a',1]},
+  {id:'w_kiln',fac:'kiln',n:'アカネ',job:'窯の作業員',wage:40,hair:'#c84a3a',cl:'#a84a36',look:['F','pony','#8a3a2a']},
+  {id:'w_stone',fac:'stone',n:'ゴン',job:'石工所の作業員',wage:40,hair:'#8a8f99',cl:'#7a7680',look:['M','short','#5a5a5a']},
+  {id:'w_cook',fac:'cook',n:'ポポ',job:'料理屋の料理人',wage:40,hair:'#f0a060',cl:'#e8e4dc',look:['F','bob','#c84a3a']}];
+for(const h of LOGIW)h.logi=1;
+const WORKMIN=20,CARRY=20,OUTMAX=10,STOCKX=5,DESTN={wst:'作業用チェスト',store:'倉庫',ship:'出荷箱'},DESTS={wst:'チェスト',store:'倉庫',ship:'出荷'};
+const LG=()=>{const L=S.logi||(S.logi={});L.fac=L.fac||{};L.hand=L.hand||{};L.src=L.src||{};L.at=L.at||{};return L};
+const wst=()=>S.wst||(S.wst={});
+const shipC=()=>{const c=S.shipCfg||(S.shipCfg={auto:1,ex:{potion:1}});c.ex=c.ex||{};return c};
+const hasChest=()=>Object.values(S.deco||{}).some(v=>v.t==='庫');
+const facBuilt=f=>!!FACCH[f]&&(['saw','mill','smelt'].includes(f)||(S.builds||[]).some(b=>BTYPES[b.t]&&BTYPES[b.t].fac===f));
+const facs=()=>Object.keys(FACCH).filter(facBuilt);
+const rkey=r=>r.out+':'+Object.keys(r.in).join('+');
+const rlabel=r=>`${Object.entries(r.in).map(([i,n])=>ITEMS[i].n+'×'+n).join('＋')} → ${ITEMS[r.out].n}×${r.n}`;
+const sumO=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
+function lf(f){const L=LG();let F=L.fac[f];if(!F)F=L.fac[f]={stock:{},out:{},mode:f==='cook'?'pick':'auto',sel:f==='cook'?PROC.cook.r.filter(r=>r.out==='yakikabu').map(rkey):[],dest:f==='cook'?'ship':'wst',rr:0,prog:0};return F}
+const actR=f=>{const F=lf(f),R=PROC[f].r;return F.mode==='auto'?R:R.filter(r=>F.sel.includes(rkey(r)))};
+function capOf(f,m){let k=0;for(const r of actR(f))if(r.in[m])k=Math.max(k,r.in[m]);return k*STOCKX}
+const canMk=(F,r)=>Object.entries(r.in).every(([i,n])=>(F.stock[i]||0)>=n);
+const canAny=f=>{const F=lf(f);return actR(f).some(r=>canMk(F,r))};
+// 施設に足りない材料（作業用チェストにある分・貯められる数まで）
+function needMats(f){const F=lf(f),W=wst(),o={};if(!hasChest())return o;for(const r of actR(f))for(const m in r.in){if(o[m]!=null)continue;const c=capOf(f,m)-(F.stock[m]||0);if(c>0&&(W[m]||0)>0)o[m]=Math.min(c,W[m])}return o}
+// チェストから取ってくれば作れるレシピがあるか
+function fetchable(f){const F=lf(f),W=wst();if(!hasChest())return false;return actR(f).some(r=>Object.entries(r.in).every(([i,n])=>(F.stock[i]||0)+(W[i]||0)>=n))}
+const workerOf=f=>LOGIW.find(h=>h.fac===f);
+const wOn=id=>!!(S.worked&&S.worked[id]);
+const facOn=f=>{const h=workerOf(f);return!!h&&wOn(h.id)};
+const shipOK=id=>{const c=shipC();return!!c.auto&&!c.ex[id]};
+// 運ぶ先に入れる。出荷箱は「自動で入れる」がオンで除外していない物だけ（ほかは倉庫）。作業用チェストが無い間は倉庫
+function putTo(dest,id,n){if(!n)return;if(dest==='ship'&&shipOK(id))S.ship[id]=(S.ship[id]||0)+n;else if(dest==='wst'&&hasChest()){const W=wst();W[id]=(W[id]||0)+n}else toStore(id,n)}
+const hDest=hid=>LG().src[hid]||(hid==='harvest'?'ship':'store');
+const hput=(hid,id,n)=>putTo(hDest(hid),id,n);
+// 1 回作る（材料のあるレシピを順番に）。作れたら true
+function mk1(f){const F=lf(f),R=actR(f);for(let i=0;i<R.length;i++){const r=R[((F.rr||0)+i)%R.length];if(!canMk(F,r))continue;F.rr=((F.rr||0)+i+1)%R.length;
+  for(const[k,n]of Object.entries(r.in)){F.stock[k]-=n;if(!F.stock[k])delete F.stock[k]}F.out[r.out]=(F.out[r.out]||0)+r.n;return true}return false}
+function produce(f,dm){const F=lf(f);F.prog=(F.prog||0)+dm;let made=0;
+  while(F.prog>=WORKMIN){if(!mk1(f)){F.prog=Math.min(F.prog,WORKMIN);break}F.prog-=WORKMIN;made++}return made}
+// 作業員が施設の中にいる間だけ作る（時間の進みで。8:00〜18:00）
+function logiTick(){const L=LG(),t=S.time;if(L.t0==null||t<L.t0)L.t0=t;const dm=t-L.t0;L.t0=t;if(dm<=0)return;
+  for(const f in L.at)if(L.at[f]&&facBuilt(f)&&t>480&&t<=1080)produce(f,Math.min(dm,t-480))}
+function dropHand(id){const L=LG(),H=L.hand[id];if(!H)return'';delete L.hand[id];const t=[];
+  for(const[i,n]of Object.entries(H.it)){if(!n)continue;if(H.to.startsWith('fac:')){const F=lf(H.to.slice(4));F.stock[i]=(F.stock[i]||0)+n}else putTo(H.to,i,n);t.push(ITEMS[i].n+'×'+n)}return t.join('・')}
+function refill(f){const F=lf(f),W=wst();for(const[i,m]of Object.entries(needMats(f))){F.stock[i]=(F.stock[i]||0)+m;W[i]-=m;if(!W[i])delete W[i]}}
+function logiFlush(){const L=LG();for(const id in L.hand)dropHand(id);L.at={}}
+// 寝た時：18:00 までの残りをまとめて進める（運び・作る）。できた物は運搬先へ
+function logiCatch(){logiFlush();const L=LG(),rem=Math.max(0,1080-Math.max(S.time,480)),cr=wOn('carry'),log=[];
+  for(const f of facs()){const F=lf(f),wk=facOn(f);if(!wk&&!cr)continue;
+    if(wk&&rem){let bud=Math.floor((rem+(F.prog||0))/WORKMIN);while(bud>0){if(!mk1(f)){refill(f);if(!mk1(f))break}bud--}}refill(f);
+    F.prog=0;const t=[];for(const i in F.out){putTo(F.dest,i,F.out[i]);t.push(ITEMS[i].n+'×'+F.out[i])}F.out={};if(t.length)log.push(`${PROC[f].n}：${t.join('・')} → ${DESTN[F.dest]}`)}
+  L.t0=null;return log}
+// 村人（運搬係・作業員）：歩いて運ぶ。住まいは建てた家（無ければ東の門から通う）
+function logiHomes(){const hs=[];for(const b of S.builds||[]){const T=BTYPES[b.t];if(!T||!T.cap)continue;const f=bfoot(b,b.t),dx=T.lots===2?5:2;for(let i=0;i<T.cap;i++)hs.push([f.x+dx,f.y+f.h])}return hs}
+function mkLogi(h,i){const hm=logiHomes()[i]||[TW-3,25];h.house={x:hm[0]-2,y:hm[1]-3,w:5,h:3,n:h.n,roof:[h.cl]};
+  return{h,i:100+i,x:hm[0]*TS+8,y:hm[1]*TS+8,dir:0,anim:0,path:[],goal:null,tgt:null,act:0,wait:.3+Math.random(),hidden:true,logi:1}}
+function placeCh(pl){return pl.startsWith('fac:')?FACCH[pl.slice(4)]:pl==='wst'?(hasChest()?'庫':'K'):pl==='ship'?'B':'K'}
+function pathTo(n,pl){const sx=Math.floor(n.x/TS),sy=Math.floor(n.y/TS);
+  if(pl==='home'){const hx=n.h.house.x+2,hy=n.h.house.y+n.h.house.h;return bfs(sx,sy,(x,y)=>x===hx&&y===hy?[x,y]:null)}
+  const ch=placeCh(pl);return bfs(sx,sy,(x,y)=>{for(const[a,b]of DIRS)if(town.m[y+b]&&town.m[y+b][x+a]===ch)return[x+a,y+b];return null})}
+function logiGo(n,pl,task){const r=pathTo(n,pl);n.task=task;n.goal=task.a==='idle'?'wander':'job';n.tgt=r?r.tgt:null;n.path=r?r.path:[];if(!n.path.length)logiArrive(n)}
+function carryTask(){const L=LG(),fs=facs();let best=null,bo=0;
+  for(const f of fs){const ot=sumO(lf(f).out);if(ot>0&&(ot>=5||!facOn(f)||!canAny(f)||S.time>=1020)&&ot>bo){bo=ot;best=f}}
+  if(best)return{pl:'fac:'+best,a:'out',f:best};
+  if(!hasChest()||!fs.length)return null;const st=L.crr=((L.crr||0)+1)%fs.length;
+  for(let i=0;i<fs.length;i++){const f=fs[(st+i)%fs.length];if(Object.keys(needMats(f)).length)return{pl:'wst',a:'mat',f}}
+  return null}
+// 作業員のすること：in＝中で作る／fetch＝チェストへ材料を取りに行く／out＝できた物を運ぶ（運搬係がいる日は いつも in）
+function wTask(f){if(wOn('carry'))return'in';const ot=sumO(lf(f).out),can=canAny(f),fe=!can&&fetchable(f);if(ot>=OUTMAX||(ot>0&&!can&&!fe))return'out';if(fe)return'fetch';return'in'}
+function logiDecide(n){const id=n.h.id,t=S.time,L=LG();
+  if(L.hand[id])return logiGo(n,L.hand[id].to,{a:'drop'});
+  if(!wOn(id)||t>=1080)return logiGo(n,'home',{a:'home'});
+  if(id==='carry'){const k=carryTask();return logiGo(n,k?k.pl:'wst',k||{a:'idle'})}
+  const f=n.h.fac;if(!facBuilt(f))return logiGo(n,'home',{a:'idle'});
+  const w=wTask(f);if(w==='out')return logiGo(n,'fac:'+f,{a:'out',f});if(w==='fetch')return logiGo(n,'wst',{a:'mat',f});return logiGo(n,'fac:'+f,{a:'in',f})}
+function logiArrive(n){const T=n.task,id=n.h.id,L=LG();n.task=null;n.goal=null;n.wait=.4;
+  const tx=Math.floor(n.x/TS),ty=Math.floor(n.y/TS);if(n.tgt){const[gx,gy]=n.tgt;n.dir=gx>tx?3:gx<tx?2:gy>ty?0:1}const[px,py]=n.tgt||[tx,ty];
+  if(!T)return;
+  if(T.a==='home'){if(S.time>=1080||!wOn(id))n.hidden=true;else n.wait=2;return}
+  if(T.a==='idle'){n.wait=2.5;return}
+  if(T.a==='drop'){const s2=dropHand(id);if(s2)popT(px,py,s2.length>12?s2.slice(0,12)+'…':s2,'#e8d8a0');return}
+  if(T.a==='out'){const F=lf(T.f),it={};let k=0;for(const i in F.out){const m=Math.min(F.out[i],CARRY-k);if(m<=0)break;it[i]=m;k+=m;F.out[i]-=m;if(!F.out[i])delete F.out[i]}if(k){L.hand[id]={it,to:F.dest};popT(px,py,'できた物→'+DESTS[F.dest],'#e8d8a0')}return}
+  if(T.a==='mat'){const W=wst(),it={};let k=0;for(const[i,m0]of Object.entries(needMats(T.f))){const m=Math.min(m0,CARRY-k);if(m<=0)break;it[i]=m;k+=m;W[i]-=m;if(!W[i])delete W[i]}if(k){L.hand[id]={it,to:'fac:'+T.f};popT(px,py,'材料→'+PROC[T.f].n,'#e8d8a0')}return}
+  if(T.a==='in'){n.inFac=T.f;n.hidden=true;n.chk=1.5;L.at[T.f]=1}}
+function updLogi(n,dt){const id=n.h.id,t=S.time,L=LG();
+  if(n.inFac){n.chk=(n.chk||0)-dt;if(n.chk>0)return;n.chk=1.5;const f=n.inFac;if(t>=1080||!wOn(id)||wTask(f)!=='in'){L.at[f]=0;n.inFac=null;n.hidden=false;n.wait=.2}return}
+  if(n.hidden){if(wOn(id)&&t>=420&&t<1080){n.hidden=false;n.wait=.1}else return}
+  if(n.path.length){const[tx,ty]=n.path[0],gx=tx*TS+8,gy=ty*TS+8,dx=gx-n.x,dy=gy-n.y,d=Math.hypot(dx,dy),sp=(n.goal==='wander'?32:54)*dt;
+    if(Math.abs(dx)>Math.abs(dy))n.dir=dx>0?3:2;else if(dy)n.dir=dy>0?0:1;n.anim+=dt*7;
+    if(d<=sp){n.x=gx;n.y=gy;n.path.shift();if(!n.path.length)logiArrive(n)}else{n.x+=dx/d*sp;n.y+=dy/d*sp}return}
+  n.anim=0;n.wait-=dt;if(n.wait<=0)logiDecide(n)}
+// 料理屋のお店（v125）：その場で食べる＝回復＋長めの強化（5分・フルコースは8分）。テイクアウト＝専用の料理
+const RESTM=[{n:'日替わり定食',g:200,heal:[150,120,40],buff:{def:300},d:'回復（HP150・ST120・MP40）＋防御+5'},
+  {n:'ハンバーグセット',g:350,full:1,buff:{atk:300},d:'全回復＋攻撃+30%'},{n:'海鮮丼',g:400,full:1,buff:{crit:300},d:'全回復＋急所率+20%'},
+  {n:'薬膳スープ',g:350,full:1,buff:{eva:300},d:'全回復＋回避率+15%'},{n:'魔女のパスタ',g:350,full:1,buff:{mag:300},d:'全回復＋魔攻+30%'},
+  {n:'デザートセット',g:180,heal:[40,150,80],buff:{spd:300},d:'回復（ST150・MP80）＋移動+25%'},
+  {n:'料理屋の特製フルコース',g:1500,full:1,buff:{atk:480,def:480,spd:480,crit:480},d:'全回復＋攻撃・防御・移動・急所率アップ（8分）'}];
+const RESTT=[['tk_onigiri',120],['tk_sand',250],['tk_bento',450],['tk_soup',300],['tk_pie',350],['tk_juice',200]];
+const restOpen=()=>wOn('w_cook')&&S.time>=600&&S.time<1200;
+function restShop(b,render){
+  if(!wOn('w_cook'))return b.append(el('div','warn','料理人がいないので お店は休み（依頼掲示板で ポポ を雇うと、次の朝から開きます）'),row(btn('閉じる',closeModal,'pri')));
+  if(!restOpen())return b.append(el('div','warn','お店は 10:00〜20:00 です'),row(btn('閉じる',closeModal,'pri')));
+  b.append(el('div','muted',`ポポ「いらっしゃい！ ここで食べると、家の料理より強化が長く続くよ（5分）」　所持金 ${S.gold} G`),el('div','sum','ここで食べる'));
+  const l=el('div','list');for(const m of RESTM){const bt=btn('食べる',()=>{if(S.gold<m.g)return toast('お金が足りない');S.gold-=m.g;P.poison=0;P.slowD=0;
+      if(m.full){S.hp=S.mhp;S.st=S.mst;S.mp=S.mmp}else{S.hp=Math.min(S.mhp,S.hp+m.heal[0]);S.st=Math.min(S.mst,S.st+m.heal[1]);S.mp=Math.min(S.mmp,S.mp+m.heal[2])}
+      for(const k in m.buff)B[k]=Math.max(B[k]||0,m.buff[k]);sfx('pickup');toast(`${m.n}を食べた！`);render(b)},'pri');if(S.gold<m.g)bt.disabled=true;
+    l.append(item(m.n,m.g+'G',m.d+'（'+Math.round(Object.values(m.buff)[0]/60)+'分）',[bt]))}
+  const l2=el('div','list');for(const[id,g]of RESTT){const buy=k=>{if(S.gold<g*k)return toast('お金が足りない');S.gold-=g*k;S.inv[id]=(S.inv[id]||0)+k;sfx('pickup');toast(`${ITEMS[id].n}${k>1?' ×'+k:''} を買った`);render(b)};
+    const b1=btn('×1',()=>buy(1)),b5=btn('×5',()=>buy(5));if(S.gold<g)b1.disabled=true;if(S.gold<g*5)b5.disabled=true;l2.append(item(ITEMS[id].n,g+'G',descOf(id)+`（持っている数 ${S.inv[id]||0}）`,[b1,b5],id))}
+  b.append(l,el('div','sum','テイクアウト（ここだけの料理・かばんへ）'),l2,row(btn('閉じる',closeModal,'pri')))}
+// 施設の「作業員と運搬」タブ
+function procW(b,f,render){const F=lf(f),h=workerOf(f),wk=h&&S.hired[h.id],cr=S.hired.carry;
+  b.append(el('div','muted',`作業員：${h.n}${wk?'（雇用中）':'（雇っていない・依頼掲示板で雇う）'}　運搬係：${cr?'ロビン（雇用中）':'いない'}`),
+    el('div','muted',`作業員は 8:00〜18:00 に ${WORKMIN}分で1回作ります（1日 最大30回）。材料は作業用チェストから運ばれ、施設には 1回分の${STOCKX}倍まで貯められます。運搬係がいない時は作業員が自分で取りに行き、できた物も運びます。`));
+  b.append(el('div','sum','作るレシピ'),row(btn('自動（材料のあるレシピ）',()=>{F.mode='auto';render(b)},F.mode==='auto'?'pri':''),btn('レシピを選ぶ',()=>{F.mode='pick';render(b)},F.mode==='pick'?'pri':'')));
+  if(F.mode==='pick'){const l=el('div','list'),W=wst();let rows=PROC[f].r.map(r=>[r,F.sel.includes(rkey(r))]);
+    if(f==='cook'&&!procW.all)rows=rows.filter(([r,on])=>on||Object.entries(r.in).every(([i,n])=>have(i)+(W[i]||0)>=n));
+    for(const[r,on]of rows)l.append(item(rlabel(r),'','',[btn(on?'作る':'作らない',()=>{const k=rkey(r);if(on)F.sel=F.sel.filter(x=>x!==k);else F.sel.push(k);render(b)},on?'pri':'')],r.out));
+    if(!rows.length)l.append(el('div','muted','材料（かばん・倉庫・作業用チェスト）がそろう料理がない'));
+    b.append(el('div','muted','「作る」にしたレシピだけを、材料のある物から順に作ります。'),l);if(f==='cook')b.append(row(btn(procW.all?'選んだ物と材料のある物だけ表示':'ぜんぶの料理を表示',()=>{procW.all=!procW.all;render(b)})))}
+  b.append(el('div','sum','できた物の運搬先'),row(...['wst','store','ship'].map(d=>btn(DESTN[d],()=>{F.dest=d;render(b)},F.dest===d?'pri':''))));
+  if(F.dest==='wst'&&!hasChest())b.append(el('div','warn','作業用チェストが無いので、今は倉庫へ運びます（町づくりで置けます）'));
+  if(F.dest==='ship'&&!shipC().auto)b.append(el('div','warn','出荷箱の「自動で入れる」がオフなので、今は倉庫へ運びます'));
+  const st=el('div','list');let a=0;for(const i in F.stock){if(!F.stock[i])continue;a=1;st.append(item(`${ITEMS[i].n} ×${F.stock[i]}`,'',`貯められる数 ${capOf(f,i)}`,[],i))}if(!a)st.append(el('div','muted','なし'));
+  const ou=el('div','list');a=0;for(const i in F.out){a=1;ou.append(item(`${ITEMS[i].n} ×${F.out[i]}`,'','',[],i))}if(!a)ou.append(el('div','muted','なし'));
+  b.append(el('div','sum','施設の中の材料'),st,row(btn('材料を倉庫へ戻す',()=>{for(const i in F.stock)toStore(i,F.stock[i]);F.stock={};render(b)})),
+    el('div','sum','できた物（運ばれるのを待っている）'),ou,row(btn('かばんへ取り出す',()=>{for(const i in F.out)S.inv[i]=(S.inv[i]||0)+F.out[i];F.out={};render(b)}),btn('閉じる',closeModal,'pri')))}
+// 作業用チェスト（どこに置いても中身は共通）
+function wchestMenu(){let tab='inb';
+  const mv=(a,c,id,n)=>{a[id]-=n;c[id]=(c[id]||0)+n;if(!a[id])delete a[id]};
+  const render=b=>{const y=mbox.scrollTop;b.innerHTML='';const W=wst();
+    b.append(el('h2','','作業用チェスト'),tabRow(tab,[['inb','かばんから入れる'],['ins','倉庫から入れる'],['out','取り出す'],['fac','施設のようす']],k=>{tab=k;render(b);mbox.scrollTop=0}),
+      el('div','muted','運搬係と施設の作業員が使う箱です。いくつ置いても中身は共通で、運搬係はいちばん近いチェストを使います。チェストを片付けても中身は残ります。'));
+    if(tab==='fac'){const l=el('div','list');
+      l.append(item(`運搬係 ロビン：${S.hired.carry?'雇用中':'いない'}`,'',LOGIW[0].d,[]));
+      for(const f of facs()){const F=lf(f),h=workerOf(f),ms=Object.entries(F.stock).map(([i,n])=>ITEMS[i].n+n).join('・')||'なし',os=Object.entries(F.out).map(([i,n])=>ITEMS[i].n+n).join('・')||'なし';
+        l.append(item(`${PROC[f].n}：${h.n}${S.hired[h.id]?'（雇用中）':'（いない）'}`,'',`${F.mode==='auto'?'自動':'選んだレシピ'}・運搬先 ${DESTN[F.dest]}／材料 ${ms}／できた物 ${os}`,[btn('設定',()=>procMenu(f,'w'))]))}
+      b.append(l,row(btn('閉じる',closeModal)));mbox.scrollTop=y;return}
+    const[from,to,vb]=tab==='inb'?[S.inv,W,'入れる']:tab==='ins'?[S.store,W,'入れる']:[W,S.inv,'出す'];const l=el('div','list');let any=0;
+    for(const id in from){const n=from[id];if(!n||!ITEMS[id])continue;any=1;l.append(item(`${ITEMS[id].n} ×${n}`,'','',[btn('1つ'+vb,()=>{mv(from,to,id,1);render(b)}),btn('全部'+vb,()=>{mv(from,to,id,from[id]);render(b)},'pri')],id))}
+    if(!any)l.append(el('div','muted',tab==='out'?'作業用チェストは空です':'入れられる物がない'));
+    const ck=()=>{const s2=new Set();for(const st in RECIPES)for(const r of RECIPES[st])if(r.out)s2.add(r.out);return s2};
+    b.append(l,row(...(tab!=='out'?[btn('料理と薬以外ぜんぶ入れる',()=>{const c2=ck();for(const id in from)if(from[id]&&ITEMS[id]&&!(ITEMS[id].heal&&c2.has(id))&&!(tab==='inb'&&S.quick.includes(id)))mv(from,to,id,from[id]);render(b)},'pri')]:[]),btn('閉じる',closeModal)));mbox.scrollTop=y};
+  openModal(render)}
 const need=()=>Math.round(6*Math.pow(S.lv,1.7));
 const ptGain=lv=>1+Math.floor(lv/10);
 function gainExp(e){e=Math.round(e*accMul('expMul'));S.exp+=e;while(S.exp>=need()){S.exp-=need();sfx('lvup');S.lv++;S.mhp+=5;S.mst+=3;S.mmp+=2;if(S.lv%2===0)S.atk++;const gp=ptGain(S.lv);S.sp=(S.sp||0)+gp;S.hp=S.mhp;S.st=S.mst;S.mp=S.mmp;toast(`レベルアップ！ Lv ${S.lv}`);setTimeout(()=>toast(`ステータスポイント+${gp}（ステータス画面で割り振ろう）`),1500)}}
@@ -1280,6 +1483,7 @@ function update(dt){
   if(!(cur.kind==='dun'&&dun.id===ABY)){timeAcc+=dt;if(timeAcc>=4.5){timeAcc=0;S.time+=10;if(S.time>=1560){passOut();return}}}
   if(cur.kind==='dun'&&dun.items)for(let i=dun.items.length-1;i>=0;i--){const it=dun.items[i];if(Math.hypot(it.x-P.x,it.y-P.y)<11){dun.items.splice(i,1);if(it.id==='gold'){sfx('coin');S.gold+=it.n;pop(P.x,P.y-20,'+'+it.n+'G','#e8b44a')}else addItem(it.id,it.n||1)}}
   for(const n of npcs)updNPC(n,dt);
+  logiTick();
   updAnimals(dt);
   updFairy(dt);updCollector(dt);
   let vx=(keys.right?1:0)-(keys.left?1:0)+joy.x,vy=(keys.down?1:0)-(keys.up?1:0)+joy.y;if(P.charm>0){P.charm-=dt;if(Math.random()<dt*4)fx.push({type:'ember',x:P.x+(Math.random()-.5)*12,y:P.y-18,t:.6,max:.6,c:'#f08ab0',rise:1})}
@@ -1358,8 +1562,9 @@ function action(){
   if(c==='z')return fairyMenu();
   if(c==='魔')return magicShop();
   if(c==='i')return pioneerMenu();
-  if(c==='材')return procMenu('saw');if(c==='粉')return procMenu('mill');if(c==='鉄')return procMenu('smelt');
-  if(c==='e'){const hs=HMAP[tx+','+ty];P.use=.2;return toast(S.time>=1260?`${hs.n}の家。もう寝ているようだ`:`${hs.n}の家。今は外にいるみたい`)}
+  if(c==='食')return grocerMenu();if(c==='庫')return wchestMenu();if(c==='料')return procMenu('cook');
+  if(c==='窯')return procMenu('kiln');if(c==='工')return procMenu('stone');if(c==='空'&&cur===town)return lotMenu(tx,ty);if(c==='材')return procMenu('saw');if(c==='粉')return procMenu('mill');if(c==='鉄')return procMenu('smelt');
+  if(c==='h'&&HMAP[tx+','+ty]&&HMAP[tx+','+ty].custom==='windmill'){P.use=.2;return toast('東の農園の風車。ゆっくり回っている')}if(c==='e'&&HMAP[tx+','+ty]&&HMAP[tx+','+ty].custom){const hs=HMAP[tx+','+ty];P.use=.2;return toast(`${hs.n}（住める人数 ${hs.cap}人・町の住民 ${popCap()}人）`)}if(c==='e'){const hs=HMAP[tx+','+ty];P.use=.2;return toast(S.time>=1260?`${hs.n}の家。もう寝ているようだ`:`${hs.n}の家。今は外にいるみたい`)}
   if(RECIPES[c])return craftMenu(c);
   const tool=curT(),k=tx+','+ty;
   if(c==='L'&&cur===town){if(!hasW('axe'))return toast('オノがあれば切り株を掘り起こせる');P.use=.3;S.stump=S.stump||{};S.stump[k]=(S.stump[k]||0)+(gs('axe',1)?2:1);spendFarm(2);profGain('axe',3);sfx('hit');pop(tx*TS+8,ty*TS+4,'ドン','#e0c08a');if(S.stump[k]>=3){town.m[ty][tx]='.';delete S.stump[k];S.felled=S.felled||{};S.felled[k]=1;addItem('wood',4+(gs('axe',0)?1:0))}return}
@@ -1369,6 +1574,7 @@ function action(){
   if(c==='T'&&tool.id==='hand')return toast('素手では木を切れない');
   if(c==='T'){P.use=.3;const ax=hasW('axe');if((S.chop[k]||0)>=(ax&&gs('axe',3)?2:1))return toast('この木からは今日はもう取った');S.chop[k]=(S.chop[k]||0)+1;spendFarm(1);if(ax)profGain('axe',2);const n=tool.id==='axe'&&ax?2+(Math.random()<.5?1:0):1+(Math.random()<.4?1:0);if(ax&&gs('axe',2)&&Math.random()<.25)addItem(Math.random()<.5?'honey':'apple',1);return addItem('wood',n+(ax&&gs('axe',0)?1:0))}
   if(c==='*'&&!S.pick[k]){S.pick[k]=1;P.use=.2;return addItem('herb',1)}
+  if(cur===town&&tool.id==='hoe'&&c!=='F'){const dg=digKind(tx,ty);if(dg){S.dig=S.dig&&S.dig.day===S.day?S.dig:{day:S.day};if(S.dig[k])return toast('ここは今日はもう掘った');S.dig[k]=1;P.use=.3;useA('hoe');spendFarm(1);sfx('hit');return addItem(dg,1+(Math.random()<.3?1:0))}}
   if(c==='F'){
     const s=S.soil[k];
     if(s&&s.c&&s.c.age>=CROPS[s.c.t].days){fGainKind('農業',2);const n=(CROPS[s.c.t].qty||1)+(gs('hoe',2)&&Math.random()<.2?1:0);if(CROPS[s.c.t].feed){S.bin=(S.bin||0)+n;sfx('pickup');pop(tx*TS+8,ty*TS,`牧草→牧草入れ +${n}（${S.bin}）`,'#d9c46a')}else addItem(harvestId(s.c.t),n);useA('pull',harvestId(s.c.t));afterHarvest(k,s);P.use=.2;return}
@@ -1683,6 +1889,17 @@ Object.assign(ART,{junglewood:()=>{A.log();G.globalAlpha=.45;R(1,5,13,7,'#3a6a2a
   kojuu:()=>{poly([8,1,12,9,8,15,4,9],'#5ac06a');C(8,10,3.5,'#5ac06a');R(6,7,2,3,'#d8ffd8')},deepore:()=>A.rock('#3a3a5a',1),stormplume:()=>{poly([3,14,12,2,14,4,5,15],'#8ab0e0');R(6,9,6,1,'#ffe060');R(9,6,1,4,'#ffe060');poly([3,14,4,15,2,15],'#888')},
   crimsoncore:()=>{C(8,9,5.5,'#7a1010');C(8,9,4,'#e0301a');C(7,8,1.8,'#ffb060')},eternalice:()=>A.gem('#c8f0ff','#ffffff'),emeraldfang:()=>{poly([5,2,11,2,9,15,7,15],'#3ac08a');R(6,3,2,6,'#c8ffe8')},darkpearl:()=>{C(8,9,5,'#2a1a3a');C(8,9,4,'#5a3a7a');R(6,6,2,2,'#d0b0ff')},
   makomo:()=>{ell(8,10,3,5,'#f0f0e0');R(7,1,2,6,'#6fae4f');R(5,2,1,5,'#86c463');R(10,2,1,5,'#86c463')},dragonjuice:()=>A.glass('#e0407a','#fff'),kinpira:()=>A.plate('#c8a070','#e0323b'),makomoyaki:()=>A.plate('#f0e0b0','#3f8a35')});
+Object.assign(ART,{clay:()=>{ell(8,10,6,4.5,'#a8684a');ell(7,9,4,2.5,'#c8886a');R(5,8,2,1,'#e0a888')},sand:()=>{ell(8,11,6.5,3.5,'#e8d098');for(let i=0;i<6;i++)R(4+i*1.6,9+(i%2),1,1,'#c8b070');ell(8,9,3,1.5,'#f4e4b8')},
+  lumber:()=>{poly([2,11,12,3,15,6,5,14],'#a06a3c');poly([2,11,5,14,5,12,2,9],'#7a4a2a');R(4,9,8,1,'#c8905a')},nail:()=>{for(const[x,y]of[[4,3],[8,5],[12,2]]){R(x-1,y,3,1,'#8a8f99');R(x,y+1,1,9,'#a9b2bd');R(x,y+10,1,2,'#6e6a78')}},
+  straw:()=>{for(let i=0;i<7;i++)R(3+i*1.6,3,1.4,11,i%2?'#d8b860':'#e8c870');R(2,8,12,2,'#a07a2a')},cutstone:()=>{R(2,5,12,9,'#8a8f99');R(2,5,12,2,'#c0c6cc');R(13,5,1,9,'#6e6a78');R(2,13,12,1,'#6e6a78')},
+  plaster:()=>{R(3,8,10,6,'#8a5a32');ell(8,8,5,2,'#f4f0e6');ell(8,7,3,1.2,'#ffffff');R(11,2,1,6,'#6b4423');R(10,2,3,2,'#a9b2bd')},brick:()=>{for(const[x,y]of[[2,9],[8,9],[5,4]]){R(x,y,7,5,'#a84a36');R(x,y,7,1,'#c86a4f');R(x+6,y,1,5,'#8a3a2a')}},
+  rooftile:()=>{for(let i=0;i<3;i++){ell(4+i*4,9,2.2,5,'#5a6a8a');ell(4+i*4,8,1.4,4,'#7a8aaa')}R(2,13,12,1,'#3e4a5e')},pane:()=>{R(3,2,10,12,'#6b4423');R(4,3,8,10,'#bfe0f8');R(8,3,1,10,'#6b4423');R(4,8,8,1,'#6b4423');R(4,3,2,2,'#ffffff')}});
+Object.assign(ART,{tk_onigiri:()=>{R(2,6,12,8,'#a9784a');R(3,7,10,6,'#6b4423');for(const x of[4,9]){poly([x,12,x+1.5,8,x+3,12],'#f8f4ea');R(x,10,3,2,'#2a3a2a')}},
+  tk_sand:()=>{poly([2,13,8,4,14,13],'#f0d8a0');poly([3,12,8,6,13,12],'#c8783a');R(4,10,8,1,'#6fae4f');R(3,12,10,1,'#e8c070')},
+  tk_bento:()=>{R(1,4,14,10,'#2a1a1a');R(1,4,14,2,'#c8463d');R(2,6,5,7,'#f8f4ea');R(8,6,6,3,'#c8783a');R(8,9,3,4,'#5aa040');R(11,9,3,4,'#e0503a');R(7,3,2,11,'#e8b44a')},
+  tk_soup:()=>{R(4,4,8,10,'#c0c6cc');R(4,4,8,2,'#8a8f99');R(5,7,6,6,'#e8a040');R(3,6,1,4,'#8a8f99');R(12,6,1,4,'#8a8f99');C(8,2,1.5,'rgba(255,255,255,.6)')},
+  tk_pie:()=>{ell(8,11,6.5,3.5,'#a9784a');ell(8,9.5,6,3,'#e8b060');for(let i=0;i<4;i++)R(4+i*2.4,8,1,3,'#a9784a');C(6,9,1,'#c8463d')},
+  tk_juice:()=>{R(5,3,6,11,'#e8f4f8');R(6,6,4,7,'#f0a040');R(6,6,4,2,'#f8d060');R(9,1,1,5,'#e0503a');R(5,3,6,1,'#c0c6cc')}});
 Object.assign(ART,{r_ent:()=>{C(8,9,5.5,'#2f6a24');C(8,9,3.8,'#7ad05a');R(6,6,2,2,'#e0ffd0')},r_king:()=>{poly([3,12,4,5,6,9,8,4,10,9,12,5,13,12],'#e8b44a');R(3,12,10,2,'#c8901a');C(8,10,1.3,'#4aa0f0')},
   r_titan:()=>{C(8,9,5.5,'#7a7068');C(8,9,3.6,'#c84a3a');R(6,7,2,2,'#ffb0a0')},r_bigcrab:()=>{poly([2,13,8,3,14,13],'#d0503a');R(5,10,6,1,'#ffb090');R(7,7,2,1,'#ffb090')},
   r_magma:()=>{C(8,9,5.5,'#3a1a10');C(8,9,4,'#ff6a1a');C(8,9,2,'#ffe060')},r_dragon:()=>{poly([8,2,13,8,8,15,3,8],'#a01a1a');poly([8,5,11,8,8,12,5,8],'#ff7a4a');R(7,6,1,2,'#ffd0b0')},
@@ -1714,14 +1931,14 @@ function dateStr(){const d=S.day-1;return`${Math.floor(d/120)+1}年目 ${'春夏
 function clockStr(){let h=Math.floor(S.time/60);const m=String(S.time%60).padStart(2,'0');return(h>=24?'深夜 '+(h-24):h)+':'+m}
 
 function sleepMenu(){openModal(b=>{b.append(el('h2','','わが家'),el('div','muted','寝ると一日が終わり、記録されます。水をやった作物は一晩で育ちます。'),row(btn('寝る',()=>advanceDay(''),'pri'),btn('やめる',closeModal)))})}
-function reapCrop(t){const c=CROPS[t];if(c.feed)S.bin=(S.bin||0)+c.qty;else if(c.plant)toStore(t,c.qty);else{const q=harvestId(t);S.ship[q]=(S.ship[q]||0)+1}}
+function reapCrop(t){const c=CROPS[t];if(c.feed)S.bin=(S.bin||0)+c.qty;else if(c.plant){if(hDest('harvest')==='ship')toStore(t,c.qty);else hput('harvest',t,c.qty)}else hput('harvest',harvestId(t),1)}
 const SHOPSEEDS=['turnip','carrot','strawberry','cabbage','tomato','grass','herb','yomogi','aloe','manaherb','basil','mint','wheat','rice','sugarcane','chili','soybean','sunflower'];
 const popt=()=>S.plantOpt||(S.plantOpt={store:1,buy:0});
 function bestSeed(){const ord=Object.keys(CROPS).filter(t=>!CROPS[t].feed&&!CROPS[t].tree).sort((a,b)=>ITEMS[b].p-ITEMS[a].p).concat(['grass']),o=popt(),ss=S.seedStore||{};
   return ord.find(t=>S.seeds[t]>0||(o.store&&ss[t]>0))||(o.buy?ord.find(t=>SHOPSEEDS.includes(t)&&!CROPS[t].plant&&!CROPS[t].feed&&S.gold-CROPS[t].seed>=seedKeep()):null)}
-const seedKeep=()=>HELPERS.reduce((a,h)=>a+(S.hired[h.id]?h.wage:0),0);
+const seedKeep=()=>[...HELPERS,...LOGIW].reduce((a,h)=>a+(S.hired[h.id]?h.wage:0),0);
 function useSeed(t){const ss=S.seedStore||{};if(S.seeds[t]>0)S.seeds[t]--;else if(popt().store&&ss[t]>0)ss[t]--;else{S.gold-=CROPS[t].seed;S.seedBuy=(S.seedBuy||0)+CROPS[t].seed}}
-function mineReward(){const n=2+Math.floor(S.deep/5);toStore('ore',n);toStore('stone',3);let t=`鉄鉱石×${n}・石×3`;if(Math.random()<.05+S.deep*.01){toStore('goldore',1);t+='・金鉱石×1'}if(Math.random()<.25+S.deep*.02){toStore('gem',1);t+='・魔石×1'}S.wdone.mine=1;return t+' を倉庫へ'}
+function mineReward(){const n=2+Math.floor(S.deep/5);hput('mine','ore',n);hput('mine','stone',3);let t=`鉄鉱石×${n}・石×3`;if(Math.random()<.05+S.deep*.01){hput('mine','goldore',1);t+='・金鉱石×1'}if(Math.random()<.25+S.deep*.02){hput('mine','gem',1);t+='・魔石×1'}S.wdone.mine=1;return t+' を倉庫へ'}
 const REH=3;
 const SEEDP=.15;
 function afterHarvest(k,s){const C=CROPS[s.c.t];s.w=false;if(!C.tree&&!(C.regrow&&(s.c.h||1)<REH)&&Math.random()<SEEDP){const t=s.c.t;S.seeds[t]=(S.seeds[t]||0)+1;S.seedGot=(S.seedGot||0)+1;if(cur===town){const[x,y]=k.split(',').map(Number);pop(x*TS+8,y*TS-6,C.n+'の種 +1','#c7e59a')}}if(C.regrow&&(s.c.h||1)<REH){s.c.h=(s.c.h||1)+1;s.c.age=Math.max(0,C.days-C.regrow)}else delete S.soil[k]}
@@ -1732,21 +1949,21 @@ function catchUp(){const w=S.worked||{},soils=Object.values(S.soil);
   if(w.water)for(const s of Object.values(S.soil))if(!s.spr)s.w=true;
   if(w.mine&&!S.wdone.mine)mineReward();
   if(w.ranch&&!S.wdone.ranch)ranchWork();
-  if(w.wood){const d=S.wdone.wood;toStore('wood',Math.max(0,3-d.w));toStore('herb',Math.max(0,2-d.h))}
-  if(w.fruit){let n=S.wdone.fruit||0;for(let y=0;y<town.H&&n<6;y++)for(let x=0;x<town.W&&n<6;x++){const k=x+','+y;if(town.m[y][x]==='Y'&&(S.fruit[k]||0)<=S.day){S.fruit[k]=S.day+3;toStore(fruitAt(x,y),(S.deco||{})[k]?2:1);n++}}}
-  if(w.fish)for(let i=S.wdone.fish||0;i<3;i++)toStore(npcFish(20,9),1);
+  if(w.wood){const d=S.wdone.wood;hput('wood','wood',Math.max(0,3-d.w));hput('wood','herb',Math.max(0,2-d.h))}
+  if(w.fruit){let n=S.wdone.fruit||0;for(let y=0;y<town.H&&n<6;y++)for(let x=0;x<town.W&&n<6;x++){const k=x+','+y;if(town.m[y][x]==='Y'&&(S.fruit[k]||0)<=S.day){S.fruit[k]=S.day+3;hput('fruit',fruitAt(x,y),(S.deco||{})[k]?2:1);n++}}}
+  if(w.fish)for(let i=S.wdone.fish||0;i<3;i++)hput('fish',npcFish(20,9),1);
   if(w.brew&&!S.wdone.brew)brewWork()}
 function advanceDay(note){
-  catchUp();
+  catchUp();const llog=logiCatch();
   {const gr=farmSum('grow');
   for(const k in S.soil){const s=S.soil[k];if(s.c&&s.w){s.c.age++;if(Math.random()<gr)s.c.age++}s.w=false}}
   let earn=0;for(const id in S.ship)earn+=ITEMS[id].p*S.ship[id];earn=Math.round(earn*(1+accSum('ship')));S.ship={};S.gold+=earn;
   S.day++;S.time=360;{const H=S.hive;if(H&&H.at)H.h=H.at.map((_,i)=>Math.min(HIVECAP,((H.h||[])[i]||0)+1))}timeAcc=0;S.chop={};S.pick={};
   if(!note){S.hp=S.mhp;S.st=S.mst;S.mp=S.mmp}
   const log=[];let wages=0;S.worked={};S.wdone={mine:0,ranch:0,wood:{w:0,h:0},fruit:0,fish:0,brew:0,till:0};
-  for(const h of HELPERS)if(S.hired[h.id]){if(S.gold>=h.wage){S.gold-=h.wage;wages+=h.wage;S.worked[h.id]=1}else log.push(`${h.n}：給金が払えず休み`)}
-  const ws=HELPERS.filter(h=>S.worked[h.id]).map(h=>h.n);if(ws.length)log.push(`今日は ${ws.join('・')} が働きます`);
-  advReturn(log);procDeliver(log);growSaplings();growTrees();
+  for(const h of[...HELPERS,...LOGIW])if(S.hired[h.id]){if(S.gold>=h.wage){S.gold-=h.wage;wages+=h.wage;S.worked[h.id]=1}else log.push(`${h.n}：給金が払えず休み`)}
+  const ws=[...HELPERS,...LOGIW].filter(h=>S.worked[h.id]).map(h=>h.n);if(ws.length)log.push(`今日は ${ws.join('・')} が働きます`);
+  log.push(...llog);advReturn(log);procDeliver(log);if(S.worked.wood){hput('wood','clay',2);hput('wood','sand',2)}growSaplings();growTrees();
   if(Math.random()<.4&&!(S.stall&&S.stall.day===S.day-1)){S.stall={day:S.day,items:genStall()};log.push('行商人が広場に露店を開いている（9:00〜17:00）')}else S.stall=null;
   if(S.animals.length){let un=0;for(const a of S.animals){a.pet=false;if((S.bin||0)>0){S.bin--;a.prod=a.type!=='sheep'||S.day%2===0}else{a.prod=false;a.aff=Math.max(0,a.aff-1);un++}}
     log.push(un?`牧草入れのエサが足りず ${un}頭がおなかをすかせている`:`動物たちがエサを食べた（牧草入れ 残り${S.bin}）`);}
@@ -1763,7 +1980,7 @@ function advanceDay(note){
 }
 /* ---------- villagers ---------- */
 let npcs=[];
-function initNPCs(){npcs=RESID.map((h,i)=>({h,i,x:(h.house.x+2)*TS+8,y:(h.house.y+h.house.h)*TS+8,dir:0,anim:0,path:[],goal:null,tgt:null,act:0,wait:.5+Math.random()*2,hidden:S.time>=1200,inCave:false}))}
+function initNPCs(){npcs=RESID.map((h,i)=>({h,i,x:(h.house.x+2)*TS+8,y:(h.house.y+h.house.h)*TS+8,dir:0,anim:0,path:[],goal:null,tgt:null,act:0,wait:.5+Math.random()*2,hidden:S.time>=1200,inCave:false}));logiFlush();LOGIW.filter(h=>wOn(h.id)).forEach((h,i)=>npcs.push(mkLogi(h,i)))}
 function walkT(x,y){return x>=0&&y>=0&&x<town.W&&y<town.H&&!SOLID.has(town.m[y][x])}
 function bfs(sx,sy,test){const prev=new Map([[sx+','+sy,null]]),q=[[sx,sy]];let qi=0;
   while(qi<q.length){const[x,y]=q[qi++];const r=test(x,y);
@@ -1782,8 +1999,8 @@ function jobTile(id,x,y){const c=town.m[y]&&town.m[y][x],k=x+','+y,s=S.soil[k];
   if(id==='fish')return c==='W'&&(S.wdone.fish||0)<3&&S.time<1020;
   if(id==='brew')return c==='魔'&&!S.wdone.brew&&S.time>=600&&S.time<1020;
   return false}
-function npcFish(x,y){const loc=x>=44&&y>=44?'sea':'pond',c=FISH.filter(f=>f.loc.includes(loc)&&!f.rare&&!f.junk&&!f.night&&(f.rod||1)<=1),tot=c.reduce((a,f)=>a+f.w,0);let r=Math.random()*tot;for(const f of c){r-=f.w;if(r<=0)return f.id}return c[0].id}
-function brewWork(){S.wdone.brew=1;const a=Math.min(3,Math.floor(have('herb')/2)),b=Math.min(2,Math.floor(have('manaherb')/2));if(a){take('herb',a*2);toStore('potion',a)}if(b){take('manaherb',b*2);toStore('manapot',b)}return a+b?`回復薬×${a}${b?'・マナポーション×'+b:''}`:'材料なし'}
+function npcFish(x,y){const loc=isSea(x,y)?'sea':'pond',c=FISH.filter(f=>f.loc.includes(loc)&&!f.rare&&!f.junk&&!f.night&&(f.rod||1)<=1),tot=c.reduce((a,f)=>a+f.w,0);let r=Math.random()*tot;for(const f of c){r-=f.w;if(r<=0)return f.id}return c[0].id}
+function brewWork(){S.wdone.brew=1;const a=Math.min(3,Math.floor(have('herb')/2)),b=Math.min(2,Math.floor(have('manaherb')/2));if(a){take('herb',a*2);hput('brew','potion',a)}if(b){take('manaherb',b*2);hput('brew','manapot',b)}return a+b?`回復薬×${a}${b?'・マナポーション×'+b:''}`:'材料なし'}
 function findJob(n,sx,sy){const id=n.h.id;return bfs(sx,sy,(x,y)=>{for(const[a,b]of DIRS)if(jobTile(id,x+a,y+b))return[x+a,y+b];return null})}
 function goNPC(n,res,goal){if(!res){n.goal=null;n.wait=1.5;return}n.path=res.path;n.tgt=res.tgt;n.goal=goal;if(!n.path.length)arriveNPC(n)}
 function decideNPC(n){
@@ -1792,7 +2009,7 @@ function decideNPC(n){
     return goNPC(n,bfs(sx,sy,(x,y)=>x===hx&&y===hy?[x,y]:null),'home')}
   if(h.work&&t>=480){const[wx,wy]=h.work;if(sx===wx&&sy===wy){n.atWork=true;n.hidden=true;n.dir=0;return}const r=bfs(sx,sy,(x,y)=>x===wx&&y===wy?[x,y]:null);if(r)return goNPC(n,r,'work')}
   if(S.worked[h.id]){const r=findJob(n,sx,sy);if(r)return goNPC(n,r,'job')}
-  const anchors=[[h.house.x+2,h.house.y+h.house.h],[26,24],[44,22],[36,28],[32,10],[23,13],[10,20],[56,21],[40,8],[24,38],[44,38],[12,25],[60,25]];
+  const anchors=[[h.house.x+2,h.house.y+h.house.h],[92,42],[100,28],[93,22],[26,24],[44,22],[36,28],[32,10],[23,13],[10,20],[56,21],[40,8],[24,38],[44,38],[12,25],[60,25]];
   for(let i=0;i<10;i++){const a=anchors[Math.random()*anchors.length|0],gx=a[0]+((Math.random()*9|0)-4),gy=a[1]+((Math.random()*7|0)-3);
     if(walkT(gx,gy))return goNPC(n,bfs(sx,sy,(x,y)=>x===gx&&y===gy?[x,y]:null),'wander')}
   n.wait=1}
@@ -1803,16 +2020,17 @@ function popT(x,y,s,c){if(cur===town)pop(x*TS+8,y*TS+4,s,c)}
 function finishNPC(n){
   n.wait=.3;const id=n.h.id,[x,y]=n.tgt,k=x+','+y,s=S.soil[k];if(!jobTile(id,x,y))return;
   if(id==='water'){s.w=true;popT(x,y,'ジャー','#9cc9ec')}
-  else if(id==='harvest'){reapCrop(s.c.t);popT(x,y,CROPS[s.c.t].feed?'牧草→牧草入れ':CROPS[s.c.t].plant?ITEMS[s.c.t].n+'→倉庫':ITEMS[s.c.t].n+'→出荷','#e8b44a');afterHarvest(k,s)}
+  else if(id==='harvest'){reapCrop(s.c.t);popT(x,y,CROPS[s.c.t].feed?'牧草→牧草入れ':CROPS[s.c.t].plant&&hDest('harvest')==='ship'?ITEMS[s.c.t].n+'→倉庫':ITEMS[s.c.t].n+'→'+DESTS[hDest('harvest')],'#e8b44a');afterHarvest(k,s)}
   else if(id==='plant'){const t=bestSeed();useSeed(t);s.c={t,age:0};toolbar();popT(x,y,'ぱらっ','#c7e59a')}
-  else if(id==='wood'){if(town.m[y][x]==='T'){S.chop[k]=1;toStore('wood',1);S.wdone.wood.w++;popT(x,y,'コン','#e0c08a')}else{S.pick[k]=1;toStore('herb',1);S.wdone.wood.h++;popT(x,y,'薬草','#8cc163')}}
+  else if(id==='wood'){if(town.m[y][x]==='T'){S.chop[k]=1;hput('wood','wood',1);S.wdone.wood.w++;popT(x,y,'コン','#e0c08a')}else{S.pick[k]=1;hput('wood','herb',1);S.wdone.wood.h++;popT(x,y,'薬草','#8cc163')}}
   else if(id==='mine'){n.inCave=true;n.hidden=true}
   else if(id==='ranch'){ranchWork();popT(x,y+1,'お世話完了','#ff9ab0')}
   else if(id==='tiller'){S.soil[k]={w:false,c:null};S.wdone.till=(S.wdone.till||0)+1;popT(x,y,'ザクッ','#c8a060')}
-  else if(id==='fruit'){const f=fruitAt(x,y);S.fruit[k]=S.day+3;toStore(f,(S.deco||{})[k]?2:1);S.wdone.fruit=(S.wdone.fruit||0)+1;popT(x,y,ITEMS[f].n+'→倉庫','#f4a0a8')}
-  else if(id==='fish'){const f=npcFish(x,y);toStore(f,1);S.wdone.fish=(S.wdone.fish||0)+1;popT(x,y,ITEMS[f].n+'→倉庫','#9cc9ec');n.wait=2.5}
+  else if(id==='fruit'){const f=fruitAt(x,y);S.fruit[k]=S.day+3;hput('fruit',f,(S.deco||{})[k]?2:1);S.wdone.fruit=(S.wdone.fruit||0)+1;popT(x,y,ITEMS[f].n+'→'+DESTS[hDest('fruit')],'#f4a0a8')}
+  else if(id==='fish'){const f=npcFish(x,y);hput('fish',f,1);S.wdone.fish=(S.wdone.fish||0)+1;popT(x,y,ITEMS[f].n+'→'+DESTS[hDest('fish')],'#9cc9ec');n.wait=2.5}
   else if(id==='brew'){const r=brewWork();popT(x,y,r,'#c7a6ff');if(cur===town)toast(r==='材料なし'?'セラ：倉庫に薬草がなくて薬を作れなかった':`セラがまほう店で ${r} を作った（倉庫へ）`);n.atWork=true;n.hidden=true}}
 function updNPC(n,dt){
+  if(n.logi)return updLogi(n,dt);
   if(n.inCave){if(S.time>=900){n.inCave=false;n.hidden=false;n.x=2*TS+8;n.y=26*TS+8;toast(`ガンツが洞窟から帰ってきた（${mineReward()}）`);n.wait=1}return}
   if(n.atWork){if(S.time>=1080){n.atWork=false;n.hidden=false;n.wait=.3}return}
   if(n.hidden)return;
@@ -1822,9 +2040,9 @@ function updNPC(n,dt){
     if(Math.abs(dx)>Math.abs(dy))n.dir=dx>0?3:2;else if(dy)n.dir=dy>0?0:1;n.anim+=dt*7;
     if(d<=sp){n.x=gx;n.y=gy;n.path.shift();if(!n.path.length)arriveNPC(n)}else{n.x+=dx/d*sp;n.y+=dy/d*sp}return}
   n.anim=0;n.wait-=dt;if(n.wait<=0)decideNPC(n)}
-const LINES={tiller:'空いた畑、耕しておくぞ',fruit:'実った果物、とってくるね',fish:'今日の釣果は倉庫に入れておくよ',brew:'薬草、薬にしておくわね',ranch:'動物たちのお世話をしてくるね',water:'水やりは任せて！',harvest:'実ったのは出荷箱に入れておくね',plant:'空いてる畑に種をまいておくよ',wood:'木材と薬草、集めておくね',mine:'洞窟に行ってくる！'};
+const LINES={carry:'材料もできた物も、運んでおくよ',w_saw:'木を切りそろえておくね',w_mill:'粉をひいておくね',w_smelt:'鉄をとかしておくぞ',w_kiln:'窯の火、見ておくね',w_stone:'石を切っておくぞ',w_cook:'いいにおいでしょ？',tiller:'空いた畑、耕しておくぞ',fruit:'実った果物、とってくるね',fish:'今日の釣果は倉庫に入れておくよ',brew:'薬草、薬にしておくわね',ranch:'動物たちのお世話をしてくるね',water:'水やりは任せて！',harvest:'実ったのは出荷箱に入れておくね',plant:'空いてる畑に種をまいておくよ',wood:'木材と薬草、集めておくね',mine:'洞窟に行ってくる！'};
 const IDLE=['いい天気だね','ちょっと散歩中なんだ','畑の調子はどう？','洞窟では無理しないでね','家の台所、使ってる？','この町、広くなったよね'];
-const FOLKSHOP={harune:()=>shopMenu(),dolf:()=>smithShop(),tia:()=>fairyMenu(),miria:()=>pioneerMenu(),gen:()=>tackleMenu(),nami:()=>marketMenu(),luna:()=>magicShop()},FOLKLINE={harune:'いらっしゃい！種や食材ならうちにおまかせ',luna:'薬と魔導書ならここよ。ゆっくり見ていって',dolf:'鉱石も装備もそろってるぞ。見ていくか？',tia:'妖精たちが待ってるわ',miria:'冒険者ギルドへようこそ！',gen:'いい竿そろってるぜ',nami:'今朝とれたての魚があるよ'};
+const FOLKSHOP={harune:()=>shopMenu(),dolf:()=>smithShop(),tia:()=>fairyMenu(),miria:()=>pioneerMenu(),gen:()=>tackleMenu(),nami:()=>marketMenu(),luna:()=>magicShop()},FOLKLINE={harune:'いらっしゃい！種と苗ならうちにおまかせ。食材はとなりの食材屋さんでね',luna:'薬と魔導書ならここよ。ゆっくり見ていって',dolf:'鉱石も装備もそろってるぞ。見ていくか？',tia:'妖精たちが待ってるわ',miria:'冒険者ギルドへようこそ！',gen:'いい竿そろってるぜ',nami:'今朝とれたての魚があるよ'};
 function talk(n){const id=n.h.id;let s;
   if(n.h.work){n.dir=[1,0,3,2][P.dir];return toast(`${n.h.n}「${S.time>=1080?'今日はもう店じまい。また明日ね':'これから店に行くところなの'}」`)}
   if(S.time>=1080)s='そろそろ家に帰らなきゃ';else if(n.goal==='job'||n.act>0)s=LINES[id];else if(S.worked[id])s='今日の仕事はひと段落。のんびりするよ';else s=IDLE[(S.day*3+n.i+(S.time/60|0))%IDLE.length];
@@ -1853,7 +2071,7 @@ function hiveSpot(){const H=S.hive||{at:[]},taken=new Set(H.at.map(a=>a+''));for
 function hiveAct(tx,ty){const H=S.hive;const i=H?H.at.findIndex(a=>a[0]===tx&&a[1]===ty):-1;if(i<0)return;P.use=.2;const n=H.h[i]||0;if(!n)return toast(`まだハチミツがたまっていない（毎朝1つ・${HIVECAP}つまで）`);H.h[i]=0;addItem('honey',n)}
 const PAST={x0:3*TS+6,x1:16*TS+10,y0:33*TS+6,y1:37*TS+10};
 function prodId(a){return ANIMALS[a.type].prod+(a.aff>=5&&Math.random()<.3+a.aff*.07?'_q':'')}
-function ranchWork(){{const H=S.hive;if(H&&H.at)H.at.forEach((_,i)=>{if(H.h[i]){toStore('honey',H.h[i]);H.h[i]=0}})}for(const a of S.animals){if(a.prod){toStore(prodId(a),1);a.prod=false}if(!a.pet){a.pet=true;a.aff=Math.min(10,a.aff+1)}}S.wdone.ranch=1}
+function ranchWork(){{const H=S.hive;if(H&&H.at)H.at.forEach((_,i)=>{if(H.h[i]){hput('ranch','honey',H.h[i]);H.h[i]=0}})}for(const a of S.animals){if(a.prod){hput('ranch',prodId(a),1);a.prod=false}if(!a.pet){a.pet=true;a.aff=Math.min(10,a.aff+1)}}S.wdone.ranch=1}
 function petAnimal(a){a.pet=true;a.aff=Math.min(10,a.aff+(accSum('bell')?2:1));pop(a.x,a.y-16,'♥','#ff7a9a');toast(`${a.name}をなでた（♥${a.aff}）`)}
 function animalAct(a){const A=ANIMALS[a.type];
   if(a.prod){a.prod=false;addItem(prodId(a),1);if(!a.pet)setTimeout(()=>petAnimal(a),900);return}
@@ -1895,14 +2113,22 @@ function ranchMenu(){
   openModal(render);
 }
 function hireMenu(){
-  const render=b=>{b.innerHTML='';b.append(el('h2','','依頼掲示板'),el('div','muted','村の人に仕事を任せられます。給金は毎朝払い、お金が足りない日は休みます。'));
+  const DC=['ship','store','wst'],PRODH=['harvest','mine','wood','ranch','fruit','fish','brew'];
+  const render=b=>{const y=mbox.scrollTop;b.innerHTML='';b.append(el('h2','','依頼掲示板'),el('div','muted','村の人に仕事を任せられます。給金は毎朝払い、お金が足りない日は休みます。「運搬先」は集めた物・とれた物を入れる場所です（作業用チェスト・倉庫・出荷箱）。'));
     const list=el('div','list');
     for(const h of HELPERS){const on=!!S.hired[h.id];
-      list.append(item(`${h.n}（${h.job}）${on?'・雇用中':''}`,h.wage+'G/日',h.d,[...(h.id==='plant'?[btn('倉庫の種：'+(popt().store?'使う':'使わない'),()=>{popt().store^=1;render(b)}),btn('種を買ってまく：'+(popt().buy?'ON':'OFF'),()=>{popt().buy^=1;render(b)})]:[]),btn(on?'やめてもらう':'雇う',()=>{if(on)delete S.hired[h.id];else{S.hired[h.id]=1;toast(`${h.n}は明日の朝から働きます`)}render(b)},on?'':'pri')]))}
-    b.append(list,row(btn('閉じる',closeModal)))};
+      list.append(item(`${h.n}（${h.job}）${on?'・雇用中':''}`,h.wage+'G/日',h.d,[...(h.id==='plant'?[btn('倉庫の種：'+(popt().store?'使う':'使わない'),()=>{popt().store^=1;render(b)}),btn('種を買ってまく：'+(popt().buy?'ON':'OFF'),()=>{popt().buy^=1;render(b)})]:[]),
+        ...(PRODH.includes(h.id)?[btn('運搬先：'+DESTN[hDest(h.id)],()=>{LG().src[h.id]=DC[(DC.indexOf(hDest(h.id))+1)%3];render(b)})]:[]),
+        btn(on?'やめてもらう':'雇う',()=>{if(on)delete S.hired[h.id];else{S.hired[h.id]=1;toast(`${h.n}は明日の朝から働きます`)}render(b)},on?'':'pri')]))}
+    const l2=el('div','list');
+    for(const h of LOGIW){const on=!!S.hired[h.id],ok=!h.fac||facBuilt(h.fac);
+      const d=h.fac?`${PROC[h.fac].n}で、作業用チェストから届いた材料でレシピを作り続ける（${WORKMIN}分で1回・8:00〜18:00）。運搬係がいない時は自分で材料を取りに行き、できた物も運ぶ。レシピと運搬先は${PROC[h.fac].n}の入口で決める`:h.d;
+      const bt=btn(on?'やめてもらう':'雇う',()=>{if(on)delete S.hired[h.id];else{S.hired[h.id]=1;toast(`${h.n}は明日の朝から働きます`)}render(b)},on?'':'pri');if(!on&&!ok)bt.disabled=true;
+      l2.append(item(`${h.n}（${h.job}）${on?'・雇用中':''}`,h.wage+'G/日',ok?d:`${PROC[h.fac].n}を建てると雇えます（${h.fac==='cook'?'商業区':'工業区'}の空き区画）`,[bt]))}
+    b.append(list,el('div','sum','物流（運ぶ・作る）'),el('div',hasChest()?'muted':'warn',hasChest()?'作業用チェストに入れた材料を、運搬係や作業員が施設へ運んで加工し、できた物を運搬先へ運びます。':'まず「町づくり」で作業用チェストを置きましょう（村人が使う材料とできた物を入れる箱）。'),l2,row(btn('閉じる',closeModal)));mbox.scrollTop=y};
   openModal(render);
 }
-function descOf(id){const it=ITEMS[id];if(it.heal){if(it.heal[0]>=999)return'HP・ST・MP全回復'+(it.buff?'＋攻撃・防御・移動アップ（90秒）':'');const p=[];['HP','ST','MP'].forEach((s,i)=>{if(it.heal[i])p.push(`${s}+${it.heal[i]}`)});if(it.buff){const bn={atk:'攻撃+30%',def:'防御+5',spd:'移動+25%',crit:'急所率+20%',eva:'回避率+15%'};p.push(Object.keys(it.buff).map(k=>bn[k]).join('・')+`（${it.buff[Object.keys(it.buff)[0]]}秒）`)}return p.join(' ')}if(it.use==='whet')return'使うと90秒間 攻撃力+30%';if(it.use==='fire')return'その場にたき火を起こす（40秒）。近くにいるとHPとSTが回復し、暗い所も明るくなる';if(it.use==='grow')return'畑の作物が1日育つ';if(it.use==='place')return'畑に置くと毎朝周囲8マスに水やり';if(it.sell)return`換金用のお宝（出荷箱に入れると${it.p}G）`;return`売値 ${it.p}G`}
+function descOf(id){const it=ITEMS[id];if(it.heal){if(it.heal[0]>=999)return'HP・ST・MP全回復'+(it.buff?'＋攻撃・防御・移動アップ（90秒）':'');const p=[];['HP','ST','MP'].forEach((s,i)=>{if(it.heal[i])p.push(`${s}+${it.heal[i]}`)});if(it.buff){const bn={atk:'攻撃+30%',def:'防御+5',spd:'移動+25%',crit:'急所率+20%',eva:'回避率+15%',mag:'魔攻+30%'};p.push(Object.keys(it.buff).map(k=>bn[k]).join('・')+`（${it.buff[Object.keys(it.buff)[0]]}秒）`)}return p.join(' ')}if(it.use==='whet')return'使うと90秒間 攻撃力+30%';if(it.use==='fire')return'その場にたき火を起こす（40秒）。近くにいるとHPとSTが回復し、暗い所も明るくなる';if(it.use==='grow')return'畑の作物が1日育つ';if(it.use==='place')return'畑に置くと毎朝周囲8マスに水やり';if(it.sell)return`換金用のお宝（出荷箱に入れると${it.p}G）`;return`売値 ${it.p}G`}
 const SWEETS=new Set(['chocolate','chococake','chocobanana','grapejelly','jam','applepie','peachpie','pudding','cake','candy','mangopudding','berryjam','honeytoast','melonpan','pumpkinpie']);
 const cookCat=r=>r.up?'料理':DRINK.has(r.out)?'飲み物':SWEETS.has(r.out)?'お菓子':!ITEMS[r.out].heal?'下ごしらえ':'料理';
 const CTABS={q:['すべて','料理','お菓子','飲み物','下ごしらえ','作れる'],p:['すべて','薬','染料','その他','作れる'],k:['すべて','道具','アクセサリー','見た目','矢','作れる'],v:['すべて','武器','防具','セット','農具','作れる']};
@@ -1967,7 +2193,7 @@ function abyBoat(l){if(!abyOpen())return l.append(item('？？？','','海の底
   [btn('潜る',()=>{closeModal();enterDun(ABY,1)},'pri'),btn(A.ng?'周回で強く：する':'周回で強く：しない',()=>{A.ng=!A.ng;toast(A.ng?`周回で強くなる：する（今は周回${abyLap()}）`:'周回で強くなる：しない');closeModal();boatMenu()})]))}
 function upMenu(){if(dun.id===ABY&&dun.abyR)return abyExit();openModal(b=>{b.append(el('h2','','出口'),el('div','muted','町へ戻りますか？'),row(btn('町へ戻る',()=>{closeModal();const g=DUNS[dun.id].gate;toTown(g[0],g[1],g[2])},'pri'),btn('探索を続ける',closeModal)))})}
 function caveMenu(){dunMenu('cave')}
-const DECO={'1':{n:'街灯',in:{ironbar:1,wood:1},g:150,solid:1},'2':{n:'植木',in:{wood:2,herb:2},g:50,solid:1},'3':{n:'花壇',in:{herb:3},g:30},'4':{n:'ベンチ',in:{wood:4},g:50,solid:1},'5':{n:'木の柵',in:{wood:1},g:10,solid:1},'6':{n:'石畳',in:{stone:2},g:10},'7':{n:'こんもりした木',in:{wood:3,herb:1},g:80,solid:1},'9':{n:'樽',in:{wood:3},g:30,solid:1},'0':{n:'井戸',in:{stone:6,wood:2},g:200,solid:1},'%':{n:'石像',in:{stone:8},g:300,solid:1},'!':{n:'ひまわり花壇',in:{sunflower:3},g:20},'&':{n:'花のアーチ',in:{wood:3,herb:4},g:120},'8':{n:'果樹の苗木',in:{},g:0,solid:1,hidden:1}};
+const DECO={'1':{n:'街灯',in:{ironbar:1,wood:1},g:150,solid:1},'2':{n:'植木',in:{wood:2,herb:2},g:50,solid:1},'3':{n:'花壇',in:{herb:3},g:30},'4':{n:'ベンチ',in:{wood:4},g:50,solid:1},'5':{n:'木の柵',in:{wood:1},g:10,solid:1},'6':{n:'石畳',in:{stone:2},g:10},'7':{n:'こんもりした木',in:{wood:3,herb:1},g:80,solid:1},'9':{n:'樽',in:{wood:3},g:30,solid:1},'0':{n:'井戸',in:{stone:6,wood:2},g:200,solid:1},'%':{n:'石像',in:{stone:8},g:300,solid:1},'庫':{n:'作業用チェスト',in:{wood:8},g:100,solid:1},'!':{n:'ひまわり花壇',in:{sunflower:3},g:20},'&':{n:'花のアーチ',in:{wood:3,herb:4},g:120},'8':{n:'果樹の苗木',in:{},g:0,solid:1,hidden:1}};
 const DECOOK='.,*';
 function growTrees(){for(const k in S.soil){const s2=S.soil[k];if(!s2.c)continue;const C2=CROPS[s2.c.t];if(!C2||!C2.tree||s2.c.age<C2.days)continue;const[x,y]=k.split(',').map(Number);delete S.soil[k];S.deco=S.deco||{};S.deco[k]={t:'Y',o:'F',f:C2.tree,d:S.day};town.m[y][x]='Y';S.ftype=S.ftype||{};S.ftype[k]=C2.tree;S.fruit[k]=0}}
 function growSaplings(){for(const k in S.deco||{}){const dd=S.deco[k];if(dd.t==='8'&&S.day-dd.d>=7){dd.t='Y';const[x,y]=k.split(',').map(Number);town.m[y][x]='Y';S.ftype=S.ftype||{};S.ftype[k]=dd.f;S.fruit[k]=0}}}
@@ -2078,7 +2304,7 @@ function buildMenu(){if(cur!==town)return toast('町の中で使おう');const d
     const l=el('div','list');
     const dn=dd&&(dd.t===','?'道':dd.t==='F'?'畑（作った所）':dd.t==='.'?(dd.o==='F'?'草地（畑だった所）':'草地（道をはがした所）'):(DECO[dd.t]||{n:'果物の木'}).n);
     if(dd)l.append(item(`目の前の${dn}を${dd.t===','||dd.t==='F'?'草地に戻す':dd.t==='.'?(dd.o==='F'?'畑に戻す':'道に戻す'):'片付ける'}`,'','',[btn('もとに戻す',()=>{if(dd.base){S.deco[k]=dd.base;town.m[ty][tx]=dd.base.t}else{town.m[ty][tx]=dd.o;delete S.deco[k]}if(S.ftype)delete S.ftype[k];for(const[i,n]of Object.entries((DECO[dd.t]||{in:{}}).in))S.inv[i]=(S.inv[i]||0)+Math.floor(n/2);toast('片付けた');closeModal()},'pri')]));
-    const ov=(ox,oy)=>Math.abs(ox-(tx*TS+8))<14&&Math.abs(oy-(ty*TS+8))<14;const gates=[ROOMS.home.exit,ROOMS.smithy.exit,...Object.values(DUNS).map(D=>D.gate),...STALLS.flatMap(st=>[[st.x,st.y],[st.x,st.y-1]])];const nearDoor=[[0,0],[1,0],[-1,0],[0,1],[0,-1]].some(([a,b2])=>'DjegzmcxQVMisNBGJHEa^魔材粉鉄'.includes(tileAt(tx+a,ty+b2)))||gates.some(gq=>gq[0]===tx&&gq[1]===ty);const rd=dd&&(dd.t===','||dd.t==='.');const can0=(!dd||rd)&&DECOOK.includes(c)&&!ov(P.x,P.y)&&!npcs.some(n=>!n.hidden&&ov(n.x,n.y))&&!S.animals.some(a2=>a2.x!=null&&ov(a2.x,a2.y));
+    const ov=(ox,oy)=>Math.abs(ox-(tx*TS+8))<14&&Math.abs(oy-(ty*TS+8))<14;const gates=[ROOMS.home.exit,ROOMS.smithy.exit,...Object.values(DUNS).map(D=>D.gate),...STALLS.flatMap(st=>[[st.x,st.y],[st.x,st.y-1]])];const nearDoor=[[0,0],[1,0],[-1,0],[0,1],[0,-1]].some(([a,b2])=>'DjegzmcxQVMisNBGJHEa^魔材粉鉄窯工料食'.includes(tileAt(tx+a,ty+b2)))||gates.some(gq=>gq[0]===tx&&gq[1]===ty);const rd=dd&&(dd.t===','||dd.t==='.');const can0=(!dd||rd)&&DECOOK.includes(c)&&!ov(P.x,P.y)&&!npcs.some(n=>!n.hidden&&ov(n.x,n.y))&&!S.animals.some(a2=>a2.x!=null&&ov(a2.x,a2.y));
     const can=can0&&!nearDoor;for(const t in DECO){const D=DECO[t];if(D.hidden)continue;const ok=(D.solid?can:can0)&&S.gold>=D.g&&Object.entries(D.in).every(([i,n])=>have(i)>=n);
       const bt=btn('置く',()=>{S.gold-=D.g;for(const[i,n]of Object.entries(D.in))take(i,n);S.deco=S.deco||{};S.deco[k]=rd?{t,o:c,base:dd}:{t,o:c};town.m[ty][tx]=t;sfx('pickup');toast(D.n+'を置いた');closeModal()},'pri');if(!ok)bt.disabled=true;
       l.append(item(D.n+(D.solid?'':'（上を歩ける）'),D.g+'G','材料：'+Object.entries(D.in).map(([i,n])=>`${ITEMS[i].n}×${n}（${have(i)}）`).join('・'),[bt]))}
@@ -2195,19 +2421,23 @@ function pioneerMenu(tab){let tb=tab||'adv';
     b.append(l)}
     b.append(row(btn('閉じる',closeModal,'pri')))};
   openModal(render)}
+// 食材屋（v125）：食材はここで買う（よろず屋は種と苗の店に）。買値は売値の約2倍（塩・小麦粉・卵は前のよろず屋の値段）
+const GROC=[['salt',30],['flour',35],['egg',90],['sugar',50],['rice',60],['milk',200],['butter',440],['chicken',120],['beastmeat',170],['soy',80],['miso',80],['oil',180],['vinegar',80],['pepper',120],['turnip',120],['potato',180],['carrot',190],['cabbage',340],['tomato',440],['kinoko',70]];
+function grocerMenu(){if(S.time<540||S.time>=1080)return toast('食材屋は 9:00〜18:00 です');
+  const render=b=>{const y=mbox.scrollTop;b.innerHTML='';b.append(el('h2','','食材屋 マルタ'),el('div','muted',`マルタ「新鮮な食材そろってるよ！ 畑や牧場でとれた物は出荷箱へどうぞ」　所持金 ${S.gold} G`));
+    const l=el('div','list');for(const[id,g]of GROC){if(!ITEMS[id])continue;const buy=k=>{if(S.gold<g*k)return toast('お金が足りない');S.gold-=g*k;S.inv[id]=(S.inv[id]||0)+k;sfx('pickup');render(b)};
+      const bs=[1,5,10].map(k=>{const bt=btn('×'+k,()=>buy(k));if(S.gold<g*k)bt.disabled=true;return bt});l.append(item(ITEMS[id].n,g+'G',`料理の材料（持っている数 ${have(id)}）`,bs,id))}
+    b.append(l,row(btn('閉じる',closeModal,'pri')));mbox.scrollTop=y};openModal(render)}
 function shopMenu(){
-  if(S.time<540||S.time>=1080)return toast('お店は 9:00〜18:00 です');
-  const render=b=>{b.innerHTML='';b.append(el('h2','','よろず屋 ハルニレ'),el('div','muted',`所持金 ${S.gold} G`));
+  if(S.time<540||S.time>=1080)return toast('花屋 ハルニレは 9:00〜18:00 です');
+  const render=b=>{b.innerHTML='';b.append(el('h2','','花屋 ハルニレ'),el('div','muted',`所持金 ${S.gold} G`));
     const list=el('div','list');
     const buy=(fn,p)=>{if(S.gold<p)return toast('お金が足りない');S.gold-=p;fn();toolbar();render(b)};
     for(const id of SHOPSEEDS){const c=CROPS[id];
       list.append(item(c.n+'の種',c.seed+'G',c.feed?`${c.days}日で収穫・牧草×${c.qty}（牧草入れへ）`:c.plant?`${c.days}日で${ITEMS[id].n}×${c.qty}（${{herb:'薬の材料',yomogi:'上級回復薬の材料',aloe:'上級回復薬・守りの薬の材料',manaherb:'MP回復薬の材料',basil:'パスタの材料',mint:'お茶・疾風の薬の材料',wheat:'台所で小麦粉に',rice:'ごはん料理の材料',sugarcane:'台所で砂糖に',chili:'カレー・力の薬の材料',soybean:'しょうゆ・みその材料',sunflower:'調理台で油に',pepper:'肉料理の味付けに'}[id]}）`:`${c.days}日で収穫・売値${ITEMS[id].p}G${c.regrow?`・連作（そのあと${c.regrow}日ごとに、全部で${REH}回とれる）`:''}`,[btn('×1',()=>buy(()=>S.seeds[id]=(S.seeds[id]||0)+1,c.seed)),btn('×5',()=>buy(()=>S.seeds[id]=(S.seeds[id]||0)+5,c.seed*5))],'seed:'+id))}
     const inv=(id,n)=>()=>S.inv[id]=(S.inv[id]||0)+n;
-    list.append(item('塩','30G','料理の味付け（漁港の海水2つから調理台でも作れる）',[btn('×1',()=>buy(inv('salt',1),30)),btn('×5',()=>buy(inv('salt',5),150))],'salt'));
-    list.append(item('小麦粉','30G','料理の材料',[btn('×1',()=>buy(inv('flour',1),30)),btn('×5',()=>buy(inv('flour',5),150))],'flour'));
-    list.append(item('卵','70G','料理の材料（ニワトリを飼うと毎日とれる）',[btn('×1',()=>buy(inv('egg',1),70)),btn('×5',()=>buy(inv('egg',5),350))],'egg'));
     for(const t of['tree_apple','tree_peach','tree_orange','tree_banana','tree_grape'])list.append(item(CROPS[t].n+'の種',CROPS[t].seed+'G','畑に植えて水やり7日で実のなる木に育つ（3日ごとに2個収穫）。オノで切り倒せる',[btn('買う',()=>buy(()=>{S.seeds[t]=(S.seeds[t]||0)+1},CROPS[t].seed))],'seed:'+t));
-    list.append(el('div','muted','薬と魔導書はまほう店へ。武器・防具・道具は鍛冶炉で作れます'));
+    list.append(el('div','muted','食材（塩・小麦粉・卵・肉・野菜など）は食材屋へ。薬と魔導書はまほう店へ。武器・防具・道具は鍛冶炉で作れます'));
     b.append(list,row(btn('店を出る',closeModal)))};
   openModal(render);
 }
@@ -2225,16 +2455,24 @@ function magicShop(){
   openModal(render);
 }
 function shipMenu(){let tab='ship';
-  const render=b=>{const y=mbox.scrollTop;b.innerHTML='';const sh=tab==='ship';
-    b.append(el('h2','','出荷箱'),tabRow(tab,[['ship','出荷する'],['back','取り出す']],k=>{tab=k;render(b)}),el('div','muted',sh?'入れたものは翌朝お金になります。':'今日入れたものは、翌朝までなら取り出せます。'));
-    const list=el('div','list');let any=false;
+  const render=b=>{const y=mbox.scrollTop;b.innerHTML='';const sh=tab==='ship',C=shipC();
+    b.append(el('h2','','出荷箱'),tabRow(tab,[['ship','出荷する'],['back','取り出す'],['cfg','自動と除外']],k=>{tab=k;render(b);mbox.scrollTop=0}));
     const mv=(a,c,id,n)=>{a[id]-=n;c[id]=(c[id]||0)+n;if(!a[id])delete a[id]};
+    if(tab==='cfg'){b.append(el('div','muted','「自動で入れる」がオンの時、運搬先を出荷箱にした物（収穫係・施設の作業員・運搬係が運ぶ物）が自動で入ります。オフの時と、除外した物は倉庫へ入ります。除外した物とアイテム枠にセットした物は「まとめて入れる」でも入りません。'),
+        row(btn('自動で入れる：'+(C.auto?'オン':'オフ'),()=>{C.auto=C.auto?0:1;render(b)},C.auto?'pri':'')));
+      const W=wst(),ids=[...new Set([...Object.keys(C.ex).filter(i=>C.ex[i]),...Object.keys(S.inv).filter(i=>S.inv[i]>0),...Object.keys(S.ship),...Object.keys(S.store).filter(i=>S.store[i]>0),...Object.keys(W).filter(i=>W[i]>0)])].filter(i=>ITEMS[i]).sort((a,c)=>(C.ex[c]?1:0)-(C.ex[a]?1:0));
+      const l=el('div','list');for(const id of ids){const x=!!C.ex[id];l.append(item(ITEMS[id].n+(x?'・除外中':''),ITEMS[id].p+'G','',[btn(x?'除外をやめる':'除外する',()=>{if(x)delete C.ex[id];else C.ex[id]=1;render(b)},x?'pri':'')],id))}
+      if(!ids.length)l.append(el('div','muted','アイテムがない'));
+      b.append(el('div','sum','除外する物（かばん・倉庫・作業用チェストにある物）'),l,row(btn('閉じる',closeModal)));mbox.scrollTop=y;return}
+    b.append(el('div','muted',sh?'入れたものは翌朝お金になります。':'今日入れたものは、翌朝までなら取り出せます。'));
+    const list=el('div','list');let any=false;
     const from=sh?S.inv:S.ship,to=sh?S.ship:S.inv,vb=sh?'出荷':'戻す';
     for(const id in from){const n=from[id];if(!n)continue;any=true;
-      list.append(item(`${ITEMS[id].n} ×${n}`,ITEMS[id].p+'G','',[btn('1つ'+vb,()=>{mv(from,to,id,1);render(b)}),btn('全部'+vb,()=>{mv(from,to,id,from[id]);render(b)},'pri')],id))}
+      list.append(item(`${ITEMS[id].n} ×${n}`+(sh&&C.ex[id]?'（除外）':sh&&S.quick.includes(id)?'（アイテム枠）':''),ITEMS[id].p+'G','',[btn('1つ'+vb,()=>{mv(from,to,id,1);render(b)}),btn('全部'+vb,()=>{mv(from,to,id,from[id]);render(b)},'pri')],id))}
     if(!any)list.append(el('div','muted',sh?'かばんに出荷できるものがない':'出荷箱は空です'));
-    const tot=Object.entries(S.ship).reduce((a,[id,n])=>a+ITEMS[id].p*n,0);
-    b.append(list,el('div','sum',`今日の出荷　${tot} G`),row(...(sh?[btn('回復薬以外ぜんぶ出荷',()=>{for(const id in S.inv)if(S.inv[id]&&id!=='potion')mv(S.inv,S.ship,id,S.inv[id]);render(b)},'pri')]:[btn('ぜんぶ戻す',()=>{for(const id in S.ship)mv(S.ship,S.inv,id,S.ship[id]);render(b)},'pri')]),btn('閉じる',closeModal)));mbox.scrollTop=y};
+    const tot=Object.entries(S.ship).reduce((a,[id,n])=>a+ITEMS[id].p*n,0),nx=Object.keys(C.ex).filter(i=>C.ex[i]).length;
+    b.append(list,el('div','sum',`今日の出荷　${tot} G`),...(sh?[el('div','muted',`「まとめて入れる」は、除外した物（${nx}種）とアイテム枠にセットした物を入れません。自動で入れる：${C.auto?'オン':'オフ'}`)]:[]),
+      row(...(sh?[btn('まとめて入れる',()=>{for(const id in S.inv)if(S.inv[id]&&!C.ex[id]&&!S.quick.includes(id))mv(S.inv,S.ship,id,S.inv[id]);render(b)},'pri')]:[btn('ぜんぶ戻す',()=>{for(const id in S.ship)mv(S.ship,S.inv,id,S.ship[id]);render(b)},'pri')]),btn('閉じる',closeModal)));mbox.scrollTop=y};
   openModal(render);
 }
 function secBag(b,R){b.append(el('div','sum','アイテム'));
@@ -2261,7 +2499,7 @@ function secStatus(b,R){
     const st=el('div','stat');
     [['HP',`${S.hp} / ${S.mhp}`],['ST',`${S.st} / ${S.mst}`],['MP',`${S.mp} / ${S.mmp}`],['EXP',`${S.exp} / ${need()}`],
      ['攻撃',(()=>{const h=heldW();if(h==='staff')return `魔法弾 ${Math.round(mag()*.5*accMul('magMul')*(B.mag>0?1.3:1))}（追尾・${(.6/aspd()).toFixed(2)}秒ごと）`;if(!['axe','pick','bow'].includes(h))return atk();const v=Math.round((S.atk+accSum('atk')+wPow(h))*WEAP[h].mult*(B.atk>0?1.3:1));return `${v}（${WEAP[h].n}）・技${atk()}`})()],['防御',def()],['魔法攻撃',mag()],['魔法防御',mdef()],['攻撃速度',`${Math.round(aspd()*100)}%`],['急所率',`${Math.round(critRate(heldW())*100)}%（急所は1.5倍）`],['回避率',`${Math.round(evaRate()*100)}%`],['移動',`${Math.round(spdMul()*100)}%`],
-     ['所持金',`${S.gold} G`],['最深到達',Object.keys(DUNS).map(id=>`${DUNS[id].n} ${Math.max((S.reach||{})[id]||0,(S.depth||{})[id]||0)}/${dmax(id)}${clearMax(id)>=dmax(id)?'★':''}`+(((S.reach||{})[id+'_h'])?`（上位 ${Math.max(S.reach[id+'_h'],(S.depth||{})[id+'_h']||0)}${clearMax(id+'_h')>=dmax(id)?'★':''}）`:'')).join('・')],['日付',dateStr()],['雇用中',HELPERS.filter(h=>S.hired[h.id]).map(h=>h.n).join('・')||'なし'],['動物',S.animals.length+'頭']]
+     ['所持金',`${S.gold} G`],['最深到達',Object.keys(DUNS).map(id=>`${DUNS[id].n} ${Math.max((S.reach||{})[id]||0,(S.depth||{})[id]||0)}/${dmax(id)}${clearMax(id)>=dmax(id)?'★':''}`+(((S.reach||{})[id+'_h'])?`（上位 ${Math.max(S.reach[id+'_h'],(S.depth||{})[id+'_h']||0)}${clearMax(id+'_h')>=dmax(id)?'★':''}）`:'')).join('・')],['日付',dateStr()],['雇用中',[...HELPERS,...LOGIW].filter(h=>S.hired[h.id]).map(h=>h.n).join('・')||'なし'],['動物',S.animals.length+'頭']]
       .forEach(([k,v])=>st.append(el('span','k',k),el('span','v',String(v))));
     b.append(st);
     b.append(el('div','sum','サウンド・設定'),row(btn('BGM '+(AU.bgm?'ON':'OFF'),()=>{setSnd('bgm',!AU.bgm);R()}),btn('効果音 '+(AU.se?'ON':'OFF'),()=>{setSnd('se',!AU.se);R()}),btn('キー設定（PC）',()=>{closeModal();keyMenu()}),btn('コントローラー',()=>{closeModal();padHelp()}),btn('グラフィック '+['標準','強化','強化＋素材'][GFX],()=>{setGfx((GFX+1)%3);R()}),btn('画面の向き '+ORIN[ORI],()=>{setOri({auto:'land',land:'port',port:'auto'}[ORI]);R()})));}
@@ -2385,7 +2623,78 @@ function wallFx(x,y,tx,ty,hs,c,wd,wl){const door='egz魔mjiDJ^材粉鉄'.include
   if(!door&&(edgeL||edgeR)){const nt=S.time>=1080||S.time<360,gl=nt?'#ffd98a':'#9fd0e8';R(x+3,y+3,10,9,'#5c3e26');R(x+4,y+4,8,7,gl);R(x+4,y+4,8,1,nt?'#fff0c0':'#d6eef8');R(x+7,y+4,2,7,'#5c3e26');R(x+4,y+7,8,1,'#5c3e26');
     if(!nt){R(x+4,y+4,2,4,'#f4e8f0');R(x+10,y+4,2,4,'#f4e8f0');R(x+5,y+5,1,2,'#d8c0d0')}else{G.fillStyle='rgba(255,220,140,.25)';G.fillRect(x+2,y+2,12,12)}
     R(x+2,y+12,12,1,'#8a6440');R(x+2,y+12,12,1,'#a9784a')}}
+// 建てた物の絵（仮）。BSPR[t]＝{w,h,ox,oy（絵の中の区画の左上）,f（描く関数）}。区画の左上から (ox,oy) ずらして貼る
+const BCV={};
+function bSprite(t){if(BCV[t])return BCV[t];const D=BSPR[t],c=document.createElement('canvas');c.width=D.w;c.height=D.h;const o=G;G=c.getContext('2d');try{D.f(D.ox,D.oy)}finally{G=o}return BCV[t]=c}
+function drawBuild(b,cx,cy){const D=BSPR[b.t];if(!D)return;const x=b.x*TS-cx-D.ox,y=b.y*TS-cy-D.oy;if(x>VW||y>VH||x+D.w<0||y+D.h<0)return;G.drawImage(bSprite(b.t),Math.round(x),Math.round(y));
+  if(b.t==='windmill'){const hx=Math.round(b.x*TS-cx+40),hy=Math.round(b.y*TS-cy-22),a0=clock*.7;for(let i=0;i<4;i++){const a=a0+i*Math.PI/2,c=Math.cos(a),s2=Math.sin(a),L=34,w=5;
+      G.fillStyle='#f3e7cf';G.beginPath();G.moveTo(hx+c*6-s2*1,hy+s2*6+c*1);G.lineTo(hx+c*L-s2*1,hy+s2*L+c*1);G.lineTo(hx+c*L-s2*w*2,hy+s2*L+c*w*2);G.lineTo(hx+c*8-s2*w*2,hy+s2*8+c*w*2);G.closePath();G.fill();
+      G.strokeStyle='#6b4423';G.lineWidth=1.5;G.beginPath();G.moveTo(hx,hy);G.lineTo(hx+c*L,hy+s2*L);G.stroke()}C(hx,hy,3,'#5a3820');C(hx,hy,1.5,'#a9784a')}}
+const BSPR={
+ cabin:{w:96,h:76,ox:8,oy:24,f:(X,Y)=>{const ox=X+16,oy=Y;G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+48,48,4);
+  poly([ox-4,oy+27,ox+52,oy+27,ox+46,oy+4,ox+24,oy-2,ox+2,oy+4],'#b8913c');for(let i=0;i<12;i++)R(ox-2+i*4.4,oy+6+(i%3),2,20-(i%3),'#a07a2a');
+  poly([ox-4,oy+27,ox+52,oy+27,ox+50,oy+30,ox-2,oy+30],'#8a6420');for(let i=0;i<13;i++)R(ox-3+i*4,oy+26,2,4,'#d8b860');R(ox+18,oy-1,12,3,'#7a5a20');
+  R(ox+34,oy-6,7,12,'#8a8f99');R(ox+34,oy-6,7,2,'#a9b2bd');C(ox+40,oy-10,3,'rgba(230,230,230,.55)');C(ox+44,oy-15,2.4,'rgba(230,230,230,.4)');
+  for(let i=0;i<5;i++){const y=oy+30+i*3.6;R(ox,y,48,3.4,i%2?'#8a5a32':'#a06a3c');R(ox,y,48,1,'#b8804c');C(ox+1,y+1.7,1.8,'#d8b080');C(ox+47,y+1.7,1.8,'#d8b080')}
+  R(ox+19,oy+33,10,15,'#5a3820');R(ox+20,oy+34,8,14,'#7a4a2a');for(let i=0;i<3;i++)R(ox+21+i*3,oy+34,1,14,'#5a3820');R(ox+26,oy+40,1,2,'#e8b44a');
+  C(ox+9,oy+38,4.2,'#5a3820');C(ox+9,oy+38,3.2,'#bfe0f8');R(ox+8,oy+35,1,6,'#5a3820');R(ox+6,oy+38,6,1,'#5a3820');
+  R(ox+30,oy+38,5,5,'#2a2a30');R(ox+31,oy+39,3,3,'#ffd060');R(ox+38,oy+43,6,5,'#b0503a');C(ox+39,oy+41,1.6,'#f2a3c4');C(ox+42,oy+40,1.6,'#ffe060')}},
+ town:{w:92,h:76,ox:6,oy:28,f:(X,Y)=>{const ox=X,oy=Y-16;G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+64,80,4);
+  poly([ox-3,oy+22,ox+83,oy+22,ox+76,oy,ox+4,oy],'#3e4a5e');for(let y=2;y<22;y+=4){R(ox+1,oy+y,78,1,'#2e3848');for(let x=(y%8?4:0);x<78;x+=8)R(ox+1+x,oy+y-3,1,3,'#2e3848')}R(ox+4,oy,72,2,'#56637a');R(ox-3,oy+21,86,2,'#2e3848');
+  R(ox+32,oy+2,16,14,'#f3e7cf');poly([ox+30,oy+4,ox+50,oy+4,ox+40,oy-4],'#3e4a5e');R(ox+35,oy+6,10,8,'#4a3420');R(ox+36,oy+7,8,6,'#bfe0f8');R(ox+40,oy+7,1,6,'#4a3420');
+  R(ox+62,oy-7,8,12,'#b0503a');R(ox+62,oy-7,8,2,'#d06a4f');
+  R(ox,oy+23,80,20,'#f3e7cf');for(const x of[0,26,52,77])R(ox+x,oy+23,3,20,'#6b4423');R(ox,oy+23,80,2,'#6b4423');R(ox,oy+41,80,2,'#6b4423');
+  G.strokeStyle='#6b4423';G.lineWidth=2;G.beginPath();for(const[x0,x1]of[[3,26],[55,77]]){G.moveTo(ox+x0,oy+41);G.lineTo(ox+x1,oy+25);G.moveTo(ox+x1,oy+41);G.lineTo(ox+x0,oy+25)}G.stroke();
+  const win=(x,y,w,h)=>{R(x-1,y-1,w+2,h+2,'#4a3420');R(x,y,w,h,'#bfe0f8');R(x+w/2,y,1,h,'#4a3420');R(x,y+h/2,w,1,'#4a3420');R(x,y,2,2,'#fff')};
+  win(ox+33,oy+26,14,10);R(ox+29,oy+36,22,2,'#8a5a32');for(let x=0;x<22;x+=3)R(ox+29+x,oy+37,1,5,'#6b4423');for(let i=0;i<6;i++)C(ox+31+i*3.6,oy+35,1.6,['#e0505a','#ffe060','#f2a3c4'][i%3]);
+  R(ox,oy+43,80,21,'#e8dcc0');R(ox,oy+56,80,8,'#9a958a');for(let x=0;x<80;x+=8)R(ox+x,oy+56,1,8,'#7f7a70');R(ox,oy+59,80,1,'#7f7a70');
+  R(ox+33,oy+44,14,20,'#4a3420');C(ox+40,oy+47,7,'#4a3420');R(ox+35,oy+46,10,18,'#8a5a32');C(ox+40,oy+47,5,'#8a5a32');R(ox+40,oy+46,1,18,'#6b4423');R(ox+36,oy+43,8,3,'#ffd060');
+  for(const x of[9,59]){win(ox+x,oy+46,12,9);R(ox+x-5,oy+45,4,11,'#4f8a5a');R(ox+x+13,oy+45,4,11,'#4f8a5a');R(ox+x-1,oy+55,14,2,'#8a5a32')}}},
+ dorm:{w:176,h:100,ox:0,oy:46,f:(X,Y)=>{const ox=X+8,oy=Y-16;G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+64,160,4);
+  R(ox,oy,160,12,'#7a6a5a');R(ox,oy,160,2,'#958675');for(let x=0;x<160;x+=6)R(ox+x,oy-3,2,3,'#5a4e42');R(ox,oy-3,160,1,'#5a4e42');
+  R(ox+10,oy-14,14,12,'#8a5a32');R(ox+9,oy-16,16,3,'#6b4423');for(let i=0;i<4;i++){R(ox+112+i*10,oy+3,8,5,'#6b4423');C(ox+114+i*10,oy+2,2,'#4f9a3c');C(ox+118+i*10,oy+2,2,'#6fbf54')}
+  R(ox+60,oy-14,40,26,'#9c4030');poly([ox+56,oy-12,ox+104,oy-12,ox+80,oy-26],'#3e4a5e');C(ox+80,oy-2,6,'#e8d8b0');C(ox+80,oy-2,4.5,'#5aa040');R(ox+79,oy-6,2,7,'#7fc060');R(ox+76,oy-3,8,2,'#7fc060');
+  R(ox,oy+12,160,52,'#a84a36');for(let y=12;y<64;y+=4){R(ox,oy+y,160,1,'#8a3a2a');for(let x=(y%8?0:6);x<160;x+=12)R(ox+x,oy+y,1,4,'#8a3a2a')}for(const y of[12,27,42])R(ox,oy+y,160,2,'#e8dcc0');R(ox+60,oy+14,40,50,'#9c4030');
+  const win=(x,y,a)=>{R(x-1,y-1,10,11,'#e8dcc0');R(x,y,8,9,'#bfe0f8');if(a){C(x+4,y,4,'#e8dcc0');C(x+4,y+1,3,'#bfe0f8')}R(x+4,y,1,9,'#5a4e42');R(x,y+4,8,1,'#5a4e42')};
+  for(const x of[6,22,38,112,128,144]){win(ox+x,oy+16,1);win(ox+x,oy+31);win(ox+x,oy+46)}for(const x of[66,86])win(ox+x,oy+16,1);win(ox+76,oy+31);
+  R(ox+68,oy+44,24,20,'#e8dcc0');C(ox+80,oy+46,12,'#e8dcc0');R(ox+70,oy+46,20,18,'#5a3820');C(ox+80,oy+47,10,'#5a3820');R(ox+72,oy+48,7,16,'#8a5a32');R(ox+81,oy+48,7,16,'#8a5a32');
+  R(ox+68,oy+37,24,6,'#3e4a5e');for(let i=0;i<4;i++)R(ox+71+i*5,oy+39,3,2,'#ffe08a');for(const x of[64,94]){R(ox+x,oy+50,2,14,'#2a2a30');R(ox+x-1,oy+47,4,3,'#ffd060')}R(ox,oy+62,160,2,'#7f7a70')}},
+ kiln:{w:88,h:84,ox:4,oy:36,f:(ox,oy)=>{G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+48,80,4);
+  R(ox+50,oy-30,10,46,'#9c4030');for(let y=-30;y<16;y+=4)R(ox+50,oy+y,10,1,'#8a3a2a');R(ox+48,oy-32,14,4,'#7a3020');C(ox+55,oy-36,4,'rgba(200,200,200,.5)');C(ox+60,oy-42,3,'rgba(200,200,200,.35)');
+  R(ox,oy+4,80,12,'#6b4423');for(let x=0;x<80;x+=6)R(ox+x,oy+4,1,12,'#5a3820');R(ox-2,oy+14,84,3,'#5a3820');
+  C(ox+18,oy+34,16,'#a84a36');for(let y=20;y<48;y+=4)R(ox+3,oy+y,30,1,'#8a3a2a');R(ox+2,oy+34,32,14,'#a84a36');C(ox+18,oy+42,6,'#2a1410');R(ox+12,oy+42,12,6,'#2a1410');C(ox+18,oy+44,3.5,'#ff8a3a');C(ox+18,oy+45,2,'#ffe060');
+  R(ox+34,oy+17,46,31,'#e8dcc0');R(ox+34,oy+17,46,2,'#c8b898');R(ox+34,oy+30,12,18,'#5a3820');R(ox+35,oy+31,10,17,'#8a5a32');R(ox+43,oy+39,1,2,'#e8b44a');
+  for(let i=0;i<3;i++)for(let j=0;j<3-i;j++){R(ox+54+j*8+i*4,oy+42-i*5,7,4,'#a84a36');R(ox+54+j*8+i*4,oy+42-i*5,7,1,'#c86a4f')}R(ox+38,oy+20,4,6,'#bfe0f8');R(ox+70,oy+20,6,6,'#bfe0f8')}},
+ windmill:{w:88,h:112,ox:4,oy:64,f:(ox,oy)=>{G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+10,oy+46,64,5);
+  poly([ox+16,oy+48,ox+64,oy+48,ox+56,oy-22,ox+24,oy-22],'#e8dcc0');for(let y=-18;y<48;y+=6)R(ox+20+Math.max(0,(-y+48)*0.06),oy+y,40-Math.max(0,(-y+48)*0.12),1,'#c8b898');
+  poly([ox+18,oy-20,ox+62,oy-20,ox+40,oy-44],'#8a3a2a');poly([ox+40,oy-44,ox+62,oy-20,ox+54,oy-20],'#6a2a1a');R(ox+18,oy-21,44,3,'#5a2a1a');
+  R(ox+34,oy+30,12,18,'#5a3820');C(ox+40,oy+30,6,'#5a3820');R(ox+35,oy+31,10,17,'#8a5a32');C(ox+40,oy+31,5,'#8a5a32');R(ox+40,oy+30,1,18,'#5a3820');
+  for(const[x,y]of[[33,0],[42,12]]){R(ox+x,oy+y,6,8,'#5a3820');R(ox+x+1,oy+y+1,4,6,'#bfe0f8')}
+  for(let i=0;i<5;i++){R(ox+4+i*3,oy+42-i%2,2,6,'#4f9a3c');C(ox+5+i*3,oy+41-i%2,1.6,['#e0505a','#ffe060','#f2a3c4'][i%3])}R(ox+60,oy+40,14,8,'#a9784a');R(ox+60,oy+40,14,2,'#c8925a');for(let i=0;i<3;i++)C(ox+63+i*4,oy+39,2.2,'#e8c070')}},
+ grocer:{w:88,h:72,ox:4,oy:22,f:(ox,oy)=>{G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+48,80,4);
+  poly([ox-2,oy+10,ox+82,oy+10,ox+74,oy-14,ox+6,oy-14],'#5a8f45');for(let y=-12;y<10;y+=4)R(ox+3,oy+y,74,1,'#456f35');R(ox-2,oy+9,84,2,'#456f35');
+  R(ox,oy+11,80,37,'#f0e4c8');R(ox,oy+11,80,2,'#c8b898');R(ox+20,oy-6,40,12,'#6b4423');R(ox+21,oy-5,38,10,'#f4e8c8');C(ox+27,oy+1,3,'#e0503a');R(ox+26,oy-3,2,2,'#5aa040');R(ox+33,oy-1,22,1,'#6b4423');R(ox+33,oy+2,16,1,'#6b4423');
+  for(let i=0;i<10;i++)poly([ox+i*8,oy+14,ox+i*8+8,oy+14,ox+i*8+8,oy+19,ox+i*8+4,oy+21,ox+i*8,oy+19],i%2?'#f8f4ea':'#4f9a3c');
+  R(ox+33,oy+27,14,21,'#6b4423');R(ox+34,oy+28,12,20,'#a9784a');R(ox+40,oy+28,1,20,'#6b4423');R(ox+35,oy+29,10,6,'#ffe8b0');
+  const crate=(x,c1,c2)=>{R(ox+x,oy+38,14,10,'#a9784a');R(ox+x,oy+38,14,2,'#c8925a');R(ox+x,oy+43,14,1,'#6b4423');for(let i=0;i<4;i++)C(ox+x+2.5+i*3,oy+37,2,i%2?c2:c1)};
+  crate(3,'#e0503a','#c8463d');crate(17,'#f08a2a','#6fae4f');crate(50,'#b46fc4','#f8f4ea');crate(64,'#e8c070','#8ad070');
+  for(const x of[5,57]){R(ox+x-1,oy+24,20,11,'#6b4423');R(ox+x,oy+25,18,9,'#ffe8b0');R(ox+x+9,oy+25,1,9,'#6b4423')}}},
+ diner:{w:88,h:84,ox:4,oy:32,f:(ox,oy)=>{G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+48,80,4);
+  R(ox+60,oy-30,8,16,'#8a8f99');R(ox+60,oy-30,8,2,'#a9b2bd');C(ox+64,oy-34,3,'rgba(230,230,230,.55)');C(ox+68,oy-40,2.4,'rgba(230,230,230,.4)');
+  poly([ox-3,oy+8,ox+83,oy+8,ox+74,oy-20,ox+6,oy-20],'#7a3a2a');for(let y=-18;y<8;y+=4)R(ox+2,oy+y,76,1,'#5a2a1a');R(ox-3,oy+7,86,2,'#5a2a1a');
+  R(ox,oy+9,80,39,'#f3e7cf');R(ox,oy+9,80,2,'#c8b898');for(const x of[0,77])R(ox+x,oy+9,3,39,'#a9784a');
+  R(ox+22,oy-4,36,11,'#6b4423');R(ox+23,oy-3,34,9,'#e8c070');C(ox+29,oy+1.5,2.6,'#e0503a');R(ox+28,oy-2,2,1,'#5aa040');R(ox+34,oy,18,1,'#6b4423');R(ox+34,oy+3,13,1,'#6b4423');
+  for(let i=0;i<10;i++)poly([ox+i*8,oy+15,ox+i*8+8,oy+15,ox+i*8+8,oy+21,ox+i*8+4,oy+23,ox+i*8,oy+21],i%2?'#ffffff':'#d8463a');
+  for(const x of[5,57]){R(ox+x-1,oy+26,20,14,'#6b4423');R(ox+x,oy+27,18,12,'#ffe8b0');R(ox+x+9,oy+27,1,12,'#6b4423');R(ox+x+2,oy+35,6,2,'#a9784a');C(ox+x+4,oy+34,1.6,'#ffffff');R(ox+x+12,oy+35,5,2,'#a9784a');C(ox+x+14,oy+34,1.4,'#e0503a');R(ox+x-2,oy+40,22,2,'#8a5a32')}
+  R(ox+33,oy+29,14,19,'#6b4423');R(ox+34,oy+30,12,18,'#a9784a');R(ox+40,oy+30,1,18,'#6b4423');R(ox+44,oy+38,1,2,'#e8b44a');R(ox+35,oy+31,4,4,'#ffe8b0');R(ox+41,oy+31,4,4,'#ffe8b0');
+  R(ox+50,oy+40,6,8,'#3a3030');R(ox+51,oy+41,4,1,'#ffffff');R(ox+51,oy+43,3,1,'#ffffff');R(ox+51,oy+45,4,1,'#ffffff');C(ox+27,oy+45,2.6,'#5aa040');C(ox+27,oy+43,1.4,'#f2a3c4')}},
+ stone:{w:88,h:72,ox:4,oy:20,f:(ox,oy)=>{G.fillStyle='rgba(30,40,20,.28)';G.fillRect(ox+2,oy+48,80,4);
+  poly([ox-2,oy+18,ox+82,oy+18,ox+76,oy-6,ox+4,oy-6],'#6e6a78');for(let y=-4;y<18;y+=4)R(ox,oy+y,80,1,'#55515e');R(ox-2,oy+17,84,2,'#55515e');
+  R(ox,oy+19,80,29,'#a9a49a');for(let y=19;y<48;y+=6){R(ox,oy+y,80,1,'#8a857a');for(let x=(y%12?0:8);x<80;x+=16)R(ox+x,oy+y,1,6,'#8a857a')}
+  R(ox+33,oy+28,14,20,'#3a3530');C(ox+40,oy+29,7,'#3a3530');R(ox+35,oy+22,10,5,'#e8d8b0');R(ox+37,oy+24,6,1,'#6b4423');
+  for(let i=0;i<3;i++){R(ox+4+i*9,oy+40,8,8,'#c8c2b6');R(ox+4+i*9,oy+40,8,1,'#e8e4dc')}R(ox+8,oy+33,8,7,'#c8c2b6');C(ox+66,oy+42,8,'#8a8f99');C(ox+64,oy+40,4,'#a9b2bd');R(ox+72,oy+30,2,12,'#6b4423');R(ox+70,oy+28,6,3,'#5a5f69')}}};
 function drawTile(c,x,y,tx,ty){
+  if(cur===town&&('he窯工料食'.includes(c))){const hs=HMAP[tx+','+ty];if(hs&&hs.custom){grass(x,y,tx,ty);return}}
   const h=hash(tx,ty);
   if(cur===town&&DECO[c]){const dd=(S.deco||{})[tx+','+ty];drawTile(dd?dd.o:((town.under||{})[tx+','+ty]||'.'),x,y,tx,ty);const nt=S.time>=1080||S.time<360;
     if(c==='1'){R(x+7,y+3,2,13,'#3a3a44');R(x+5,y+15,6,1,'#2a2a34');R(x+5,y,6,4,'#2a2a34');R(x+6,y+1,4,2,nt?'#ffe08a':'#f3e7cf')}
@@ -2394,6 +2703,7 @@ function drawTile(c,x,y,tx,ty){
     else if(c==='4'){R(x+1,y+6,14,3,'#a9784a');R(x+1,y+4,14,2,'#8a5a32');R(x+2,y+9,2,5,'#6b4423');R(x+12,y+9,2,5,'#6b4423')}
     else if(c==='5'){R(x,y+6,16,2,'#d3a874');R(x,y+10,16,2,'#d3a874');R(x+2,y+3,2,11,'#b48552');R(x+12,y+3,2,11,'#b48552')}
     else if(c==='6'){R(x,y,16,16,'#a7a3a8');for(const[a,b,w,hh]of[[0,0,7,7],[8,0,8,5],[8,6,8,10],[0,8,7,8]])R(x+a+1,y+b+1,w-2,hh-2,'#c4c0c6')}
+    else if(c==='庫'){R(x+1,y+4,14,11,'#5a3820');R(x+2,y+5,12,9,'#a9784a');R(x+1,y+3,14,3,'#8a5a32');R(x+2,y+3,12,1,'#7fb069');R(x+2,y+9,12,1,'#6b4423');R(x+7,y+8,2,3,'#c0c6cc');R(x+4,y+11,2,2,'#7fb069');R(x+10,y+11,2,2,'#7fb069')}
     else if(c==='9'){R(x+3,y+4,10,11,'#8a5a32');R(x+3,y+6,10,1,'#5a3a1a');R(x+3,y+11,10,1,'#5a3a1a');R(x+4,y+3,8,2,'#a9784a')}
     else if(c==='0'){C(x+8,y+10,6.5,'#8a8f99');C(x+8,y+10,4.5,'#2a4a6a');R(x+2,y+1,1,9,'#6b4423');R(x+13,y+1,1,9,'#6b4423');R(x+1,y,14,2,'#a9784a');R(x+7,y+2,2,4,'#c0c6cc')}
     else if(c==='%'){R(x+4,y+12,8,4,'#8a8f99');R(x+5,y+4,6,8,'#b0b4bc');C(x+8,y+3,3,'#b0b4bc');R(x+6,y+6,4,1,'#8a8f99')}
@@ -2475,7 +2785,8 @@ function drawTile(c,x,y,tx,ty){
     case'葦':R(x,y,16,16,'#4a4a2a');for(let i=0;i<5;i++){const hh=10+((i*7+tx*3+ty)%5);R(x+1+i*3,y+16-hh,1,hh,i%2?'#8a9a4a':'#6a7a3a');R(x+1+i*3,y+15-hh,2,3,'#a08a5a')}R(x,y+13,16,3,'#3a3a20');break;
     case'樹':jground(x,y,tx,ty);R(x+7,y+9,3,7,'#6b4423');C(x+8,y+6,7,'#3e8a3a');C(x+5,y+5,4,'#56a548');C(x+12,y+7,3.5,'#2f7a30');R(x+4,y+3,2,1,'#86c463');if(hash(tx,ty)<.3){C(x+5,y+10,1.6,'#f0d040');C(x+6,y+11,1.6,'#e8c030')}break;
     case'炭':mudG(x,y,tx,ty);C(x+8,y+11,6.5,'#2a2018');C(x+7,y+10,5,'#3a2a20');R(x+5,y+8,2,1,'#5a4a3a');R(x+9,y+11,2,1,'#4a3a2a');R(x+7,y+6,1,2,'#6a8a4a');break;
-    case'T':if(atlOK()){bgT(x,y,tx,ty);if(tileAt(tx,ty+1)==='T'){const r=AM.tree[0];G.drawImage(ATL,r[0],r[1],r[2],19,x-1,y-6,r[2],19)}else atl('tree',0,x+8,y+16,9,27);break}bgT(x,y,tx,ty);R(x+6,y+10,4,6,'#6b4423');C(x+8,y+7,7,'#3e7a37');C(x+7,y+6,5,'#4f9444');R(x+5,y+3,2,2,'#6cb35a');break;
+    case'桜':grass(x,y,tx,ty);G.fillStyle='rgba(30,40,20,.25)';G.beginPath();G.ellipse(x+8,y+15,6,2,0,0,7);G.fill();R(x+7,y+8,3,8,'#6b4423');C(x+8,y+6,7.5,'#e48aac');C(x+6,y+4,4.5,'#f4b8cc');C(x+11,y+5,3.5,'#fbd0de');R(x+4,y+8,1,1,'#ffffff');R(x+12,y+3,1,1,'#ffffff');if(Math.sin(clock*1.3+tx*7+ty)>.96)R(x+3+((clock*9+tx)%10),y+12+((clock*5)%4),1,1,'#f8c8d8');break;
+case'T':if(atlOK()){bgT(x,y,tx,ty);if(tileAt(tx,ty+1)==='T'){const r=AM.tree[0];G.drawImage(ATL,r[0],r[1],r[2],19,x-1,y-6,r[2],19)}else atl('tree',0,x+8,y+16,9,27);break}bgT(x,y,tx,ty);R(x+6,y+10,4,6,'#6b4423');C(x+8,y+7,7,'#3e7a37');C(x+7,y+6,5,'#4f9444');R(x+5,y+3,2,2,'#6cb35a');break;
     case'F':{const s=S.soil[tx+','+ty];
       if(!s){R(x,y,16,16,'#a07a4c');R(x+(h*14|0),y+((h*91)%14|0),1,1,'#8a6640');R(x+((h*37)%14|0),y+((h*13)%14|0),2,1,'#b58c5a')}
       else{R(x,y,16,16,s.w?'#4f3522':'#6f4c2d');const f=s.w?'#3d2819':'#5a3c22';R(x+1,y+3,14,2,f);R(x+1,y+10,14,2,f);if(s.w){R(x+3,y+7,1,1,'#7aa7c7');R(x+11,y+13,1,1,'#7aa7c7')}
@@ -2628,9 +2939,10 @@ function farmAnim(x,y,d){const u=P.ua;if(!u)return false;const T=FARMT[u.k],q=(c
 function drawNPC(x,y,n){
   const h=n.h,d=n.dir,f=n.anim?Math.floor(n.anim)%4:-1;x=Math.round(x);y=Math.round(y);
   G.fillStyle='rgba(40,30,50,.18)';G.beginPath();G.ellipse(x,y+5,6,2.4,0,0,7);G.fill();G.fillStyle='rgba(40,30,50,.14)';G.beginPath();G.ellipse(x,y+5,4,1.5,0,0,7);G.fill();
-  const L=NPCLOOK[h.id]||['F','bob','#5a3a2a'],M=L[0]==='M',cl=h.house.roof[0];
+  const L=NPCLOOK[h.id]||h.look||['F','bob','#5a3a2a'],M=L[0]==='M',cl=h.house.roof[0];
   drawHuman(x,y,{d,f:n.act>0?-1:f,hair:h.hair,hs:L[1],eye:L[2],beard:!!L[3],cloth:cl,pants:M,coat:M,blouse:M?shade(cl,1.35):'#f3e7cf',rib:M?shade(cl,.6):'#c8463d'});
   if(h.id==='merchant'){R(x-6,y-16,12,2,shade(cl,.8));R(x-4,y-18,8,2,cl)}
+  if(n.logi&&S.logi&&S.logi.hand[h.id]){const bb=Math.round(Math.sin((n.anim||0)*1.6)*.6);R(x-6,y-29+bb,12,8,'#6b4423');R(x-5,y-28+bb,10,6,'#c8925a');R(x-5,y-28+bb,10,1,'#e0b07a');R(x-1,y-26+bb,2,2,'#6b4423');R(x-7,y-22,2,4,'#f2c9a0');R(x+5,y-22,2,4,'#f2c9a0')}
   if(n.act>0){const v=DIRS[d],bob=Math.sin(clock*14)*1.5,tool={tiller:'hoe',water:'can',plant:'turnip',wood:'hoe',mine:'hoe',fruit:'apple',fish:'rod',brew:'potion'}[h.id];
     if(h.id==='harvest'){R(x+v[0]*9-4,y+v[1]*5-6+bob,8,5,'#a9784a');R(x+v[0]*9-3,y+v[1]*5-8+bob,6,2,'#e4472e')}
     else drawIcon(tool,x+v[0]*10-8,y+v[1]*6-12+bob);
@@ -2813,7 +3125,7 @@ function draw(){
   for(const st of STALLS)if(stOpen(st)){const sx=st.x*TS+8,sy=st.y*TS+8;ents.push({y:sy-12,d:()=>drawNPC(sx-cx,sy-12-cy,st.npc)},{y:sy,d:()=>drawStall(sx-cx,sy-cy,st.aw)});if(Math.hypot(P.x-sx,P.y-sy)<44)labels.push({x:sx,y:sy-34,s:st.n})}
   if(cur===town)for(const n of npcs){if(n.hidden)continue;ents.push({y:n.y,d:()=>OL((a,b)=>drawNPC(a,b,n),n.x-cx,n.y-cy)});if(Math.hypot(P.x-n.x,P.y-n.y)<40)labels.push({x:n.x,y:n.y-20,s:n.h.n})}
   if(cur.kind==='dun'){const near=mons.filter(m=>m.lv&&!m.dormant&&(m.boss||Math.hypot(m.x-P.x,m.y-P.y)<90)).sort((a,b)=>(b.boss-a.boss)||Math.hypot(a.x-P.x,a.y-P.y)-Math.hypot(b.x-P.x,b.y-P.y)).slice(0,3);const put=[];for(const m of near){let y=m.y-m.r*((m.boss||m.fb)?3.6:2)-10;while(put.some(q=>Math.abs(q[0]-m.x)<56&&Math.abs(q[1]-y)<9))y-=9;put.push([m.x,y]);labels.push({x:m.x,y,s:`${MONN[m.type]||''} Lv${m.lv}`,c:m.fb?'#ff9a8a':m.hard?'#ff9ad0':m.tint?'#ffd8a0':m.boss?'#ff9a8a':'#f3e7cf'})}}
-  ents.push({y:-1e9,d:()=>drawFires(cx,cy)});
+  ents.push({y:-1e9,d:()=>drawFires(cx,cy)});if(cur===town)for(const b of[...FIXB,...(S.builds||[])])ents.push({y:(b.y+3)*TS-2,d:()=>drawBuild(b,cx,cy)});
   ents.sort((a,b)=>a.y-b.y).forEach(e=>e.d());
   if(cur.kind==='dun')drawBangs(cx,cy);
   if(P.fish){const f=P.fish,v=DIRS[P.dir],hx=Math.round(P.x-cx),hy=Math.round(P.y-cy-4),ck=Math.min(1,(clock-(f.c0??-9))/.45),bite=f.st==='bite';
@@ -3062,9 +3374,9 @@ function curSeed(){const ok=GROUPS[1].ids();if(!ok.length)return null;if(!ok.inc
 function curT(){if(S.grp===3){S.grp=0;if(S.rod)S.sel.farm='rod'}const g=S.grp||0;if(g===1)return{id:'seed',seed:1,crop:curSeed()};if(g===0)return TNAME[S.sel.farm]||TNAME.hoe;if(g===2||g===4)return TNAME[hasW(S.sel.weap)?S.sel.weap:'sword'];return S.rod?TNAME.rod:TNAME.hoe}
 function announce(){const t=curT();toast(t.seed?(t.crop?`${CROPS[t.crop].n}の種（×${S.seeds[t.crop]}）`:'手持ちの種がない'):t.s)}
 function moveSlot(d){const ok=g=>g===1?GROUPS[1].ids().length>0:g===4?weps().length>1:true,L=GORDER.length;let pos=Math.max(0,GORDER.indexOf(S.grp||0));for(let n=0;n<L;n++){pos=(pos+d+L)%L;if(ok(GORDER[pos]))break}S.grp=GORDER[pos];if(S.grp===2||S.grp===4)S.sel.weap=weps()[S.grp===2?0:1];toolbar();announce()}
-function selGroup(g){if(g===3&&!S.rod)return toast('釣り竿は作業台かゲンの釣り具屋で手に入ります');if(g===2||g===4){const w=weps()[g===2?0:1];if(!w)return toast('2つ目の武器は装備画面で選べます');S.sel.weap=w;S.grp=g;toolbar();return announce()}if(g===1&&!GROUPS[1].ids().length)return toast('手持ちの種がない（よろず屋・種屋・モンスターから）');if((S.grp||0)===g&&g!==3||g===0&&S.grp===1)return cycleIn(1,g);S.grp=g;toolbar();announce()}
+function selGroup(g){if(g===3&&!S.rod)return toast('釣り竿は作業台かゲンの釣り具屋で手に入ります');if(g===2||g===4){const w=weps()[g===2?0:1];if(!w)return toast('2つ目の武器は装備画面で選べます');S.sel.weap=w;S.grp=g;toolbar();return announce()}if(g===1&&!GROUPS[1].ids().length)return toast('手持ちの種がない（花屋・種屋・モンスターから）');if((S.grp||0)===g&&g!==3||g===0&&S.grp===1)return cycleIn(1,g);S.grp=g;toolbar();announce()}
 function farmIds(){return[...GROUPS[0].ids(),...GROUPS[1].ids().map(t=>'seed:'+t)]}
-function cycleIn(d,g=S.grp||0){if(g===0){const ids=farmIds(),now=S.grp===1?'seed:'+curSeed():S.sel.farm;let i=ids.indexOf(now);const nx=ids[(i+d+ids.length)%ids.length];if(nx.startsWith('seed:')){S.sel.seed=nx.slice(5);S.grp=1}else{S.sel.farm=nx;S.grp=0}toolbar();announce();return}if(g===2||g===4){if(weps().length>1)selGroup(g===2?4:2);return}const key=['farm','seed','weap'][g];if(!key)return;const ids=GROUPS[g].ids();if(!ids.length)return toast(g===1?'手持ちの種がない（よろず屋・モンスターから）':'');
+function cycleIn(d,g=S.grp||0){if(g===0){const ids=farmIds(),now=S.grp===1?'seed:'+curSeed():S.sel.farm;let i=ids.indexOf(now);const nx=ids[(i+d+ids.length)%ids.length];if(nx.startsWith('seed:')){S.sel.seed=nx.slice(5);S.grp=1}else{S.sel.farm=nx;S.grp=0}toolbar();announce();return}if(g===2||g===4){if(weps().length>1)selGroup(g===2?4:2);return}const key=['farm','seed','weap'][g];if(!key)return;const ids=GROUPS[g].ids();if(!ids.length)return toast(g===1?'手持ちの種がない（花屋・モンスターから）':'');
   const now=g===1?curSeed():g===0?S.sel.farm:(hasW(S.sel.weap)?S.sel.weap:'sword');const i=ids.indexOf(now);S.sel[key]=ids[(i+d+ids.length)%ids.length];S.grp=g;toolbar();announce()}
 function drawItemIcon(id){const it=ITEMS[id],h=it.heal||[0,0,0],col=(h[2]||0)>h[0]&&(h[2]||0)>=h[1]?'#a77fe0':h[1]>h[0]?'#5aa0d6':'#d9534f';
   if(DRINK.has(id)){R(6,2,4,3,'#c0c6cc');R(4,5,8,9,'#cfe8f0');R(5,8,6,5,col);R(5,6,2,2,'#fff')}else{G.fillStyle='#efe0bf';G.beginPath();G.ellipse(8,11,7,3,0,0,7);G.fill();C(8,8,4,col==='#d9534f'?'#e0a03a':col);R(6,6,2,1,'#fff6')}}
@@ -3225,6 +3537,8 @@ function startGame(fresh){
   if(!fresh&&!(loadSave()||{}).ptV1){S.ptV1=1;S.pt=S.pt||{};S.pt.mag=(S.pt.mag||0)+Math.round(S.lv*1.0);S.sp=S.sp||0;S.prof=S.prof||{};for(const w of['sword','rune','staff','axe','pick','bow'])if(hasW(w))S.prof[w]=S.prof[w]||{lv:Math.min(PMAX,Math.max(1,Math.round(S.lv*.65))),exp:0}}
   {const RMF={funa:15,koi:35,bass:70,goldkoi:500,ika:70,katsuo:140,nettai:60,lobster:250};let g=0;for(const o of[S.inv,S.store,S.ship])for(const k in RMF)for(const[id,m]of[[k,1],[k+'_q',1.8]])if(o[id]){g+=Math.round(RMF[k]*m)*o[id];delete o[id]}if(S.dex)for(const k in RMF)delete S.dex[k];if(g){S.gold+=g;setTimeout(()=>toast(`取り扱いがなくなった魚を市場が${g}Gで引き取ってくれた`),800)}}
   for(const f of['apple','peach','orange'])if(S.inv['sap_'+f]){S.seeds['tree_'+f]=(S.seeds['tree_'+f]||0)+S.inv['sap_'+f];delete S.inv['sap_'+f]}
+  {const BS=S.builds||[];for(const b of[...BS]){if(!FIXB.some(f=>f.x===b.x&&f.y===b.y))continue;const T=BTYPES[b.t];const L=LOTS.find(q=>q.z===T.z&&!FIXB.some(f=>f.x===q.x&&f.y===q.y)&&!BS.some(o=>o!==b&&o.x===q.x&&o.y===q.y));
+    if(L&&T.lots===1){b.x=L.x;b.y=L.y;setTimeout(()=>toast(`${T.n}を商業区の別の区画（${L.x},${L.y}）へ移しました（食材屋ができたため）`),900)}else{S.builds=BS.filter(o=>o!==b);S.gold+=T.g;for(const[i,n]of Object.entries(T.in))toStore(i,n);setTimeout(()=>toast(`食材屋ができたので、${T.n}の代金と材料を返しました`),900)}}}
   P.pave=null;const tmig=fresh?-1:townMigrate();const zmig=fresh?(S.zoneV=2,null):zoneMigrate();rebuildTown();hiveRe();if(zmig)setTimeout(()=>openModal(b=>b.append(el('h2','','町が新しくなった！'),el('div','muted','まん中の円い広場から、4本の大通りが東西南北の門へのびています。北西が畑と家、北東が工業区（製材所・製粉所・製鉄所）、南東が居住区、南西が牧場・果樹園・港、広場のまわりが商業区です。'),el('div','muted','畑の作物・水やり・スプリンクラー・畑の上の果樹は、同じ並びのまま新しい畑へ移しました。'+(zmig.nf?`畑づくりで広げた畑${zmig.nf}マスは、作物を種に戻して代金を返しました。`:'')+(zmig.nd?`町づくりの飾り・道${zmig.nd}個は、材料を倉庫へ戻しました（町づくりで置き直せます）。`:'')+(zmig.nh?`移していた家${zmig.nh}軒は、居住区の新しい区画へ（見た目はそのまま）。`:'')),el('div','muted','看板の立っている所は空き区画です。家は居住区の空き区画に移せます。'),row(btn('閉じる',closeModal,'pri')))),600);
   enterRoom('home');initNPCs();$('#title').hidden=true;paused=false;toolbar();
   if(fresh){save();openModal(b=>{b.append(el('h2','','はじめに'),
