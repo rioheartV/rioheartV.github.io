@@ -212,7 +212,7 @@ Object.assign(ITEMS,{kinoko:{n:'キノコ',p:30,heal:[8,8,0]},fur:{n:'毛皮',p:
 Object.assign(ITEMS,{plank:{n:'板材',p:25},ironbar:{n:'鉄材',p:120},glass:{n:'ガラス',p:70},rope:{n:'縄',p:30},
   lantern:{n:'ランタン',p:180,use:'lantern'},smoke:{n:'煙玉',p:45,use:'smoke'},
   bento:{n:'お弁当',p:650,heal:[200,150,40]},pancake:{n:'ホットケーキ',p:170,heal:[70,60,20]},salve:{n:'薬草の軟膏',p:90,heal:[70,20,0]},
-  woodbox:{n:'木箱',p:150},vase:{n:'ガラスの花瓶',p:330},stained:{n:'ステンドグラス',p:950}});
+  woodbox:{n:'木箱',p:150},vase:{n:'ガラスの花瓶',p:230},stained:{n:'ステンドグラス',p:800}});
 Object.assign(ITEMS,{charcoal:{n:'木炭',p:55},woodbowl:{n:'木の器',p:50},woodcarving:{n:'木彫りの置物',p:120},campfire:{n:'たき火セット',p:60,use:'fire'}});
 const DRINK=new Set(['lavtea','tk_juice','cocoa','bananajuice','grapejuice','water','mugicha','appletea','peachnectar','berrysoda','carrotjuice','tomatojuice','milktea','manasoda','stdrink','hipotion','powerpot','guardpot','swiftpot','spiritpot','mintea','manapot','herbtea','cocojuice','tropjuice','potion','stpot','elixir','juice','mpot','mpot2','milk','milk_q','hotmilk','honeymilk','antidote']);
 const FISH=[
@@ -230,7 +230,7 @@ const FISH=[
 const LOCN={sea:'漁港の海',island:'孤島の海',pond:'町の池',lake:'山の湖',fall:'山の滝つぼ',forest:'森の池'};
 for(const f of FISH){ITEMS[f.id]={n:f.n,p:f.p,fish:!f.junk};if(!f.junk)ITEMS[f.id+'_q']={n:f.n+'★',p:Math.round(f.p*1.8),fish:1}}
 Object.assign(ITEMS,{bait:{n:'練りエサ',p:5},anyfish:{n:'魚（種類は問わない）',p:0},
-  yakizakana:{n:'焼き魚',p:50,heal:[40,30,0]},sashimi:{n:'ニジマスの刺身',p:120,heal:[50,20,30]},fishsoup:{n:'魚のスープ',p:380,heal:[70,40,20]},
+  yakizakana:{n:'焼き魚',p:55,heal:[40,30,0]},sashimi:{n:'ニジマスの刺身',p:120,heal:[50,20,30]},fishsoup:{n:'魚のスープ',p:380,heal:[70,40,20]},
   fishpie:{n:'フィッシュパイ',p:230,heal:[90,60,30]},unaju:{n:'うなぎの卵とじ',p:480,heal:[150,120,50]}});
 const FISHIDS=Object.keys(ITEMS).filter(k=>ITEMS[k].fish).sort((a,b)=>ITEMS[a].p-ITEMS[b].p);
 const ANIMALS={cow:{n:'ウシ',price:1500,prod:'milk'},chicken:{n:'ニワトリ',price:500,prod:'egg'},sheep:{n:'ヒツジ',price:1200,prod:'wool'}};
@@ -321,7 +321,7 @@ const STANCES={calm:{n:'鎮静',lv:1,d:'攻撃しない間（3秒）、STとMP�
   ward:{n:'守りの型',lv:4,d:'防御+2（欠点なし）',def:2},swift:{n:'軽身',lv:6,d:'移動速度+8%（欠点なし）',spd:.08},mikiri:{n:'見切り',lv:10,d:'回避率+5%（欠点なし）',eva:.05},
   ki:{n:'練気',lv:14,d:'攻撃+5%（欠点なし）',atk:.05},mind:{n:'瞑想',lv:16,d:'魔法の威力+8%（欠点なし）',mag:.08},heal:{n:'養生',lv:22,d:'6秒ごとにHPが1%回復（欠点なし）',regen:1},
   steady:{n:'不動',lv:25,d:'防御+3・魔防+3。移動速度-5%',def:3,mdef:3,spd:-.05}};
-Object.assign(STANCES,{blaze:{n:'炎の型',lv:30,d:'攻撃+12%・魔法の威力+12%。ダンジョンではHPが6秒ごとに1%減る（HPが1割より下では減らない）',atk:.12,mag:.12,burnHp:1,isle:'volcano',mat:{lavacrystal:5,firemeat:3}},
+Object.assign(STANCES,{blaze:{n:'炎の型',lv:30,d:'攻撃+20%・魔法の威力+15%。ダンジョンではHPが6秒ごとに1%減る（HPが1割より下では減らない）',atk:.2,mag:.15,burnHp:1,isle:'volcano',mat:{lavacrystal:5,firemeat:3}},
   raiko:{n:'雷光の型',lv:32,d:'攻撃速度+15%・移動速度+10%。防御-3',aspd:.15,spd:.1,def:-3,isle:'thunder',mat:{thunderstone:5,stormplume:2}},
   tide:{n:'潮流の型',lv:34,d:'魔防+5・6秒ごとにHPが1%回復・攻撃しない間STとMPがわずかに回復（欠点なし）',mdef:5,regen:1,calm:1,isle:'seatemple',mat:{coral:5,pearl:2}}});
 {const C={calm:0,rage:0,ward:500,swift:800,focus:1000,mikiri:1500,guard:1800,ki:2500,mind:3000,fury:5000,heal:6000,steady:8000,zen:10000,blaze:15000,raiko:18000,tide:22000};for(const id in STANCES)STANCES[id].cost=C[id]??5000}
@@ -397,8 +397,8 @@ const CROPS={turnip:{n:'カブ',seed:20,days:2},strawberry:{n:'イチゴ',seed:1
 ITEMS.grass={n:'牧草',p:5};
 Object.assign(ITEMS,{yomogi:{n:'ヨモギ',p:30,heal:[8,0,0]},aloe:{n:'アロエ',p:60,heal:[15,0,0]},ginseng:{n:'高麗人参',p:220,heal:[20,40,0]},mandragora:{n:'マンドラゴラ',p:500},
   basil:{n:'バジル',p:30},mint:{n:'ミント',p:30,heal:[0,5,5]},rosemary:{n:'ローズマリー',p:40},rice:{n:'米',p:25},sugarcane:{n:'サトウキビ',p:30},sugar:{n:'砂糖',p:25},
-  hipotion:{n:'上級回復薬',p:220,heal:[120,0,0]},powerpot:{n:'力の薬',p:300,heal:[0,0,0],buff:{atk:150}},guardpot:{n:'守りの薬',p:180,heal:[0,0,0],buff:{def:150}},swiftpot:{n:'疾風の薬',p:150,heal:[0,0,0],buff:{spd:150}},
-  spiritpot:{n:'精霊の秘薬',p:1500,heal:[999,999,999],buff:{atk:90,def:90,spd:90}},mintea:{n:'ミントティー',p:70,heal:[5,35,25],buff:{eva:60}},pasta:{n:'トマトバジルパスタ',p:520,heal:[70,50,20]},herbfish:{n:'ハーブ焼き魚',p:130,heal:[60,40,10]},
+  hipotion:{n:'上級回復薬',p:170,heal:[120,0,0]},powerpot:{n:'力の薬',p:300,heal:[0,0,0],buff:{atk:150}},guardpot:{n:'守りの薬',p:180,heal:[0,0,0],buff:{def:150}},swiftpot:{n:'疾風の薬',p:115,heal:[0,0,0],buff:{spd:150}},
+  spiritpot:{n:'精霊の秘薬',p:1100,heal:[999,999,999],buff:{atk:90,def:90,spd:90}},mintea:{n:'ミントティー',p:70,heal:[5,35,25],buff:{eva:60}},pasta:{n:'トマトバジルパスタ',p:520,heal:[70,50,20]},herbfish:{n:'ハーブ焼き魚',p:130,heal:[60,40,10]},
   onigiri:{n:'おにぎり',p:55,heal:[25,25,0]},takikomi:{n:'炊き込みご飯',p:320,heal:[60,50,10]},curryrice:{n:'カレーライス',p:650,heal:[180,150,30]},cake:{n:'ショートケーキ',p:800,heal:[60,70,40]},candy:{n:'ミントキャンディ',p:120,heal:[0,20,20]},
   manaherb:{n:'魔力草',p:60,heal:[0,0,10]},wheat:{n:'小麦',p:20},chili:{n:'トウガラシ',p:50,heal:[5,15,0]},
   manapot:{n:'マナポーション',p:160,heal:[0,0,60]},herbtea:{n:'ハーブティー',p:150,heal:[10,30,30]},curry:{n:'カレー',p:520,heal:[120,100,20],buff:{crit:90}},
@@ -423,7 +423,7 @@ Object.assign(ITEMS,{copperore:{n:'銅鉱石',p:40},copperbar:{n:'銅の延べ�
 Object.assign(ITEMS,{gear:{n:'歯車',p:360},circuit:{n:'魔導回路',p:1400},heatplate:{n:'耐熱板',p:600},coolpipe:{n:'冷却管',p:700},belt:{n:'ベルト',p:380}});
 // 花（v129）：花屋 ハルニレで種を売る。収穫は倉庫へ（植物あつかい）
 Object.assign(ITEMS,{tulip:{n:'チューリップ',p:45},lavender:{n:'ラベンダー',p:40},rose:{n:'バラ',p:110},lily:{n:'ユリ',p:150},pot:{n:'植木鉢',p:15},
-  bouquet:{n:'花束',p:800},potpourri:{n:'ポプリ',p:340},lavtea:{n:'ラベンダーティー',p:90,heal:[20,60,30]}});
+  bouquet:{n:'花束',p:700},potpourri:{n:'ポプリ',p:290},lavtea:{n:'ラベンダーティー',p:90,heal:[20,60,30]}});
 Object.assign(CROPS,{tulip:{n:'チューリップ',seed:30,days:3,qty:2,plant:1},lavender:{n:'ラベンダー',seed:40,days:4,qty:3,plant:1},rose:{n:'バラ',seed:80,days:5,qty:2,plant:1,regrow:3},lily:{n:'ユリ',seed:100,days:6,qty:2,plant:1}});
 // 料理屋のテイクアウト（v125）：料理屋でだけ買える。売値は買値の約4割
 Object.assign(ITEMS,{tk_onigiri:{n:'おにぎり弁当',p:45,heal:[80,80,0]},tk_sand:{n:'カツサンド',p:100,heal:[120,100,0],buff:{def:150}},tk_bento:{n:'料理屋の特製弁当',p:180,heal:[220,160,40],buff:{atk:150}},
@@ -440,7 +440,7 @@ Object.assign(ITEMS,{r_ent:{n:'古樹の心核',p:2000},r_king:{n:'スライム�
 Object.assign(ITEMS,{kojuu:{n:'古樹の雫',p:400},deepore:{n:'深層鉱',p:500},stormplume:{n:'嵐の羽根',p:600},crimsoncore:{n:'紅蓮の核',p:800},eternalice:{n:'永久氷晶',p:900},emeraldfang:{n:'翠玉の牙',p:900},darkpearl:{n:'闇真珠',p:1300}});
 for(const t in CROPS)if(!CROPS[t].feed&&!CROPS[t].plant&&!CROPS[t].tree)ITEMS[t+'_q']={n:ITEMS[t].n+'★',p:Math.round(ITEMS[t].p*1.8),heal:ITEMS[t].heal.map(v=>Math.round(v*1.3))};
 const FAIRIES=[
-  {id:'lumina',n:'ルミナ',kind:'戦闘',el:'holy',trait:'pierce',col:'#ffe08a',fee:1500,d:'光の妖精（聖）。近くの敵へ追尾する光弾を撃つ。光弾は敵を貫く。ときどき急所率アップ（+20%・10秒）',atk:{cd:1.3,dmg:()=>2+S.lv*.6,range:100},buff:{every:20,type:'crit',dur:10}},
+  {id:'lumina',n:'ルミナ',kind:'戦闘',el:'holy',trait:'pierce',col:'#ffe08a',fee:1500,d:'光の妖精（聖）。近くの敵へ追尾する光弾を撃つ。光弾は敵を貫く。ときどき急所率アップ（+20%・10秒）',atk:{cd:1.6,dmg:()=>2+S.lv*.6,range:100},buff:{every:20,type:'crit',dur:10}},
   {id:'sylfi',n:'シルフィ',kind:'戦闘',el:'wind',trait:'push',col:'#9ce0c0',fee:2500,d:'風の妖精（風）。風弾で敵を押し返し、ときどき攻撃力アップ（+30%・10秒）',atk:{cd:1.6,dmg:()=>1+S.lv*.6,range:110},buff:{every:20,type:'atk',dur:10}},
   {id:'mirel',n:'ミレル',kind:'戦闘',el:'water',col:'#f4a0c8',fee:3000,d:'癒しの妖精（水）。HPが減ると回復し、ときどき防御アップ（+5・12秒）。弱い水弾も撃つ',atk:{cd:2.2,dmg:()=>1+S.lv*.5,range:90},heal:{every:6,below:.7,amt:.12},buff:{every:24,type:'def',dur:12}},
   {id:'homura',n:'ホムラ',kind:'戦闘',el:'fire',trait:'burst',col:'#ff8a3a',fee:2800,d:'火の妖精。火の弾が当たると小さく爆発し、まわりの敵も焼く',atk:{cd:1.6,dmg:()=>2+S.lv*.7,range:110}},
@@ -515,7 +515,7 @@ const RECIPES={
      {up:1,n:'金のじょうろ',d:'前方3×3マスにまとめて水やり',in:{goldore:2,ore:3},show:()=>S.can===1,apply:()=>S.can=2}]};
 const EQ={
   head:{n:'頭',col:['','#8a5a32','#a9b2bd','#9f7fe0','#e8b44a','#3f8a5a','#fff0b0'],tiers:[null,{n:'革の帽子',def:1,crit:.01,in:{wing:2,jelly:2}},{n:'鉄の兜',def:3,crit:.02,in:{ore:4,wing:2}},{n:'魔石の兜',def:5,mdef:3,crit:.03,in:{ore:5,gem:3}},{n:'金の兜',def:7,mdef:4,crit:.05,in:{goldore:3,ore:3,stone:2}},{n:'大蛇の兜',def:9,mdef:6,crit:.07,noPsn:1,in:{venom:3,plume:2,goldore:3}},{n:'星輝の兜',def:11,mdef:8,crit:.09,noPsn:1,in:{stormplume:2,emeraldfang:2,goldore:3}}]},
-  body:{n:'体',col:['','#a9b2bd','#9f7fe0','#3f9a8a','#e8b44a','#b03028','#6aa8d8','#fff0b0'],tiers:[null,{n:'鉄の鎧',def:2,in:{ore:4,jelly:3}},{n:'魔石の鎧',def:5,mdef:3,in:{ore:6,gem:3,jelly:5}},{n:'竜鱗の鎧',def:9,mdef:4,in:{ore:10,gem:6,wing:6}},{n:'黄金の鎧',def:12,mdef:5,in:{goldore:5,gem:4,ore:6}},{n:'竜王の鎧',def:16,mdef:8,in:{dragonscale:2,obsidian:3,goldore:3}},{n:'氷竜の鎧',def:20,mdef:12,in:{frostscale:2,icecrystal:5,snowfur:4}},{n:'星輝の鎧',def:24,mdef:15,in:{deepore:3,eternalice:2,darkpearl:1}}]},
+  body:{n:'体',col:['','#a9b2bd','#9f7fe0','#3f9a8a','#e8b44a','#b03028','#6aa8d8','#fff0b0'],tiers:[null,{n:'鉄の鎧',def:4,in:{ore:4,jelly:3}},{n:'魔石の鎧',def:5,mdef:3,in:{ore:6,gem:3,jelly:5}},{n:'竜鱗の鎧',def:9,mdef:4,in:{ore:10,gem:6,wing:6}},{n:'黄金の鎧',def:12,mdef:5,in:{goldore:5,gem:4,ore:6}},{n:'竜王の鎧',def:16,mdef:8,in:{dragonscale:2,obsidian:3,goldore:3}},{n:'氷竜の鎧',def:20,mdef:12,in:{frostscale:2,icecrystal:5,snowfur:4}},{n:'星輝の鎧',def:24,mdef:15,in:{deepore:3,eternalice:2,darkpearl:1}}]},
   shield:{n:'盾',col:['','#a9784a','#8a8f99','#a9b2bd','#9f7fe0','#e8b44a','#fff0b0'],tiers:[null,{n:'木の盾',def:1,in:{wood:4}},{n:'石の盾',def:2,in:{stone:6,wood:2}},{n:'鉄の盾',def:3,in:{ore:3,stone:2,wood:1}},{n:'魔石の盾',def:6,mdef:3,in:{ore:6,gem:4}},{n:'金の盾',def:8,mdef:3,in:{goldore:3,ore:4}},{n:'星輝の盾',def:11,mdef:6,in:{deepore:3,kojuu:2}}]},
   feet:{n:'足',col:['','#6b4423','#8a8f99','#e8b44a','#5a6a3a','#fff0b0'],tiers:[null,{n:'革のブーツ',def:1,spd:.08,eva:.02,in:{wing:3,jelly:2}},{n:'鉄のブーツ',def:2,spd:.15,eva:.03,in:{ore:5,wing:4}},{n:'金のブーツ',def:3,spd:.22,eva:.05,in:{goldore:2,wing:4,stone:2}},{n:'沼渡りのブーツ',def:4,spd:.25,eva:.06,noSlow:1,in:{peat:4,swamppearl:1,fur:3}},{n:'星輝のブーツ',def:5,spd:.3,eva:.08,noSlow:1,in:{stormplume:2,darkpearl:1,kojuu:2}}]}};
 EQ.head.tiers.push({n:'深淵の兜',def:13,mdef:10,crit:.11,noPsn:1,in:{abyssshard:8,abysscore:1,r_icedragon:1}});EQ.head.col.push('#7a4ac0');
@@ -629,7 +629,7 @@ function accMul(k){let v=1;for(const id of S.acc)if(id&&ACCS[id][k])v*=ACCS[id][
 function equipAcc(id,on){const a=ACCS[id],sg=on?1:-1;
   if(on){const i=S.acc.indexOf(null);if(i<0)return toast('アクセサリー枠（2つ）がいっぱい');S.acc[i]=id}else{const i=S.acc.indexOf(id);if(i<0)return;S.acc[i]=null}
   if(a.hp){S.mhp+=sg*a.hp;S.hp=Math.min(S.hp,S.mhp)}if(a.st){S.mst+=sg*a.st;S.st=Math.min(S.st,S.mst)}if(a.mp){S.mmp+=sg*a.mp;S.mp=Math.min(S.mp,S.mmp)}}
-const SWP=[0,3,7,12,16,22,28,34,41],WLP=[0,1,5,9,12,14];
+const SWP=[0,3,7,12,16,22,28,34,41],WLP=[0,1,5,9,12,14],BOWP=[0,1,5,9,24,30];
 const WEAP={sword:{n:'剣',mult:1,d:'バランスのよい武器'},axe:{n:'オノ',mult:.75,vs:'wood',d:'木と木のモンスターに特攻。森の大木も切れる'},
   pick:{n:'ツルハシ',mult:.75,vs:'stone',d:'岩・鉱石と石のモンスターに特攻。大岩も砕ける'},bow:{n:'弓',mult:.7,vs:'fly',d:'矢を飛ばす。飛ぶモンスターに特攻'},
   hand:{n:'素手',mult:.1,d:'STを使わない弱いパンチ'},
@@ -637,7 +637,7 @@ const WEAP={sword:{n:'剣',mult:1,d:'バランスのよい武器'},axe:{n:'オ�
   dagger:{n:'短剣',mult:.75,d:'軽くて攻撃が速い。持っている間 回避率+10%'},
   great:{n:'大剣',mult:1.55,d:'威力が高いが、攻撃も技も遅い'},
   staff:{n:'杖',mult:.55,d:'持っている間、魔攻と魔防が上がりMPが少しずつ回復する。通常攻撃は敵を追いかける魔法弾（魔攻の 1.5 倍の威力）。技は使えない'},rune:{n:'魔法剣',mult:1,d:'魔法剣の技（属性の技・ST と少しの MP を使う）が使える。攻撃は剣より低めだが、持っている間は魔攻と魔防も上がる'},katana:{n:'刀',mult:1,d:'振りが速く、持っている間 急所率+5%。居合・連撃の技が使える'}};
-const STAFFD=[0,2,4,7,8,10],RUNEM2=[0,8,15,24,28,33],RUNED=[0,1,3,5,6,7],ASPDW={sword:1,katana:1.15,rune:1,spear:1,dagger:1.3,great:.65,staff:.9,axe:.85,pick:.85,bow:1},STAFFM=[0,8,18,30,36,42],STAFFR=[0,.6,1,1.5,1.7,2],RUNEA=[0,4,10,15,18,21],RUNEM=[0,4,8,12,14,16];
+const STAFFD=[0,2,4,7,8,10],RUNEM2=[0,8,15,24,28,33],RUNED=[0,1,3,5,6,7],ASPDW={sword:1,katana:1.15,rune:1,spear:1,dagger:1.3,great:.65,staff:.9,axe:.85,pick:.85,bow:1},STAFFM=[0,8,18,30,36,42],STAFFR=[0,.6,1,1.5,1.7,2],RUNEA=[0,4,10,15,26,32],RUNEM=[0,4,8,12,14,16];
 const OFFH=['shield','blink'],heldW=()=>OFFH.includes(S.sel.weap)?(weps().find(x=>!OFFH.includes(x))||'hand'):hasW(S.sel.weap)?S.sel.weap:weps().find(x=>!OFFH.includes(x))||'hand';
 const hasOff=k=>weps().includes(k)&&hasW(k),w2=()=>{const w=weps();return w.length>1?w[1]:null};
 let offCd=0;
@@ -645,8 +645,8 @@ function useOff(){const w=w2();if(!w)return toast('装備2が空いています�
   const sg=S.grp,sw=S.sel.weap;S.sel.weap=w;S.grp=4;try{attack()}finally{S.grp=sg;S.sel.weap=sw}}
 const shieldOn=()=>S.sel.weap==='shield'&&(S.grp===2||S.grp===4)&&hasW('shield'),blinkOn=()=>S.sel.weap==='blink'&&(S.grp===2||S.grp===4)&&hasW('blink');
 const weps=()=>{const w=(S.weps||[]).filter(x=>hasW(x)&&!FARMW.includes(x)).slice(0,2);return w.length?w:['sword']};
-function wEff(w,l){if(!l)return'';if(w==='spear')return`攻撃+${SPEARP[l]}・急所率が高い`;if(w==='dagger')return`攻撃+${DAGP[l]}・速い・回避率が高い`;if(w==='great')return`攻撃+${GREATP[l]}・遅い`;if(w==='katana')return`攻撃+${KATP[l]}・速い・急所率が高い`;if(w==='axe'||w==='pick')return`威力+${WLP[l]}・${w==='axe'?'木':'石'}特攻・採取`;if(w==='staff')return`魔攻+${STAFFM[l]}・魔防+${STAFFD[l]}・MP回復 ${STAFFR[l]}/秒`;if(w==='rune')return`攻撃+${RUNEA[l]}・魔攻+${RUNEM2[l]}・魔防+${RUNED[l]}・攻撃に魔法ダメージを上乗せ`;return`威力+${WLP[l]}・${WEAP[w].vs==='wood'?'木':WEAP[w].vs==='stone'?'石':'飛行'}特攻`}
-const KATP=[0,4,9,15,21,25,29],SPEARP=[0,5,11,18,24,27,31],DAGP=[0,3,7,12,17,19,22],GREATP=[0,6,13,21,30,34,39];
+function wEff(w,l){if(!l)return'';if(w==='spear')return`攻撃+${SPEARP[l]}・急所率が高い`;if(w==='dagger')return`攻撃+${DAGP[l]}・速い・回避率が高い`;if(w==='great')return`攻撃+${GREATP[l]}・遅い`;if(w==='katana')return`攻撃+${KATP[l]}・速い・急所率が高い`;if(w==='axe'||w==='pick')return`威力+${WLP[l]}・${w==='axe'?'木':'石'}特攻・採取`;if(w==='staff')return`魔攻+${STAFFM[l]}・魔防+${STAFFD[l]}・MP回復 ${STAFFR[l]}/秒`;if(w==='rune')return`攻撃+${RUNEA[l]}・魔攻+${RUNEM2[l]}・魔防+${RUNED[l]}・攻撃に魔法ダメージを上乗せ`;return`威力+${(w==='bow'?BOWP:WLP)[l]}・${WEAP[w].vs==='wood'?'木':WEAP[w].vs==='stone'?'石':'飛行'}特攻`}
+const KATP=[0,4,9,15,21,25,29],SPEARP=[0,5,11,18,24,36,44],DAGP=[0,3,7,12,17,28,34],GREATP=[0,6,13,21,30,34,39];
 const WNAMES={spear:['なし','鉄の細剣','魔石の細剣','金の細剣','竜騎の細剣','雷光の細剣','深淵の細剣'],dagger:['なし','鉄の短剣','魔石の短剣','金の短剣','竜牙の短剣','海竜の短剣','深淵の短剣'],katana:['なし','鉄の刀','魔石の刀','業物の刀','竜鱗の刀','雷切','深淵の刀'],great:['なし','鉄の大剣','魔石の大剣','金の大剣','竜王の大剣','炎獄の大剣','深淵の大剣'],axe:['なし','鉄のオノ','魔石のオノ','金のオノ'],pick:['なし','鉄のツルハシ','魔石のツルハシ','金のツルハシ'],bow:['なし','木の弓','精霊の弓','黄金の弓','雷鳴の弓','深淵の弓'],staff:['なし','樫の杖','魔石の杖','賢者の杖','炎帝の杖','深淵の杖'],rune:['なし','ルーンソード','ミスリルの魔剣','星詠みの剣','潮騒の魔法剣','深淵の魔剣']};
 [['spear',1,{ore:3,wood:2}],['spear',2,{ore:5,gem:3,wood:2}],['spear',3,{goldore:4,gem:4,wood:2}],['spear',4,{dragonscale:2,obsidian:3,goldore:3}],['dagger',1,{ore:2,wing:1}],['dagger',2,{ore:3,gem:2,wing:2}],['dagger',3,{goldore:3,gem:3}],['dagger',4,{dragonscale:1,obsidian:2,goldore:3}],['great',1,{ore:6,wood:2}],['great',2,{ore:8,gem:4}],['great',3,{goldore:6,gem:4,ore:4}],['great',4,{dragonscale:3,obsidian:4,goldore:4}],['axe',1,{ore:2,stone:3,wood:2}],['axe',2,{ore:5,gem:2,wood:3}],['axe',3,{goldore:3,ore:3,wood:2}],['pick',1,{ore:2,stone:3,wood:1}],['pick',2,{ore:5,gem:2}],['pick',3,{goldore:3,ore:3,stone:2}],['bow',1,{wood:5,wing:2}],['bow',2,{wood:6,gem:2,feather:4}],['bow',3,{goldore:3,wood:4,feather:5}],['staff',1,{wood:4,gem:1}],['staff',2,{wood:5,gem:4,manaherb:3}],['staff',3,{goldore:3,gem:6,obsidian:2}],['rune',1,{ore:4,gem:2}],['rune',2,{ore:6,gem:5,goldore:1}],['rune',3,{goldore:4,gem:6,dragonscale:1}],['spear',5,{thunderstone:6,mithrilore:3,steel:3}],['dagger',5,{coral:5,pearl:2,steel:3}],['great',5,{lavacrystal:6,obsidian:4,steel:4}],['bow',4,{thunderstone:5,stormplume:3,wood:6}],['staff',4,{lavacrystal:5,gem:6,goldore:3}],['rune',4,{coral:6,darkpearl:1,mithrilore:3}],['spear',6,{abyssshard:10,abysscore:2,r_yeti:1}],['dagger',6,{abyssshard:8,abysscore:2,r_croc:1}],['great',6,{abyssshard:12,abysscore:2,r_titan:1}],['bow',5,{abyssshard:8,abysscore:1,r_ent:1}],['staff',5,{abyssshard:8,abysscore:2,r_mud:1}],['rune',5,{abyssshard:10,abysscore:2,r_toad:1}],['katana',1,{ore:4,wood:2,charcoal:2}],['katana',2,{ore:5,gem:3,charcoal:2}],['katana',3,{goldore:4,gem:4,ironbar:3}],['katana',4,{dragonscale:2,obsidian:3,goldore:3}],['katana',5,{thunderstone:6,steel:4,mithrilore:2}],['katana',6,{abyssshard:10,abysscore:2,r_icedragon:1}]]
   .forEach(([w,l,inp])=>RECIPES.v.push({up:1,n:WNAMES[w][l],d:`${WEAP[w].d}（${wEff(w,l)}）`,in:inp,show:()=>(S.wl[w]||0)===l-1,apply:()=>{S.wl[w]=l;S.weps=S.weps||[];if(!FARMW.includes(w)&&!S.weps.includes(w)&&S.weps.length<2)S.weps.push(w);toolbar()}}));
@@ -752,7 +752,7 @@ const MON={
   treant:{hp:14,atk:5,sp:14,r:7,exp:8,gold:8,drop:'wood',dp:.7,kind:'wood'},
   golem:{hp:28,atk:8,sp:16,r:7,exp:14,gold:15,drop:'gem',dp:.35,kind:'stone'},
   ent:{hp:70,atk:7,sp:14,r:12,exp:50,gold:100,drop:'wood',dp:1,kind:'wood',boss:1},
-  titan:{hp:120,atk:11,sp:16,r:12,exp:90,gold:200,drop:'gem',dp:1,kind:'stone',boss:1},
+  titan:{hp:120,atk:11,sp:16,r:12,exp:180,gold:200,drop:'gem',dp:1,kind:'stone',boss:1},
   mushroom:{hp:10,atk:3,sp:10,r:6,exp:5,gold:5,drop:'kinoko',dp:.6,kind:'wood',ai:'spore'},
   boar:{hp:18,atk:7,sp:22,r:7,exp:8,gold:8,drop:'fur',dp:.5,ai:'charge'},
   bee:{hp:5,atk:3,sp:52,r:4,exp:3,gold:3,drop:'honey',dp:.35,kind:'fly',ai:'swarm',pack:3},
@@ -771,7 +771,7 @@ const MON={
   bigcrab:{hp:130,atk:12,sp:20,r:12,exp:120,gold:250,drop:'shell',dp:1,kind:'stone',boss:1,ai:'crab'},
   magmaking:{hp:150,atk:13,sp:20,r:12,exp:150,gold:300,drop:'obsidian',dp:1,kind:'fire',boss:1},
   dragon:{hp:170,atk:12,sp:24,r:13,exp:400,gold:800,drop:'dragonscale',dp:1,kind:'fire',boss:1,ai:'dragon'},
-  king:{boss:1,hp:90,atk:9,sp:20,r:12,exp:60,gold:120,drop:'gem',dp:1},
+  king:{boss:1,hp:90,atk:9,sp:20,r:12,exp:100,gold:120,drop:'gem',dp:1},
   mofu:{hp:8,atk:3,sp:30,r:5,exp:4,gold:5,drop:'ribbon',dp:.3},
   dryad:{hp:16,atk:5,sp:18,r:6,exp:9,gold:10,drop:'herb',dp:.6,kind:'wood',ai:'shooter',shot:'leaf'},
   lanta:{hp:10,atk:4,sp:26,r:5,exp:6,gold:8,drop:'ribbon',dp:.25},
@@ -830,7 +830,7 @@ const COS={hat:{straw:{n:'麦わら帽子',in:{wheat:6,ribbon:1}},flower:{n:'花
   out:{apron:{n:'エプロンドレス',in:{wool:1,ribbon:2}},coat:{n:'旅人のコート',in:{fur:4,wool:1}},summer:{n:'夏のワンピース',in:{wool:1,shell:4}},robe:{n:'魔法使いのローブ',in:{wool:2,reifu:1}},knight:{n:'騎士風の服',in:{ore:4,wool:1}}}};
 for(const sl in COS)for(const id in COS[sl]){const c=COS[sl][id];RECIPES.k.push({up:1,n:c.n,d:'見た目の装備（'+(sl==='hat'?'帽子':'服')+'）。家のドレッサーで着替えられる',in:c.in,show:()=>!(S.cos||{})[id],apply:()=>{S.cos=S.cos||{};S.cos[id]=1;S.look=S.look||{};S.look[sl]=id;toast(c.n+'を作った！（家のドレッサーで着替え）')}})}
 RECIPES.q.push({out:'dragonjuice',in:{dragonfruit:1,water:1}},{out:'kinpira',in:{lotus:1,soy:1,sugar:1}},{out:'makomoyaki',in:{makomo:1,butter:1,soy:1}});
-RECIPES.k.push({out:'charcoal',in:{wood:4}},{out:'campfire',in:{wood:5}},{out:'woodbowl',in:{wood:3}},{out:'bouquet',in:{rose:2,tulip:2,lily:1,ribbon:1}},{out:'circuit',in:{goldnugget:1,gem:2,glass:1}},{out:'copperwire',in:{copperbar:1},cnt:5},{out:'magcore',in:{maore:2,gem:2,circuit:1}},{out:'goldcraft',in:{goldnugget:1,gem:1}},{out:'belt',in:{fur:2,rope:1}},{out:'potpourri',in:{lavender:3,rose:1}},{out:'woodcarving',in:{wood:6,stone:1}});
+RECIPES.k.push({out:'charcoal',in:{wood:4}},{out:'campfire',in:{wood:5}},{out:'woodbowl',in:{wood:3}},{out:'bouquet',in:{rose:2,tulip:2,lily:1,ribbon:1}},{out:'circuit',in:{goldnugget:1,gem:2,glass:1}},{out:'copperwire',in:{copperbar:1},cnt:5},{out:'magcore',in:{maore:2,gem:2,circuit:1}},{out:'goldcraft',in:{goldnugget:1,gem:1}},{out:'belt',in:{fur:4,rope:1}},{out:'potpourri',in:{lavender:3,rose:1}},{out:'woodcarving',in:{wood:6,stone:1}});
 (function guardPrices(){const fishMin=Math.min(...FISHIDS.map(f=>ITEMS[f].p));
   for(const st in RECIPES)for(const r of RECIPES[st]){if(r.up||!r.out)continue;const cost=Object.entries(r.in).reduce((a,[id,n])=>a+(id==='anyfish'?fishMin:ITEMS[id].p)*n,0);
     const min=Math.ceil(cost*1.1/(r.cnt||1));if(ITEMS[r.out].p<min){ITEMS[r.out].p=min;(window.__priceFix=window.__priceFix||[]).push(r.out)}}})();
@@ -1098,12 +1098,12 @@ const DUNS={
     native:['s_merman','s_jelly','s_angler','s_kraken','s_leviathan'],reuse:['shell','gem','goldore','jelly'],nw:['coral','pearl','coral','mithrilore','seaweed'],
     loot:['shell','gem','goldore','coral','pearl','gold','gold']}};
 // 深淵：99F・毎回1Fから・10階ごとに地形が変わる（森→洞窟→山→火山→氷→密林→沼→…）・10階ごとに主・50Fから主が普通の魔物のように出る
-const ABY='abyss',ABYT=['forest','cave','mountain','island','ice','jungle','swamp'],abyT=f=>ABYT[Math.floor((f-1)/10)%7];
+const ABY='abyss',ABYT=['forest','cave','mountain','island','ice','jungle','swamp','volcano','thunder','seatemple'],abyT=f=>ABYT[Math.floor((f-1)/10)%ABYT.length];
 const ABB=['ent','king','titan','bigcrab','magmaking','yetiking','toadking','mudking','dragon','croc','serpent','icedragon'];
 DUNS.abyss={n:'深淵',max:99,seeds:['dragonfruit','mandragora','ginseng','melon','lotus','tree_cacao'],off:17,stars:5,outdoor:false,gate:[30,43,1],
   wall:f=>{const t=DUNS[abyT(f)];return typeof t.wall==='function'?t.wall(f):t.wall},floor:f=>{const t=DUNS[abyT(f)];return typeof t.floor==='function'?t.floor(f):t.floor},
   lvf:f=>18+Math.round((f-1)*1.35),
-  pool:f=>{const t=abyT(f),T=DUNS[t];let p=T.pool(T.max).concat(DEEP[t].pool);if(f>=50){const t2=abyT(f+10);p=p.concat(DUNS[t2].pool(DUNS[t2].max))}return p},
+  pool:f=>{const t=abyT(f),T=DUNS[t];let p=T.pool(T.max).concat(DEEP[t].pool);if(f>=50){const t2=abyT(Math.min(f+10,99));p=p.concat(DUNS[t2].pool(DUNS[t2].max))}return p},
   boss:f=>{if(f>=99)return'abyssking';const k=Math.floor(f/10)-1,pk=a=>a[Math.random()*a.length|0];return k<6?pk(ABB.slice(k*2,k*2+2)):pk(ABB)},
   loot:['gold']};
 // 島の床の落とし物：浅い階は流用素材が多め、深い階ほど新素材が出やすい
@@ -1472,10 +1472,10 @@ const ZONES={farm2:[[84,2,99,23]],park:[[85,38,99,48]],res:[[43,29,82,48],[102,2
 function zoneAt(x,y){for(const z in ZONES)for(const[a,b,c,d]of ZONES[z])if(x>=a&&x<=c&&y>=b&&y<=d)return z;return null}
 const inZone=(z,x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(zoneAt(x,y)!==z)return false;return true};
 // 工業区の加工所：材料を入れると翌朝に倉庫へ（1回 5G・1日 30回まで）
-const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:8},out:'charcoal',n:3},{in:{wood:3},out:'lumber',n:1},{in:{junglewood:2},out:'belt',n:1}]},
-  mill:{n:'製粉所',d:'粉をひく・しぼる',r:[{in:{wheat:2},out:'flour',n:3},{in:{sugarcane:1},out:'sugar',n:3},{in:{sunflower:2},out:'oil',n:1},{in:{wheat:3},out:'straw',n:2},{in:{rice:3},out:'straw',n:2}]},
-  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:4,charcoal:2},out:'ironbar',n:3},{in:{sand:4,charcoal:2},out:'glass',n:3},{in:{ironbar:1},out:'nail',n:10},{in:{ironbar:2},out:'gear',n:1},{in:{copperore:3,charcoal:1},out:'copperbar',n:2},{in:{mithrilore:3,charcoal:2},out:'mithril',n:1},{in:{maore:2,ironbar:1,gem:1},out:'magisteel',n:1},{in:{adamore:3,charcoal:3,heatplate:1},out:'adamant',n:1},{in:{icecrystal:1,ironbar:1},out:'coolpipe',n:1},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]},
-  kiln:{n:'窯',d:'粘土や砂を焼く',r:[{in:{clay:2,charcoal:1},out:'brick',n:4},{in:{clay:2,charcoal:1},out:'rooftile',n:3},{in:{shell:2,stone:1},out:'plaster',n:2},{in:{sand:4,charcoal:2},out:'glass',n:3},{in:{glass:2},out:'pane',n:1},{in:{obsidian:1,brick:4},out:'heatplate',n:1}]},
+const PROC={saw:{n:'製材所',d:'木を加工する',r:[{in:{wood:1},out:'plank',n:1},{in:{junglewood:1},out:'plank',n:10},{in:{wood:11},out:'charcoal',n:3},{in:{wood:3},out:'lumber',n:1},{in:{junglewood:2},out:'belt',n:1}]},
+  mill:{n:'製粉所',d:'粉をひく・しぼる',r:[{in:{wheat:2},out:'flour',n:3},{in:{sugarcane:1},out:'sugar',n:2},{in:{sunflower:2},out:'oil',n:1},{in:{wheat:3},out:'straw',n:2},{in:{rice:3},out:'straw',n:2}]},
+  smelt:{n:'製鉄所',d:'鉱石をとかす',r:[{in:{ore:5,charcoal:2},out:'ironbar',n:3},{in:{sand:6,charcoal:2},out:'glass',n:3},{in:{ironbar:1},out:'nail',n:10},{in:{ironbar:2},out:'gear',n:1},{in:{copperore:3,charcoal:1},out:'copperbar',n:2},{in:{mithrilore:3,charcoal:2},out:'mithril',n:1},{in:{maore:2,ironbar:1,gem:1},out:'magisteel',n:1},{in:{adamore:3,charcoal:3,heatplate:1},out:'adamant',n:1},{in:{icecrystal:1,ironbar:1},out:'coolpipe',n:1},{in:{goldore:2,charcoal:1},out:'goldnugget',n:1}]},
+  kiln:{n:'窯',d:'粘土や砂を焼く',r:[{in:{clay:2,charcoal:1},out:'brick',n:4},{in:{clay:2,charcoal:1},out:'rooftile',n:3},{in:{shell:2,stone:1},out:'plaster',n:2},{in:{sand:6,charcoal:2},out:'glass',n:3},{in:{glass:2},out:'pane',n:1},{in:{obsidian:1,brick:4},out:'heatplate',n:1}]},
   stone:{n:'石工所',d:'石を切る・砕く',r:[{in:{stone:4},out:'cutstone',n:1},{in:{stone:1},out:'sand',n:2}]}},PROCFEE=5,PROCCAP=30;
 function procMenu(f,tab0){const F=PROC[f];S.proc=S.proc||{};S.proc[f]=S.proc[f]||[];let tab=tab0||(f==='cook'?'shop':PWGEN.has(f)||f==='clay'?'w':'own'),all=false;
   const render=b=>{const sy=mbox.scrollTop;b.innerHTML='';b.append(el('h2','',F.n),tabRow(tab,[...(f==='cook'?[['shop','お店']]:[]),...(PWGEN.has(f)||f==='clay'?[]:[['own','自分で頼む']]),['w',PWGEN.has(f)?'燃料と電気':'作業員と運搬']],k=>{tab=k;render(b);mbox.scrollTop=0}));
@@ -2051,7 +2051,7 @@ function tackleMenu(){
     l.append(item('練りエサ','10G',`魚が早くかかり、珍しい魚も出やすい（手持ち ${have('bait')}）`,[btn('×1',()=>buy(()=>S.inv.bait=(S.inv.bait||0)+1,10)),btn('×10',()=>buy(()=>S.inv.bait=(S.inv.bait||0)+10,100))]));
     b.append(l,row(btn('つり図鑑',()=>{closeModal();dexMenu()}),btn('閉じる',closeModal)))};
   openModal(render)}
-function wPow(w){if(w==='spear')return SPEARP[S.wl.spear||0]+enh('spear');if(w==='dagger')return DAGP[S.wl.dagger||0]+enh('dagger');if(w==='great')return GREATP[S.wl.great||0]+enh('great');if(w==='katana')return KATP[S.wl.katana||0]+enh('katana');if(w==='sword')return heldW()==='rune'?RUNEA[S.wl.rune]+enh('rune'):SWP[S.sword]+enh('sword');if(w==='rune')return RUNEA[S.wl.rune||0]+enh('rune');return WLP[S.wl[w]||0]+enh(w)}
+function wPow(w){if(w==='spear')return SPEARP[S.wl.spear||0]+enh('spear');if(w==='dagger')return DAGP[S.wl.dagger||0]+enh('dagger');if(w==='great')return GREATP[S.wl.great||0]+enh('great');if(w==='katana')return KATP[S.wl.katana||0]+enh('katana');if(w==='sword')return heldW()==='rune'?RUNEA[S.wl.rune]+enh('rune'):SWP[S.sword]+enh('sword');if(w==='rune')return RUNEA[S.wl.rune||0]+enh('rune');return (w==='bow'?BOWP:WLP)[S.wl[w]||0]+enh(w)}
 const enh=k=>((S.enh||{})[k])||0,EMAX=10;
 function wDmg(w,m,mult=1){if(w==='sword'&&heldW()==='staff')w='staff';if(w==='sword'&&['spear','dagger','great','katana'].includes(heldW()))w=heldW();const pw=w==='sword'?heldW():w;if(m&&m.hp!==undefined)profGain(pw,1);mult*=1+.01*(profLv(pw)-1);if(pw==='sword'&&gs('sword',1))mult*=1.08;if(pw==='bow'&&gs('bow',1))mult*=1.1;if(pw==='great'&&gs('great',0))mult*=1.08;mult*=critRoll(m,pw);let b=S.atk+accSum('atk')+wPow(w);if(B.atk>0)b*=1.3;if(set4('fire')&&S.hp<=S.mhp/2)b*=1.3;b*=1+stv('atk');b*=WEAP[w].mult*mult;if(m&&WEAP[w].vs&&MON[m.type].kind===WEAP[w].vs)b*=2.2;if(m&&MON[m.type].kind==='ghost')b*=.5;return Math.max(1,Math.round(b*(.85+Math.random()*.3)))}
 const ARROWS={normal:{n:'木の矢',st:0,mp:0,d:'ふつうの矢'},pierce:{n:'貫通の矢',st:1,mp:1,d:'敵をすべて貫く',in:{ore:3,feather:3}},poison:{n:'毒の矢',st:1,mp:1,d:'当たった敵を毒にする',in:{kinoko:3,feather:2}},
@@ -2948,13 +2948,13 @@ function dresserMenu(){const L=()=>S.look||(S.look={});
 function shade(c,k){const n=parseInt(c.slice(1),16);let r=n>>16,g2=n>>8&255,b2=n&255;r=Math.round(r*k);g2=Math.round(g2*k);b2=Math.round(b2*k);return'#'+((1<<24)+(Math.min(255,r)<<16)+(Math.min(255,g2)<<8)+Math.min(255,b2)).toString(16).slice(1)}
 const PIOMAT={jungle:[['junglewood',8],['goldore',8]],swamp:[['peat',8],['goldore',8]],forest:[['wood',15],['stone',10]],cave:[['ore',10],['stone',15]],mountain:[['goldore',5],['ore',10]],island:[['obsidian',4],['goldore',6]],ice:[['icecrystal',6],['goldore',8]],volcano:[['lavacrystal',6],['goldore',8]],thunder:[['thunderstone',6],['goldore',8]],seatemple:[['coral',6],['goldore',8]]};
 const ADVS=[{id:'pico',n:'ピコ',r:'見習い冒険者',p:1,need:null},{id:'kyle',n:'カイル',r:'剣士',p:2,need:null},{id:'sora',n:'ソラ',r:'魔導士',p:3,need:'cave'},{id:'bald',n:'バルド',r:'竜狩り',p:4,need:'mountain'},{id:'seres',n:'セレス',r:'聖騎士',p:5,need:'island'}];
-const DFEE={forest:230,cave:410,mountain:700,island:1200,ice:2050,jungle:1400,swamp:1740,volcano:2400,thunder:2800,seatemple:3200},DDAYS={forest:1,cave:1,mountain:2,island:2,ice:3,jungle:3,swamp:3,volcano:3,thunder:3,seatemple:3};
+const DFEE={forest:230,cave:410,mountain:700,island:1200,ice:2050,jungle:1400,swamp:1740,volcano:1850,thunder:2100,seatemple:2050},DDAYS={forest:1,cave:1,mountain:2,island:2,ice:3,jungle:3,swamp:3,volcano:3,thunder:3,seatemple:3};
 const advFee=(a,id)=>Math.round(DFEE[id]*(1+.25*(a.p-DUNS[id].stars)));
 const advOpen=a=>!a.need||clearMax(a.need)>0;
 function advLoot(a,id){const md=(S.advMode||{})[a.id],LP=md==='gather'?.65:md==='fight'?.25:.45,D=DUNS[id],mx=dmax(id),deep=mx>D.max,n=4+2*(a.p-D.stars)+Math.floor(mx/5),got={};let gold=0;const add=(k,c=1)=>got[k]=(got[k]||0)+c;
   for(let i=0;i<n;i++){const r=Math.random(),f=1+(Math.random()*mx|0);
     if(r<LP){const lt=lootOf(id,f),k=lt[Math.random()*lt.length|0];if(k==='gold')gold+=Math.round((15+Math.random()*20)*(1+(f+D.off)*.3));else add(k)}
-    else if(r<.88){const pool=D.pool(f),t=pool[Math.random()*pool.length|0];add(MON[t].drop);if(md==='fight'&&Math.random()<.4)add(MON[t].drop);if(MEAT[t]&&Math.random()<.5)add(MEAT[t])}
+    else if(r<.88){const pool=D.pool(f),t=pool[Math.random()*pool.length|0];add(MON[t].drop);if(md==='fight'&&Math.random()<.2)add(MON[t].drop);if(MEAT[t]&&Math.random()<.5)add(MEAT[t])}
     else{const t=D.seeds[Math.random()*D.seeds.length|0];S.seeds[t]=(S.seeds[t]||0)+1;add('seed:'+t)}}
   if(Math.random()<.3)add('herb',2);if(md==='gather'){add('wood',2+(Math.random()*3|0));add('stone',2+(Math.random()*3|0));add('herb',1+(Math.random()*2|0))}for(let i=0;i<Math.ceil(n/4);i++)if(Math.random()<.2){const f=1+(Math.random()*mx|0);add(f>D.max&&Math.random()<.25?'goldidol':TREAS[id][Math.random()*TREAS[id].length|0])}return{got,gold}}
 function advReturn(log){S.adv=S.adv||{};for(const a of ADVS){const e=S.adv[a.id];if(!e||e.ret>S.day)continue;delete S.adv[a.id];
