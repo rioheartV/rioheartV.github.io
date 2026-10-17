@@ -1259,8 +1259,8 @@ function castSk(sk,go){
   sfx(sk.k==='技'?'tech':/heal|regen|fullcare|hiheal/.test(sk.id)?'heal':'magic');
   const d=DIRS[P.dir];P.cast=heldW()==='great'?.55:heldW()==='dagger'||heldW()==='katana'?.2:.3;{const col=(ELC[skEl(sk)]||ELC.magic)[0];skillFx(sk);pop(P.x,P.y-30,sk.n,col)}
   if(sk.id==='spin'){P.spin=.4;fx.push({type:'ring',x:P.x,y:P.y,t:.35,max:.35});
-    for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<28+m.r){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;hitMon(m,1.3,[dx/l,dy/l])}}
-  else if(sk.id==='rush'){P.rush=.22;P.rushSp=260;P.rushMul=1.6;P.rushHit=new Set();P.cast=.1}
+    for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<28+m.r){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;hitMon(m,1.04,[dx/l,dy/l])}}
+  else if(sk.id==='rush'){P.rush=.22;P.rushSp=260;P.rushMul=1.04;P.rushHit=new Set();P.cast=.1}
   else if(sk.id==='wave')projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*170,vy:d[1]*170,life:.8,type:'wave',pierce:true,hit:new Set(),dmg:()=>Math.round(atk()*2),dir:d});
   else if(sk.id==='fire')projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*140,vy:d[1]*140,life:1.1,type:'fire',pierce:false,hit:new Set(),dmg:m=>magDmg(m,1.8,'fire'),dir:d});
   else if(sk.id==='aqua'&&cur.kind==='dun')projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*160,vy:d[1]*160,life:1,type:'water',pierce:false,hit:new Set(),dmg:m=>magDmg(m,.9,'water'),dir:d});
@@ -1328,7 +1328,7 @@ function castNew(sk,d,a0){const W=heldW(),wd=k=>m=>Math.round(wDmg(W==='bow'?'bo
     for(const m of[...mons]){const rx=m.x-P.x,ry=m.y-P.y,l=Math.hypot(rx,ry)||1;if(l<34+m.r&&(rx*dd[0]+ry*dd[1])/l>.3)hitMon(m,.7,dd)}});return 1}
   if(sk.id==='tsubame'){const ts=reachMons(130).slice(0,3);if(!ts.length){pop(P.x,P.y-18,'空振り','#ccc');return 1}ts.forEach((t,i)=>sched(.06+i*.16,()=>{if(mons.includes(t))slashAt(t,4.5)}));P.inv=Math.max(P.inv,.5);return 1}
   if(sk.id==='mugen'){P.inv=Math.max(P.inv,.9);P.cast=.6;fx.push({type:'mcirc',x:P.x,y:P.y,t:.5,max:.5,c:'#ffffff',c2:'#c8d0d8',r:20,_p:1,follow:1});sched(.5,()=>{const ts=reachMons(140);flash=.1;shake=.2;for(const t of ts)if(mons.includes(t))slashAt(t,4.5)});return 1}
-  if(sk.id==='enbu'){for(let i=0;i<2;i++)sched(i*.22,()=>{P.spin=.3;fx.push({type:'ring',x:P.x,y:P.y,t:.3,max:.3});spark(P.x,P.y-6,ELC.fire,12,{sp:90,life:.4});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<36+m.r)rh(m,1.1,'fire','#ffb84a')});return 1}
+  if(sk.id==='enbu'){for(let i=0;i<2;i++)sched(i*.22,()=>{P.spin=.3;fx.push({type:'ring',x:P.x,y:P.y,t:.3,max:.3});spark(P.x,P.y-6,ELC.fire,12,{sp:90,life:.4});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<36+m.r)rh(m,.79,'fire','#ffb84a')});return 1}
   if(sk.id==='mizukiri'){projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*190,vy:d[1]*190,life:.75,type:'wave',scale:1.1,col:'rgba(90,170,255,.95)',pierce:true,hit:new Set(),dir:d,dmg:m=>Math.round(wDmg('sword',m)*1.3)+magDmg(m,.8,'water')});return 1}
   if(sk.id==='fuuga'){P.rush=.3;P.rushSp=380;P.rushMul=2;P.rushHit=new Set();P.cast=.1;sched(.32,()=>{fx.push({type:'gust',x:P.x,y:P.y-4,t:.4,max:.4,d:DIRS[P.dir]});for(const m of[...mons]){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;if(l<48+m.r){hurtMon(m,magDmg(m,1,'wind'),[dx/l,dy/l],'#cfe8ff');m.kx=dx/l*(m.boss?100:360);m.ky=dy/l*(m.boss?100:360)}}});return 1}
   if(sk.id==='chisai'){P.cast=.35;sched(.25,()=>{shake=.25;for(let i=0;i<8;i++){const a=i*.785;fx.push({type:'crack',x:P.x+Math.cos(a)*30,y:P.y+Math.sin(a)*30,t:.5,max:.5})}for(const m of[...mons]){if(Math.hypot(m.x-P.x,m.y-P.y)<56+m.r){rh(m,4.4,'earth','#d9b26a');m.stun=Math.max(m.stun||0,m.boss?.2:.8)}}});return 1}
@@ -1341,18 +1341,18 @@ function castNew(sk,d,a0){const W=heldW(),wd=k=>m=>Math.round(wDmg(W==='bow'?'bo
     sched(.3+i*.2,()=>{shake=.1;fx.push({type:'boom',x,y,t:.35,max:.35,r:26,c:'#ff6a2a'});spark(x,y,['#ff6a2a','#ffe060'],10,{sp:90,vy:-80,life:.5});for(const o of[...mons])if(Math.hypot(o.x-x,o.y-y)<24+o.r)hurtMon(o,magDmg(o,1.35,'fire'),[0,0],'#ffb84a')})}return 1}
   if(sk.id==='raijin'){flash=.06;for(let i=0;i<8;i++)sched(.08+i*.12,()=>{const dd=DIRS[P.dir];for(let k=1;k<=4;k++)fx.push({type:'bolt',x:P.x+dd[0]*k*28,y:P.y+dd[1]*k*28,t:.2,max:.2});for(const m of lineMons(dd,130,10)){hurtMon(m,magDmg(m,0.8,'thunder'),[0,0],'#ffe08a');m.stun=Math.max(m.stun||0,m.boss?.2:.6)}});return 1}
   if(sk.id==='aquaprison'){const ts=reachMons(140).slice(0,4);if(!ts.length){pop(P.x,P.y-18,'空振り','#ccc');return 1}for(const m of ts){m.stun=Math.max(m.stun||0,m.boss?1:3);fx.push({type:'circle',x:m.x,y:m.y-4,t:3,max:3,c:'#4aa0f0'})}
-    for(let i=0;i<6;i++)sched(.5*i+.3,()=>{for(const m of ts)if(mons.includes(m)){hurtMon(m,magDmg(m,1.7,'water'),[0,0],'#9cc9ec');spark(m.x,m.y-6,['#4aa0f0','#e8f8ff'],4,{sp:30,vy:-30,life:.4})}});return 1}
+    for(let i=0;i<6;i++)sched(.5*i+.3,()=>{for(const m of ts)if(mons.includes(m)){hurtMon(m,magDmg(m,1.53,'water'),[0,0],'#9cc9ec');spark(m.x,m.y-6,['#4aa0f0','#e8f8ff'],4,{sp:30,vy:-30,life:.4})}});return 1}
   if(sk.id==='hien'){for(const da of[-.2,0,.2]){const a=a0+da;projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:Math.cos(a)*190,vy:Math.sin(a)*190,life:.6,type:'wave',scale:.7,pierce:false,hit:new Set(),dmg:wd(1.4),dir:[Math.cos(a),Math.sin(a)]})}return 1}
   if(sk.id==='charge'){chargeUp(.6,d=>{fx.push({type:'ring',x:P.x+d[0]*14,y:P.y+d[1]*14,t:.3,max:.3});for(const m of[...mons]){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;if(l<40+m.r&&(dx*d[0]+dy*d[1])/l>.2)hitMon(m,3.2,[dx/l,dy/l])}});return 1}
   if(sk.id==='javelin'){arrowP(a0,0,{pierce:true,life:1.1,sp:260,big:1,rad:9,col:'#bfe0ff',dmg:wd(1.4)});return 1}
-  if(sk.id==='chthrust'){chargeUp(.7,d=>projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*280,vy:d[1]*280,life:.75,type:'wave',scale:1.6,col:'rgba(190,224,255,.95)',pierce:true,ghost:1,hit:new Set(),dmg:wd(3.6),dir:d}));return 1}
+  if(sk.id==='chthrust'){chargeUp(.7,d=>projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*280,vy:d[1]*280,life:.75,type:'wave',scale:1.6,col:'rgba(190,224,255,.95)',pierce:true,ghost:1,hit:new Set(),dmg:wd(4.5),dir:d}));return 1}
   if(sk.id==='chshot'){P.wpn='bow';chargeUp(.8,d=>{arrowP(Math.atan2(d[1],d[0]),5.5,{pierce:true,life:1.4,sp:340,big:1,rad:12,ghost:1});P.swing=.3});return 1}
   if(sk.id==='vacuum'){chargeUp(1,d=>{const a=Math.atan2(d[1],d[0]);for(const da of[-.5,-.25,0,.25,.5])projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:Math.cos(a+da)*230,vy:Math.sin(a+da)*230,life:.9,type:'wave',scale:2,col:'rgba(255,230,160,.95)',pierce:true,ghost:1,hit:new Set(),dmg:wd(3),dir:[Math.cos(a+da),Math.sin(a+da)]})});return 1}
   if(sk.id==='smissile'){const ts=reachMons(170);for(let i=0;i<3;i++){const a=a0+(i-1)*.6,t=ts[i%Math.max(1,ts.length)]||null;projs.push({x:P.x,y:P.y-6,vx:Math.cos(a)*120,vy:Math.sin(a)*120,life:1.8,type:'spark',col:'#ffe060',ghost:!!t,homing:t,pierce:false,hit:new Set(),dmg:m=>magDmg(m,.99,'thunder'),dir:d})}return 1}
   if(sk.id==='wisp'){const o={x:P.x,y:P.y-14,life:15,type:'spark',col:'#fff6c8',ghost:1,pierce:true,hit:new Set(),rad:0,vx:0,vy:0,dir:[0,0],dmg:()=>0,
       upd:(p,dt)=>{if(cur.kind!=='dun'&&cur!==town&&!cur.dojo){p.life=0;return}p.hit=new Set(mons);const tx=P.x-DIRS[P.dir][0]*10,ty=P.y-18;p.x+=(tx-p.x)*Math.min(1,dt*5);p.y+=(ty-p.y)*Math.min(1,dt*5)+Math.sin(clock*4)*.3;p.vx=0;p.vy=0;
         p.cd=(p.cd||0)-dt;if(p.cd<=0){const t=reachMons(130)[0];if(t){p.cd=1.3;projs.push({x:p.x,y:p.y,vx:0,vy:-60,life:1.2,type:'spark',col:'#ffe08a',ghost:1,homing:t,pierce:false,hit:new Set(),dmg:m=>magDmg(m,.3,'holy'),dir:DIRS[P.dir]})}else p.cd=.3}}};projs.push(o);return 1}
-  if(sk.id==='forb'){orbs(3,10,24,'#ff9a3a','fire',m=>magDmg(m,.1,'fire'));return 1}
+  if(sk.id==='forb'){orbs(3,10,24,'#ff9a3a','fire',m=>magDmg(m,.14,'fire'));return 1}
   if(sk.id==='dorbit'){orbs(5,12,28,'#a060d0','dark',m=>{const v=magDmg(m,.15,'dark');S.hp=Math.min(S.mhp,S.hp+Math.ceil(v*.1));return v});return 1}
   if(sk.id==='fray'||sk.id==='sray'){const big=sk.id==='sray',T=big?1.5:1,len=big?150:120,w=big?10:6,col=big?['#fff6c8','#ffffff']:['#8ad0f8','#e8f8ff'],el=big?'holy':'ice',k=big?.42:.35;
     const f={type:'beam',x:P.x,y:P.y,t:T,max:T,len,w,c:col[0],c2:col[1],follow:1,d:DIRS[P.dir]};fx.push(f);P.cast=.2;
@@ -1361,17 +1361,17 @@ function castNew(sk,d,a0){const W=heldW(),wd=k=>m=>Math.round(wDmg(W==='bow'?'bo
 function castExtra(sk,d){
   const a0=Math.atan2(d[1],d[0]);
   if(castNew(sk,d,a0))return 1;
-  if(sk.id==='stunarrow'){arrowP(a0,1.2,{onHit:m=>{m.stun=m.boss?.8:2},col:'#ffe08a'});P.wpn='bow';P.swing=.3;return}
-  if(sk.id==='poisonrain'){for(let i=-3;i<=3;i++)arrowP(a0+i*.16,1,{onHit:m=>{m.psn=6},col:'#c07fd0'});P.wpn='bow';P.swing=.3;return}
+  if(sk.id==='stunarrow'){arrowP(a0,3.24,{onHit:m=>{m.stun=m.boss?.8:2},col:'#ffe08a'});P.wpn='bow';P.swing=.3;return}
+  if(sk.id==='poisonrain'){for(let i=-3;i<=3;i++)arrowP(a0+i*.16,1.6,{onHit:m=>{m.psn=6},col:'#c07fd0'});P.wpn='bow';P.swing=.3;return}
   if(sk.id==='pierce'){arrowP(a0,6,{pierce:true,life:1.3,sp:300,big:1,rad:12});P.wpn='bow';P.swing=.3;shake=.1;return}
   if(sk.id==='ryusei'){const cx=P.x+d[0]*80,cy=P.y+d[1]*80;fx.push({type:'circle',x:cx,y:cy-4,t:1.5,max:1.5,c:'#cfe8ff'});
     for(let i=0;i<14;i++)sched(.1*i,()=>{const a=Math.random()*6.28,rr=Math.random()*50,x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;fx.push({type:'fall',x,y,t:.2,max:.2});
       sched(.2,()=>{fx.push({type:'burst',x,y,t:.25,max:.25,c:'#f3e7cf'});for(const m of[...mons])if(Math.hypot(m.x-x,m.y-y)<20+m.r){hurtMon(m,Math.round(wDmg('bow',m)*2.2),[0,0],'#f3e7cf');m.slow=2}})});P.wpn='bow';P.swing=.3;return}
-  if(sk.id==='gale'){P.rush=.32;P.rushSp=400;P.rushMul=2.8;P.rushHit=new Set();P.cast=.1;return}
-  if(sk.id==='lunge'){P.rush=.25;P.rushSp=330;P.rushMul=2.1;P.rushHit=new Set();P.cast=.1;return}
+  if(sk.id==='gale'){P.rush=.32;P.rushSp=400;P.rushMul=2.52;P.rushHit=new Set();P.cast=.1;return}
+  if(sk.id==='lunge'){P.rush=.25;P.rushSp=330;P.rushMul=1.3;P.rushHit=new Set();P.cast=.1;return}
   if(sk.id==='whirl'){P.inv=Math.max(P.inv,.4);for(let i=0;i<4;i++)sched(i*.25,()=>{P.spin=.35;fx.push({type:'ring',x:P.x,y:P.y,t:.3,max:.3});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<40+m.r){const dx=m.x-P.x,dy=m.y-P.y,l=Math.hypot(dx,dy)||1;hitMon(m,1.1,[dx/l,dy/l])}});return}
-  if(sk.id==='tenkuu'){projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*230,vy:d[1]*230,life:1,type:'wave',scale:2,col:'rgba(255,236,170,.95)',pierce:true,ghost:true,rad:18,hit:new Set(),dmg:()=>Math.round(atk()*6.2),dir:d});shake=.25;flash=.05;return}
-  if(sk.id==='spiral'){P.inv=Math.max(P.inv,.6);for(let i=0;i<5;i++)sched(.12+i*.09,()=>{fx.push({type:'thrust',x:P.x+d[0]*8,y:P.y-4+d[1]*8,d,t:.15,max:.15});lineHit(d,95,.9)});return}
+  if(sk.id==='tenkuu'){projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*230,vy:d[1]*230,life:1,type:'wave',scale:2,col:'rgba(255,236,170,.95)',pierce:true,ghost:true,rad:18,hit:new Set(),dmg:()=>Math.round(atk()*7.13),dir:d});shake=.25;flash=.05;return}
+  if(sk.id==='spiral'){P.inv=Math.max(P.inv,.6);for(let i=0;i<5;i++)sched(.12+i*.09,()=>{fx.push({type:'thrust',x:P.x+d[0]*8,y:P.y-4+d[1]*8,d,t:.15,max:.15});lineHit(d,95,.74)});return}
   if(sk.id==='senbon'){for(let i=0;i<12;i++)sched(i*.1,()=>{const a=a0+(Math.random()-.5)*.9,dd=[Math.cos(a),Math.sin(a)];fx.push({type:'thrust',x:P.x+dd[0]*8,y:P.y-4+dd[1]*8,d:dd,t:.12,max:.12});P.wpn='sword';P.swing=.08;
       for(const m of[...mons]){const rx=m.x-P.x,ry=m.y-P.y,l=Math.hypot(rx,ry)||1;if(l<48+m.r&&(rx*d[0]+ry*d[1])/l>.5)hitMon(m,1.15,d)}});P.inv=Math.max(P.inv,.3);return}
   if(sk.id==='ranbu'){P.inv=Math.max(P.inv,1.2);for(let i=0;i<8;i++)sched(i*.14,()=>{const ts=reachMons(140);const m=ts[i%Math.max(1,ts.length)];
@@ -1379,14 +1379,14 @@ function castExtra(sk,d){
       for(const[ox,oy]of[[-14,0],[14,0],[0,-14],[0,14]]){if(free(m.x+ox,m.y+oy,5)){P.x=m.x+ox;P.y=m.y+oy;break}}P.dir=Math.abs(m.x-P.x)>Math.abs(m.y-P.y)?(m.x>P.x?3:2):(m.y>P.y?0:1);
       P.wpn='sword';P.swMul=1;P.swing=.12;P.swHit=new Set();fx.push({type:'burst',x:m.x,y:m.y-6,t:.25,max:.25,c:'#ffd060'});hitMon(m,1.2,DIRS[P.dir])});return}
   if(sk.id==='haou'){projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*200,vy:d[1]*200,life:1,type:'wave',scale:2.2,pierce:true,ghost:true,hit:new Set(),rad:22,dmg:()=>Math.round(atk()*6.5),dir:d});shake=.3;flash=.06;return}
-  if(sk.id==='flare'){const ft=reachMons(170)[0],fd=ft?Math.hypot(ft.x-P.x,ft.y-P.y)||1:0,fv=ft?[(ft.x-P.x)/fd,(ft.y-P.y)/fd]:d;projs.push({x:P.x+fv[0]*8,y:P.y-4+fv[1]*8,vx:fv[0]*150,vy:fv[1]*150,homing:ft||null,life:1,type:'fire',big:1,pierce:false,hit:new Set(),dmg:m=>magDmg(m,.6,'fire'),dir:d,onEnd:p=>explode(p.x,p.y,42,2.1,'fire','#ff9a3a')});return}
+  if(sk.id==='flare'){const ft=reachMons(170)[0],fd=ft?Math.hypot(ft.x-P.x,ft.y-P.y)||1:0,fv=ft?[(ft.x-P.x)/fd,(ft.y-P.y)/fd]:d;projs.push({x:P.x+fv[0]*8,y:P.y-4+fv[1]*8,vx:fv[0]*150,vy:fv[1]*150,homing:ft||null,life:1,type:'fire',big:1,pierce:false,hit:new Set(),dmg:m=>magDmg(m,.75,'fire'),dir:d,onEnd:p=>explode(p.x,p.y,42,2.62,'fire','#ff9a3a')});return}
   if(sk.id==='blizzard'){const cx=P.x+d[0]*55,cy=P.y+d[1]*55;for(let i=0;i<7;i++)sched(i*.18,()=>{for(let k=0;k<8;k++)fx.push({type:'ember',x:cx+(Math.random()-.5)*90,y:cy+(Math.random()-.5)*90,t:.4,max:.4,c:'#e8f8ff',rise:1});
       for(const m of[...mons])if(Math.hypot(m.x-cx,m.y-cy)<48+m.r){hurtMon(m,magDmg(m,.45,'ice'),[0,0],'#bfe8ff');m.slow=2.5}});return}
   if(sk.id==='chain'){let from={x:P.x,y:P.y},hit=new Set();for(let i=0;i<6;i++){const nx=mons.filter(m=>!hit.has(m)&&Math.hypot(m.x-from.x,m.y-from.y)<(i?80:130)).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];if(!nx)break;hit.add(nx);
-      const fr={...from};sched(i*.08,()=>{fx.push({type:'zap',x:fr.x,y:fr.y-6,x2:nx.x,y2:nx.y-6,t:.25,max:.25});if(mons.includes(nx))hurtMon(nx,magDmg(nx,1.6,'thunder'),[0,0],'#ffe08a')});from=nx}
+      const fr={...from};sched(i*.08,()=>{fx.push({type:'zap',x:fr.x,y:fr.y-6,x2:nx.x,y2:nx.y-6,t:.25,max:.25});if(mons.includes(nx))hurtMon(nx,magDmg(nx,2.24,'thunder'),[0,0],'#ffe08a')});from=nx}
     if(!hit.size)pop(P.x,P.y-18,'空振り','#ccc');else flash=.06;return}
   
-  if(sk.id==='shadow'){const t=reachMons(170)[0]||null;projs.push({x:P.x+d[0]*8,y:P.y-6+d[1]*8,vx:d[0]*120,vy:d[1]*120,life:2,type:'dark',ghost:!!t,homing:t,pierce:false,hit:new Set(),dmg:m=>{const v=magDmg(m,5,'dark');S.hp=Math.min(S.mhp,S.hp+Math.ceil(v*.2));return v},dir:d});return}
+  if(sk.id==='shadow'){const t=reachMons(170)[0]||null;projs.push({x:P.x+d[0]*8,y:P.y-6+d[1]*8,vx:d[0]*120,vy:d[1]*120,life:2,type:'dark',ghost:!!t,homing:t,pierce:false,hit:new Set(),dmg:m=>{const v=magDmg(m,4,'dark');S.hp=Math.min(S.mhp,S.hp+Math.ceil(v*.2));return v},dir:d});return}
   const nearT=r=>reachMons(r)[0]||null;
   const mLine=(len,mult,el,wide,col)=>{for(const m of[...mons]){const rx=m.x-P.x,ry=m.y-P.y,al=rx*d[0]+ry*d[1],pp=Math.abs(rx*d[1]-ry*d[0]);if(al>-4&&al<len&&pp<wide+m.r)hurtMon(m,magDmg(m,mult,el),d,col)}};
   const vortex=(cx,cy,r,mult,el,col,dur,pull,extra)=>{for(let i=0;i<dur*4;i++)sched(i*.25,()=>{const X=typeof cx==='function'?cx():cx,Y=typeof cy==='function'?cy():cy;fx.push({type:'ring',x:X,y:Y+4,t:.3,max:.3},{type:'boom',x:X,y:Y,t:.25,max:.25,r:r*.6,c:col});
@@ -1394,12 +1394,12 @@ function castExtra(sk,d){
   if(sk.id==='tidal'){projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*150,vy:d[1]*150,life:1.1,type:'wave',scale:1.8,col:'rgba(90,170,240,.95)',pierce:true,ghost:true,rad:18,hit:new Set(),dmg:m=>magDmg(m,2.6,'water'),onHit:m=>{if(!m.boss){m.kx=d[0]*200;m.ky=d[1]*200}},dir:d});return}
   if(sk.id==='maelstrom'){const X=P.x+d[0]*60,Y=P.y+d[1]*60;vortex(X,Y,56,.5,'water','#4aa0f0',3,1);return}
   if(sk.id==='gigabolt'){flash=.12;for(let i=0;i<5;i++)sched(i*.22,()=>{const ts=reachMons(170),rs=new Set(ts);const m=ts[Math.random()*ts.length|0];const X=m?m.x:P.x+d[0]*60+(Math.random()-.5)*40,Y=m?m.y:P.y+d[1]*60;fx.push({type:'bolt',x:X,y:Y,t:.35,max:.35});shake=.15;
-      fx.push({type:'boom',x:X,y:Y,t:.3,max:.3,r:30,c:'#ffe060'});for(const mm of[...mons])if(rs.has(mm)&&Math.hypot(mm.x-X,mm.y-Y)<30+mm.r){hurtMon(mm,magDmg(mm,1.98,'thunder'),[0,0],'#ffe060');mm.stun=mm.boss?.4:.9}});return}
-  if(sk.id==='cyclone'){const st={x:P.x+d[0]*12,y:P.y+d[1]*12};for(let i=0;i<8;i++)sched(i*.15,()=>{st.x+=d[0]*14;st.y+=d[1]*14;fx.push({type:'gust',x:st.x,y:st.y-4,t:.3,max:.3,d});for(const m of[...mons])if(Math.hypot(m.x-st.x,m.y-st.y)<22+m.r){hurtMon(m,magDmg(m,.8,'wind'),[0,0],'#9ce0c0');m.slow=Math.max(m.slow||0,.6)}});return}
-  if(sk.id==='tornado'){vortex(()=>P.x,()=>P.y,66,.5,'wind','#9ce0c0',3,1);return}
-  if(sk.id==='stone'){for(const da of[-.25,0,.25]){const a=a0+da;projs.push({x:P.x,y:P.y-4,vx:Math.cos(a)*170,vy:Math.sin(a)*170,life:.8,type:'spark',col:'#a9784a',pierce:false,hit:new Set(),dmg:m=>magDmg(m,.6,'earth'),dir:[Math.cos(a),Math.sin(a)]})}return}
+      fx.push({type:'boom',x:X,y:Y,t:.3,max:.3,r:30,c:'#ffe060'});for(const mm of[...mons])if(rs.has(mm)&&Math.hypot(mm.x-X,mm.y-Y)<30+mm.r){hurtMon(mm,magDmg(mm,1.58,'thunder'),[0,0],'#ffe060');mm.stun=mm.boss?.4:.9}});return}
+  if(sk.id==='cyclone'){const st={x:P.x+d[0]*12,y:P.y+d[1]*12};for(let i=0;i<8;i++)sched(i*.15,()=>{st.x+=d[0]*14;st.y+=d[1]*14;fx.push({type:'gust',x:st.x,y:st.y-4,t:.3,max:.3,d});for(const m of[...mons])if(Math.hypot(m.x-st.x,m.y-st.y)<22+m.r){hurtMon(m,magDmg(m,.72,'wind'),[0,0],'#9ce0c0');m.slow=Math.max(m.slow||0,.6)}});return}
+  if(sk.id==='tornado'){vortex(()=>P.x,()=>P.y,66,.57,'wind','#9ce0c0',3,1);return}
+  if(sk.id==='stone'){for(const da of[-.25,0,.25]){const a=a0+da;projs.push({x:P.x,y:P.y-4,vx:Math.cos(a)*170,vy:Math.sin(a)*170,life:.8,type:'spark',col:'#a9784a',pierce:false,hit:new Set(),dmg:m=>magDmg(m,.78,'earth'),dir:[Math.cos(a),Math.sin(a)]})}return}
   if(sk.id==='spike'){for(let i=1;i<=6;i++)sched(i*.05,()=>fx.push({type:'crack',x:P.x+d[0]*i*18,y:P.y+d[1]*i*18,t:.5,max:.5},{type:'burst',x:P.x+d[0]*i*18,y:P.y+d[1]*i*18-6,t:.3,max:.3,c:'#c8a060'}));mLine(115,2.6,'earth',18,'#c8a060');shake=.2;return}
-  if(sk.id==='holy'){const t=nearT(150);projs.push({x:P.x+d[0]*8,y:P.y-6+d[1]*8,vx:d[0]*150,vy:d[1]*150,life:1.4,type:'spark',col:'#fff6c8',ghost:!!t,homing:t,pierce:false,hit:new Set(),dmg:m=>magDmg(m,1.98,'holy'),dir:d});return}
+  if(sk.id==='holy'){const t=nearT(150);projs.push({x:P.x+d[0]*8,y:P.y-6+d[1]*8,vx:d[0]*150,vy:d[1]*150,life:1.4,type:'spark',col:'#fff6c8',ghost:!!t,homing:t,pierce:false,hit:new Set(),dmg:m=>magDmg(m,2.57,'holy'),dir:d});return}
   if(sk.id==='cross'){const t=nearT(150),X=t?t.x:P.x+d[0]*50,Y=t?t.y:P.y+d[1]*50;for(const[ax,ay]of[[1,0],[0,1]])for(let k=-3;k<=3;k++)fx.push({type:'beam',x:X+ax*k*14,y:Y+ay*k*14+6,t:.35,max:.35});flash=.08;
     for(const m of[...mons]){const dx=Math.abs(m.x-X),dy=Math.abs(m.y-Y);if((dx<64&&dy<14+m.r)||(dy<64&&dx<14+m.r))hurtMon(m,magDmg(m,2.8,'holy'),[0,0],'#fff6c8')}return}
   if(sk.id==='dark'){const t=nearT(160);projs.push({x:P.x+d[0]*8,y:P.y-6+d[1]*8,vx:d[0]*70,vy:d[1]*70,life:3.2,type:'dark',ghost:!!t,homing:t,hsp:70,turn:3,pierce:false,hit:new Set(),dmg:m=>{const v=magDmg(m,1.8,'dark');S.hp=Math.min(S.mhp,S.hp+Math.ceil(v*.1));return v},dir:d});return}
@@ -1420,9 +1420,9 @@ function castExtra(sk,d){
   if(sk.id==='hawkeye'){B.crit=Math.max(B.crit||0,30*supMul('m_dark'));pop(P.x,P.y-22,'ホークアイ','#c8a0f0');return}
   if(sk.id==='mirage'){B.eva=Math.max(B.eva||0,30*supMul('m_water'));pop(P.x,P.y-22,'ミラージュ','#9cd8f0');return}
   if(sk.id==='shell'){B.mdef=Math.max(B.mdef||0,20*supMul('m_holy'));pop(P.x,P.y-22,'シェル','#fff6c8');return}
-  if(sk.id==='inferno'){for(let i=0;i<12;i++)sched(i*.25,()=>{fx.push({type:'flame',x:P.x,y:P.y,t:.3,max:.3});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<62+m.r)hurtMon(m,magDmg(m,.45,'fire'),[0,0],'#ff9a3a')});return}
-  if(sk.id==='zero'){flash=.15;shake=.2;const rs=new Set(reachMons(170));for(const m of[...mons])if(rs.has(m)){fx.push({type:'burst',x:m.x,y:m.y-6,t:.4,max:.4,c:'#bfe8ff'});hurtMon(m,magDmg(m,3.2,'ice'),[0,0],'#bfe8ff');m.stun=m.boss?1.2:3;m.frz=m.stun}return}
-  if(sk.id==='judge'){for(let i=0;i<6;i++)sched(i*.22,()=>{const rs=new Set(reachMons(150));for(const m of[...mons])if(rs.has(m)){fx.push({type:'beam',x:m.x,y:m.y,t:.2,max:.2});hurtMon(m,magDmg(m,.75,'holy'),[0,0],'#fff6c8')}});return}
+  if(sk.id==='inferno'){for(let i=0;i<12;i++)sched(i*.25,()=>{fx.push({type:'flame',x:P.x,y:P.y,t:.3,max:.3});for(const m of[...mons])if(Math.hypot(m.x-P.x,m.y-P.y)<62+m.r)hurtMon(m,magDmg(m,.56,'fire'),[0,0],'#ff9a3a')});return}
+  if(sk.id==='zero'){flash=.15;shake=.2;const rs=new Set(reachMons(170));for(const m of[...mons])if(rs.has(m)){fx.push({type:'burst',x:m.x,y:m.y-6,t:.4,max:.4,c:'#bfe8ff'});hurtMon(m,magDmg(m,4.8,'ice'),[0,0],'#bfe8ff');m.stun=m.boss?1.2:3;m.frz=m.stun}return}
+  if(sk.id==='judge'){for(let i=0;i<6;i++)sched(i*.22,()=>{const rs=new Set(reachMons(150));for(const m of[...mons])if(rs.has(m)){fx.push({type:'beam',x:m.x,y:m.y,t:.2,max:.2});hurtMon(m,magDmg(m,1.01,'holy'),[0,0],'#fff6c8')}});return}
   if(sk.id==='fullcare'){S.hp=S.mhp;P.poison=0;P.regen=20;fx.push({type:'heal',x:P.x,y:P.y,t:.9,max:.9});pop(P.x,P.y-18,'全回復','#9cf0a0');return}
   if(sk.id==='enchant'){const T=60*supMul('m_holy');B.atk=Math.max(B.atk,T);B.bar=Math.max(B.bar||0,T);B.mdef=Math.max(B.mdef||0,T);B.mag=Math.max(B.mag||0,T);pop(P.x,P.y-22,'エンチャント','#ffd060');return}
 
@@ -1431,7 +1431,7 @@ function castExtra(sk,d){
   else if(sk.id==='quake'){for(let i=1;i<=6;i++)fx.push({type:'crack',x:P.x+d[0]*i*18,y:P.y+d[1]*i*18,t:.5+i*.04,max:.5+i*.04});
     for(const m of[...mons]){const rx=m.x-P.x,ry=m.y-P.y,along=rx*d[0]+ry*d[1],perp=Math.abs(rx*d[1]-ry*d[0]);if(along>0&&along<115&&perp<16+m.r)hitMon(m,2.4,d)}shake=.25}
   else if(sk.id==='storm'){P.storm=1.2;P.stT=0}
-  else if(sk.id==='ice')projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*170,vy:d[1]*170,life:1,type:'ice',pierce:false,hit:new Set(),dir:d,dmg:m=>magDmg(m,1.8,'ice'),onHit:m=>{m.slow=3}});
+  else if(sk.id==='ice')projs.push({x:P.x+d[0]*8,y:P.y-4+d[1]*8,vx:d[0]*170,vy:d[1]*170,life:1,type:'ice',pierce:false,hit:new Set(),dir:d,dmg:m=>magDmg(m,2.34,'ice'),onHit:m=>{m.slow=3}});
   else if(sk.id==='wind'){fx.push({type:'gust',x:P.x+d[0]*24,y:P.y-4+d[1]*24,t:.4,max:.4,d});
     for(const m of[...mons]){const rx=m.x-P.x,ry=m.y-P.y,l=Math.hypot(rx,ry)||1;if(l<80&&(rx*d[0]+ry*d[1])/l>.3){hurtMon(m,magDmg(m,.7,'wind'),d,'#cfe8ff');m.kx=d[0]*(m.boss?120:420);m.ky=d[1]*(m.boss?120:420)}}}
   else if(sk.id==='regen'){P.regen=20;P.rgT=0;fx.push({type:'heal',x:P.x,y:P.y,t:.7,max:.7})}
@@ -1440,7 +1440,7 @@ function castExtra(sk,d){
     const cx0=Math.floor((P.x+d[0]*22)/TS),cy0=Math.floor((P.y+d[1]*22)/TS);let n=0;S.grown=S.grown||{};
     for(let yy=-1;yy<=1;yy++)for(let xx=-1;xx<=1;xx++){const k=(cx0+xx)+','+(cy0+yy),s2=S.soil[k];fx.push({type:'heal',x:(cx0+xx)*TS+8,y:(cy0+yy)*TS+12,t:.6,max:.6});if(s2&&s2.c&&s2.c.age<CROPS[s2.c.t].days&&S.grown[k]!==S.day){s2.c.age++;S.grown[k]=S.day;n++}}
     growTrees();pop(P.x,P.y-18,n?`${n}株が育った`:'育つ作物がない','#9cf0a0')}
-  else if(sk.id==='earth'){shake=.5;const rs=new Set(reachMons(140));for(const m of[...mons]){if(MON[m.type].kind==='fly')continue;if(rs.has(m)){hurtMon(m,magDmg(m,3,'earth'),[0,0],'#d9b26a');fx.push({type:'crack',x:m.x,y:m.y,t:.5,max:.5})}}}
+  else if(sk.id==='earth'){shake=.5;const rs=new Set(reachMons(140));for(const m of[...mons]){if(MON[m.type].kind==='fly')continue;if(rs.has(m)){hurtMon(m,magDmg(m,3.9,'earth'),[0,0],'#d9b26a');fx.push({type:'crack',x:m.x,y:m.y,t:.5,max:.5})}}}
   else if(sk.id==='meteor'){const ts=reachMons(170);
     if(!ts.length){pop(P.x,P.y-18,'空振り','#ccc');return}for(let i=0;i<7;i++){const m=ts[i%ts.length];fx.push({type:'meteor',x:m.x,y:m.y,t:.45+i*.18,max:.45+i*.18,cb:()=>{shake=.12;if(mons.includes(m))hurtMon(m,magDmg(m,2.2,'fire'),[0,0],'#ffb84a')}})}}
 }
