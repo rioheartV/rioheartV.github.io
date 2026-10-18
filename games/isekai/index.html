@@ -1633,13 +1633,13 @@ function convTick(){const P2=pw();if(!wearOK('conv'))return;if(decoN('搬'))wear
 // 自動植え付け機（v137）
 const PLANTG=.3,PLANTT=.2;
 const plantCfg=()=>S.plantM||(S.plantM={t:null,buy:0});
-function plantSeed(){const C=plantCfg(),ss=S.seedStore||{},has=t=>(ss[t]||0)+(S.seeds[t]||0)>0;
-  const ord=C.t?[C.t]:Object.keys(CROPS).filter(t=>!CROPS[t].feed&&!CROPS[t].tree).sort((a,b)=>ITEMS[b].p-ITEMS[a].p);
+function plantSeed(gh){const C=plantCfg(),ss=S.seedStore||{},has=t=>(ss[t]||0)+(S.seeds[t]||0)>0;
+  const ord=C.t?[C.t]:Object.keys(CROPS).filter(t=>!CROPS[t].feed&&!CROPS[t].tree).sort((a,b)=>(gh?0:(inSea(b)-inSea(a)))||ITEMS[b].p-ITEMS[a].p);
   const t=ord.find(has);if(t)return t;if(C.buy){const b=ord.find(t=>SHOPSEEDS.includes(t)&&shopOK('seed',t)&&S.gold-CROPS[t].seed>=seedKeep());if(b)return b}return null}
 function plantUse(t){const ss=S.seedStore||{};if(ss[t]>0)ss[t]--;else if(S.seeds[t]>0)S.seeds[t]--;else{S.gold-=CROPS[t].seed;S.seedBuy=(S.seedBuy||0)+CROPS[t].seed}}
 function plantTick(){const P2=pw();if(!wearOK('plant'))return;let ch=0;for(const[x,y]of decoAt('植'))for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){const X=x+dx,Y=y+dy,k=X+','+Y;if(tileAt(X,Y)!=='F')continue;let so=S.soil[k];
     if(!so){if(P2.v<PLANTT){pwLack();continue}P2.v-=PLANTT;so=S.soil[k]={w:false,c:null};wearAdd('plant',.5)}
-    if(so.c||so.spr)continue;const t=plantSeed();if(!t)continue;if(P2.v<PLANTG){pwLack();continue}P2.v-=PLANTG;plantUse(t);so.c={t,age:0};wearAdd('plant',1);ch=1}
+    if(so.c||so.spr)continue;const t=plantSeed(inGH(X,Y));if(!t)continue;if(P2.v<PLANTG){pwLack();continue}P2.v-=PLANTG;plantUse(t);so.c={t,age:0};wearAdd('plant',1);ch=1}
   if(ch&&cur===town)toolbar()}
 function plantMenu(){const render=b=>{b.innerHTML='';const C=plantCfg(),ss=S.seedStore||{};
   b.append(el('h2','','自動植え付け機'),el('div','muted',`まわり 9×9 の畑を 30 分ごとに耕して種をまきます（1 マス 電気${PLANTG}・耕すのは ${PLANTT}）。種は倉庫→かばんの順に使います。水やりはしません（スプリンクラーや水やり係・水路と組み合わせよう）。町の電気 ${Math.floor(pw().v)}/${pwCap()}`));
@@ -2382,7 +2382,7 @@ function shopMore(k,ids){const t=shopTier(),lk=ids.filter(id=>((SHOPT[k]||{})[id
   return el('div','muted',`ダンジョンを踏破すると品ぞろえが増えます（いま 踏破 ${t}か所。あと ${nx-t}か所で ${lk.filter(id=>SHOPT[k][id]===nx).length}品・まだの品 ${lk.length}）`)}
 const SHOPSEEDS=['tulip','lavender','rose','lily','turnip','carrot','strawberry','cabbage','tomato','grass','herb','yomogi','aloe','manaherb','basil','mint','wheat','rice','sugarcane','chili','soybean','sunflower'];
 const popt=()=>S.plantOpt||(S.plantOpt={store:1,buy:0});
-function bestSeed(){const ord=Object.keys(CROPS).filter(t=>!CROPS[t].feed&&!CROPS[t].tree).sort((a,b)=>(inSea(b)-inSea(a))||ITEMS[b].p-ITEMS[a].p).concat(['grass']),o=popt(),ss=S.seedStore||{};
+function bestSeed(gh){const ord=Object.keys(CROPS).filter(t=>!CROPS[t].feed&&!CROPS[t].tree).sort((a,b)=>(gh?0:(inSea(b)-inSea(a)))||ITEMS[b].p-ITEMS[a].p).concat(['grass']),o=popt(),ss=S.seedStore||{};
   return ord.find(t=>S.seeds[t]>0||(o.store&&ss[t]>0))||(o.buy?ord.find(t=>SHOPSEEDS.includes(t)&&shopOK('seed',t)&&!CROPS[t].plant&&!CROPS[t].feed&&S.gold-CROPS[t].seed>=seedKeep()):null)}
 const seedKeep=()=>[...HELPERS,...LOGIW].reduce((a,h)=>a+(S.hired[h.id]?h.wage:0),0);
 function useSeed(t){const ss=S.seedStore||{};if(S.seeds[t]>0)S.seeds[t]--;else if(popt().store&&ss[t]>0)ss[t]--;else{S.gold-=CROPS[t].seed;S.seedBuy=(S.seedBuy||0)+CROPS[t].seed}}
@@ -2393,7 +2393,7 @@ function afterHarvest(k,s){const C=CROPS[s.c.t];s.w=false;if(!C.tree&&!(C.regrow
 function catchUp(){const w=S.worked||{},soils=Object.values(S.soil);
   if(w.tiller){let n=S.wdone.till||0;const tc=40*cnt('tiller');for(let y=0;y<town.H&&n<tc;y++)for(let x=0;x<town.W&&n<tc;x++){const k=x+','+y;if(town.m[y][x]==='F'&&!S.soil[k]){S.soil[k]={w:false,c:null};n++}}}
   if(w.harvest)for(const[k,s]of Object.entries(S.soil))if(s.c&&s.c.age>=CROPS[s.c.t].days){reapCrop(s.c.t,s);afterHarvest(k,s)}
-  if(w.plant)for(const s of Object.values(S.soil)){if(s.c||s.spr)continue;const t=bestSeed();if(!t)break;useSeed(t);s.c={t,age:0}}
+  if(w.plant)for(const[k5,s]of Object.entries(S.soil)){if(s.c||s.spr)continue;const t=bestSeed(inGH(...k5.split(',').map(Number)));if(!t)break;useSeed(t);s.c={t,age:0}}
   if(w.water)for(const s of Object.values(S.soil))if(!s.spr)s.w=true;
   if(w.mine&&!S.wdone.mine)mineReward();
   if(w.ranch&&!S.wdone.ranch)ranchWork();
@@ -2478,7 +2478,7 @@ function finishNPC(n){
   n.wait=.3;const id=n.h.id,[x,y]=n.tgt,k=x+','+y,s=S.soil[k];if(!jobTile(id,x,y))return;
   if(id==='water'){s.w=true;popT(x,y,'ジャー','#9cc9ec')}
   else if(id==='harvest'){reapCrop(s.c.t,s);popT(x,y,CROPS[s.c.t].feed?'牧草→牧草入れ':CROPS[s.c.t].plant&&hDest('harvest')==='ship'?ITEMS[s.c.t].n+'→倉庫':ITEMS[s.c.t].n+'→'+DESTS[hDest('harvest')],'#e8b44a');afterHarvest(k,s)}
-  else if(id==='plant'){const t=bestSeed();useSeed(t);s.c={t,age:0};toolbar();popT(x,y,'ぱらっ','#c7e59a')}
+  else if(id==='plant'){const t=bestSeed(inGH(x,y));useSeed(t);s.c={t,age:0};toolbar();popT(x,y,'ぱらっ','#c7e59a')}
   else if(id==='wood'){if(town.m[y][x]==='T'){S.chop[k]=1;hput('wood','wood',1);S.wdone.wood.w++;popT(x,y,'コン','#e0c08a')}else{S.pick[k]=1;hput('wood','herb',1);S.wdone.wood.h++;popT(x,y,'薬草','#8cc163')}}
   else if(id==='mine'){n.inCave=true;n.hidden=true}
   else if(id==='ranch'){ranchWork();popT(x,y+1,'お世話完了','#ff9ab0')}
@@ -4351,7 +4351,7 @@ function casFocus(pi,pt){const bs=[...mbox.querySelectorAll('button')].filter(x=
  if(!t)t=bs.find(x=>x.dataset.main)||bs.find(x=>x.classList.contains('pri')&&!x.closest('.tabs'))||null;if(t)t.focus({preventScroll:true})}
 function casRender(b){const sy=mbox.scrollTop,pa=document.activeElement,pin=pa&&mbox.contains(pa),pall=[...mbox.querySelectorAll('button')].filter(x=>!x.disabled),pi=pin?pall.indexOf(pa):-1,pt=pin?pa.textContent:null;b.innerHTML='';casStyle();
  b.append(el('h2','','カジノ'),el('div','muted',`コイン ${casCoin()} 枚　所持金 ${S.gold}G　（コイン 1 枚 ${CASRATE}G・G には戻せない）`),
-  tabRow(CAS.tab,[['coin','コイン'],['slot','スロット'],['roul','ルーレット'],['bj','ブラックジャック'],['pk','ポーカー'],['prize','景品']],k=>{if(CAS.busy)return;CAS.tab=k;casRender(b)}));
+  (tr=>{tr.style.flexWrap='wrap';return tr})(tabRow(CAS.tab,[['coin','コイン'],['slot','スロット'],['roul','ルーレット'],['bj','ブラックジャック'],['pk','ポーカー'],['prize','景品']],k=>{if(CAS.busy)return;CAS.tab=k;casRender(b)})));
  const t=CAS.tab;
  if(t==='coin'){const L=el('div','list');for(const n of[10,50,100,500]){const g=n*CASRATE,bt=btn('買う',()=>{if(S.gold<g)return toast('お金が足りない');if(casCoin()+n>CASMAX)return toast('これ以上は持てない');S.gold-=g;casAdd(n);sfx('cas_chip');casRender(b)},'pri');if(S.gold<g)bt.disabled=true;L.append(item(`コイン ${n} 枚`,`${g}G`,'',[bt]))}b.append(L)}
  if(t==='slot'){const cv=document.createElement('canvas');cv.id='casSlot';cv.width=214;cv.height=180;cv.style.cssText='display:block;margin:6px auto;image-rendering:auto;max-width:100%';b.append(cv);
@@ -4382,6 +4382,7 @@ function casinoMenu(){CAS.busy=false;openModal(b=>casRender(b));setTimeout(()=>{
 Object.assign(SFX,{cas_spin:t=>{for(let i=0;i<6;i++)tone(660+i*40,t+i*.05,.04,'p25',.03)},cas_stop:t=>{tone(330,t,.06,'p50',.06);noise(t,.04,.05,2200)},
  cas_win:t=>[784,988,1175,1568].forEach((f,i)=>tone(f,t+i*.08,.14,'p25',.05)),cas_jack:t=>{[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>tone(f,t+i*.07,.16,'p25',.06));noise(t+.5,.3,.05,4000)},
  cas_card:t=>noise(t,.05,.07,3200),cas_chip:t=>{tone(1800,t,.03,'triangle',.04);tone(2400,t+.03,.03,'triangle',.03)}});
+// ---- カジノここまで（v196・p140 はここまでを置き換える）
 
 Object.assign(SFX,{err:t=>{tone(233,t,.07,'p50',.05);tone(185,t+.08,.1,'p50',.05)},craft:t=>{noise(t,.04,.08,2600);tone(1319,t+.05,.12,'triangle',.06);tone(1760,t+.11,.18,'triangle',.05)},eat:t=>{for(let i=0;i<3;i++)noise(t+i*.09,.05,.07,900+i*150)},drink:t=>{tone(523,t,.12,'sine',.06,0,.6);tone(440,t+.14,.12,'sine',.05,0,.6)},prof:t=>[659,880,1175].forEach((f,i)=>tone(f,t+i*.06,.12,'triangle',.05)),fame:t=>{[523,659,784,1047].forEach((f,i)=>tone(f,t+i*.1,.22,'p25',.06));[523,659,784].forEach(f=>tone(f,t+.42,.5,'triangle',.04))},pet:t=>{tone(988,t,.08,'p12',.04,0,1.3);tone(1319,t+.09,.1,'p12',.035,0,1.2)},alarm:t=>{for(let i=0;i<3;i++){tone(880,t+i*.2,.09,'p50',.05);tone(660,t+i*.2+.1,.09,'p50',.05)}},buff:t=>{tone(392,t,.3,'triangle',.06,0,3);noise(t+.05,.2,.04,5000)},reel:t=>{for(let i=0;i<5;i++)noise(t+i*.04,.02,.05,3500)},depart:t=>{tone(196,t,.5,'triangle',.07);tone(294,t,.5,'triangle',.05);tone(392,t+.35,.45,'triangle',.05)},cur:t=>tone(1568,t,.025,'triangle',.018),store:t=>{noise(t,.05,.06,1200);tone(660,t+.04,.06,'p25',.03)}}); function sfx(n){if(!AU.ctx||!AU.se||!SFX[n])return;const t=AU.ctx.currentTime;if(t-(AU.last[n]||0)<.045)return;AU.last[n]=t;try{SFX[n](t)}catch(e){}}
 // 曲：8分音符ごと。'-'はのばす、'.'は休み
