@@ -1051,7 +1051,7 @@ function fairyMenu(){
 let paused=true,timeAcc=0,clock=0;
 const keys={};const joy={x:0,y:0};let actQ=false,actHeld=false,holdCd=0,offQ=false,offHeld=false;
 
-const KEY='mebuki-save-v1';
+const KEY='mebuki-save-v2';
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function loadSave(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 
@@ -4749,7 +4749,7 @@ function startGame(fresh){
   else toast('おかえりなさい');
 }
 (function title(){
-  const tb=$('#tbtns'),has=!!loadSave();let armed=false;
+  const tb=$('#tbtns'),has=!!loadSave();let armed=false;try{if(!has&&localStorage.getItem('mebuki-save-v1')){const n=document.createElement('div');n.className='tsub';n.id='oldsave';n.style.cssText='color:#f0c46a;margin:6px 0';n.textContent='大きく作り直したため、前のセーブデータは使えません（はじめから遊んでください）';tb.parentNode.insertBefore(n,tb)}}catch(e){}
   if(has)tb.append(btn('つづきから',()=>startGame(false),'pri'));
   const nb=btn('はじめから',()=>{if(has&&!armed){armed=true;nb.textContent='もう一度押すと上書き';return}startGame(true)},has?'':'pri');
   tb.append(nb);
