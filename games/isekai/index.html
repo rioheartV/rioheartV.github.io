@@ -719,7 +719,8 @@ BTYPES.trade={n:'交易所',z:'com',lots:1,door:'交',rank:3,g:30000,in:{lumber:
 BTYPES.casino={n:'カジノ',z:'com',lots:1,door:'賭',rank:2,g:20000,in:{lumber:20,glass:10,goldore:5,gem:3},d:'コインで遊ぶ（スロット・ルーレット・ブラックジャック・ポーカー）。コインは景品と交換できる'}; Object.assign(ACCS,{c_bunny:{n:'バニーの髪飾り',d:'移動速度+12%・回避率+5%（カジノの景品）',spd:.12,eva:.05,drop:1,sell:4000},c_dice:{n:'黄金のサイコロ',d:'急所率+12%・ドロップ率+20%・敵の落とすお金+50%（カジノの景品）',crit:.12,luck:1,drop:1,sell:9000},c_crown:{n:'勝負師の王冠',d:'獲得経験値+40%・攻撃+4（カジノの景品）',expMul:1.4,atk:4,drop:1,sell:20000}}); BTYPES.grocer={n:'食材屋',z:'com',lots:1,door:'食',fixed:1,g:0,in:{},d:'食材の店'};
 // 最初からある建物（空き区画を使う）
 // v207 windmill free
-BTYPES.windmill={n:'風車',z:'farm',zs:['farm','farm2','orc','ranch','base','ind'],lots:1,door:'h',g:6000,in:{lumber:20,plank:10,rope:4},d:'畑のそばに建つ大きな風車（町のながめ）'}; Object.assign(BTYPES,{b_saw:{n:'製材所',z:'ind',lots:1,native:1,only:1,g:1500,in:{wood:20,stone:5},d:'木を板材・角材・木炭に加工する'},b_mill:{n:'製粉所',z:'ind',lots:1,native:1,only:1,g:3000,in:{wood:20,stone:15},d:'小麦を粉に・サトウキビを砂糖に・油をしぼる'},b_smelt:{n:'製鉄所',z:'ind',lots:1,native:1,only:1,g:6000,in:{stone:30,ore:10},d:'鉱石をとかして鉄材やガラスに'},b_bath:{n:'ゆの花湯',z:'com',lots:1,native:1,only:1,g:5000,in:{stone:20,wood:20},d:'町の銭湯。お湯につかると回復する'},b_fairy:{n:'妖精の館',z:'com',lots:1,native:1,only:1,g:8000,in:{wood:20,gem:5},d:'妖精と契約して、お供にする'}}); LOTS.push({x:102,y:15,z:'com',only:'b_fairy'},{x:112,y:15,z:'com',only:'b_bath'},{x:3,y:3,z:'ind',only:'b_saw'},{x:9,y:3,z:'ind',only:'b_mill'},{x:15,y:3,z:'ind',only:'b_smelt'}); var hasB=t=>typeof S!=='undefined'&&!!S&&(S.builds||[]).some(b=>b.t===t); var NEEDH=['water','harvest','plant','mine','wood','fruit','fish','tiller','brew']; var resIn=h=>{const id=h.id==='lumber'?'wood':h.id;return !NEEDH.includes(id)||hasB('hs_'+id)}; for(const id of NEEDH){const h=HELPERS.find(q=>q.id===id);if(h)BTYPES['hs_'+id]={n:`${h.n}の家`,z:'res',lots:1,native:1,only:1,cap:1,g:2500,in:{wood:20,stone:10},d:`${h.n}（${h.job}）が引っ越してくる。雇えるようになり、住民も 1 人増える${id==='wood'?'（木こりのコズエも一緒に住む）':''}`}} var lotOnly=L=>{if(L.only)return L.only;if(L.z!=='res')return null;for(const id of NEEDH){const h=HELPERS.find(q=>q.id===id);if(h&&h.house&&h.house.x===L.x&&h.house.y===L.y)return'hs_'+id}return null}; 
+BTYPES.windmill={n:'風車',z:'farm',zs:['farm','farm2','orc','ranch','base','ind'],lots:1,door:'h',g:6000,in:{lumber:20,plank:10,rope:4},d:'畑のそばに建つ大きな風車（町のながめ）'}; Object.assign(BTYPES,{b_saw:{n:'製材所',z:'ind',lots:1,native:1,only:1,g:1500,in:{wood:20,stone:5},d:'木を板材・角材・木炭に加工する'},b_mill:{n:'製粉所',z:'ind',lots:1,native:1,only:1,g:3000,in:{wood:20,stone:15},d:'小麦を粉に・サトウキビを砂糖に・油をしぼる'},b_smelt:{n:'製鉄所',z:'ind',lots:1,native:1,only:1,g:6000,in:{stone:30,ore:10},d:'鉱石をとかして鉄材やガラスに'},b_bath:{n:'ゆの花湯',z:'com',lots:1,native:1,only:1,g:5000,in:{stone:20,wood:20},d:'町の銭湯。お湯につかると回復する'},b_fairy:{n:'妖精の館',z:'com',lots:1,native:1,only:1,g:8000,in:{wood:20,gem:5},d:'妖精と契約して、お供にする'}}); BTYPES.b_fairy.fixed=1;BTYPES.b_flower={n:'花屋',z:'com',lots:1,native:1,only:1,g:3000,in:{wood:20,stone:10},d:'花の種を売る店。建つと花屋のハルニレが引っ越してくる'};
+LOTS.push({x:97,y:15,z:'com',only:'b_flower'},{x:102,y:15,z:'com',only:'b_fairy'},{x:112,y:15,z:'com',only:'b_bath'},{x:3,y:3,z:'ind',only:'b_saw'},{x:9,y:3,z:'ind',only:'b_mill'},{x:15,y:3,z:'ind',only:'b_smelt'}); var hasB=t=>typeof S!=='undefined'&&!!S&&(S.builds||[]).some(b=>b.t===t); var NEEDH=['water','harvest','plant','mine','wood','fruit','fish','tiller','brew']; var resIn=h=>{const id=h.id==='lumber'?'wood':h.id;return !NEEDH.includes(id)||hasB('hs_'+id)}; for(const id of NEEDH){const h=HELPERS.find(q=>q.id===id);if(h)BTYPES['hs_'+id]={n:`${h.n}の家`,z:'res',lots:1,native:1,only:1,cap:1,g:2500,in:{wood:20,stone:10},d:`${h.n}（${h.job}）が引っ越してくる。雇えるようになり、住民も 1 人増える${id==='wood'?'（木こりのコズエも一緒に住む）':''}`}} var lotOnly=L=>{if(L.only)return L.only;if(L.z!=='res')return null;for(const id of NEEDH){const h=HELPERS.find(q=>q.id===id);if(h&&h.house&&h.house.x===L.x&&h.house.y===L.y)return'hs_'+id}return null}; 
 const FIXB=[{x:117,y:15,t:'grocer'}];
 const bfoot=(L,t)=>{const T=BTYPES[t];return{x:L.x,y:L.y,w:T.lots===2?11:5,h:3}};
 const bLotFree=L=>town.m[L.y+2]&&town.m[L.y+2][L.x+2]==='空';
@@ -901,8 +902,8 @@ function buildTown(skip,hm=HMAP){
   rect(86,18,121,28,'舗');for(const[x,y]of[[121,18],[120,18],[121,19],[121,28],[120,28],[121,27]])m[y][x]='.';
   rect(FOUNT.x,FOUNT.y,FOUNT.x+FOUNT.w-1,FOUNT.y+FOUNT.h-1,'U');rect(85,23,FOUNT.x-1,23,'渠');
   // 北の店（花屋・妖精の館・まほう店・ゆの花湯・食材屋）
-  rect(97,15,101,17,'S');m[17][99]='s';
-  if(hasB('b_fairy'))bld(102,15,5,3,'妖精の館',['#c07fd0','#9c5fb0','#dca0e8'],'z',2,{art:'fairy'});
+  if(hasB('b_flower')){rect(97,15,101,17,'S');m[17][99]='s'}
+  bld(102,15,5,3,'妖精の館',['#c07fd0','#9c5fb0','#dca0e8'],'z',2,{art:'fairy'});
   bld(107,15,5,3,'まほう店',['#5a3f86','#432e66','#7a5ab0'],'魔',2,{art:'magic'});
   if(hasB('b_bath'))bld(112,15,5,3,'ゆの花湯',['#3f7f8a','#2e5f68','#5a9fa8'],'^',2,{bath:1,art:'bath'});
   // 南の店（鍛冶屋・冒険者ギルド）と商業の区画（道 y33）
@@ -1130,7 +1131,7 @@ function lotMenu(tx,ty){const L=LOTS.find(l=>l.x+2===tx&&l.y+2===ty);if(!L)retur
     for(const t in BTYPES){const T=BTYPES[t];if(T.z!==L.z||T.fixed||(lotOnly(L)?lotOnly(L)!==t:T.only))continue;any=1;const L2=T.lots===2?LOTS.find(q=>q.x===L.x+6&&q.y===L.y):null;const room=T.lots===1||(L2&&bLotFree(L2));
       const f=bfoot(L,t);let deco=false;for(let y=f.y;y<f.y+f.h;y++)for(let x=f.x;x<f.x+f.w;x++)if((S.deco||{})[x+','+y]&&!(x===L.x+2&&y===L.y+2))deco=true;
       const BC=bcost(T),rk=(T.rank||0)<=fameRank()&&(!T.need||clearMax(T.need)>0),ok=room&&!deco&&rk&&S.gold>=BC.g&&Object.entries(BC.in).every(([i,n])=>have(i)>=n);
-      const bt=btn('建てる',()=>{S.gold-=BC.g;for(const[i,n]of Object.entries(BC.in))take(i,n);S.builds=S.builds||[];S.builds.push({t,x:L.x,y:L.y});rebuildTown();if(t.startsWith('hs_'))initNPCs();sfx('lvup');closeModal();toast(`${T.n}が建った！`+(T.cap?`（住民 +${T.cap}人・町の住民 ${popCap()}人）`:''))},'pri');if(!ok)bt.disabled=true;
+      const bt=btn('建てる',()=>{S.gold-=BC.g;for(const[i,n]of Object.entries(BC.in))take(i,n);S.builds=S.builds||[];S.builds.push({t,x:L.x,y:L.y});rebuildTown();if(t.startsWith('hs_')||t==='b_flower')initNPCs();sfx('lvup');closeModal();toast(`${T.n}が建った！`+(T.cap?`（住民 +${T.cap}人・町の住民 ${popCap()}人）`:''))},'pri');if(!ok)bt.disabled=true;
       l.append(item(T.n+(T.cap?`（${T.cap}人）`:''),BC.g+'G'+(BC.g<T.g?'（大工）':''),T.d+'。材料：'+Object.entries(BC.in).map(([i,n])=>`${ITEMS[i].n}×${n}（${have(i)}）`).join('・')+(!room?'。右どなりの区画が空いていない':deco?'。区画の中の飾りを片付けてから':'')+(T.rank?`。町の評判ランク ${T.rank} から${rk?'':'（いま '+fameRank()+'）'}`:'')+(T.need&&!clearMax(T.need)?`。${DUNS[T.need].n}を踏破すると建てられる`:''),[bt]))}
     if(!any)l.append(el('div','muted','ここに建てられる物はまだない（料理屋は次の版）'));b.append(l,row(btn('閉じる',closeModal)))})}
 function lootOf(id,f){if(id===ABY){const t=abyT(f),L=lootOf(t,Math.min(f,DUNS[t].max)).slice();for(let i=0;i<1+Math.floor(f/15);i++)L.push('abyssshard');if(f>=40)L.push('abysscore');if(f>=10)L.push('maore');if(f>=30)L.push('adamore','mithrilore');return L}const D=DUNS[id];let L=D.loot;if(D.nw){const w=Math.min(.7,.15+f*.02),n=20,k=Math.round(n*w);L=[];for(let i=0;i<k;i++)L.push(D.nw[i%D.nw.length]);for(let i=k;i<n-3;i++)L.push(D.reuse[i%D.reuse.length]);L.push('gold','gold','gold')}return f>D.max?L.concat(DEEP[id].loot):L}
@@ -2618,7 +2619,7 @@ const SHOPN={harune:'花屋の店番',dolf:'鍛冶屋の店番',tia:'妖精の�
 const RESHAIR=['#5a3a2a','#c86a3a','#e0c070','#3a3a44','#8a5a32','#f0a060'];
 function personList(){const L=[];
   for(const h of HELPERS)L.push({id:h.id,kind:'helper',n:h.n,hair:h.hair,look:NPCLOOK[h.id]||h.look,house:h.house,inTown:resIn(h),def:h.id,o:h});
-  for(const h of FOLK)L.push({id:h.id,kind:'folk',n:h.n,hair:h.hair,look:NPCLOOK[h.id]||h.look,house:h.house,inTown:true,def:'shop:'+h.id,o:h});
+  for(const h of FOLK)L.push({id:h.id,kind:'folk',n:h.n,hair:h.hair,look:NPCLOOK[h.id]||h.look,house:h.house,inTown:folkIn(h),def:'shop:'+h.id,o:h});
   for(const h of LOGIW)L.push({id:h.id,kind:'logi',n:h.n,hair:h.hair,look:h.look,house:null,inTown:true,def:h.id,o:h});
   const hs=resHomes(),n=resCount();for(let i=0;i<n;i++){const hm=hs[i%Math.max(1,hs.length)],nm=resName(i);
     L.push({id:'res'+i,kind:'res',n:nm,hair:RESHAIR[i%6],look:[i%2?'M':'F',['short','long','pony','bob','bun','spiky'][i%6],['#3a6ad0','#3a8a4a','#5a3a2a','#c84a6a'][i%4]],
@@ -2631,8 +2632,9 @@ function resCount(){const named=HELPERS.filter(h=>!h.shareHouse&&resIn(h)).lengt
 const JCAT={water:'畑',harvest:'畑',plant:'畑',tiller:'畑',mine:'採集',wood:'採集',lumber:'採集',ranch:'牧場',fruit:'果樹',fish:'釣り',brew:'製造'};
 function jobList(){const L=[];for(const j in JOBDEF){const c=JCAT[j]||'畑';L.push({id:j,n:JOBDEF[j].job,cat:c,g:c==='製造'?'中':'外',wage:JOBDEF[j].wage,slot:j,ok:true})}
   for(const h of LOGIW){const c=h.fac?'製造':{carry:'運搬',carp:'建築'}[h.id]||'運搬';L.push({id:h.id,n:h.job,cat:c,g:'中',wage:h.wage,slot:h.id,ok:!h.fac||facBuilt(h.fac)})}
-  for(const h of FOLK)L.push({id:'shop:'+h.id,n:SHOPN[h.id]||h.job+'の店番',cat:'お店',g:'中',wage:0,slot:null,fid:h.id,ok:true});return L}
+  for(const h of FOLK)L.push({id:'shop:'+h.id,n:SHOPN[h.id]||h.job+'の店番',cat:'お店',g:'中',wage:0,slot:null,fid:h.id,ok:folkIn(h)});return L}
 const jobById=id=>jobList().find(j=>j.id===id);
+const folkIn=h=>h.id!=='harune'||hasB('b_flower');// v220 花屋が建つまでハルニレは町にいない
 function pjInit(){if(S.pj)return;S.pj={};for(const h of FOLK)S.pj[h.id]='shop:'+h.id;
   for(const h of HELPERS)if(S.hired&&S.hired[h.id])S.pj[h.id]=jobOf(h);for(const h of LOGIW)if(S.hired&&S.hired[h.id])S.pj[h.id]=h.id;
   let i=0;const n=popN();for(const id in(S.crew||{})){const k=S.hired&&S.hired[id]?Math.min(crewMax(),S.crew[id]):0;for(let c=0;c<k&&i<n;c++)S.pj['res'+(i++)]=id}}
@@ -2687,7 +2689,7 @@ function secFolk(b,R){applyJobs();const P=personList(),inT=P.filter(p=>p.inTown)
   const opts=[['','なし（雇わない）'],...jobSorted(JL.filter(j=>j.ok)).map(j=>[j.id,jobOptLabel(j)])];const l=el('div','list');
   const KIND={helper:'住民',folk:'住民',res:'住民',logi:'通い'};
   for(const p of[...P.filter(q=>q.inTown),...P.filter(q=>!q.inTown)]){const j=S.pj[p.id],J=j&&jobById(j);if(FOLKF2==='out'&&!(J&&J.g==='外')||FOLKF2==='in'&&!(J&&J.g==='中')||FOLKF2==='free'&&(j||!p.inTown))continue;
-    if(!p.inTown){if(FOLKF2==='all')l.append(item(p.n,'まだ町にいない',p.kind==='helper'?`町づくりで「${p.id==='lumber'?HELPERS.find(q=>q.id==='wood').n:p.n}の家」を建てると引っ越してくる`:'住む家がない',[]));continue}
+    if(!p.inTown){if(FOLKF2==='all')l.append(item(p.n,'まだ町にいない',p.kind==='helper'?`町づくりで「${p.id==='lumber'?HELPERS.find(q=>q.id==='wood').n:p.n}の家」を建てると引っ越してくる`:p.id==='harune'?'町づくりで「花屋」を建てると引っ越してくる':'住む家がない',[]));continue}
     const lead=J&&PJL[j]&&PJL[j].id===p.id,role=!J?'':J.slot&&!lead?`・${PJL[j]?PJL[j].n:''}の手伝い`:'',now=folkNow(p.kind==='res'?'res'+p.id.slice(3):p.id);
     selRow(l,`${p.n}（${KIND[p.kind]}）`,`${p.house?'住まい：（'+p.house.x+','+p.house.y+'）':'住まい：森の門のそばから通う'}${J?'・'+J.g+'の仕事・'+J.cat+(J.wage?'・給金 '+J.wage+'G/日':''):''}${role}・今：${now}`,opts,j||'',v=>{if(pjSetPerson(p.id,v)){toast(v?`${p.n}は明日の朝から${jobById(v).n}をします`:`${p.n}は仕事なしになった`)}R()})}
   if(!l.children.length)l.append(el('div','muted','ここに入る人はいない'));b.append(l)}
@@ -3380,7 +3382,7 @@ function placeMenu(tx,ty,dir){if(cur!==town)return;
   openModal(b=>{b.append(el('h2','','建物を建てる'),el('div','muted',`上を向いて立つと、目の前のマスが入口になり、建物は奥（上）へ建ちます。区（居住区・商業区・工業区）の中の草地に建てられます。決まった場所の物は、その場所に建ちます。材料はかばんと倉庫の両方から。所持金 ${S.gold}G・町の住民 ${popCap()}人`));const l=el('div','list');
     for(const t in BTYPES){const T=BTYPES[t];if(T.fixed)continue;if(T.only&&hasB(t))continue;if(t.startsWith('hs_')&&!bFixedAt(t))continue;
       const sp=bSpot(t,tx,ty,dir),BC=bcost(T),rk=(T.rank||0)<=fameRank()&&(!T.need||clearMax(T.need)>0),ok=!!sp.f&&rk&&S.gold>=BC.g&&Object.entries(BC.in).every(([i,n])=>have(i)>=n);
-      const bt=btn('建てる',()=>{const sp2=bSpot(t,tx,ty,dir);if(!sp2.f)return toast(sp2.why);S.gold-=BC.g;for(const[i,n]of Object.entries(BC.in))take(i,n);S.builds=S.builds||[];S.builds.push({t,x:sp2.f.x,y:sp2.f.y});rebuildTown();if(t.startsWith('hs_'))initNPCs();sfx('lvup');closeModal();toast(`${T.n}が建った！`+(T.cap?`（住民 +${T.cap}人・町の住民 ${popCap()}人）`:''))},'pri');if(!ok)bt.disabled=true;
+      const bt=btn('建てる',()=>{const sp2=bSpot(t,tx,ty,dir);if(!sp2.f)return toast(sp2.why);S.gold-=BC.g;for(const[i,n]of Object.entries(BC.in))take(i,n);S.builds=S.builds||[];S.builds.push({t,x:sp2.f.x,y:sp2.f.y});rebuildTown();if(t.startsWith('hs_')||t==='b_flower')initNPCs();sfx('lvup');closeModal();toast(`${T.n}が建った！`+(T.cap?`（住民 +${T.cap}人・町の住民 ${popCap()}人）`:''))},'pri');if(!ok)bt.disabled=true;
       const where=sp.fixed?'（決まった場所に建つ）':`（${bZones(T).map(z=>BZN[z]||z).join('・')}${T.lots===2?'・横 11 マス':''}）`;
       l.append(item(T.n+(T.cap?`（${T.cap}人）`:'')+where,BC.g+'G'+(BC.g<T.g?'（大工）':''),T.d+'。材料：'+Object.entries(BC.in).map(([i,n])=>`${ITEMS[i].n}×${n}（${have(i)}）`).join('・')+(sp.f?'':'。'+sp.why)+(T.rank?`。町の評判ランク ${T.rank} から${rk?'':'（いま '+fameRank()+'）'}`:'')+(T.need&&!clearMax(T.need)?`。${DUNS[T.need].n}を踏破すると建てられる`:''),[bt]))}
     b.append(l,row(btn('閉じる',closeModal)))})}
