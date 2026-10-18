@@ -716,7 +716,7 @@ Object.assign(BTYPES,{museum:{n:'博物館',z:'com',lots:1,door:'博',rank:2,g:2
   tower:{n:'恵みの塔',z:'ind',lots:1,door:'h',rank:5,g:300000,in:{brick:50,pane:10,circuit:2,kojuu:3},d:'毎朝、水をやった作物が もう 1 日育つことがある（25%）'},
   clock:{n:'黄金の時計台',z:'res',lots:1,door:'h',rank:6,g:500000,in:{goldnugget:20,gear:10,pane:6,cutstone:20},d:'夜ふかしで倒れる時間が 2 時間のび、倒れてもお金を落とさない'}});
 BTYPES.trade={n:'交易所',z:'com',lots:1,door:'交',rank:3,g:30000,in:{lumber:30,plank:30,rope:20,nail:30},d:'荷を積んで船を出す。行き先ごとに日数と値段の倍率・好まれる物がちがう。帰りに珍しい物を持ち帰ることも'};
-BTYPES.grocer={n:'食材屋',z:'com',lots:1,door:'食',fixed:1,g:0,in:{},d:'食材の店'};
+BTYPES.casino={n:'カジノ',z:'com',lots:1,door:'賭',rank:2,g:20000,in:{lumber:20,glass:10,goldore:5,gem:3},d:'コインで遊ぶ（スロット・ルーレット・ブラックジャック・ポーカー）。コインは景品と交換できる'}; Object.assign(ACCS,{c_bunny:{n:'バニーの髪飾り',d:'移動速度+12%・回避率+5%（カジノの景品）',spd:.12,eva:.05,drop:1,sell:4000},c_dice:{n:'黄金のサイコロ',d:'急所率+12%・ドロップ率+20%・敵の落とすお金+50%（カジノの景品）',crit:.12,luck:1,drop:1,sell:9000},c_crown:{n:'勝負師の王冠',d:'獲得経験値+40%・攻撃+4（カジノの景品）',expMul:1.4,atk:4,drop:1,sell:20000}}); BTYPES.grocer={n:'食材屋',z:'com',lots:1,door:'食',fixed:1,g:0,in:{},d:'食材の店'};
 // 最初からある建物（空き区画を使う）
 BTYPES.windmill={n:'風車',z:'farm2',lots:1,door:'h',fixed:1,g:0,in:{},d:'東の農園の風車'};
 const FIXB=[{x:53,y:15,t:'grocer'},{x:86,y:19,t:'windmill'}];
@@ -738,7 +738,7 @@ const FOLK=[{id:'harune',n:'ハルニレ',job:'花屋',hair:'#c86a3a',work:[33,1
 FOLK.forEach((h,i)=>h.house={x:HPOSD[h.id][0],y:HPOSD[h.id][1],w:5,h:3,n:h.n,roof:RPAL[[3,6,7,10,1,11,9][i]][1]});
 {const a=HELPERS.find(h=>h.id==='lumber'),w=HELPERS.find(h=>h.id==='wood');a.house=w.house}
 const RESID=[...HELPERS,...FOLK];
-const HINT={'ア':'アトリエ（鍛冶・調理・調合など。わが家と中でつながっている）','銅':'銅像','像':'金の像','鐘':'ミスリルの鐘','黒':'黒曜石の石畳','灯':'魔鉱のランプ','柵':'鉄の柵','溝':'水路','門':'水門','交':'交易所','博':'博物館','転':'転移の石碑','植':'自動植え付け機','橋':'橋','水':'水力発電機','火':'火力発電所','蓄':'大型蓄電装置','仕':'自動仕分け機','冷':'冷蔵庫','炉':'魔導炉','販':'無人販売所','車':'水車','風':'風力発電機','電':'蓄電池','収':'自動収穫機','掘':'採掘ドリル','網':'池の網','搬':'搬送機','鉢':'鉢植えのチューリップ','薫':'ラベンダーの花壇','百':'ユリの花壇','桜':'桜の木（花の公園）','食':'食材屋（9:00〜18:00）','庫':'作業用チェスト（村人の作業の材料・できた物を入れる箱）','料':'料理屋','空':'空き区画（いずれ建物が建つ場所）','樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'花屋 ハルニレ（種と苗）',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
+const HINT={'ア':'アトリエ（鍛冶・調理・調合など。わが家と中でつながっている）','銅':'銅像','像':'金の像','鐘':'ミスリルの鐘','黒':'黒曜石の石畳','灯':'魔鉱のランプ','柵':'鉄の柵','溝':'水路','門':'水門','交':'交易所','賭':'カジノ','博':'博物館','転':'転移の石碑','植':'自動植え付け機','橋':'橋','水':'水力発電機','火':'火力発電所','蓄':'大型蓄電装置','仕':'自動仕分け機','冷':'冷蔵庫','炉':'魔導炉','販':'無人販売所','車':'水車','風':'風力発電機','電':'蓄電池','収':'自動収穫機','掘':'採掘ドリル','網':'池の網','搬':'搬送機','鉢':'鉢植えのチューリップ','薫':'ラベンダーの花壇','百':'ユリの花壇','桜':'桜の木（花の公園）','食':'食材屋（9:00〜18:00）','庫':'作業用チェスト（村人の作業の材料・できた物を入れる箱）','料':'料理屋','空':'空き区画（いずれ建物が建つ場所）','樹':'密林の木（オノで切る）','炭':'泥炭の山（ツルハシで掘る）','!':'ひまわり花壇',W:'水辺（釣り竿で釣り・漁港の海は海水をくめる）','^':'ゆの花湯（銭湯）','$':'鍛冶屋の店（鉱石・装備）',x:'氷の洞窟',c:'洞窟のダンジョン','8':'果樹の苗木（そだち中）','0':'井戸（水をくむ）','9':'樽',L:'切り株（オノで掘り起こす）','1':'街灯','2':'植木','4':'ベンチ',a:'ドレッサー（着替え）',A:'金床（装備の強化）',M:'船（孤島へ）',G:'漁港の市場',y:'ヤシの木',j:'鍛冶屋',Z:'ベッド（寝る）',K:'収納箱（倉庫）',U:'噴水',R:'金の鉱脈',Q:'森のダンジョン',V:'山のダンジョン',J:'ゲンの釣り具屋',b:'牧草入れ',m:'マーサの牧場',z:'妖精の館','魔':'まほう店（薬・魔導書）',Y:'果物をとる',g:'倉庫',D:'家（寝る）',B:'出荷箱',s:'花屋 ハルニレ（種と苗）',c:'洞窟',k:'作業台',q:'調理台',v:'鍛冶炉',p:'調合台',N:'依頼掲示板',T:'木材を取る','*':'薬草をつむ'};
 const SEEDCOL={tulip:'#f05a7a',lavender:'#9a7ae0',rose:'#d8203a',lily:'#f8f0e0',dragonfruit:'#e0407a',lotus:'#e8c8c0',makomo:'#d8e0b0',tree_banana:'#f0d040',tree_grape:'#7a4aa8',tree_cacao:'#a0522d',soybean:'#e0c890',sunflower:'#f0c030',pepper:'#3a3530',tree_apple:'#e0323b',tree_peach:'#f4a0a8',tree_orange:'#f0902a',yomogi:'#8ab070',aloe:'#5aa070',ginseng:'#e0c8a0',mandragora:'#a05a8a',basil:'#4fa040',mint:'#8ae0b0',rosemary:'#7a8ae0',rice:'#e8d070',sugarcane:'#9ad070',herb:'#6fc25a',manaherb:'#7a6ae0',wheat:'#e0c070',chili:'#d83a2a',carrot:'#f08a2a',cabbage:'#8ad070',pumpkin:'#e8902a',eggplant:'#6a3a8a',pineapple:'#e8b44a',mango:'#f08a3a',turnip:'#b46fc4',strawberry:'#e0323b',tomato:'#e4472e',grass:'#8cc163',potato:'#a9784a',berry:'#4a5ac8',corn:'#f0c030',melon:'#7fc060'};
 const TOOLS=[{id:'hand',s:'素手'},{id:'hoe',s:'クワ'},{id:'can',s:'じょうろ'},{id:'seed',s:'種',seed:1},{id:'sword',s:'剣',w:1},{id:'spear',s:'細剣',w:1},{id:'dagger',s:'短剣',w:1},{id:'great',s:'大剣',w:1},{id:'katana',s:'刀',w:1},{id:'axe',s:'オノ',w:1},{id:'pick',s:'ツルハシ',w:1},{id:'bow',s:'弓',w:1},{id:'staff',s:'杖',w:1},{id:'rune',s:'魔法剣',w:1},{id:'rod',s:'釣り竿',rod:1}];
 const GORDER=[0,2,4],GKEY={0:'g1',2:'g3',4:'g4'};
@@ -1945,7 +1945,7 @@ function action(){
   if(c==='h'&&HMAP[tx+','+ty]&&['tower','clock'].includes(HMAP[tx+','+ty].custom)){P.use=.2;return toast(BTYPES[HMAP[tx+','+ty].custom].n+'：'+BTYPES[HMAP[tx+','+ty].custom].d)}
   if(c==='炉')return procMenu('power');if(c==='火')return procMenu('thermal');if(c==='蓄'&&cur===town){P.use=.2;return pwMenu()}if('車水風電門避'.includes(c)&&cur===town){P.use=.2;return pwMenu()}if(c==='交'&&cur===town)return tradeMenu();if(c==='販')return standMenu();if(c==='植'&&cur===town)return plantMenu();if(c==='仕'&&cur===town)return sortMenu();if(c==='冷'&&cur===town)return fridgeMenu();if('車水風電収掘網搬'.includes(c)&&cur===town){P.use=.2;return toast(`${DECO[c].n}：${DECO[c].d}（町の電気 ${Math.floor(pw().v)}/${pwCap()}・発電 ${pwRate()}/時）`)}
   if(c==='食')return grocerMenu();if(c==='庫')return wchestMenu();if(c==='料')return procMenu('cook');
-  if(c==='窯')return procMenu('kiln');if(c==='坑')return procMenu('clay');if(c==='熔')return procMenu('forge');if(c==='雷')return procMenu('spark');if(c==='珠')return procMenu('pearl');if(c==='道'&&cur===town)return enterDojo();if(c==='湯'&&cur===town)return onsenMenu();if(c==='工')return procMenu('stone');if(c==='空'&&cur===town)return lotMenu(tx,ty);if(c==='材')return procMenu('saw');if(c==='粉')return procMenu('mill');if(c==='鉄')return procMenu('smelt');
+  if(c==='窯')return procMenu('kiln');if(c==='坑')return procMenu('clay');if(c==='熔')return procMenu('forge');if(c==='雷')return procMenu('spark');if(c==='珠')return procMenu('pearl');if(c==='道'&&cur===town)return enterDojo();if(c==='湯'&&cur===town)return onsenMenu();if(c==='賭'&&cur===town)return casinoMenu();if(c==='工')return procMenu('stone');if(c==='空'&&cur===town)return lotMenu(tx,ty);if(c==='材')return procMenu('saw');if(c==='粉')return procMenu('mill');if(c==='鉄')return procMenu('smelt');
   if(c==='h'&&HMAP[tx+','+ty]&&HMAP[tx+','+ty].custom==='windmill'){P.use=.2;return toast('東の農園の風車。ゆっくり回っている')}if(c==='e'&&HMAP[tx+','+ty]&&HMAP[tx+','+ty].custom){const hs=HMAP[tx+','+ty];P.use=.2;return toast(`${hs.n}（住める人数 ${hs.cap}人・町の住民 ${popCap()}人）`)}if(c==='e'){const hs=HMAP[tx+','+ty];P.use=.2;return toast(S.time>=1260?`${hs.n}の家。もう寝ているようだ`:`${hs.n}の家。今は外にいるみたい`)}
   if(RECIPES[c])return craftMenu(c);
   const tool=curT(),k=tx+','+ty;
@@ -3463,7 +3463,7 @@ Object.assign(BSPR,{
 Object.assign(BSPR,{onsen:{w:88,h:80,ox:4,oy:28,f:(ox,oy)=>{bShadow(ox,oy);bPlank(ox+8,oy+14,68,34,'#8a5a3a','#6b4423','#a9784a');poly([ox+2,oy+16,ox+82,oy+16,ox+70,oy-2,ox+14,oy-2],'#4a5a6a');R(ox+10,oy-4,64,3,'#3a4a5a');
   bDoor(ox,oy,'#3a2a5a','#6a5a8a');R(ox+33,oy+31,14,6,'#e0e0f0');G.fillStyle='#c83a3a';G.font='bold 8px sans-serif';G.fillText('ゆ',ox+36,oy+37);
   for(const x of[10,60]){R(ox+x,oy+38,16,9,'#6a6a72');R(ox+x+1,oy+39,14,7,'#7ac0d8');R(ox+x+2,oy+40,5,1,'#e0f4fc')}R(ox+60,oy+20,10,10,'#bfe0f8');R(ox+14,oy+20,10,10,'#bfe0f8')}}});
-BANIM.onsen=(x,y)=>{for(const x2 of[18,68])bPuff(x+x2,y+34,'255,255,255',3)};
+Object.assign(BSPR,{casino:{w:88,h:80,ox:4,oy:28,f:(ox,oy)=>{bShadow(ox,oy);bPlank(ox+6,oy+12,72,36,'#4a1a3a','#30102a','#6a2a52');poly([ox+0,oy+14,ox+84,oy+14,ox+76,oy-6,ox+8,oy-6],'#2a0a2a');R(ox+6,oy-8,72,3,'#e8b44a');R(ox+4,oy+13,76,2,'#e8b44a');R(ox+16,oy-4,52,13,'#1a0a1a');R(ox+16,oy-4,52,1,'#e8b44a');R(ox+16,oy+8,52,1,'#e8b44a');G.fillStyle='#ffd060';G.font='bold 10px sans-serif';G.fillText('カジノ',ox+27,oy+6);bDoor(ox,oy,'#7a1a2a','#c8a040');for(const x of[12,62]){R(ox+x,oy+20,12,12,'#ffcf6a');R(ox+x+1,oy+21,10,10,'#e86a3a');R(ox+x+5,oy+21,1,10,'#7a1a2a')}G.fillStyle='#e8b44a';G.font='bold 9px serif';G.fillText('♠',ox+14,oy+44);G.fillText('♥',ox+64,oy+44)}}}); BANIM.casino=(x,y)=>{const n=9,ph=Math.floor(clock*6);for(let i=0;i<n;i++){const on=(i+ph)%3===0;G.fillStyle=on?'#fff6a0':'#6a4a1a';G.fillRect(x+21+i*6,y-7,2,2);G.fillStyle=(i+ph)%3===1?'#fff6a0':'#6a4a1a';G.fillRect(x+21+i*6,y+8,2,2)}}; BANIM.onsen=(x,y)=>{for(const x2 of[18,68])bPuff(x+x2,y+34,'255,255,255',3)};
 // 住人の家の型（v150）。VHOUSE＝村人の家（扉 'e'・建てた物でない・わが家でない）。h.vt＝型、h.vw＝壁、h.vd＝扉の色、h.vs＝よろい戸
 let VH_M=null,VH_L=[];const VCORNER=['45,29','75,35'];
 function vHouses(){if(VH_M===town.m)return VH_L;VH_M=town.m;const seen=new Set(),L=[];for(const k in HMAP){const h=HMAP[k];if(seen.has(h))continue;seen.add(h);if(h.custom||h.w!==5||h.h!==3||town.m[h.y+2][h.x+2]!=='e')continue;L.push(h)}
@@ -4260,6 +4260,115 @@ let SPN=null,MDIM=null;
 function mcastFx(sk){const pal=ELC[skEl(sk)]||ELC.magic,tier=sk.t||1;fx.push({type:'mburst',x:P.x,y:P.y,t:.5,max:.5,c:pal[0],c2:pal[1],r:16+tier*6});SPN={n:sk.n,c:pal[0],c2:pal[1],t0:clock,tier};if(tier>=3){MDIM={t0:clock,d:.9};flash=Math.max(flash,.06);shake=Math.max(shake,.12)}sfx(tier>=3?'mcast3':'mcast')}
 function drawSpellName(){if(!SPN)return;const e=clock-SPN.t0,D=1.4;if(e>D||e<0){SPN=null;return}const a=e<.12?e/.12:e>D-.35?(D-e)/.35:1,sc=e<.12?1.4-.4*e/.12:1;g.save();g.globalAlpha=a;g.translate(Math.round(VW/2),26);g.scale(sc,sc);g.font=`bold ${SPN.tier>=3?16:13}px sans-serif`;g.textAlign='center';g.textBaseline='middle';const w=g.measureText(SPN.n).width+36,bg=g.createLinearGradient(-w/2,0,w/2,0);bg.addColorStop(0,'rgba(10,8,30,0)');bg.addColorStop(.2,'rgba(10,8,30,.78)');bg.addColorStop(.8,'rgba(10,8,30,.78)');bg.addColorStop(1,'rgba(10,8,30,0)');g.fillStyle=bg;g.fillRect(-w/2,-12,w,24);g.fillStyle=SPN.c;g.fillRect(-w/2+12,11,w-24,1);g.fillRect(-w/2+12,-12,w-24,1);g.lineWidth=3;g.strokeStyle='rgba(10,8,30,.95)';g.strokeText(SPN.n,0,1);g.fillStyle=SPN.c2;g.fillText(SPN.n,0,1);g.restore()}
 Object.assign(SFX,{chant:t=>[880,1175,1568].forEach((f,i)=>tone(f,t+i*.07,.2,'triangle',.05,0,1.15)),mcast:t=>{tone(523,t,.14,'p25',.07,0,1.5);tone(1047,t+.05,.22,'triangle',.07,0,1.05);noise(t,.15,.06,2600)},mcast3:t=>{noise(t,.5,.16,320);tone(110,t,.55,'triangle',.18,0,.5);[523,784,1047,1568].forEach((f,i)=>tone(f,t+.06+i*.05,.32,'triangle',.06,0,1.02))},tele:t=>{tone(1600,t,.05,'p12',.045);tone(1600,t+.09,.05,'p12',.045)},iai:t=>{noise(t,.06,.14,6500);tone(2637,t+.03,.18,'triangle',.05,0,1);tone(3520,t+.05,.14,'triangle',.03,0,1)},crit:t=>{tone(1319,t,.06,'p12',.07);tone(1976,t+.05,.12,'p12',.07,0,1.02);noise(t,.08,.12,3000)},rain:t=>{noise(t,.9,.08,5200);noise(t+.2,.9,.06,3800);tone(784,t,.3,'triangle',.04,0,.8)}});
+// ---- カジノ（v190・PC）：商業区に建てる「カジノ」（扉 '賭'）。コイン 1 枚 20G（G には戻せない）・景品と交換
+//  スロット（還元 約 95%）・ルーレット（0 が 1 つ・97.3%）・ブラックジャック（BJ 3:2・親は 17 で止まる）・ポーカー（ジャック以上・約 98%）
+const CASRATE=20,CASMAX=99999;
+const CASPRIZE=[{t:'acc',id:'c_bunny',c:800},{t:'acc',id:'c_dice',c:2000},{t:'acc',id:'c_crown',c:5000},{t:'it',id:'elixir',c:30},{t:'it',id:'spiritpot',c:80},{t:'it',id:'magcore',c:250}];
+const CAS={tab:'coin',bet:1,busy:false,sl:{r:[5,11,17],msg:''},rl:{bets:[],amt:1,num:7,last:null,msg:''},bj:null,pk:null};
+const casCoin=()=>S.coin||0;
+function casAdd(n){S.coin=Math.max(0,Math.min(CASMAX,casCoin()+n))}
+function casPay(n){if(casCoin()<n){toast('コインが足りない');return false}casAdd(-n);return true}
+function casStyle(){if(document.getElementById('casStyle'))return;const st=document.createElement('style');st.id='casStyle';st.textContent=
+ '.casc{display:inline-block;width:34px;height:48px;margin:2px;border-radius:5px;background:#fbf8ee;color:#222;font:bold 15px sans-serif;text-align:center;line-height:22px;padding-top:3px;box-shadow:0 1px 0 #0006;vertical-align:top}'+
+ '.casc.r{color:#c8283a}.casc.bk{background:repeating-linear-gradient(45deg,#3a2a6a,#3a2a6a 4px,#5a3a8a 4px,#5a3a8a 8px)}.casc.h{outline:3px solid #ffd060;transform:translateY(-6px)}'+
+ '.cashand{min-height:58px;margin:4px 0}.casbig{font:bold 16px sans-serif;margin:6px 0}.casgrid{display:flex;flex-wrap:wrap;gap:4px}.casgrid button{min-width:64px}';document.head.append(st)}
+// ---- スロット：3 リール・24 コマ（7×1・BAR×2・ベル×3・スライム×4・葉×6・チェリー×3・はずれ×5）
+const SLSYM=['7','BAR','ベル','スライム','葉','チェリー','－'],SLN=[1,2,3,4,6,3,5];
+const SLSTRIP=(()=>{const a=[];SLN.forEach((n,i)=>{for(let k=0;k<n;k++)a.push(i)});return a})();
+const SLPAY={0:500,1:100,2:40,3:25,4:12};
+function slEval(r){const[a,b,c]=r;if(a===b&&b===c&&SLPAY[a])return SLPAY[a];if(a===5&&b===5&&c===5)return 20;if(a===5&&b===5)return 8;if(a===5)return 3;return 0}
+function slDrawSym(g2,s,x,y,w,h){g2.fillStyle='#fbf8ee';g2.fillRect(x,y,w,h);const cx=x+w/2,cy=y+h/2;g2.textAlign='center';g2.textBaseline='middle';
+ if(s===0){g2.fillStyle='#d0283a';g2.font='bold 30px serif';g2.fillText('7',cx,cy+1)}
+ else if(s===1){g2.fillStyle='#222';g2.fillRect(cx-17,cy-8,34,16);g2.fillStyle='#fff';g2.font='bold 11px sans-serif';g2.fillText('BAR',cx,cy+1)}
+ else if(s===2){g2.fillStyle='#e8b020';g2.beginPath();g2.arc(cx,cy-2,10,Math.PI,0);g2.lineTo(cx+12,cy+8);g2.lineTo(cx-12,cy+8);g2.fill();g2.fillStyle='#a07010';g2.fillRect(cx-2,cy+8,4,4)}
+ else if(s===3){g2.fillStyle='#5fc85a';g2.beginPath();g2.ellipse(cx,cy+3,14,10,0,0,Math.PI*2);g2.fill();g2.beginPath();g2.arc(cx,cy-4,7,0,Math.PI*2);g2.fill();g2.fillStyle='#223';g2.fillRect(cx-5,cy,3,3);g2.fillRect(cx+2,cy,3,3)}
+ else if(s===4){g2.fillStyle='#3e9a3e';g2.beginPath();g2.ellipse(cx,cy,7,14,.6,0,Math.PI*2);g2.fill();g2.strokeStyle='#1f6a28';g2.lineWidth=2;g2.beginPath();g2.moveTo(cx-6,cy+9);g2.lineTo(cx+6,cy-9);g2.stroke()}
+ else if(s===5){g2.strokeStyle='#3a7a2a';g2.lineWidth=2;g2.beginPath();g2.moveTo(cx-6,cy+4);g2.quadraticCurveTo(cx,cy-14,cx+2,cy-12);g2.moveTo(cx+6,cy+4);g2.quadraticCurveTo(cx+2,cy-10,cx+2,cy-12);g2.stroke();g2.fillStyle='#d0283a';g2.beginPath();g2.arc(cx-6,cy+7,6,0,Math.PI*2);g2.arc(cx+7,cy+7,6,0,Math.PI*2);g2.fill()}
+ else{g2.fillStyle='#bbb';g2.font='bold 16px sans-serif';g2.fillText('－',cx,cy)}}
+function slDraw(cv,pos){const g2=cv.getContext('2d'),W=60,H=56;g2.fillStyle='#2a1a3a';g2.fillRect(0,0,cv.width,cv.height);
+ for(let i=0;i<3;i++){const x=10+i*(W+8),p=pos[i],L=SLSTRIP.length,base=Math.floor(p),fr=p-base;g2.save();g2.beginPath();g2.rect(x,6,W,H*3);g2.clip();
+  for(let k=-2;k<=2;k++){const s=SLSTRIP[((base+k)%L+L)%L];slDrawSym(g2,s,x,6+H+(k-fr)*H,W,H-2)}g2.restore();g2.strokeStyle='#e8b44a';g2.lineWidth=2;g2.strokeRect(x,6,W,H*3)}
+ g2.strokeStyle='rgba(255,60,60,.85)';g2.lineWidth=2;g2.beginPath();g2.moveTo(4,6+H*1.5);g2.lineTo(cv.width-4,6+H*1.5);g2.stroke()}
+function slSpin(b){if(CAS.busy)return;const bet=CAS.bet;if(!casPay(bet))return;CAS.busy=true;sfx('cas_spin');
+ const L=SLSTRIP.length,fin=[0,1,2].map(()=>Math.random()*L|0),start=CAS.sl.r.slice(),t0=performance.now(),dur=[900,1300,1700];
+ const cv=document.getElementById('casSlot');const step=now=>{const e=now-t0,pos=[0,1,2].map(i=>{const d=dur[i];if(e>=d)return fin[i];const k=e/d,ease=1-Math.pow(1-k,3);const tgt=fin[i]+L*(3+i);return(start[i]+(tgt-start[i])*ease)%L});
+  if(cv&&cv.isConnected)slDraw(cv,pos);[0,1,2].forEach(i=>{if(e>=dur[i]&&!step['s'+i]){step['s'+i]=1;sfx('cas_stop')}});
+  if(e<dur[2]+20)requestAnimationFrame(step);else{CAS.sl.r=fin;const r=fin.map(i=>SLSTRIP[i]),m=slEval(r);CAS.busy=false;
+   if(m){casAdd(m*bet);CAS.sl.msg=`当たり！ ${m*bet} 枚`;sfx(m>=40?'cas_jack':'cas_win')}else CAS.sl.msg='はずれ';if(b&&b.isConnected)casRender(b)}};requestAnimationFrame(step)}
+// ---- ルーレット：0〜36・赤黒/奇偶/前後半 2 倍・12 区切り 3 倍・数字 36 倍（賭けた分も込みの戻り）
+const RLRED=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]),RLORD=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const RLBET={red:{n:'赤',m:2,f:x=>RLRED.has(x)},black:{n:'黒',m:2,f:x=>x>0&&!RLRED.has(x)},odd:{n:'奇数',m:2,f:x=>x>0&&x%2===1},even:{n:'偶数',m:2,f:x=>x>0&&x%2===0},low:{n:'1〜18',m:2,f:x=>x>=1&&x<=18},high:{n:'19〜36',m:2,f:x=>x>=19},d1:{n:'1〜12',m:3,f:x=>x>=1&&x<=12},d2:{n:'13〜24',m:3,f:x=>x>=13&&x<=24},d3:{n:'25〜36',m:3,f:x=>x>=25}};
+function rlWin(bet,x){if(bet.k==='num')return bet.v===x?bet.a*36:0;const B=RLBET[bet.k];return B.f(x)?bet.a*B.m:0}
+function rlDraw(cv,ang,ball){const g2=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)/2-6;g2.fillStyle='#1a3a2a';g2.fillRect(0,0,W,H);
+ const n=RLORD.length;for(let i=0;i<n;i++){const a0=ang+i*2*Math.PI/n,a1=a0+2*Math.PI/n,x=RLORD[i];g2.fillStyle=x===0?'#2a9a4a':RLRED.has(x)?'#c8283a':'#1a1a22';g2.beginPath();g2.moveTo(cx,cy);g2.arc(cx,cy,R,a0,a1);g2.fill();
+  const am=(a0+a1)/2;g2.save();g2.translate(cx+Math.cos(am)*(R-11),cy+Math.sin(am)*(R-11));g2.rotate(am+Math.PI/2);g2.fillStyle='#fff';g2.font='bold 8px sans-serif';g2.textAlign='center';g2.fillText(String(x),0,3);g2.restore()}
+ g2.fillStyle='#8a5a32';g2.beginPath();g2.arc(cx,cy,R*.55,0,Math.PI*2);g2.fill();g2.fillStyle='#e8b44a';g2.beginPath();g2.arc(cx,cy,R*.18,0,Math.PI*2);g2.fill();
+ g2.strokeStyle='#e8b44a';g2.lineWidth=3;g2.beginPath();g2.arc(cx,cy,R,0,Math.PI*2);g2.stroke();
+ if(ball){g2.fillStyle='#fff';g2.beginPath();g2.arc(cx+Math.cos(ball.a)*ball.r*R,cy+Math.sin(ball.a)*ball.r*R,4,0,Math.PI*2);g2.fill()}}
+function rlSpin(b){if(CAS.busy)return;const L=CAS.rl.bets;if(!L.length)return toast('先に賭けてね');CAS.busy=true;sfx('cas_spin');
+ const n=RLORD.length,idx=Math.random()*n|0,x=RLORD[idx],t0=performance.now(),D=2600,cv=document.getElementById('casRl'),a00=Math.random()*6.28,turns=4;
+ const fin=-Math.PI/2-(idx+.5)*2*Math.PI/n;const wheelEnd=a00+(((fin-a00)%(2*Math.PI))+2*Math.PI)%(2*Math.PI)+2*Math.PI*turns;
+ const step=now=>{const e=Math.min(1,(now-t0)/D),k=1-Math.pow(1-e,3),ang=a00+(wheelEnd-a00)*k,ba=-Math.PI/2-(1-k)*Math.PI*10,br=.86-.12*Math.max(0,(e-.7)/.3);
+  if(cv&&cv.isConnected)rlDraw(cv,ang,{a:ba,r:br});if(e<1)requestAnimationFrame(step);else{let w=0;for(const bt of L)w+=rlWin(bt,x);CAS.busy=false;CAS.rl.last=x;CAS.rl.bets=[];
+   if(w){casAdd(w);sfx(w>=36?'cas_jack':'cas_win')}else sfx('cas_stop');CAS.rl.msg=`${x}（${x===0?'緑':RLRED.has(x)?'赤':'黒'}）　${w?w+' 枚の戻り':'はずれ'}`;if(b&&b.isConnected)casRender(b)}};requestAnimationFrame(step)}
+function rlBet(k){const a=CAS.rl.amt;if(CAS.busy||!casPay(a))return;CAS.rl.bets.push(k==='num'?{k,a,v:CAS.rl.num}:{k,a});sfx('cas_chip')}
+// ---- トランプ
+const CSUIT=['♠','♥','♦','♣'],CRANK=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+function cDeck(){const d=[];for(let s=0;s<4;s++)for(let r=1;r<=13;r++)d.push({s,r});for(let i=d.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[d[i],d[j]]=[d[j],d[i]]}return d}
+function cCard(c,hold,back){const e=el('span','casc'+(back?' bk':(c.s===1||c.s===2?' r':''))+(hold?' h':''));if(!back){e.innerHTML=`${CRANK[c.r]}<br>${CSUIT[c.s]}`}return e}
+// ---- ブラックジャック
+function bjVal(h){let v=0,a=0;for(const c of h){v+=c.r>=10?10:c.r===1?11:c.r;if(c.r===1)a++}while(v>21&&a){v-=10;a--}return v}
+function bjDeal(b){if(CAS.busy)return;const bet=CAS.bet;if(!casPay(bet))return;const d=cDeck();CAS.bj={d,p:[d.pop(),d.pop()],k:[d.pop(),d.pop()],bet,done:false,msg:''};sfx('cas_card');
+ const B=CAS.bj,pb=bjVal(B.p)===21,kb=bjVal(B.k)===21;if(pb||kb){B.done=true;if(pb&&!kb){casAdd(Math.round(bet*2.5));B.msg=`ブラックジャック！ ${Math.round(bet*2.5)} 枚`;sfx('cas_jack')}else if(pb&&kb){casAdd(bet);B.msg='引き分け（両方ブラックジャック）'}else B.msg='親のブラックジャック…'}casRender(b)}
+function bjEnd(b){const B=CAS.bj;while(bjVal(B.k)<17)B.k.push(B.d.pop());const p=bjVal(B.p),k=bjVal(B.k);B.done=true;
+ if(p>21)B.msg='バースト…';else if(k>21||p>k){casAdd(B.bet*2);B.msg=`勝ち！ ${B.bet*2} 枚`;sfx('cas_win')}else if(p===k){casAdd(B.bet);B.msg='引き分け'}else B.msg='負け…';casRender(b)}
+function bjHit(b){const B=CAS.bj;B.p.push(B.d.pop());sfx('cas_card');if(bjVal(B.p)>21){B.done=true;B.msg='バースト…';casRender(b)}else if(bjVal(B.p)===21)bjEnd(b);else casRender(b)}
+function bjDouble(b){const B=CAS.bj;if(!casPay(B.bet))return;B.bet*=2;B.p.push(B.d.pop());sfx('cas_card');if(bjVal(B.p)>21){B.done=true;B.msg='バースト…';casRender(b)}else bjEnd(b)}
+// ---- ポーカー（ジャック以上・5 枚・1 回だけ取りかえ）
+const PKPAY=[['ロイヤルストレートフラッシュ',250],['ストレートフラッシュ',50],['フォーカード',25],['フルハウス',9],['フラッシュ',6],['ストレート',4],['スリーカード',3],['ツーペア',2],['ジャック以上のワンペア',1]];
+function pkEval(h){const r=h.map(c=>c.r===1?14:c.r).sort((a,b)=>a-b),fl=h.every(c=>c.s===h[0].s),cnt={};for(const x of r)cnt[x]=(cnt[x]||0)+1;const v=Object.values(cnt).sort((a,b)=>b-a);
+ const uniq=new Set(r).size===5,st=uniq&&(r[4]-r[0]===4||r.join()==='2,3,4,5,14');
+ if(st&&fl)return r[0]===10?0:1;if(v[0]===4)return 2;if(v[0]===3&&v[1]===2)return 3;if(fl)return 4;if(st)return 5;if(v[0]===3)return 6;if(v[0]===2&&v[1]===2)return 7;
+ if(v[0]===2){const pr=+Object.keys(cnt).find(k=>cnt[k]===2);if(pr>=11)return 8}return -1}
+function pkDeal(b){if(CAS.busy)return;const bet=CAS.bet;if(!casPay(bet))return;const d=cDeck();CAS.pk={d,h:[d.pop(),d.pop(),d.pop(),d.pop(),d.pop()],hold:[0,0,0,0,0],bet,done:false,msg:''};sfx('cas_card');casRender(b)}
+function pkDraw(b){const P2=CAS.pk;for(let i=0;i<5;i++)if(!P2.hold[i])P2.h[i]=P2.d.pop();sfx('cas_card');const e=pkEval(P2.h);P2.done=true;
+ if(e>=0){const w=PKPAY[e][1]*P2.bet;casAdd(w);P2.msg=`${PKPAY[e][0]}！ ${w} 枚`;sfx(e<=3?'cas_jack':'cas_win')}else P2.msg='役なし…';casRender(b)}
+// ---- 画面
+function casBetRow(b,opts){return row(...opts.map(n=>btn(`${n} 枚`,()=>{CAS.bet=n;casRender(b)},CAS.bet===n?'pri':'')))}
+function casRender(b){const sy=mbox.scrollTop;b.innerHTML='';casStyle();
+ b.append(el('h2','','カジノ'),el('div','muted',`コイン ${casCoin()} 枚　所持金 ${S.gold}G　（コイン 1 枚 ${CASRATE}G・G には戻せない）`),
+  tabRow(CAS.tab,[['coin','コイン'],['slot','スロット'],['roul','ルーレット'],['bj','ブラックジャック'],['pk','ポーカー'],['prize','景品']],k=>{if(CAS.busy)return;CAS.tab=k;casRender(b)}));
+ const t=CAS.tab;
+ if(t==='coin'){const L=el('div','list');for(const n of[10,50,100,500]){const g=n*CASRATE,bt=btn('買う',()=>{if(S.gold<g)return toast('お金が足りない');if(casCoin()+n>CASMAX)return toast('これ以上は持てない');S.gold-=g;casAdd(n);sfx('cas_chip');casRender(b)},'pri');if(S.gold<g)bt.disabled=true;L.append(item(`コイン ${n} 枚`,`${g}G`,'',[bt]))}b.append(L)}
+ if(t==='slot'){const cv=document.createElement('canvas');cv.id='casSlot';cv.width=214;cv.height=180;cv.style.cssText='display:block;margin:6px auto;image-rendering:auto;max-width:100%';b.append(cv);
+  slDraw(cv,CAS.sl.r);b.append(el('div','casbig',CAS.sl.msg||'まんなかの線にそろえる'),casBetRow(b,[1,3,10]),row(btn(`回す（${CAS.bet} 枚）`,()=>slSpin(b),'pri')),
+   el('small','muted','7 7 7＝500倍・BAR×3＝100・ベル×3＝40・スライム×3＝25・葉×3＝12・チェリー：1つ目に 3・1〜2つ目に 8・3つそろい 20'))}
+ if(t==='roul'){const cv=document.createElement('canvas');cv.id='casRl';cv.width=200;cv.height=200;cv.style.cssText='display:block;margin:6px auto;max-width:100%';b.append(cv);rlDraw(cv,0,null);
+  const R=CAS.rl,tot=R.bets.reduce((a,x)=>a+x.a,0);b.append(el('div','casbig',R.msg||'賭けてから回す'),el('small','muted','1 回に賭ける枚数'),row(...[1,5,10,50,100].map(n=>btn(`${n}`,()=>{R.amt=n;casRender(b)},R.amt===n?'pri':''))));
+  const gd=el('div','casgrid');for(const k in RLBET)gd.append(btn(`${RLBET[k].n}（${RLBET[k].m}倍）`,()=>{rlBet(k);casRender(b)}));b.append(gd);
+  b.append(row(btn('－',()=>{R.num=(R.num+36)%37;casRender(b)}),btn(`数字 ${R.num} に賭ける（36倍）`,()=>{rlBet('num');casRender(b)}),btn('＋',()=>{R.num=(R.num+1)%37;casRender(b)})),
+   el('div','muted',`いまの賭け：${R.bets.length?R.bets.map(x=>(x.k==='num'?x.v:RLBET[x.k].n)+'×'+x.a).join('・'):'なし'}（計 ${tot} 枚）`),
+   row(btn('回す',()=>rlSpin(b),'pri'),btn('賭けを戻す',()=>{if(CAS.busy)return;casAdd(tot);R.bets=[];casRender(b)})))}
+ if(t==='bj'){const B=CAS.bj;if(!B||B.done){b.append(casBetRow(b,[1,5,10,50]),row(btn(`配る（${CAS.bet} 枚）`,()=>bjDeal(b),'pri')))}
+  if(B){const kh=el('div','cashand'),ph=el('div','cashand');B.k.forEach((c,i)=>kh.append(cCard(c,0,!B.done&&i===1)));B.p.forEach(c=>ph.append(cCard(c)));
+   b.append(el('div','muted',`親 ${B.done?bjVal(B.k):'?'}`),kh,el('div','muted',`あなた ${bjVal(B.p)}（賭け ${B.bet} 枚）`),ph);
+   if(!B.done){const dbl=btn('倍にして 1 枚だけ',()=>bjDouble(b));if(B.p.length!==2||casCoin()<B.bet)dbl.disabled=true;b.append(row(btn('もう 1 枚',()=>bjHit(b),'pri'),btn('止める',()=>bjEnd(b)),dbl))}
+   else b.append(el('div','casbig',B.msg))}
+  b.append(el('small','muted','21 に近いほうが勝ち。勝つと 2 倍・ブラックジャック（最初の 2 枚で 21）は 2.5 倍。親は 17 以上で止まる'))}
+ if(t==='pk'){const P2=CAS.pk;if(!P2||P2.done)b.append(casBetRow(b,[1,5,10,50]),row(btn(`配る（${CAS.bet} 枚）`,()=>pkDeal(b),'pri')));
+  if(P2){const hd=el('div','cashand');P2.h.forEach((c,i)=>{const e=cCard(c,P2.hold[i]);if(!P2.done){e.style.cursor='pointer';e.onclick=()=>{P2.hold[i]^=1;sfx('cas_chip');casRender(b)}}hd.append(e)});b.append(hd);
+   if(!P2.done)b.append(el('small','muted','残すカードを選んでから「取りかえる」'),row(...P2.h.map((c,i)=>btn(`${P2.hold[i]?'残す':'－'} ${CRANK[c.r]}${CSUIT[c.s]}`,()=>{P2.hold[i]^=1;casRender(b)},P2.hold[i]?'pri':''))),row(btn('取りかえる',()=>pkDraw(b),'pri')));
+   else b.append(el('div','casbig',P2.msg))}
+  b.append(el('small','muted','配当（賭けの倍）：'+PKPAY.map(x=>x[0]+' '+x[1]).join('・')))}
+ if(t==='prize'){const L=el('div','list');for(const P3 of CASPRIZE){const own=P3.t==='acc'&&(S.accs[P3.id]||(S.accStore||{})[P3.id]);if(own)continue;
+   const nm=P3.t==='acc'?ACCS[P3.id].n:ITEMS[P3.id].n,ds=P3.t==='acc'?'アクセサリー・'+ACCS[P3.id].d:'',bt=btn('交換',()=>{if(!casPay(P3.c))return;if(P3.t==='acc')grantAcc(P3.id);else addItem(P3.id,1);casRender(b)},'pri');if(casCoin()<P3.c)bt.disabled=true;
+   L.append(item(nm,`${P3.c} 枚`,ds,[bt],P3.t==='it'?P3.id:null))}b.append(L)}
+ b.append(row(btn('出る',()=>{if(CAS.busy)return;closeModal()})));mbox.scrollTop=sy}
+function casinoMenu(){CAS.busy=false;openModal(b=>casRender(b))}
+Object.assign(SFX,{cas_spin:t=>{for(let i=0;i<6;i++)tone(660+i*40,t+i*.05,.04,'p25',.03)},cas_stop:t=>{tone(330,t,.06,'p50',.06);noise(t,.04,.05,2200)},
+ cas_win:t=>[784,988,1175,1568].forEach((f,i)=>tone(f,t+i*.08,.14,'p25',.05)),cas_jack:t=>{[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>tone(f,t+i*.07,.16,'p25',.06));noise(t+.5,.3,.05,4000)},
+ cas_card:t=>noise(t,.05,.07,3200),cas_chip:t=>{tone(1800,t,.03,'triangle',.04);tone(2400,t+.03,.03,'triangle',.03)}});
+
 function sfx(n){if(!AU.ctx||!AU.se||!SFX[n])return;const t=AU.ctx.currentTime;if(t-(AU.last[n]||0)<.045)return;AU.last[n]=t;try{SFX[n](t)}catch(e){}}
 // 曲：8分音符ごと。'-'はのばす、'.'は休み
 const NM={C:0,D:2,E:4,F:5,G:7,A:9,B:11};const nf=s=>{const m=/^([A-G])(b|#)?(\d)$/.exec(s);if(!m)return 0;return 440*Math.pow(2,(NM[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+(+m[3]+1)*12-69)/12)};
@@ -4499,7 +4608,7 @@ function helpMenu(){if(paused&&modal.hidden)return;if(!modal.hidden)closeModal()
   sec('1日の流れ',['・朝 6:00 に家で目がさめる。畑に水をやり、実った作物を収穫する','・出荷箱に入れた物は、次の朝お金になる。お店や市場でも売れる','・ダンジョンでは素材・装備・換金品が手に入る。敵が落とす換金品は売るためのお宝','・夜は家のベッドで寝る。26:00 を過ぎると倒れて、お金を 1 割落とす（夜ふかしの砂時計を着けていれば倒れない）']);
   sec('町づくり',['・町づくり（メニューのキー）で建物や設備・飾りを置く','・依頼掲示板で人を雇うと、水やり・収穫・採集・加工などをしてくれる','・機械は電気で 24 時間動く（寝ている間も）。水車や発電機で電気を作る','・港の船から島のダンジョンへ渡れる。交易船で品物を遠くへ売れる']);
   sec('戦い',['・武器は 2 つ持てる。武器を使うほど熟練度が上がり、技を覚える','・魔法は魔導書で覚える。唱えると足元に魔法陣が出て、詠唱が終わると放たれる','・構えは道場で師範から覚える。道場のかかしを叩くと熟練度を上げられる','・敵の頭に「！」が出たら大きな技が来る合図。予告の間に当てると止められる']);
-  sec('図鑑（右上の「図鑑」ボタン）',['・コレクター図鑑：手に入れた物と、入手・使い道','・モンスター図鑑：会った魔物・倒した魔物と、出る所','・つり図鑑：釣った魚と大きさ（図鑑の画面の下のボタン）']);
+  sec('カジノ',['・商業区の空き区画に建てる（町の評判ランク 2・20,000G＋角材・ガラス・金鉱石・魔石）','・コインは 1 枚 20G で買う。G には戻せない。景品（アクセサリー・薬・魔導核）と交換できる','・スロット：まんなかの線に 3 つそろえる・ルーレット：赤黒・奇数偶数・12 ずつ・数字に賭ける','・ブラックジャック：21 に近いほうが勝ち・ポーカー：5 枚の役（1 回だけ取りかえる）']);   sec('図鑑（右上の「図鑑」ボタン）',['・コレクター図鑑：手に入れた物と、入手・使い道','・モンスター図鑑：会った魔物・倒した魔物と、出る所','・つり図鑑：釣った魚と大きさ（図鑑の画面の下のボタン）']);
   b.append(row(btn('キー設定',()=>{closeModal();keyMenu()}),btn('つり図鑑',()=>{closeModal();dexMenu()}),btn('閉じる',closeModal,'pri')))})}
 function keyMenu(){const render=b=>{b.innerHTML='';b.append(el('h2','','キー設定'),el('div','muted',KCAP?`「${KNAME[KCAP]}」に割り当てるキーを押してください（Escでやめる）`:'「変更」を押してから新しいキーを押すと、そのキーに置き換わります（ほかの操作と同じキーは自動で外れます）。'));
   const l=el('div','list');for(const a in KDEF)l.append(item(KNAME[a],'',KB[a].map(kLabel).join('・')||'なし',[btn(KCAP===a?'入力待ち…':'変更',()=>{KCAP=a;render(b)},KCAP===a?'pri':'')]));
