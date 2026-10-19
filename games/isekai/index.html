@@ -84,7 +84,7 @@ body.gp #mbox button:focus,body.gp #mbox select:focus,body.gp #tbtns button:focu
 #bS small{display:block;font-size:9px;white-space:nowrap}
 #btns{display:grid!important;grid-template-columns:58px 84px;grid-template-rows:50px 50px 40px;grid-template-areas:"s a" "m a" "d a";gap:8px 12px!important;align-items:center}
 #btns.off{grid-template-areas:"s a" "m a" "d o"}#bO small{display:block;font-size:9px;white-space:nowrap}#bO{grid-area:o;width:84px;height:40px;font-size:13px;line-height:1.05;background:#6b5a42;border-color:#a9b2bd;border-radius:14px}#bO.blink{background:#2f6a5a;border-color:#9ce0c0}#bO.on{background:#a9b2bd;color:#2a1d0c}
-body.land #bO{width:76px;height:32px}
+body.land #bO{width:76px;height:32px}#bO.none{opacity:.45}/* v249 */
 #bD{grid-area:d;width:58px;height:40px;font-size:10px;white-space:nowrap;letter-spacing:-.05em;background:var(--panel2)}
 .ovb{position:absolute;right:6px;top:6px;font-family:var(--pix);font-size:12px;color:var(--fg);background:rgba(53,44,56,.88);border:1px solid var(--line);border-radius:10px;padding:4px 10px;cursor:pointer;z-index:2}
 #bD:active{transform:translateY(1px)}
@@ -146,6 +146,14 @@ body.land #mbtns{display:flex!important;flex-direction:column;gap:4px}body.land 
 #rot button{font-family:var(--pix);font-size:13px;background:var(--panel2);color:var(--fg);border:2px solid var(--line);border-radius:12px;padding:7px 12px;margin-top:10px}
 
  /* v181 HUD */ .bars{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3px 10px!important;align-items:center}.bars .bar{grid-column:1}.bars #buffs{grid-column:2;grid-row:1;min-height:0;gap:3px}.bars .bf{width:22px;height:22px}#skslots{grid-column:2;grid-row:2/4;display:flex;gap:4px;align-self:stretch;min-width:0}.sks{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;background:rgba(53,44,56,.88);border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-family:var(--pix);font-size:11px;line-height:1.25}.sks .k{color:var(--gold,#e8b44a);font-weight:normal;font-size:10px}.sks .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg)}.sks .c{font-size:10px;color:#9cc9ec;white-space:nowrap;overflow:hidden}.sks.ng{opacity:.6}.sks.ng .c{color:#ff8a8a}.sks.none .n{color:#8a7a8a}#skinfo{display:none!important}body.land .bars{grid-template-columns:minmax(0,1fr)}body.land .bars #buffs{grid-column:1;grid-row:4}body.land #skslots{grid-column:1;grid-row:5;min-height:34px}#where.pave{color:#ffe08a;background:rgba(60,40,10,.8);border:1px solid #f0c46a;border-radius:6px;padding:1px 6px}/* v233 */
+@media (hover:none),(pointer:coarse){body:not(.land) #skslots{grid-column:2;grid-row:1/4;display:grid;grid-template-rows:1fr 1fr;gap:3px}body:not(.land) #skslots .sks{padding:1px 8px}body:not(.land) .bars #buffs{grid-column:1/-1;grid-row:4}}/* v250 skslots */
+@media (hover:none),(pointer:coarse){body:not(.land) #mbtns{justify-content:stretch}body:not(.land) #mbtnsB{grid-template-columns:repeat(6,minmax(0,1fr));width:100%;gap:3px}body:not(.land) #mbtnsB .ovb{padding:5px 0;font-size:clamp(9px,2.8vw,11px);letter-spacing:-.05em;white-space:nowrap}}#stage>#mmap{position:absolute;right:6px;top:6px;width:84px;z-index:2;opacity:.9}/* v250 mbtns */
+#skSt,#bX{display:none}@media (hover:none),(pointer:coarse){#bX{display:block;width:48px;height:36px;font-size:10px;line-height:1.05;white-space:nowrap;letter-spacing:-.05em;background:#5a4a6e;border-color:#c9b2e8}#bX small{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#bX.on{background:#c9b2e8;color:#2a1d36}#bX:active{transform:translateY(1px)}#btns{position:relative}#bX{position:absolute;right:calc(100% + 6px);bottom:0}body.land #bX{width:54px;height:32px}body:not(.land) #skslots{grid-template-rows:1fr 1fr 1fr}body:not(.land) #skSt{display:flex}body:not(.land) #skslots .sks{flex-direction:row;align-items:center;gap:5px;line-height:1.1}body:not(.land) #skslots .sks .k{flex:none}body:not(.land) #skslots .sks .n{flex:1 1 auto}body:not(.land) #skslots .sks .c{flex:none;margin-left:auto}#skSt .k{color:#c9b2e8}}/* v251 mode */
+body.land #mbtns{flex-direction:row!important;align-items:flex-start}body.land #mbtnsB{flex:none}body.land #mmap{flex:1 1 0;min-width:0;width:auto;max-width:none;max-height:84px;object-fit:contain;align-self:flex-start}/* v251 lmap */
+@media (hover:none),(pointer:coarse){body.land #mbtnsB #bX,body.land #mbtnsB #bD{position:static;grid-area:auto;width:auto;height:auto;padding:3px 8px;font-size:11px;border-radius:999px;line-height:1.2}body.land #mbtnsB #bX small{display:inline;margin-left:3px}body.land #skslots{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:3px}body.land #skT{grid-column:1;grid-row:1}body.land #skM{grid-column:2;grid-row:1/3}body.land #skSt{display:flex;grid-column:1;grid-row:2;flex-direction:row;align-items:center;gap:4px;padding:1px 6px}body.land #skSt .n{flex:1 1 auto}}/* v251 land */
+body.land #pad,body.land #btns{margin-bottom:clamp(0px,calc(100vh - 362px),24px);margin-bottom:clamp(0px,calc(100dvh - 362px),24px)}/* v252 lift */
+body.pchud #hud .bars{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;grid-template-rows:1fr 1fr 1fr auto;align-items:center}body.pchud .bars .bar{grid-column:1}body.pchud .bars #buffs{grid-column:2;grid-row:1}body.pchud .bars #skslots{grid-column:1/3;grid-row:4;display:flex;gap:4px}body.pchud #skSt{display:flex}body.pchud .bars .sks{flex-direction:row;align-items:center;gap:6px;padding:3px 8px}body.pchud .bars .sks .k{flex:none}body.pchud .bars .sks .n{flex:1 1 auto}body.pchud .bars .sks .c{flex:none;margin-left:auto}body.pchud .bars #mbtnsB{grid-column:2;grid-row:2/4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-content:start}body.pchud .bars #mbtnsB .ovb{position:static;padding:5px 2px;font-size:clamp(10px,calc(1vw + 6px),12px);letter-spacing:-.03em;white-space:nowrap}body.pchud .bars #mmap{grid-column:3;grid-row:1/5;width:150px;align-self:start}body.pchud #app>#mbtns{display:none!important}/* v253 pchud */
+@media (hover:none),(pointer:coarse){body:not(.land) #mbtnsB .ovb{grid-row:2}body:not(.land) #mbtnsB #bX{grid-column:5;grid-row:1}body:not(.land) #mbtnsB #bD{grid-column:6;grid-row:1}body:not(.land) #mbtnsB #bX,body:not(.land) #mbtnsB #bD{position:static;width:auto;height:auto;padding:4px 0;font-size:clamp(9px,2.8vw,11px);letter-spacing:-.05em;white-space:nowrap;border-radius:999px;line-height:1.2}body:not(.land) #mbtnsB #bX small{display:none}#btns,#btns.off{grid-template-columns:58px 84px;grid-template-rows:46px 46px 46px;grid-template-areas:"s a" "m a" "o a";gap:8px 14px!important;align-items:center;justify-items:center}#bS,#bM,#bO{width:58px;height:46px;border-radius:50%}#bO{font-size:12px}#bA{align-self:center}body.land #btns,body.land #btns.off{grid-template-columns:54px 76px!important;grid-template-rows:40px 40px 40px!important;gap:6px 12px!important}body.land #bS,body.land #bM,body.land #bO{width:54px;height:40px}}/* v254 portbtn */
 .pk-bg{position:fixed;inset:0;z-index:44;background:rgba(10,6,20,.35)}.pk-d{font-size:12px;color:var(--fg);background:var(--bg);border-radius:8px;padding:6px 8px;min-height:2.6em;line-height:1.4}/* v240 */
 .ledger{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:12px;display:flex;flex-direction:column;gap:2px;margin:4px 0}/* v242 */
 </style>
@@ -156,17 +164,17 @@ body.land #mbtns{display:flex!important;flex-direction:column;gap:4px}body.land 
     <div class="hrow"><span id="date"></span><span id="lvbox"><span id="lv"></span><i class="xb"><u id="xpb"></u></i></span><span id="clock"></span><span id="gold"></span><span id="pwr"></span></div>
     <div class="bars">
       <div class="bar"><b>HP</b><i><u id="hpb"></u></i><span id="hpt"></span></div><div id="buffs" aria-label="かかっている効果"></div>
-      <div class="bar st"><b>ST</b><i><u id="stb"></u></i><span id="stt"></span></div><div id="skslots"><div class="sks none" id="skT"><b class="k">技</b><span class="n">なし</span><span class="c"></span></div><div class="sks none" id="skM"><b class="k">魔法</b><span class="n">なし</span><span class="c"></span></div></div>
+      <div class="bar st"><b>ST</b><i><u id="stb"></u></i><span id="stt"></span></div><div id="skslots"><div class="sks none" id="skT"><b class="k">技</b><span class="n">なし</span><span class="c"></span></div><div class="sks none" id="skM"><b class="k">魔法</b><span class="n">なし</span><span class="c"></span></div><div class="sks none" id="skSt"><b class="k">モード</b><span class="n">なし</span><span class="c"></span></div></div>
       <div class="bar mp"><b>MP</b><i><u id="mpb"></u></i><span id="mpt"></span></div>
     </div>
   </header>
-  <div id="mbtns"><div id="skinfo"></div><div id="mbtnsB"><button class="ovb" data-t="status">ステータス</button><button class="ovb" data-t="equip">装備</button><button class="ovb" data-t="skill">術技</button><button id="bB" class="ovb" data-t="bag">かばん</button><button class="ovb" data-t="dexs">図鑑</button><button class="ovb" data-t="help">ヘルプ</button></div><canvas id="mmap" width="72" height="52" title="地図（押すと大きい地図）"></canvas></div>
+  <div id="mbtns"><div id="skinfo"></div><div id="mbtnsB"><button class="ovb" data-t="status">ステータス</button><button class="ovb" data-t="equip">装備</button><button class="ovb" data-t="skill">術技</button><button id="bB" class="ovb" data-t="bag">かばん</button><button class="ovb" data-t="dexs">図鑑</button><button class="ovb" data-t="set">設定</button></div><canvas id="mmap" width="72" height="52" title="地図（押すと大きい地図）"></canvas></div>
   <main id="stage"><canvas id="cv"></canvas><div id="where"></div></main>
   <nav id="tools"></nav>
   <div id="keys"><b>移動</b> WASD／矢印　<b>ダッシュ</b> Z（押すたびに切替）　<b>使う</b> Space・Enter（長押しで連続）　<b>道具</b> Q/E で枠を移動・R/F で中身を切替（1 農具・2 種・3 武器1・4 武器2 で直接選択・釣り竿は農具の枠）　<b>アイテム</b> 5/6　<b>技</b> V（Gで始まりの技を切替）　<b>魔法</b> B（Hで切替）　<b>かばん</b> X　<b>ステータス</b> J　<b>帰る</b> P（ダンジョン→町／町→家の前）　<b>町づくり</b> M</div>
   <div id="ctrl">
     <div id="pad"><div id="knob"></div></div>
-    <div id="btns"><button id="bS" class="rb">技<small id="bSn"></small></button><button id="bM" class="rb">魔法<small id="bMn"></small></button><button id="bA" class="rb">A<small>使う</small></button><button id="bD" class="rb">ダッシュ</button><button id="bO" class="rb" hidden>B</button></div>
+    <div id="btns" class="off"><button id="bS" class="rb">技<small id="bSn"></small></button><button id="bM" class="rb">魔法<small id="bMn"></small></button><button id="bA" class="rb">A<small>使う</small></button><button id="bX" class="rb">モード<small id="bXn"></small></button><button id="bD" class="rb">ダッシュ</button><button id="bO" class="rb none">B<small>なし</small></button></div>
   </div>
 </div>
 <div id="toast" hidden></div>
@@ -3815,7 +3823,14 @@ function shipMenu(){let tab='ship';
 }
 function secEtc(b,R){// v229 その他：図鑑・手帳・町づくり・サウンドと設定
   b.append(el('div','sum','図鑑・町'),row(btn('図鑑',()=>{closeModal();dexHub()}),...(cur.kind==='room'&&ROOMB[cur.id]?[btn('模様替え',()=>{closeModal();furnMenu()})]:[]),...(cur===town?[btn('町づくり',()=>{closeModal();buildMenu()})]:[]),...(cur.kind==='dun'?[btn('脱出して町へ',()=>{closeModal();const g=DUNS[dun.id].gate;toTown(g[0],g[1],g[2]);toast('ダンジョンから脱出した')})]:[])));
-  b.append(el('div','sum','サウンド・設定'),row(btn('BGM '+(AU.bgm?'ON':'OFF'),()=>{setSnd('bgm',!AU.bgm);R()}),btn('効果音 '+(AU.se?'ON':'OFF'),()=>{setSnd('se',!AU.se);R()}),btn('キー設定（PC）',()=>{closeModal();keyMenu()}),btn('コントローラー',()=>{closeModal();padHelp()}),btn('グラフィック '+['標準','強化','強化＋素材'][GFX],()=>{setGfx((GFX+1)%3);R()}),btn('画面の向き '+ORIN[ORI],()=>{setOri({auto:'land',land:'port',port:'auto'}[ORI]);R()}),btn('時間の速さ '+TSPN[TSP],()=>{setTsp((TSP+1)%3);R()}),btn('地図 '+MAPN[MAPM],()=>{setMapM((MAPM+1)%3);R()})));}
+  b.append(el('div','sum','設定・ヘルプ'),row(btn('設定・ヘルプを開く',()=>{closeModal();setMenu()})));}
+// v249 p207 設定（右上の「設定」ボタン）：前の「その他」タブのサウンド・設定の段と、ヘルプの入口
+function setMenu(){if(paused&&modal.hidden)return;if(!modal.hidden)closeModal();openModal(b=>{const R=()=>{const y=mbox.scrollTop;b.innerHTML='';draw();mbox.scrollTop=y};
+  const draw=()=>{b.append(el('h2','','設定'),
+    el('div','sum','サウンド・画面'),row(btn('BGM '+(AU.bgm?'ON':'OFF'),()=>{setSnd('bgm',!AU.bgm);R()}),btn('効果音 '+(AU.se?'ON':'OFF'),()=>{setSnd('se',!AU.se);R()}),btn('グラフィック '+['標準','強化','強化＋素材'][GFX],()=>{setGfx((GFX+1)%3);R()}),btn('画面の向き '+ORIN[ORI],()=>{setOri({auto:'land',land:'port',port:'auto'}[ORI]);R()}),btn('時間の速さ '+TSPN[TSP],()=>{setTsp((TSP+1)%3);R()}),btn('地図 '+MAPN[MAPM],()=>{setMapM((MAPM+1)%3);R()})),
+    el('div','sum','操作'),row(btn('キー設定（PC）',()=>{closeModal();keyMenu()}),btn('コントローラー',()=>{closeModal();padHelp()})),
+    el('div','sum','ヘルプ'),row(btn('ヘルプ（遊び方・操作）',()=>{closeModal();helpMenu()})),
+    row(btn('閉じる',closeModal,'pri')))};draw()})}
 function secBag(b,R){b.append(el('div','sum','アイテム'));
     const list=el('div','list cmp');let any=false;// v232 詰める
     for(const id in S.inv){const n=S.inv[id];if(!n||!ITEMS[id])continue;any=true;const it=ITEMS[id];let bs=[];
@@ -4359,7 +4374,7 @@ function drawWeather(){const w=wxNow();if(!w||!GFX)return;
   if(w===3){const f=(clock%7);if(f<.12||(f>.22&&f<.3)){G.fillStyle='rgba(235,240,255,.55)';G.fillRect(0,0,VW,VH)}}
   if(w===4){G.fillStyle='rgba(225,235,250,.10)';G.fillRect(0,0,VW,VH);for(let i=0;i<60;i++){const sp=18+(i%4)*7,x=((i*67+Math.sin(clock*.8+i)*10+clock*6)%(VW+20))-10,y=((i*43+clock*sp)%(VH+10))-5;G.fillStyle=i%3?'#ffffff':'#e0ecff';G.fillRect(Math.round(x),Math.round(y),i%4?1:2,i%4?1:2)}}}
 // 地図（v155）
-const MAPN=['なし','ミニ','大きい地図'];let MAPM=1;try{const v=localStorage.getItem('mebuki-map');if(v!==null&&+v>=0&&+v<3)MAPM=+v}catch(e){}
+const MAPN=['なし','ミニ','大きい地図'];let MAPM=1;try{const v=localStorage.getItem('mebuki-map');if(v==='0')MAPM=0}catch(e){}// v251 p211 起動時は大きい地図を引き継がずミニ
 function setMapM(v){MAPM=v;try{localStorage.setItem('mebuki-map',String(v))}catch(e){}}
 const MCV=document.createElement('canvas');let MCT=-1,MCK=null;
 function mapCol(c,dn){if('Ww=X溝門'.includes(c))return'#4a86c8';if(c==='~')return'#3a76b8';if(dn){if(c==='d')return'#ff8ac8';if(c==='u')return'#7ad8ff';return SOLID.has(c)?null:'#c8b898'}
@@ -5336,7 +5351,9 @@ function hud(){updBuffs();
   setT('date',`${dateStr()}（${'月火水木金土日'[(S.day-1)%7]}）${WXI[wxNow()]}`);setT('clock',clockStr());setT('gold',S.gold+' G');{const e=$('#pwr');if(e){const has=pwRate()>0||pwUsers().length||Object.keys(FACCH).some(f=>PWGEN.has(f)&&machN(f));const t=has?`⚡${Math.floor(pw().v)}/${pwCap()}`:'';if(e.textContent!==t)e.textContent=t;e.style.color=has&&pw().lackT!=null&&S.time-pw().lackT<60?'#ff8a7a':'';e.title=has?`町の電気（発電 ${pwRate()}/時）`:''}}
   setW('hpb',clamp(S.hp/S.mhp*100,0,100)+'%');setW('stb',clamp(S.st/S.mst*100,0,100)+'%');
   setW('mpb',clamp(S.mp/S.mmp*100,0,100)+'%');setT('mpt',`${S.mp}/${S.mmp}`);
-  {const sk=nextTech()[1],mk=slotSk('m',loadOf().mi);setT('bSn',sk?sk.n:'');setT('bMn',mk?mk.n:'');const kl=a=>kLabel((KB[a]||[''])[0]||''),si=`技 ${kl('tech')}：${sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし'}｜魔法 ${kl('magic')}：${mk?'「'+mk.n+'」':'なし'}（${kl('magSw')}で切替）`;if(si!==P.siT){P.siT=si;const e=$('#skinfo');if(e){e.innerHTML='';const pc=matchMedia('(hover:hover) and (pointer:fine)').matches;const a1=el('span');a1.append(el('b','','技'+(pc?'['+kl('tech')+']':'')),' '+(sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし'));const a2=el('span');a2.append(el('b','','魔法'+(pc?'['+kl('magic')+']':'')),' '+(mk?'「'+mk.n+'」':'なし')+(pc?'　'+kl('magSw')+'で切替':'　長押しで切替'));e.append(a1,a2)}}}{const k=$('#skT'),m=$('#skM');if(k&&m){const pc=matchMedia('(hover:hover) and (pointer:fine)').matches,kl=a=>kLabel((KB[a]||[''])[0]||''),sk=nextTech()[1],mk=slotSk('m',loadOf().mi);const tc=sk?Math.ceil(sk.cost*((hgs('sword',2)||hgs('spear',2)||hgs('dagger',2)||hgs('great',2)||hgs('katana',2))?.8:hgs('rune',2)?.9:1)):0,tm=sk&&sk.mp?Math.ceil(sk.mp*(hgs('rune',2)?.9:1)):0,okT=!!sk&&S.st>=tc&&S.mp>=tm&&!P.chant;const mc=mk?Math.ceil(mk.cost*accMul('mpMul')*(hgs('staff',2)?.85:hgs('rune',2)?.9:1)*mCostMul(mk)):0,okM=!!mk&&S.mp>=mc&&!P.chant,ec=mk?((ELC[skEl(mk)]||ELC.magic)[0]):'';const key=[sk&&sk.id,tc,tm,okT,mk&&mk.id,mc,okM,pc,kl('tech'),kl('magic')].join('|');if(key!==P.slK){P.slK=key;k.className='sks'+(sk?(okT?'':' ng'):' none');k.querySelector('.k').textContent='技'+(pc?' ['+kl('tech')+']':'');k.querySelector('.n').textContent=sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし';k.querySelector('.c').textContent=sk?'ST '+tc+(tm?'・MP '+tm:''):'';m.className='sks'+(mk?(okM?'':' ng'):' none');m.style.borderColor=ec||'';m.querySelector('.k').textContent='魔法'+(pc?' ['+kl('magic')+']':'');m.querySelector('.n').textContent=mk?'「'+mk.n+'」':'なし';m.querySelector('.c').textContent=mk?'MP '+mc+(pc?'　'+kl('magSw')+'で切替':''):''}}}
+  {const sk=nextTech()[1],mk=slotSk('m',loadOf().mi);setT('bSn',sk?sk.n:'');setT('bMn',mk?mk.n:'');const kl=a=>kLabel((KB[a]||[''])[0]||''),si=`技 ${kl('tech')}：${sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし'}｜魔法 ${kl('magic')}：${mk?'「'+mk.n+'」':'なし'}（${kl('magSw')}で切替）`;if(si!==P.siT){P.siT=si;const e=$('#skinfo');if(e){e.innerHTML='';const pc=matchMedia('(hover:hover) and (pointer:fine)').matches;const a1=el('span');a1.append(el('b','','技'+(pc?'['+kl('tech')+']':'')),' '+(sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし'));const a2=el('span');a2.append(el('b','','魔法'+(pc?'['+kl('magic')+']':'')),' '+(mk?'「'+mk.n+'」':'なし')+(pc?'　'+kl('magSw')+'で切替':'　長押しで切替'));e.append(a1,a2)}}}{const z=$('#skSt'),zb=$('#bX'),sid=S.stance&&STANCES[S.stance]?S.stance:'',zl=S.stanceLast&&STANCES[S.stanceLast]?STANCES[S.stanceLast].n:'';// v251 p210 モード
+  if(z&&z.dataset.k!==sid+'|'+zl){z.dataset.k=sid+'|'+zl;z.className='sks'+(sid?'':' none');z.querySelector('.n').textContent=sid?STANCES[sid].n:'なし';if(zb){zb.classList.toggle('on',!!sid);$('#bXn').textContent=sid?'ON':(zl||'')}}}
+{const k=$('#skT'),m=$('#skM');if(k&&m){const pc=matchMedia('(hover:hover) and (pointer:fine)').matches,kl=a=>kLabel((KB[a]||[''])[0]||''),sk=nextTech()[1],mk=slotSk('m',loadOf().mi);const tc=sk?Math.ceil(sk.cost*((hgs('sword',2)||hgs('spear',2)||hgs('dagger',2)||hgs('great',2)||hgs('katana',2))?.8:hgs('rune',2)?.9:1)):0,tm=sk&&sk.mp?Math.ceil(sk.mp*(hgs('rune',2)?.9:1)):0,okT=!!sk&&S.st>=tc&&S.mp>=tm&&!P.chant;const mc=mk?Math.ceil(mk.cost*accMul('mpMul')*(hgs('staff',2)?.85:hgs('rune',2)?.9:1)*mCostMul(mk)):0,okM=!!mk&&S.mp>=mc&&!P.chant,ec=mk?((ELC[skEl(mk)]||ELC.magic)[0]):'';const key=[sk&&sk.id,tc,tm,okT,mk&&mk.id,mc,okM,pc,kl('tech'),kl('magic')].join('|');if(key!==P.slK){P.slK=key;k.className='sks'+(sk?(okT?'':' ng'):' none');k.querySelector('.k').textContent='技'+(pc?' ['+kl('tech')+']':'');k.querySelector('.n').textContent=sk?TIERN.技[sk.t]+'「'+sk.n+'」':'なし';k.querySelector('.c').textContent=sk?'ST '+tc+(tm?'・MP '+tm:''):'';m.className='sks'+(mk?(okM?'':' ng'):' none');m.style.borderColor=ec||'';m.querySelector('.k').textContent='魔法'+(pc?' ['+kl('magic')+']':'');m.querySelector('.n').textContent=mk?'「'+mk.n+'」':'なし';m.querySelector('.c').textContent=mk?'MP '+mc+(pc?'　'+kl('magSw')+'で切替':''):''}}}
   setT('hpt',`${S.hp}/${S.mhp}`);setT('stt',`${S.st}/${S.mst}`);setT('lv','Lv'+S.lv+(S.sp>0?'＋':''));setW('xpb',clamp(S.exp/need()*100,0,100)+'%');
   let w='';
   if(cur.kind==='room'&&paused)w=cur.name;
@@ -5368,7 +5385,7 @@ let tbSig='';
 function toolbar(){
   if((S.weps||[]).includes('shield'))S.shAuto=1;
   if(!S.shAuto&&S.eq&&S.eq.shield&&shOwn().length&&(S.weps||[]).filter(w=>hasW(w)).length<2&&!(S.weps||[]).includes('shield')){S.shAuto=1;S.weps=[...(S.weps&&S.weps.length?S.weps.filter(hasW).slice(0,1):['sword']),'shield'];setTimeout(()=>toast('盾は武器の枠（装備2）に入れました'),300)}
-  const nav=$('#tools');wSync();{const o=$('#bO'),bt=$('#btns'),w=w2();if(o){o.hidden=!w;bt.classList.toggle('off',!!w);o.textContent='';if(w){o.append('B',el('small','',w==='shield'?'盾':w==='blink'?'回避':TNAME[w].s))}o.classList.toggle('blink',w==='blink')}}
+  const nav=$('#tools');wSync();{const o=$('#bO'),bt=$('#btns'),w=w2();if(o){o.hidden=false;bt.classList.add('off');o.textContent='';o.append('B',el('small','',!w?'なし':w==='shield'?'盾':w==='blink'?'回避':TNAME[w].s));o.classList.toggle('blink',w==='blink');o.classList.toggle('none',!w)}}
   if(!nav.children.length){
     GORDER.forEach((i,pos)=>{const g=GROUPS[i];const b=el('button','slot');b.id='slot'+i;b.setAttribute('aria-label',g.n);const c=document.createElement('canvas');c.width=c.height=16;
       b.append(c,el('span','nm',g.n),el('em','ct'),el('b','gk',kLabel((KB[GKEY[i]]||[''])[0]||'')));b.onclick=()=>{selGroup(i);b.blur()};nav.append(b)});
@@ -5489,7 +5506,7 @@ const padEnd=e=>{if(e.pointerId!==padId)return;padId=null;joy.x=joy.y=0;knob.sty
 const bA=$('#bA');
 bA.addEventListener('pointerdown',e=>{e.preventDefault();if(paused)return;try{bA.setPointerCapture(e.pointerId)}catch(_){}actQ=true;actHeld=true});
 ['pointerup','pointercancel','lostpointercapture'].forEach(t=>bA.addEventListener(t,()=>actHeld=false));
-for(const b of document.querySelectorAll('#mbtns button'))b.addEventListener('click',()=>b.dataset.t==='help'?helpMenu():b.dataset.t==='dexs'?dexHub():menu(b.dataset.t));
+for(const b of document.querySelectorAll('#mbtns button'))b.addEventListener('click',()=>b.dataset.t==='set'?setMenu():b.dataset.t==='help'?helpMenu():b.dataset.t==='dexs'?dexHub():menu(b.dataset.t));
 $('#lvbox').addEventListener('click',()=>{if(!paused)statusMenu()});
 for(const[id,tap,hold]of[['#bS',castSkill,cycleStart],['#bM',castMagic,cycleMagic]]){const b=$(id);let t0=0,tm=null;
   b.addEventListener('pointerdown',e=>{e.preventDefault();if(paused)return;t0=1;tm=setTimeout(()=>{t0=0;hold()},450)});
@@ -5498,6 +5515,7 @@ const bD=$('#bD'),bO=$('#bO');
 bO.addEventListener('pointerdown',e=>{e.preventDefault();if(paused)return;try{bO.setPointerCapture(e.pointerId)}catch(_){}offQ=true;offHeld=true});
 ['pointerup','pointercancel','lostpointercapture'].forEach(t=>bO.addEventListener(t,()=>offHeld=false));
 bD.addEventListener('pointerdown',e=>{e.preventDefault();if(paused)return;toggleDash()});
+$('#bX').addEventListener('pointerdown',e=>{e.preventDefault();if(paused)return;toggleStance()});// v251 p210
 addEventListener('contextmenu',e=>e.preventDefault());
 
 /* ---------- boot ---------- */
@@ -5510,7 +5528,13 @@ const ORIN={auto:'自動',port:'縦',land:'横'},touchUI=()=>!matchMedia('(hover
 function applyOri(){const land=innerWidth>innerHeight,tu=touchUI(),want=ORI==='auto'?land:ORI==='land';
   document.body.classList.toggle('land',tu&&land&&want);
   const bad=tu&&ORI!=='auto'&&want!==land,r=$('#rot');if(r){r.hidden=!bad;if(bad)$('#rotm').textContent=`画面の向きが「${ORIN[ORI]}」の設定です。端末を${ORI==='land'?'横':'縦'}向きにしてください。`}
-  requestAnimationFrame(fit)}
+  mmPlace();requestAnimationFrame(fit)}
+function btnPlace(){const x=$('#bX'),d=$('#bD'),mb=$('#mbtnsB'),bt=$('#btns'),o=$('#bO');if(!x||!d||!mb||!bt)return;// v251 p212 横向きはモード・ダッシュを図鑑・設定の下へ
+  if(touchUI()){if(x.parentNode!==mb){mb.append(x,d)}}else if(x.parentNode!==bt){bt.insertBefore(x,o);bt.insertBefore(d,o)}}
+function pcPlace(){const bars=$('.bars'),mbB=$('#mbtnsB'),mm=$('#mmap'),mb=$('#mbtns'),si=$('#skinfo');if(!bars||!mbB||!mm||!mb)return false;// v253 p214 PC はボタンと地図をバーの横へ
+  const pc=!touchUI()&&!document.body.classList.contains('land');document.body.classList.toggle('pchud',pc);if(pc){if(mbB.parentNode!==bars)bars.append(mbB);if(mm.parentNode!==bars)bars.append(mm);return true}if(mbB.parentNode!==mb)mb.insertBefore(mbB,si?si.nextSibling:mb.firstChild);if(mm.parentNode===bars)mb.append(mm);return false}
+function mmPlace(){btnPlace();if(pcPlace())return;const mm=$('#mmap'),mb=$('#mbtns'),st=$('#stage');if(!mm||!mb||!st)return;// v250 p209 地図の置き場所
+  if(touchUI()&&!document.body.classList.contains('land')){if(mm.parentNode!==st)st.append(mm)}else if(mm.parentNode!==mb)mb.append(mm)}
 function setOri(v){ORI=v;try{localStorage.setItem('mebuki-ori',v)}catch(e){}
   const so=screen.orientation;try{if(v==='auto'){if(so&&so.unlock)so.unlock()}else if(so&&so.lock&&touchUI()){const go=()=>so.lock(v==='land'?'landscape':'portrait').catch(()=>{});const de=document.documentElement;if(!document.fullscreenElement&&de.requestFullscreen)de.requestFullscreen().then(go,()=>{});else go()}}catch(e){}
   applyOri()}
