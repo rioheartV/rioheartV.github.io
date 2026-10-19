@@ -1951,7 +1951,7 @@ function action(){
   if(P.fish)return fishAct();
   const d=DIRS[P.dir],tx=Math.floor((P.x+d[0]*12)/TS),ty=Math.floor((P.y+d[1]*12)/TS),c=tileAt(tx,ty);
   if(cur.dojo){if(c==='師')return dojoMenu();if(c==='E')return;return blinkOn()?doBlink():shieldOn()?0:attack()}
-  if(cur===town){const fx=P.x+d[0]*12,fy=P.y+d[1]*12;if(S.pet&&PET.x!=null&&Math.hypot(PET.x-fx,PET.y-6-fy)<13){P.use=.2;return petPat()}}
+  if(cur===town){const fx=P.x+d[0]*12,fy=P.y+d[1]*12;if(S.pet&&PET.x!=null&&Math.hypot(PET.x-fx,PET.y-6-fy)<13){P.use=.2;return petPat()}}if(cur===town){for(const bs in BOXCH){const bp=boxPos(bs);if(bp&&bp[0]===tx&&bp[1]===ty){P.use=.2;return boxMenu(bs)}}}
   if(cur.kind==='dun'){if(c==='u')return upMenu();if(c==='*'&&cur.outdoor){cur.m[ty][tx]=cur.floorCh||'.';P.use=.2;return addItem('herb',1)}if(curT().id==='rod')return startFish();
     {const tw=('LTy樹'.includes(c)&&hasW('axe'))?'axe':('OR炭'.includes(c)&&hasW('pick'))?'pick':null;if(tw&&curT().id!==tw&&!mons.some(m=>Math.hypot(m.x-P.x,m.y-P.y)<30)){P.wpn=tw;spend(1);sfx('swing');P.swMax=.28/aspd();P.swing=P.swMax;P.swHit=new Set();return}}
     return blinkOn()?doBlink():shieldOn()?0:attack()}
@@ -2919,6 +2919,7 @@ function boxPos(site){if(BOXPM!==town.m){BOXPM=town.m;BOXP={}}if(site in BOXP)re
   return BOXP[site]=null}
 const boxes=()=>S.box||(S.box={});
 const boxCount=site=>sumO((boxes()[site]||{}));
+function boxMenu(site){const R=b=>{b.innerHTML='';const o=boxes()[site]||{},ks=Object.keys(o).filter(k=>o[k]>0);b.append(el('h2','',`${BOXN[site]}の箱`),el('div','muted',ks.length?'作業員がとった物。運搬係が運ぶ前なら、ここで受け取れる':'空っぽ（作業員がとった物がここに入る）'));if(ks.length){const all=el('button','pri','全部受け取る');all.onclick=()=>{const a=[];for(const k of ks){a.push([k.split('|')[1],o[k]]);delete o[k]}addItems(a);R(b)};b.append(all)}for(const k of ks){const id=k.split('|')[1],it=el('div','item');it.append(el('span','',`${ITEMS[id]?ITEMS[id].n:id} ×${o[k]}`));const bt=el('button','','受け取る');bt.onclick=()=>{const n=o[k];delete o[k];addItem(id,n);R(b)};it.append(bt);b.append(it)}const cl=el('button','','とじる');cl.onclick=closeModal;b.append(cl)};openModal(R)}
 function boxPut(hid,id,n){const site=BOXSITE[hid];if(!site||!wOn('carry')||!boxPos(site))return false;const B=boxes(),o=B[site]||(B[site]={}),k=hid+'|'+id;o[k]=(o[k]||0)+n;return true}
 // 物の行き先：建っている施設の材料で、貯める余地があればその施設／無ければその仕事の入れ先
 function routeOf(hid,id){for(const f of facs()){const F=lf(f),c=capOf(f,id)-(F.stock[id]||0);if(c>0)return'fac:'+f}return hDest(hid)}
@@ -3167,7 +3168,7 @@ function advanceDay(note){
   S.day++;S.time=360;{const H=S.hive;if(H&&H.at)H.h=H.at.map((_,i)=>Math.min(HIVECAP,((H.h||[])[i]||0)+1))}timeAcc=0;S.chop={};S.pick={};
   if(!note){S.hp=S.mhp;S.st=S.mst;S.mp=S.mmp}
   const log=[];let wages=0;S.worked={};S.wdone={mine:0,ranch:0,wood:{w:0,h:0},fruit:0,fish:0,brew:0,till:0,lumber:0};
-  pjAuto();applyJobs();S.cday={};{let free=Math.min(S.pop||0,popCap());for(const h of[...HELPERS,...LOGIW])if(S.hired[h.id]){const c=Math.min(crew(h.id),free),w=h.wage*(1+c)-(h.id==='carry'&&carryFree()?h.wage:0);if(S.gold>=w){S.gold-=w;wages+=w;S.worked[h.id]=1;if(c){S.cday[h.id]=c;free-=c;if(h.id==='carry')for(let j=0;j<c;j++)S.worked['carry'+(j+2)]=1}}else log.push(`${pjLeadName(h.id)}：給金が払えず休み`)}}
+  pjAuto();applyJobs();S.cday={};{for(const h of[...HELPERS,...LOGIW])if(S.hired[h.id]){const c=crew(h.id),w=h.wage*(1+c)-(h.id==='carry'&&carryFree()?h.wage:0);if(S.gold>=w){S.gold-=w;wages+=w;S.worked[h.id]=1;if(c){S.cday[h.id]=c;if(h.id==='carry')for(let j=0;j<c;j++)S.worked['carry'+(j+2)]=1}}else log.push(`${pjLeadName(h.id)}：給金が払えず休み`)}}
   const ws=[...HELPERS,...LOGIW].filter(h=>S.worked[h.id]).map(h=>pjLeadName(h.id));if(ws.length)log.push(`今日は ${ws.join('・')} が働きます`);
   log.push(...llog);advReturn(log);procDeliver(log);techMorning(log);machDayRoll(log);machMorning(log);standSell(log);resMorning(log);tradeMorning(log);petMorning(log);helpMorning(log);if(jobOn('wood')){hput('wood','clay',2);hput('wood','sand',2)}growSaplings();growTrees();
   if((fameRank()>=4||Math.random()<.4)&&!(fameRank()<4&&S.stall&&S.stall.day===S.day-1)){S.stall={day:S.day,items:genStall()};log.push('行商人が広場に露店を開いている（9:00〜17:00）')}else S.stall=null;
@@ -5365,6 +5366,7 @@ function hud(){updBuffs();
     else if(cur===town&&c!=='h'&&c!=='e'&&HMAP[k]&&HMAP[k].custom&&BTYPES[HMAP[k].custom])w='A：'+HMAP[k].n;
     else if(HINT[c]&&!(c==='T'&&S.chop[k])&&!(c==='*'&&S.pick[k])&&!(c==='Y'&&(S.fruit[k]||0)>S.day))w='A：'+HINT[c];
     else if(c==='e')w=HMAP[k].n+'の家'}
+  if(cur===town&&!w){const d=DIRS[P.dir],fx=Math.floor((P.x+d[0]*12)/TS),fy=Math.floor((P.y+d[1]*12)/TS);for(const bs in BOXCH){const bp=boxPos(bs);if(bp&&bp[0]===fx&&bp[1]===fy){w='A：'+BOXN[bs]+'の箱';break}}}
   if(cur===town&&!w){const z=zoneAt(Math.floor(P.x/TS),Math.floor(P.y/TS));if(z)w='町・'+ZONEN[z]}
   if(P.pave&&cur===town)w='［'+(PAVEN[P.pave]||'町づくり')+'中・使うボタンで目の前に］'+(w?' '+w:'');
   setT('where',w);{const f=$('#mmfl');if(f){const t=cur.kind==='dun'?`${dun.name} ${floorLabel()}`+(dun.boss&&mons.some(m=>m.boss)?'・主の部屋':''):'';if(f.textContent!==t)f.textContent=t}}{const we=$('#where');if(we)we.classList.toggle('pave',!!(P.pave&&cur===town))}// v233
