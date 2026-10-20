@@ -1943,7 +1943,7 @@ function update(dt){
   const busy=P.swing>0||P.use>0||P.cast>0||P.rush>0;
   if(P.rush>0){fx.push({type:'after',x:P.x,y:P.y,t:.2,max:.2});P.rush-=dt;const d=DIRS[P.dir];moveBody(P,d[0]*(P.rushSp||260)*dt,d[1]*(P.rushSp||260)*dt,5);P.inv=Math.max(P.inv,.15);P.anim+=dt*14;
     for(const m of[...mons])if(!P.rushHit.has(m)&&Math.hypot(m.x-P.x,m.y-P.y)<m.r+11){P.rushHit.add(m);hitMon(m,P.rushMul||1.6)}}
-  else if(P.sit){if(l>.15)standUp();else sitTick(dt)}else if(l>.15){if(!busy&&!actHeld&&!offAtkH()){if(Math.abs(vx)>Math.abs(vy))P.dir=vx>0?3:2;else P.dir=vy>0?0:1}
+  else if(P.sit){if(l>.15)standUp();else sitTick(dt)}else if(l>.15){if(!busy&&!actHeld&&!offAtkH()&&!(offHeld&&w2()==='shield'&&hasW('shield'))){if(Math.abs(vx)>Math.abs(vy))P.dir=vx>0?3:2;else P.dir=vy>0?0:1}
     P.dash=dashOn&&!busy&&!actHeld&&!offAtkH();if(P.dash&&Math.random()<.35)spark(P.x-vx/l*5,P.y+5,cur.kind==='dun'&&!cur.outdoor?['#8a7f72','#a89c8c']:['#c8b490','#e0d0b0'],1,{sp:12,vy:-12,life:.4,r:2,sz:2});
     const sp=(actHeld||offAtkH()?48:busy?20:P.dash&&!P.guard?115:66)*spdMul()*(P.chant?.4:1)*(P.guard&&offHeld?.7:1);P.anim+=dt*(P.dash?13:8);moveBody(P,vx*sp*dt,vy*sp*dt,5)}else P.anim=0;
   updFish(dt,l>.15);
@@ -5076,7 +5076,7 @@ else if(f.type==='aura'){G.save();G.globalAlpha=k;G.strokeStyle=f.c;G.lineWidth=
   if(cur.kind==='dun'&&!cur.outdoor){const LR=P.light>0?2:1,gr=g.createRadialGradient(P.x-cx,P.y-cy,36*LR,P.x-cx,P.y-cy,150*LR);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,.85)');g.fillStyle=gr;g.fillRect(0,0,VW,VH)}
   else if(cur.kind!=='room'){const t=S.time;{let mo=0,ev=0;if(t>=360&&t<540)mo=(1-(t-360)/180)*.16;if(t>=930&&t<1110)ev=Math.sin((t-930)/180*Math.PI)*.2;if(mo>0){g.fillStyle=`rgba(255,196,150,${mo})`;g.fillRect(0,0,VW,VH)}if(ev>0){g.fillStyle=`rgba(255,130,60,${ev})`;g.fillRect(0,0,VW,VH)}}
     let a=0;if(t<420)a=(420-t)/60*.2;else if(t>=1080)a=Math.min(.55,(t-1080)/240*.55);if(a>0&&GFX)gfxLight(cx,cy,a);else if(a>0){g.fillStyle=`rgba(18,20,58,${a})`;g.fillRect(0,0,VW,VH);if(a>.15){g.save();g.globalCompositeOperation='lighter';if(cur===town)for(const k in S.deco||{}){if(S.deco[k].t!=='1')continue;const[lx,ly]=k.split(',').map(Number),qx=lx*TS+8-cx,qy=ly*TS+2-cy;if(qx<-80||qy<-80||qx>VW+80||qy>VH+80)continue;const lg2=g.createRadialGradient(qx,qy,2,qx,qy,56);lg2.addColorStop(0,`rgba(255,210,130,${a*.7})`);lg2.addColorStop(1,'rgba(255,210,130,0)');g.fillStyle=lg2;g.fillRect(qx-56,qy-56,112,112)}const px=P.x-cx,py=P.y-cy-6,lg=g.createRadialGradient(px,py,4,px,py,70);lg.addColorStop(0,`rgba(255,200,120,${a*.45})`);lg.addColorStop(1,'rgba(255,200,120,0)');g.fillStyle=lg;g.fillRect(px-70,py-70,140,140);g.restore()}}
-    {const vg=g.createRadialGradient(VW/2,VH/2,VH*.45,VW/2,VH/2,VH*.85);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.28)');g.fillStyle=vg;g.fillRect(0,0,VW,VH)}}
+    if(a>0){const vg=g.createRadialGradient(VW/2,VH/2,VH*.45,VW/2,VH/2,VH*.85);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,`rgba(0,0,0,${(.28*Math.min(1,a/.2)).toFixed(3)})`);g.fillStyle=vg;g.fillRect(0,0,VW,VH)}}
   if(cur===town)drawWeather();if(cur.kind==='dun'&&dun){if(dun.id==='abyss')abyFx();else if(dun.id==='volcano'||(dun.id==='island'&&floor>12))lavaFx()}
   fireGlow(cx,cy);
   drawMap();
