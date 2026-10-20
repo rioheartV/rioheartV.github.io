@@ -2420,8 +2420,7 @@ function grassTuft(x,y,tx,ty){if(cur!==town||GFX<1)return;const h=hash(tx*5+3,ty
   for(let i=0;i<3;i++){const b=bx+i*2,t=(i===1?1:.7)*s;R(b,by-2,1,2,'#4f8a38');R(b+Math.round(t*.5),by-4,1,2,'#5f9e45');R(b+Math.round(t),by-6+(i===1?0:1),1,2,'#7cbc5a')}}
 function drawSky(cx,cy){if(cur!==town||GFX<1)return;const W=town.W*TS,day=S.time>=360&&S.time<1080;
   // 雲の影（昼だけ・西から東へ）
-  if(day){G.save();for(let i=0;i<6;i++){const span=W+900,x=((i*733+clock*(4+i))%span)-450,y=(i*277%(town.H*TS-200))+60,sx=x-cx,sy=y-cy;if(sx<-260||sx>VW+260||sy<-140||sy>VH+140)continue;
-    G.fillStyle='rgba(30,40,70,.045)';for(const[a,b,rx,ry]of[[0,0,110,46],[70,-18,80,38],[-80,10,70,34],[30,26,90,30]]){G.beginPath();G.ellipse(sx+a,sy+b,rx,ry,0,0,7);G.fill()}}G.restore()}
+  if(day){G.save();G.fillStyle='rgba(30,40,70,.045)';const span=W+300,HH=town.H*TS;for(let i=0;i<28;i++){const h1=hash(i*13+1,7),h2=hash(i*7+3,11),x=((h1*span+clock*(5+h2*4))%span)-150,y=hash(i*5+2,3)*HH,sx=x-cx,sy=y-cy;if(sx<-80||sx>VW+80||sy<-40||sy>VH+40)continue;const k=.75+h2*.45;G.beginPath();for(let j=0;j<5;j++){const a=(hash(i*17+j,5)-.5)*70*k,b=(hash(i*19+j,9)-.5)*20*k,rx=(16+hash(i*23+j,4)*14)*k,ry=rx*.55;G.moveTo(sx+a+rx,sy+b);G.ellipse(sx+a,sy+b,rx,ry,0,0,7)}G.fill()}G.restore()}
   // 鳥の群れ（昼・ときどき空を渡る）
   if(day){const per=80,ph=clock%per,i0=Math.floor(clock/per);if(ph<50){const dir=i0%2?1:-1,y0=((i0*389)%(town.H*TS-160))+80,x0=dir>0?-200+ph*(W+400)/50:W+200-ph*(W+400)/50;
     for(let j=0;j<7;j++){const k=Math.ceil(j/2)*(j%2?1:-1),bx=x0-dir*Math.abs(k)*14-cx,by=y0+k*9-cy;if(bx<-20||bx>VW+20||by<-20||by>VH+20)continue;const f=Math.sin(clock*7+j*1.7);
@@ -2907,7 +2906,7 @@ const fTill=(x,y)=>ftc(x,y)==='F'&&!S.soil[x+','+y]&&(S.wdone.till||0)<40*Math.m
 const fWaterSrc=(x,y)=>{const c=ftc(x,y);return c==='W'||c==='0'};
 function fAnySoil(pred){for(const k in S.soil){const[x,y]=k.split(',').map(Number);if(pred(x,y))return true}return false}
 function fNear(sx,sy,pred){return bfs(sx,sy,(x,y)=>{for(const[a,b]of DIRS)if(pred(x+a,y+b))return[x+a,y+b];return null})}
-function farmFind(n,sx,sy){const I=fInv(n),t=S.time,go=(sub,pred)=>{const q=fNear(sx,sy,pred);if(q){n.fsub=sub;return q}return null};let r;
+function farmFind(n,sx,sy){const I=fInv(n),t=S.time,FRES={harvest:1,water:1,plant:1,till:1},taken=(sub,x,y)=>npcs.some(q=>q!==n&&q.fsub===sub&&q.tgt&&q.tgt[0]===x&&q.tgt[1]===y),go=(sub,pred)=>{const q=fNear(sx,sy,FRES[sub]?(x,y)=>pred(x,y)&&!taken(sub,x,y):pred);if(q){n.fsub=sub;return q}return null};let r;
   if(bagN(I)>=FBAG||(t>=1020&&bagN(I)>0))return go('ship',farmShipPred());
   if(r=go('harvest',fRipe))return r;
   if(I.water>0){if(r=go('water',fDry))return r}else if(fAnySoil(fDry)&&(r=go('fill',fWaterSrc)))return r;
@@ -3244,7 +3243,7 @@ function jobTile(id,x,y){const c=town.m[y]&&town.m[y][x],k=x+','+y,s=S.soil[k];
   return false}
 function npcFish(x,y){const loc=isSea(x,y)?'sea':DIRS.some(([a,b])=>isRiver(x+a,y+b))||isRiver(x,y)?'forest':'pond',c=FISH.filter(f=>f.loc.includes(loc)&&!f.rare&&!f.junk&&!f.night&&(f.rod||1)<=1),tot=c.reduce((a,f)=>a+f.w,0);let r=Math.random()*tot;for(const f of c){r-=f.w;if(r<=0)return f.id}return c[0].id}
 function brewWork(){S.wdone.brew=1;const bc=cnt('brew'),a=Math.min(3*bc,Math.floor(have('herb')/2)),b=Math.min(2*bc,Math.floor(have('manaherb')/2));if(a){take('herb',a*2);hput('brew','potion',a)}if(b){take('manaherb',b*2);hput('brew','manapot',b)}return a+b?`回復薬×${a}${b?'・マナポーション×'+b:''}`:'材料なし'}
-function findJob_v242(n,sx,sy){const id=jobOf(n.h);return bfs(sx,sy,(x,y)=>{for(const[a,b]of DIRS)if(jobTile(id,x+a,y+b))return[x+a,y+b];return null})}
+const JOB1={mine:1,ranch:1,brew:1};function findJob_v242(n,sx,sy){const id=jobOf(n.h),tk=(x,y)=>npcs.some(q=>q!==n&&q.h&&q.goal==='job'&&jobOf(q.h)===id&&q.tgt&&q.tgt[0]===x&&q.tgt[1]===y),f=free=>bfs(sx,sy,(x,y)=>{for(const[a,b]of DIRS)if(jobTile(id,x+a,y+b)&&(!free||!tk(x+a,y+b)))return[x+a,y+b];return null});return f(1)||(JOB1[id]?f(0):null)}
 function goNPC(n,res,goal){if(!res){n.goal=null;n.wait=1.5;return}n.path=res.path;n.tgt=res.tgt;n.goal=goal;if(!n.path.length)arriveNPC(n)}
 function decideNPC_v244(n){
   const h=n.h,t=S.time,sx=Math.floor(n.x/TS),sy=Math.floor(n.y/TS);n.goal=null;
