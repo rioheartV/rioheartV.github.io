@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoveArt｜自分の絵を顔トラッキングで動かすアバターアプリ（無料・Windows）</title>
+<meta name="description" content="レイヤー分けした自分の絵（PSD）を取り込んで、カメラの顔トラッキングと口パクで動かせる無料の Windows 用アプリ。仮想カメラで OBS や配信にそのまま映せます。">
+<link rel="canonical" href="https://rioheartv.github.io/apps/moveart/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="リオハート">
+<meta property="og:title" content="MoveArt｜自分の絵を顔トラッキングで動かすアバターアプリ">
+<meta property="og:description" content="自分の PSD を取り込んで、顔トラッキングと口パクで動かせる無料の Windows 用アプリ。">
+<meta property="og:url" content="https://rioheartv.github.io/apps/moveart/">
+<meta property="og:locale" content="ja_JP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>">
+<style>
+  body::before { background-image: linear-gradient(rgba(255,250,253,.60), rgba(255,250,253,.74)), url('../../assets/bg.jpg'), linear-gradient(165deg, #fff4fb 0%, #eef7ff 55%, #f4ecff 100%); }
+  body::after { display: none; }
+  .dl-box { text-align: center; }
+  .dl-btn { font-size: 1.15rem; padding: 16px 38px; margin: 6px 0 10px; }
+  .dl-meta { color: var(--ink-soft); font-size: .9rem; font-weight: 700; }
+  .hash { font-family: Consolas, "Courier New", monospace; font-size: .78rem; word-break: break-all;
+          background: rgba(255,255,255,.85); border: 1px dashed var(--border); border-radius: 10px; padding: 8px 10px;
+          display: block; margin-top: 6px; color: var(--ink); text-align: left; }
+  .card ol, .card ul { padding-left: 1.3em; color: var(--ink); font-size: .96rem; }
+  .card li { margin: 3px 0; }
+  .card code { font-family: Consolas, "Courier New", monospace; font-size: .88em; background: rgba(255,121,176,.1);
+               padding: 1px 5px; border-radius: 6px; word-break: break-all; }
+  .stack { display: grid; gap: 22px; margin-top: 24px; }
+  .back { display: inline-block; margin: 0 0 10px; font-weight: 800; color: var(--ink-soft); }
+  .back:hover { color: var(--pink); }
+  @media (max-width: 600px) { .card { padding: 20px; } .dl-btn { padding: 14px 24px; font-size: 1.05rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="../../" class="brand">リオ♡ハート</a>
+    <div class="nav-links">
+      <a href="../../#apps">アプリ</a>
+      <a href="../../#games">あそびば</a>
+      <a href="../../#links">リンク</a>
+    </div>
+  </nav>
+  <div class="hero-inner">
+    <h1>🎭 MoveArt</h1>
+    <p class="lead">自分の絵を、顔トラッキングと口パクで動かせる無料のアバターアプリです♡</p>
+  </div>
+</header>
+
+<main>
+  <section class="section" style="padding-top:0">
+    <a class="back" href="../../#apps">← トップへ戻る</a>
+
+    <div class="card dl-box">
+      <span class="tag">Windows 10 / 11 ・ 無料</span>
+      <h3>ダウンロード</h3>
+      <a class="btn btn-primary dl-btn" href="https://github.com/rioheartV/rioheartV.github.io/releases/download/moveart-2026.10.25.1/MoveArt_2026.10.25.1.zip">⬇ MoveArt をダウンロード</a>
+      <p class="dl-meta">版 2026.10.25.1 ・ zip 178 MB ・ Python などを入れる必要はありません</p>
+      <p class="dl-meta">ダウンロードの前に、下の<a href="#terms" style="text-decoration:underline">利用規約</a>を読んでください。<b>自己責任</b>で使ってください。</p>
+      <p class="dl-meta" style="margin-top:10px">ファイルが本物か確かめたい時の SHA256：
+        <span class="hash">bf695989e543fd948ec94767a97bd3ddaa4fe00eaa67805fc3fb2e8d4ac1ac2d</span></p>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <h3>できること</h3>
+        <ul>
+          <li><b>自分の PSD（レイヤー分けした絵）を取り込んで動かせる</b>（レイヤーがそのままパーツになります）</li>
+          <li>カメラの<b>顔トラッキング</b>で頭・目・口が動く・マイクの声で<b>口パク</b></li>
+          <li><b>仮想カメラ</b>で OBS・配信・ほかのアプリにそのまま映せる（背景の色も選べます）</li>
+          <li>パラメータを振った状態でパーツを動かすと、その形がそのパラメータに保存される・揺れ物理</li>
+          <li>録画・スクショ・PSD の書き出し・SmartPaint と連携して塗り直し</li>
+        </ul>
+        <p class="dl-meta" style="text-align:left;margin-top:8px">この版の顔トラッキングは 1 日 1 時間までです。読み込めるのは PSD と MoveArt のモデルだけです。</p>
+      </div>
+
+      <div class="card">
+        <h3>はじめかた</h3>
+        <ol>
+          <li>ダウンロードした zip を右クリック →「すべて展開」で、デスクトップやドキュメントなど<b>書き込める場所</b>に展開します（zip の中から直接起動しないでください。Program Files の中には置かないでください）。</li>
+          <li>展開したフォルダの <code>MoveArt.exe</code> をダブルクリックします。</li>
+          <li>最初に利用規約が出ます。読んで同意すると始まります。</li>
+          <li>キャラ選択の画面で「＋ キャラを追加…」を押し、自分の PSD を選びます。カードを押すとそのキャラで開きます。</li>
+          <li>くわしい使い方は、アプリの「ヘルプ」→「📖 操作ガイド」にあります。</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>「WindowsによってPCが保護されました」と出た時</h3>
+        <p>個人で作った無料のアプリには作者の電子署名が付いていないため、初めて起動する時にこの青い画面が出ます。
+          <b>「詳細情報」→「実行」</b>を押すと起動します（2 回目からは出ません）。</p>
+        <p style="margin-top:8px">ダウンロードしたファイルが本物か確かめたい時は、PowerShell で次を打ち、上の SHA256 と同じかを見てください。</p>
+        <span class="hash">Get-FileHash .\MoveArt_2026.10.25.1.zip -Algorithm SHA256</span>
+      </div>
+
+      <div class="card">
+        <h3>モデルと設定の置き場所・消し方</h3>
+        <ul>
+          <li>取り込んだキャラ・モデル：展開したフォルダの <code>out\auto</code>（キャラの一覧は <code>data</code>）</li>
+          <li>スクショ・録画：展開したフォルダの <code>screenshots</code>・<code>recordings</code></li>
+          <li>設定・利用時間の記録：<code>%LOCALAPPDATA%\MoveArt</code></li>
+          <li>新しい版に入れ替える時は、<code>out</code> と <code>data</code> のフォルダを新しいフォルダへ移してください。</li>
+          <li>消す時は、展開したフォルダと <code>%LOCALAPPDATA%\MoveArt</code> を消してください。</li>
+        </ul>
+      </div>
+
+      <div class="card" id="terms">
+        <h3>利用規約</h3>
+        <p>ダウンロード・使用の前に読んでください。ダウンロードまたは使った時点で、この規約に同意したものとします。同意できない場合は、使わずに削除してください。</p><h4>1. 自己責任で使ってください</h4><p>本アプリ(MoveArt)は、利用者ご自身の判断と責任で使ってください。</p><h4>2. 無料で使えます</h4><p>個人でも仕事でも使えます。本アプリで動かした映像や作ったモデルは、収益化した配信・動画にも使えます。</p><h4>3. 取り込む絵・作った映像について</h4><ul><li>取り込めるのは、自分で作った絵・モデルか、権利者から使ってよいと許可を得たものだけです</li><li>絵・モデルや、それで作った映像の権利は、もとの権利者・制作者のものです。作者がその権利を主張することはありません</li><li>取り込んだ絵や作った映像の内容(他人の著作権・肖像権などを侵していないか等)と、その公開・利用から生じる問題の責任は、すべて利用者にあります。作者は一切関与しません</li></ul><h4>4. 禁止すること</h4><ul><li>アプリそのもの(exe・zip・中のファイル)をほかの場所で配布すること(紹介する時は配布ページのリンクを案内してください)</li><li>アプリそのものを販売・貸し出しすること</li><li>改変や解析をして配布すること、利用時間の制限などの仕組みを外す・ごまかすこと</li><li>他人の絵・キャラクター・モデルを、権利者の許可なく取り込む・動かす・公開すること</li><li>実在の人物になりすます・誤解させる・名誉や信用を傷つける目的で使うこと</li><li>未成年者を性的に扱う内容や、差別・暴力・嫌がらせを助ける内容を作る・配信すること</li><li>作者が作った・公認したかのように見せること(作者の名前・ロゴを無断で使うことを含む)</li><li>法律や公序良俗に反する使い方</li></ul><h4>5. 顔トラッキングの利用時間</h4><p>この版の顔トラッキングは 1 日 1 時間までです(端末の日付で翌日にまた使えます)。制限の内容は、新しい版で変わることがあります。</p><h4>6. カメラ・マイクと送る情報について</h4><ul><li>カメラの映像とマイクの音は、顔トラッキングと口パクのために、この PC の中だけで使います。作者や外のサーバーへは送りません</li><li>映像や音が保存されるのは、利用者が録画やスクショをした時だけです(録画の「カメラも」を入れた時だけ、カメラの映像も保存されます)</li><li>アプリがインターネットにつなぐのは、利用者が「開発者支援」のリンクを押してブラウザが開く時だけです。SmartPaint 連携などのやり取りは、同じ PC の中だけで行います</li></ul><h4>7. 保証はありません・責任の範囲</h4><p>アプリは現状のまま提供します。動作・正確さ・安全性・特定の目的に合うことは保証しません。作者の故意または重大な過失による場合を除き、使ったこと、または使えなかったことで起きた損害(モデルや作業内容が消えた・配信が止まった・PC やカメラの不具合など)について、作者は責任を負いません。大事なモデルはこまめに保存し、別の場所にも控えを取ってください。</p><h4>8. サポートについて</h4><p>作者には、問い合わせへの対応・不具合の修正・更新・配布を続ける義務はありません。予告なく配布を止めたり、内容を変えたりすることがあります。</p><h4>9. オープンソースの部品</h4><p>アプリに入っているオープンソースの部品(PySide6 など)には、それぞれのライセンスが適用されます(一覧と本文は同梱の「サードパーティのライセンス.txt」)。この規約は、それらのライセンスで認められた権利を制限しません。</p><h4>10. 規約の変更</h4><p>この規約は予告なく変わることがあります。新しい版の規約は、新しい版のアプリと配布ページに載せます。規約を変えた版では、アプリの中で改めて同意をお願いします。</p><h4>11. 準拠法</h4><p>この規約は日本の法律に従って解釈します。</p>
+        <p class="dl-meta" style="text-align:left;margin-top:8px">版 2026.10.25.1</p>
+        <p class="dl-meta" style="text-align:left;margin-top:8px">アプリの中の「ヘルプ」→「📜 利用規約・禁止事項」と、zip の中の <code>利用規約.txt</code> も同じ内容です。</p>
+      </div>
+
+      <div class="card">
+        <h3>気をつけること</h3>
+        <ul>
+          <li>取り込めるのは、自分で作った絵か、使ってよいと許可を得た絵だけです。</li>
+          <li>大事なモデルはこまめに 💾保存し、別の場所にも控えを取ってください。</li>
+          <li>使っている部品の一覧とライセンスは、zip の中の <code>サードパーティのライセンス.txt</code> にあります。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>© <span id="year"></span> リオ♡ハート ｜ <a href="../../">トップへ</a></p>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
