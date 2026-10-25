@@ -152,6 +152,7 @@ a { color: inherit; text-decoration: none; }
 .badge-vt { background: linear-gradient(135deg, #6fc4ff, #4aa3ff); }
 .badge-ai { background: linear-gradient(135deg, #ff9ec7, #ff79b0); }
 .char h3 { font-size: 1.5rem; color: #ff5fa0; margin-bottom: 8px; }
+.char h3 .name-tbd { display: block; font-size: .85rem; font-weight: 700; color: #b07a92; margin-top: 2px; }
 .char p { color: var(--ink); font-size: .95rem; text-align: left; }
 
 /* ===== ゲーム ===== */
