@@ -65,6 +65,7 @@
         大事なモデルはこまめに保存し、別の場所にも控えを取ってください。</p>
       <a class="btn btn-primary dl-btn" href="https://github.com/rioheartV/MoveArt/releases/download/v2026.10.25.1/MoveArt_2026.10.25.1.zip">⬇ MoveArt をダウンロード</a>
       <p class="dl-meta">版 2026.10.25.1 ・ zip 178 MB ・ Python などを入れる必要はありません</p>
+      <p class="dl-meta" id="dl-count" data-repo="rioheartV/MoveArt" hidden></p>
       <p class="dl-meta">ダウンロードの前に、下の<a href="#terms" style="text-decoration:underline">利用規約</a>を読んでください。<b>自己責任</b>で使ってください。</p>
       <p class="dl-meta" style="margin-top:10px">ファイルが本物か確かめたい時の SHA256：
         <span class="hash">bf695989e543fd948ec94767a97bd3ddaa4fe00eaa67805fc3fb2e8d4ac1ac2d</span></p>
@@ -136,5 +137,21 @@
   <p>© <span id="year"></span> リオ♡ハート ｜ <a href="../../">トップへ</a></p>
 </footer>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+// ダウンロード数＝GitHub の Releases の zip の回数の合計（取れない時は欄ごと出さない）
+(function () {
+  var el = document.getElementById('dl-count');
+  if (!el || !window.fetch) return;
+  fetch('https://api.github.com/repos/' + el.dataset.repo + '/releases?per_page=100')
+    .then(function (r) { if (!r.ok) throw r.status; return r.json(); })
+    .then(function (rels) {
+      var n = 0;
+      rels.forEach(function (rel) { (rel.assets || []).forEach(function (a) { if (/\.zip$/i.test(a.name)) n += a.download_count || 0; }); });
+      el.textContent = 'これまでのダウンロード ' + n.toLocaleString('ja-JP') + ' 回';
+      el.hidden = false;
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>

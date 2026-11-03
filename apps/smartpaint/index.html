@@ -62,6 +62,7 @@
       <h3>ダウンロード</h3>
       <a class="btn btn-primary dl-btn" href="https://github.com/rioheartV/SmartPaint/releases/download/v2026.10.27/SmartPaint_2026.10.27.zip">⬇ SmartPaint をダウンロード</a>
       <p class="dl-meta">版 2026.10.27 ・ zip 33 MB ・ Python などを入れる必要はありません</p>
+      <p class="dl-meta" id="dl-count" data-repo="rioheartV/SmartPaint" hidden></p>
       <p class="dl-meta">ダウンロードの前に、下の<a href="#terms" style="text-decoration:underline">利用規約</a>を読んでください。<b>自己責任</b>で使ってください。</p>
       <p class="dl-meta" style="margin-top:10px">ファイルが本物か確かめたい時の SHA256：
         <span class="hash">7eebbc21b38ebb6b7b71ff63233ea6b26da885da0a62abc3a214c6c4be3753d5</span></p>
@@ -149,5 +150,21 @@
   <p>© <span id="year"></span> リオ♡ハート ｜ <a href="../../">トップへ</a></p>
 </footer>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+// ダウンロード数＝GitHub の Releases の zip の回数の合計（取れない時は欄ごと出さない）
+(function () {
+  var el = document.getElementById('dl-count');
+  if (!el || !window.fetch) return;
+  fetch('https://api.github.com/repos/' + el.dataset.repo + '/releases?per_page=100')
+    .then(function (r) { if (!r.ok) throw r.status; return r.json(); })
+    .then(function (rels) {
+      var n = 0;
+      rels.forEach(function (rel) { (rel.assets || []).forEach(function (a) { if (/\.zip$/i.test(a.name)) n += a.download_count || 0; }); });
+      el.textContent = 'これまでのダウンロード ' + n.toLocaleString('ja-JP') + ' 回';
+      el.hidden = false;
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>
